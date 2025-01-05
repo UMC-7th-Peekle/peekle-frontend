@@ -22,7 +22,7 @@ body:
         - [ ] 추가 정보 필요
     validations:
       required: true
-   - type: textarea
+  - type: textarea
     id: help-more
     attributes:
       label: 🎻 기타
