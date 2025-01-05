@@ -1,10 +1,10 @@
-name: ⚙️ Setting
+name: ⚙️ Chore
 description: 설정이 필요하신가요?
-title: '[⚙️ Setting] '
-labels: ['⚙️ Setting']
+title: '[⚙️ Chore] '
+labels: ['⚙️ Chore']
 body:
   - type: textarea
-    id: setting-description
+    id: chore-description
     attributes:
       label: 📍 설정 설명
       placeholder: |
@@ -12,7 +12,7 @@ body:
     validations:
       required: true
   - type: textarea
-    id: setting-checklist
+    id: chore-checklist
     attributes:
       label: ✅ To-Do
       description: |
@@ -22,7 +22,7 @@ body:
     validations:
       required: true
   - type: textarea
-    id: setting-more
+    id: chore-more
     attributes:
       label: 🎻 기타
       description: 더 하고 싶은 말이 있다면 작성해 주세요
