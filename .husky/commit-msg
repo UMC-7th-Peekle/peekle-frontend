@@ -1,1 +1,6 @@
+if ! grep -qE '\(#[0-9]+\)$' "$1"; then
+  echo "커밋 메시지 끝에 이슈 번호를 추가해주세요 (예: (#123))"
+  exit 1
+fi
+
 npx --no-install commitlint --edit "$1"
