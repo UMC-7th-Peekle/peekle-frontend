@@ -1,0 +1,31 @@
+name: 🆘 Help
+description: 도움 요청
+title: '[🆘 Help] '
+labels: ['🆘 Help']
+body:
+  - type: textarea
+    id: help-description
+    attributes:
+      label: 📍 버그 내용
+      placeholder: |
+        - 도움이 필요한 부분에 대한 설명을 작성해 주세요
+    validations:
+      required: true
+  - type: textarea
+    id: help-checklist
+    attributes:
+      label: ✅ To-Do
+      description: |
+        아래 체크리스트를 작성해주세요
+      placeholder: |
+        - [ ] 도움 요청 사항 설명
+        - [ ] 추가 정보 필요
+    validations:
+      required: true
+   - type: textarea
+    id: help-more
+    attributes:
+      label: 🎻 기타
+      description: 더 하고 싶은 말이 있다면 작성해 주세요
+    validations:
+      required: false

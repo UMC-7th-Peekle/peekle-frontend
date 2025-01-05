@@ -1,0 +1,33 @@
+name: 🚀 Release
+description: "릴리즈 준비"
+title: '[🚀 Release] '
+labels: ['🚀 Release']
+body:
+  - type: textarea
+    id: release-description
+    attributes:
+      label: 📍 릴리즈 내용
+      placeholder: |
+        - 버전: v1.0.0
+        - 주요 변경사항
+    validations:
+      required: true
+  - type: textarea
+    id: release-checklist
+    attributes:
+      label: ✅ To-Do
+      placeholder: |
+        - [ ] 버전 태그 생성
+        - [ ] 테스트 완료
+        - [ ] 문서 업데이트
+        - [ ] main 브랜치 머지
+        - [ ] develop 브랜치 머지
+    validations:
+      required: true
+  - type: textarea
+    id: hotfix-more
+    attributes:
+      label: 🎻 기타
+      description: 더 하고 싶은 말이 있다면 작성해 주세요
+    validations:
+      required: false

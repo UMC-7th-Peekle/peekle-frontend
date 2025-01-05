@@ -1,0 +1,42 @@
+name: 🐛 Bug
+description: 버그 리포트
+title: '[🐛 Bug] '
+labels: ['🐛 Bug']
+body:
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: 📍 버그 내용
+      placeholder: |
+        - 어떤 버그가 발생했는지 설명해주세요
+    validations:
+      required: true
+  - type: textarea
+    id: bug-reproduction
+    attributes:
+      label: 🔄 재현 단계
+      description: |
+        버그를 재현하는 방법을 단계별로 작성해 주세요
+      placeholder: |
+        1. 어디를 클릭했는지
+        2. 어떤 동작을 했는지
+        3. 어떤 에러가 발생했는지
+    validations:
+      required: true
+  - type: textarea
+    id: bug-simulation
+    attributes:
+      label: ✅ To-Do
+      description: |
+        아래 체크리스트를 작성해주세요
+      placeholder: |
+        - [ ] 최대한 세분화 해서 작성
+    validations:
+      required: true
+  - type: textarea
+    id: bug-more
+    attributes:
+      label: 🎻 기타
+      description: 더 하고 싶은 말이 있다면 작성해 주세요
+    validations:
+      required: false

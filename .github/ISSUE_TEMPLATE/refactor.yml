@@ -1,0 +1,41 @@
+name: 🔄 Refactor
+description: "코드 리팩토링"
+title: '[🔄 Refactor] '
+labels: ['🔄 Refactor']
+body:
+  - type: textarea
+    id: refactor-description
+    attributes:
+      label: 📍 리팩토링 내용
+      placeholder: |
+        - 어떤 부분을 리팩토링할지 설명해주세요 (현재 코드 설명, 문제점 등)
+    validations:
+      required: true
+  - type: textarea
+    id: refactor-reason
+    attributes:
+      label: 🎯 리팩토링 이유
+      placeholder: |
+        - 사용자 경험 개선
+        - 성능
+        - 코드 가독성
+        - 유지보수성
+    validations:
+      required: true
+  - type: textarea
+    id: refactor-checklist
+    attributes:
+      label: ✅ To-Do
+      description: |
+        아래 체크리스트를 작성해주세요
+      placeholder: |
+        - [ ] 최대한 세분화 해서 작성
+    validations:
+      required: true
+  - type: textarea
+    id: refactor-more
+    attributes:
+      label: 🎻 기타
+      description: 더 하고 싶은 말이 있다면 작성해 주세요
+    validations:
+      required: false

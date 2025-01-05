@@ -1,0 +1,30 @@
+name: ✨ Feature
+description: "새로운 기능 추가"
+title: '[✨ Feature] '
+labels: ['✨ Feature']
+body:
+  - type: textarea
+    id: feat-description
+    attributes:
+      label: 📍 기능 설명
+      placeholder: |
+        - 어떤 기능을 개발할지 설명해주세요
+    validations:
+      required: true
+  - type: textarea
+    id: feat-checklist
+    attributes:
+      label: ✅ To-Do
+      description: |
+        아래 체크리스트를 작성해주세요
+      placeholder: |
+        - [ ] 최대한 세분화 해서 작성
+    validations:
+      required: true
+  - type: textarea
+    id: feat-more
+    attributes:
+      label: 🎻 기타
+      description: 더 하고 싶은 말이 있다면 작성해 주세요
+    validations:
+      required: false
