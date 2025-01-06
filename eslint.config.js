@@ -1,14 +1,53 @@
+import js from "@eslint/js";
 import globals from "globals";
-import pluginJs from "@eslint/js";
+import reactHooks from "eslint-plugin-react-hooks";
+import reactRefresh from "eslint-plugin-react-refresh";
 import tseslint from "typescript-eslint";
-import pluginReact from "eslint-plugin-react";
+import prettier from "eslint-plugin-prettier";
 
-
-/** @type {import('eslint').Linter.Config[]} */
 export default [
-  {files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"]},
-  {languageOptions: { globals: globals.browser }},
-  pluginJs.configs.recommended,
+  { ignores: ["dist"] },
+  js.configs.recommended,
   ...tseslint.configs.recommended,
-  pluginReact.configs.flat.recommended,
+  {
+    files: ["**/*.{js,jsx,ts,tsx}"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      globals: globals.browser,
+    },
+    plugins: {
+      "react-hooks": reactHooks,
+      "react-refresh": reactRefresh,
+      prettier,
+    },
+    rules: {
+      "no-unused-vars": "error",
+      eqeqeq: "error",
+      "prettier/prettier": [
+        "error",
+        {
+          endOfLine: "auto",
+          semi: true,
+          singleQuote: true,
+          tabWidth: 2,
+          printWidth: 80,
+          arrowParens: "always",
+          bracketSpacing: true,
+          useTabs: false,
+          trailingComma: "all",
+          quoteProps: "as-needed",
+        },
+      ],
+      ...reactHooks.configs.recommended.rules,
+      "react-refresh/only-export-components": [
+        "warn",
+        { allowConstantExport: true },
+      ],
+    },
+    settings: {
+      react: {
+        version: "detect",
+      },
+    },
+  },
 ];
