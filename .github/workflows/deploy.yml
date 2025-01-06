@@ -1,20 +1,23 @@
-name: Deploy
+name: Deploy to Separate Repositories
 
 on:
   push:
-    branches: ['develop']
+    branches:
+      - develop
+      - main
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     container: pandoc/latex
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
       - name: Install mustache (to update the date)
         run: apk add ruby && gem install mustache
 
-      - name: creates output
+      - name: Creates output
         run: sh ./build.sh
 
       - name: Pushes to another repository
@@ -25,10 +28,7 @@ jobs:
         with:
           source-directory: 'output'
           destination-github-username: jongse7
-          destination-repository-name: peekle-frontend-develop
+          destination-repository-name: ${{ github.ref == 'refs/heads/develop' && 'peekle-frontend-develop' || 'peekle-frontend' }}
           user-email: ${{ secrets.EMAIL }}
           commit-message: ${{ github.event.commits[0].message }}
           target-branch: main
-
-      - name: Test get variable exported by push-to-another-repository
-        run: echo $DESTINATION_CLONED_DIRECTORY

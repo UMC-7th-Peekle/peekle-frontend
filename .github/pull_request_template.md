@@ -1,4 +1,4 @@
-## 1️⃣ 작업 내용 Summary
+## 1️⃣ 작업 내용
 
 - resolved #(issue_num)
 
