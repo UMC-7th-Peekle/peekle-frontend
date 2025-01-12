@@ -1,17 +1,16 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import Layout from '@/layouts/Layout'
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Layout from "@/layouts/Layout";
+import FontsTestPage from "@/test/FontsTestPage";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  return children
-}
+  return children;
+};
 
 const router = createBrowserRouter(
   [
     {
-      path: '/',
-      element: (
-        <Layout />
-      ),
+      path: "/",
+      element: <Layout />,
       // errorElement: <NotFoundPage />,
       children: [
         {
@@ -20,26 +19,30 @@ const router = createBrowserRouter(
             <ProtectedRoute>
               <></>
             </ProtectedRoute>
-          )
+          ),
         },
         {
-          path: '/auth/signup',
+          path: "/auth/signup",
           // element: <SignUpPage />
         },
         {
-          path: '/auth/signin',
+          path: "/auth/signin",
           // element: <SignInPage />
         },
-      ]
-    }
+        {
+          path: "/test/fonts",
+          element: <FontsTestPage />,
+        },
+      ],
+    },
   ],
   {
     basename: import.meta.env.BASE_URL,
-  }
-)
+  },
+);
 
 const Router = () => {
-  return <RouterProvider router={router} />
-}
+  return <RouterProvider router={router} />;
+};
 
-export default Router
+export default Router;
