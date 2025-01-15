@@ -1,6 +1,5 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Layout from '@/layouts/Layout';
-import FontsTestPage from '@/test/FontsTestPage';
 import { HomePage } from '@/pages';
 
 const ProtectedPage = ({ children }: { children: React.ReactNode }) => {
@@ -29,10 +28,6 @@ const router = createBrowserRouter(
         {
           path: '/auth/signin',
           // element: <SignInPage />
-        },
-        {
-          path: '/test/fonts',
-          element: <FontsTestPage />,
         },
       ],
     },
