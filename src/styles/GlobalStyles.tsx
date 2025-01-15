@@ -10,7 +10,7 @@ const GlobalStyles = createGlobalStyle`
   ${reset}
   
   @import url('./fonts.css');
-
+  @import url('./designToken.css');
   body {
   }
 
