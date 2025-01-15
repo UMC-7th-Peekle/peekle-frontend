@@ -14,7 +14,7 @@
     "moduleDetection": "force",
     "noEmit": true,
     "jsx": "react-jsx",
-    "sourceMap": true,      
+    "sourceMap": true,
     "declaration": true,
     "incremental": true,
 
@@ -24,8 +24,8 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitThis": true,
-    "noImplicitReturns": true, 
-    "allowJs": true,      
+    "noImplicitReturns": true,
+    "allowJs": true,
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {

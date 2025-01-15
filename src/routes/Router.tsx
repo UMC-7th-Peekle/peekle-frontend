@@ -1,8 +1,9 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Layout from "@/layouts/Layout";
 import FontsTestPage from "@/test/FontsTestPage";
+import { HomePage } from "@/pages";
 
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+const ProtectedPage = ({ children }: { children: React.ReactNode }) => {
   return children;
 };
 
@@ -10,16 +11,16 @@ const router = createBrowserRouter(
   [
     {
       path: "/",
-      element: <Layout />,
+      element: (
+        <ProtectedPage>
+          <Layout />
+        </ProtectedPage>
+      ),
       // errorElement: <NotFoundPage />,
       children: [
         {
           index: true,
-          element: (
-            <ProtectedRoute>
-              <></>
-            </ProtectedRoute>
-          ),
+          element: <HomePage />,
         },
         {
           path: "/auth/signup",
