@@ -1,8 +1,8 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 const Wrapper = styled.div`
   padding: 20px;
-  font-family: "Pretendard", sans-serif;
+  font-family: 'Pretendard', sans-serif;
 
   h1 {
     font-weight: 900; /* Black */

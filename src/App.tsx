@@ -1,17 +1,17 @@
-import { Suspense, useState } from "react";
+import { Suspense, useState } from 'react';
 import {
   QueryCache,
   QueryClient,
   QueryClientProvider,
   QueryErrorResetBoundary,
-} from "@tanstack/react-query";
-import { APIResponseError } from "endpoint-client";
-import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
-import { ErrorBoundary } from "react-error-boundary";
-import Router from "./routes/Router";
-import GlobalStyles from "@/styles/GlobalStyles";
-import "@/styles/fonts.css";
-import "@/styles/designToken.css";
+} from '@tanstack/react-query';
+import { APIResponseError } from 'endpoint-client';
+import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools';
+import { ErrorBoundary } from 'react-error-boundary';
+import Router from './routes/Router';
+import GlobalStyles from '@/styles/GlobalStyles';
+import '@/styles/fonts.css';
+import '@/styles/designToken.css';
 
 function App() {
   const [isOpen, setIsOpen] = useState<boolean>(false); // ReactQueryDevtoolsPanel 열고 닫기
@@ -20,9 +20,9 @@ function App() {
     queryCache: new QueryCache({
       onError: (error, query) => {
         if (error instanceof APIResponseError) {
-          if (error.body.code === "invalid_token") {
-            localStorage.removeItem("accessToken");
-            window.location.href = "/";
+          if (error.body.code === 'invalid_token') {
+            localStorage.removeItem('accessToken');
+            window.location.href = '/';
           }
         }
 
@@ -59,10 +59,10 @@ function App() {
       </QueryErrorResetBoundary>
       <button
         onClick={() => setIsOpen(!isOpen)}
-      >{`${isOpen ? "Close" : "Open"} the devtools panel`}</button>
+      >{`${isOpen ? 'Close' : 'Open'} the devtools panel`}</button>
       {isOpen && (
         <ReactQueryDevtoolsPanel
-          style={{ height: "200px" }}
+          style={{ height: '200px' }}
           onClose={() => setIsOpen(false)}
         />
       )}
