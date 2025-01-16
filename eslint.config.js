@@ -23,7 +23,6 @@ export default [
       prettier,
     },
     rules: {
-      'no-unused-vars': 'error',
       eqeqeq: 'error',
       'prettier/prettier': 'error',
       ...reactHooks.configs.recommended.rules,
