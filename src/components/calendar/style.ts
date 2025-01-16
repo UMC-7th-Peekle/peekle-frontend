@@ -8,20 +8,49 @@ export const StyledCalendar = styled(Calendar)<{ rangeHeight?: string }>`
   width: 412px;
   height: 351px;
 
+  /* 네비게이션 스타일 */
+  .react-calendar__navigation {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1rem;
+
+    /* 년/월 텍스트 중앙 정렬 */
+    .react-calendar__navigation__label {
+      flex: 1;
+      text-align: center;
+      font-size: 1.125rem; /* 18px */
+      font-weight: 600;
+      background-color: ${(props) => props.theme.color.gray['0']};
+    }
+
+    /* 년도 넘기는 버튼 숨기기 */
+    .react-calendar__navigation__next2-button,
+    .react-calendar__navigation__prev2-button {
+      display: none;
+    }
+
+    /* 달 넘기는 버튼 스타일 */
+    .react-calendar__navigation__arrow {
+      color: ${(props) => props.theme.color.gray['500']};
+      font-size: 1.5rem;
+      font-weight: 400;
+      background-color: ${(props) => props.theme.color.gray['0']};
+    }
+  }
+
   /* 타일 스타일 */
   .react-calendar__tile {
     aspect-ratio: 1;
     background-color: white;
     color: ${(props) => props.theme.color.gray['600']};
     font-size: 1.125rem;
-    font-weight: regular;
+    font-weight: 400;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
-    pointer-events: none; /* 클릭 이벤트 차단 */
 
-    /* 텍스트 위치 보정 */
     abbr {
       position: absolute;
       top: 50%;
@@ -29,22 +58,6 @@ export const StyledCalendar = styled(Calendar)<{ rangeHeight?: string }>`
       transform: translate(-50%, -50%);
       z-index: 2;
     }
-  }
-
-  /* 원 스타일 (공통) */
-  .react-calendar__tile.selectedDay::before,
-  .react-calendar__tile.startDay::before,
-  .react-calendar__tile.endDay::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: ${(props) => props.rangeHeight || '65%'};
-    height: ${(props) => props.rangeHeight || '65%'};
-    border-radius: 50%;
-    background-color: ${(props) => props.theme.color.primary['500']};
-    z-index: 1;
   }
 
   /* 오늘 날짜 스타일 */
@@ -76,7 +89,20 @@ export const StyledCalendar = styled(Calendar)<{ rangeHeight?: string }>`
     z-index: 0;
   }
 
-  /* startDay 스타일 */
+  /* startDay, endDay 스타일 */
+  .react-calendar__tile.startDay::before,
+  .react-calendar__tile.endDay::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: ${(props) => props.rangeHeight || '65%'};
+    height: ${(props) => props.rangeHeight || '65%'};
+    border-radius: 50%;
+    background-color: ${(props) => props.theme.color.primary['500']};
+    z-index: 1;
+  }
   .react-calendar__tile.startDay::after {
     content: '';
     position: absolute;
@@ -88,8 +114,6 @@ export const StyledCalendar = styled(Calendar)<{ rangeHeight?: string }>`
     background-color: ${(props) => props.theme.color.primary['100']};
     z-index: 0;
   }
-
-  /* endDay 스타일 */
   .react-calendar__tile.endDay::after {
     content: '';
     position: absolute;
@@ -102,7 +126,6 @@ export const StyledCalendar = styled(Calendar)<{ rangeHeight?: string }>`
     z-index: 0;
   }
 
-  /* 선택된 날짜 스타일 */
   .selectedDay {
     color: ${(props) => props.theme.color.gray['0']};
     font-weight: 600;
