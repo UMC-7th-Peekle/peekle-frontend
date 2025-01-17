@@ -13,7 +13,7 @@ import { ThemeProvider } from 'styled-components';
 import { theme } from '@/styles/theme';
 import GlobalStyles from '@/styles/GlobalStyles';
 import '@/styles/fonts.css';
-
+import { Alert, Confirm } from '@/components';
 function App() {
   const [isOpen, setIsOpen] = useState<boolean>(false); // ReactQueryDevtoolsPanel 열고 닫기
 
@@ -26,6 +26,8 @@ function App() {
             <ErrorBoundary onReset={reset} FallbackComponent={ErrorFallback}>
               <NuqsAdapter>
                 <Suspense fallback={<DeferredLoader />}>
+                  <Alert />
+                  <Confirm />
                   <Router />
                 </Suspense>
               </NuqsAdapter>

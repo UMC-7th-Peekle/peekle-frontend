@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Layout from '@/layouts/Layout';
-import { HomePage } from '@/pages';
+import { EventPage } from '@/pages';
 
 const ProtectedPage = ({ children }: { children: React.ReactNode }) => {
   return children;
@@ -19,7 +19,7 @@ const router = createBrowserRouter(
       children: [
         {
           index: true,
-          element: <HomePage />,
+          element: <EventPage />,
         },
         {
           path: '/auth/signup',
