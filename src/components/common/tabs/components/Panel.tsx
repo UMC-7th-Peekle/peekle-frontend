@@ -3,15 +3,15 @@ import { useTabsContext } from '../context/TabsContext';
 import { TabPanelProps } from '@/types/common';
 
 const Panel = ({ value, children }: TabPanelProps) => {
-  const { selectedKey, label } = useTabsContext();
+  const { selectedValue, option } = useTabsContext();
 
-  if (value !== selectedKey) return null;
+  if (value !== selectedValue) return null;
 
   return (
     <PanelContainer
-      id={`${label}-panel-${value}`}
+      id={`${option}-panel-${value}`}
       role="tabpanel"
-      aria-labelledby={`${label}-trigger-${value}`}
+      aria-labelledby={`${option}-trigger-${value}`}
     >
       {children}
     </PanelContainer>

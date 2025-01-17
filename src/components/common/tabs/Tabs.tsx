@@ -6,13 +6,13 @@ import List from './components/List';
 import Panel from './components/Panel';
 import Trigger from './components/Trigger';
 
-const Tabs = ({ label, defaultValue, children }: TabsProps) => {
-  const [selectedKey, setSelectedKey] = useState(defaultValue);
+const Tabs = ({ option, defaultValue, children }: TabsProps) => {
+  const [selectedValue, setSelectedValue] = useState(defaultValue);
 
   const providerValue = {
-    selectedKey,
-    setSelectedKey,
-    label,
+    selectedValue,
+    setSelectedValue,
+    option,
   };
 
   return (
@@ -32,13 +32,13 @@ export default Tabs;
  * 사용 예시
  * import { Tabs } from '@/components'
  * 
- * <Tabs defaultValue={'sort'} label="이벤트 필터 탭">
+ * <Tabs defaultValue={'sort'} option="이벤트 필터 탭">
     <Tabs.List>
-      <Tabs.Trigger value={'sort'} text="정렬" onClick={handleSortTabClick} /> //onClick은 선택입니다
-      <Tabs.Trigger value={'category'} text="카테고리" />
-      <Tabs.Trigger value={'duration'} text="기간" />
-      <Tabs.Trigger value={'price'} text="비용" />
-      <Tabs.Trigger value={'location'} text="지역" />
+      <Tabs.Trigger value={'sort'} label="정렬" onClick={handleSortTabClick} /> //onClick은 선택입니다
+      <Tabs.Trigger value={'category'} label="카테고리" />
+      <Tabs.Trigger value={'duration'} label="기간" />
+      <Tabs.Trigger value={'price'} label="비용" />
+      <Tabs.Trigger value={'location'} label="지역" />
     </Tabs.List>
     <Tabs.Panel value={'sort'}>
       <div>요소1</div>

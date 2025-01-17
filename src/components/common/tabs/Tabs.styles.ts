@@ -17,10 +17,7 @@ export const PanelContainer = styled.section`
   padding: 0 20px;
 `;
 
-// Trigger
-export const Btn = styled.button``;
-
-export const TabText = styled.p<{ $isActive: boolean }>`
+export const TriggerBtn = styled.button<{ $isActive: boolean }>`
   ${({ $isActive, theme }) =>
     $isActive ? theme.typeFace.body['18SB'] : theme.typeFace.body['18R']};
   color: ${({ $isActive, theme }) =>

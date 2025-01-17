@@ -3,12 +3,12 @@ import { useTabsContext } from '../context/TabsContext';
 import { TabListProps } from '@/types/common';
 
 const List = ({ children }: TabListProps) => {
-  const { label } = useTabsContext();
+  const { option } = useTabsContext();
 
   return (
     <ListContainer
       role="tablist"
-      aria-label={label}
+      aria-label={option}
       aria-orientation="horizontal"
     >
       {children}
