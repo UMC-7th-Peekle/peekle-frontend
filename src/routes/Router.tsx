@@ -3,6 +3,7 @@ import Layout from '@/layouts/Layout';
 import { EventPage } from '@/pages';
 
 const ProtectedPage = ({ children }: { children: React.ReactNode }) => {
+  // 로그인 여부 확인해 페이지 보호 필요
   return children;
 };
 
