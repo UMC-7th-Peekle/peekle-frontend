@@ -4,7 +4,6 @@ import { ConfirmStore } from '@/types/common';
 
 export const useConfirmStore = create<ConfirmStore>((set) => ({
   isOpen: false,
-  setIsOpen: (isOpen: boolean) => set({ isOpen }),
   content: null,
   show: (content: ReactNode) => {
     set({

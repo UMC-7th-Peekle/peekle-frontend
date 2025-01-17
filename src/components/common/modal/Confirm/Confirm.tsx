@@ -1,6 +1,6 @@
 import * as S from './Confirm.styles';
 import ModalPortal from '../ModalPortal/ModalPortal';
-import { useConfirmStore } from '@/stores/modal/useConfirmStore';
+import { useConfirmStore } from '@/stores/common/modal/useConfirmStore';
 
 const Confirm = () => {
   const { isOpen, content, close } = useConfirmStore();
@@ -17,7 +17,7 @@ const Confirm = () => {
 export default Confirm;
 
 /** 사용 예시
- * import { useConfirmStore, confirm } from '@/stores/modal/useConfirmStore';
+ * import { useConfirmStore, confirm } from '@/stores/common/modal/useConfirmStore';
  *
  * const { close } = useConfirmStore(); // 모달 닫는 함수
  *

@@ -19,3 +19,37 @@ export interface ConfirmStore {
   show: (content: ReactNode) => void;
   close: () => void;
 }
+
+// Tabs
+export interface TabsContextType {
+  selectedKey: string;
+  setSelectedKey: (key: string) => void;
+  label: string;
+}
+
+export interface TabsProps {
+  label: string;
+  defaultValue: string;
+  children: React.ReactNode;
+}
+
+export interface TabTriggerProps {
+  value: string;
+  text: string;
+  onClick?: () => void;
+}
+
+export interface TabPanelProps {
+  value: string;
+  children: React.ReactNode;
+}
+
+export interface TabListProps {
+  children: React.ReactElement<TabTriggerProps>[];
+}
+
+// BottomSheet
+export interface BottomSheetStore {
+  isBottomSheetOpen: boolean;
+  setIsBottomSheetOpen: (issBottomSheetOpen: boolean) => void;
+}
