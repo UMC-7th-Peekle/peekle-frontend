@@ -78,6 +78,7 @@ export default Select;
 
 /** 사용 예시
  * <Select
+    key={'sort'}
     option={'sort'} // select 이름, 쿼리 파람에 들어감
     defaultValue={'latest'} // 기본값
     defaultLabel={'가까운 날짜순'} // 기본적으로 UI에 표시될 값

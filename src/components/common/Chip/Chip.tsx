@@ -19,5 +19,11 @@ const Chip = ({ label, value, selectedValue, onSelect }: ChipProps) => {
 export default Chip;
 
 /** 사용 예시
- *
+ * <Chip
+    key={value}
+    label={label}
+    value={value}
+    selectedValue={getMatchingChip(dateRange)}
+    onSelect={() => handleChipSelect(value)}
+  />
  */
