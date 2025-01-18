@@ -32,7 +32,9 @@ export default Tabs;
  * 사용 예시
  * import { Tabs } from '@/components'
  * 
- * <Tabs defaultValue={'sort'} option="이벤트 필터 탭">
+ * const { activeTab } = useBottomSheetStore(); // 전역 상태로 선택됨 탭 관리
+ * 
+ * <Tabs defaultValue={activeTab} option="이벤트 필터 탭">
     <Tabs.List>
       <Tabs.Trigger value={'sort'} label="정렬" onClick={handleSortTabClick} /> //onClick은 선택입니다
       <Tabs.Trigger value={'category'} label="카테고리" />

@@ -1,6 +1,6 @@
 import * as S from './Confirm.styles';
 import ModalPortal from '../ModalPortal/ModalPortal';
-import { useConfirmStore } from '@/stores/common/modal/useConfirmStore';
+import { useConfirmStore } from '@/stores';
 
 const Confirm = () => {
   const { isOpen, content, close } = useConfirmStore();

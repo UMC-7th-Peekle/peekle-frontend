@@ -5,8 +5,9 @@ export { default as Tabs } from './common/tabs/Tabs';
 export { default as BottomSheet } from './common/BottomSheet/BottomSheet';
 export { default as Alert } from './common/modal/Alert/Alert';
 export { default as Confirm } from './common/modal/Confirm/Confirm';
+export { default as ModalPortal } from './common/modal/ModalPortal/ModalPortal';
 export { default as Chip } from './common/Chip/Chip';
-// export { default as Select } from './common/Select/Select';
+export { default as Select } from './common/Select/Select';
 
 // event
 export { default as EventCard } from './event/EventCard/EventCard';

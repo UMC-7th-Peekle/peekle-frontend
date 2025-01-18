@@ -1,6 +1,6 @@
 import * as S from './Alert.styles';
 import ModalPortal from '../ModalPortal/ModalPortal';
-import { useAlertStore } from '@/stores/common/modal/useAlertStore';
+import { useAlertStore } from '@/stores';
 
 const Alert = () => {
   const { isOpen, message, close } = useAlertStore();

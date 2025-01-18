@@ -1,16 +1,6 @@
 import styled, { keyframes } from 'styled-components';
 import LineSVG from '@/assets/images/icons/line.svg?react';
 
-const fadeIn = keyframes`
-  from { opacity: 0; }
-  to { opacity: 1; }
-`;
-
-const fadeOut = keyframes`
-  from { opacity: 1; }
-  to { opacity: 0; }
-`;
-
 const slideIn = keyframes`
   from { transform: translateY(100%); }
   to { transform: translateY(0); }
@@ -21,24 +11,12 @@ const slideOut = keyframes`
   to { transform: translateY(100%); }
 `;
 
-export const Overlay = styled.div<{ $isOpen: boolean }>`
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.25);
-  z-index: 2;
-
-  animation: ${({ $isOpen }) => ($isOpen ? fadeIn : fadeOut)} 0.3s ease;
-`;
-
 export const BottomSheet = styled.div<{ $isOpen: boolean }>`
   position: fixed;
   bottom: 0;
   left: 0;
-  z-index: 3;
   width: 100%;
+  z-index: 3;
   display: flex;
   flex-direction: column;
   align-items: center;

@@ -1,6 +1,7 @@
 import * as S from './BottomSheet.styles';
 import { ReactNode, useState, useEffect } from 'react';
-import useBottomSheetStore from '@/stores/common/useBottomSheetStore';
+import { ModalPortal } from '@/components';
+import { useBottomSheetStore } from '@/stores';
 
 const BottomSheet = ({ children }: { children: ReactNode }) => {
   const { isBottomSheetOpen, setIsBottomSheetOpen } = useBottomSheetStore();
@@ -22,16 +23,12 @@ const BottomSheet = ({ children }: { children: ReactNode }) => {
   if (!isRendered) return null;
 
   return (
-    <>
-      <S.Overlay
-        onClick={() => setIsBottomSheetOpen(false)}
-        $isOpen={isBottomSheetOpen}
-      />
+    <ModalPortal onClose={() => setIsBottomSheetOpen(false)}>
       <S.BottomSheet $isOpen={isBottomSheetOpen}>
         <S.LineIcon />
         {children}
       </S.BottomSheet>
-    </>
+    </ModalPortal>
   );
 };
 
