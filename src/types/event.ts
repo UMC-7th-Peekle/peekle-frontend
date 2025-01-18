@@ -11,3 +11,13 @@ export interface EventCardProps {
   startDate: string;
   endDate: string;
 }
+
+export type DateRange = [Date | null, Date | null];
+
+// event-filter
+type FilterType = 'single' | 'multiple';
+
+export interface UseEventFilterProps {
+  key?: string;
+  type?: FilterType;
+}

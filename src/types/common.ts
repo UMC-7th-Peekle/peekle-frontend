@@ -5,7 +5,7 @@ import {
   DURATION_OPTIONS,
   PRICE_OPTIONS,
   LOCATION_OPTIONS,
-} from '@/constants/common';
+} from '@/constants/event';
 
 // Portal
 export interface PortalProps {

@@ -1,8 +1,8 @@
-import * as S from './EventPage.styles';
+import * as S from './EventMapPage.styles';
 import { EventCard, Select, BottomSheet, BottomSheetTabs } from '@/components';
 import { events } from '@/sample-data/event';
 
-export const EventPage = () => {
+export const EventMapPage = () => {
   return (
     <S.EventPageContainer>
       <S.SelectWapper>
@@ -50,3 +50,5 @@ export const EventPage = () => {
     </S.EventPageContainer>
   );
 };
+
+export default EventMapPage;

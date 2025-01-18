@@ -1,5 +1,11 @@
 import styled from 'styled-components';
 
+export const Container = styled.section`
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+`;
+
 export const Button = styled.button<{ $isActive: boolean }>`
   align-self: flex-start;
   gap: 28px;

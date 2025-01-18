@@ -1,6 +1,6 @@
 import * as S from './EventCard.styles';
 import { EventCardProps } from '@/types/event';
-import { formatDate } from '@/utils/dateFormatter';
+import { formatDateToMonthDay } from '@/utils/dateFormatter';
 
 export const EventCard = (props: EventCardProps) => {
   const { location, price, images, title, startDate, endDate } = props;
@@ -32,7 +32,7 @@ export const EventCard = (props: EventCardProps) => {
         </S.Top>
         <S.Title>{title}</S.Title>
         <S.Date>
-          {formatDate(startDate)} ~ {formatDate(endDate)}
+          {formatDateToMonthDay(startDate)} ~ {formatDateToMonthDay(endDate)}
         </S.Date>
       </S.Info>
     </S.EventCard>

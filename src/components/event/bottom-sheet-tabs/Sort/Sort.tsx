@@ -1,19 +1,26 @@
 import * as S from './Sort.styles';
-import { useQueryState } from 'nuqs';
-import { SORT_OPTIONS } from '@/constants/common';
+import { SORT_OPTIONS } from '@/constants/event';
+import useEventFilter from '@/hooks/event/useEventFilter';
 
 const Sort = () => {
-  const [sortValue, setSortValue] = useQueryState('sort');
+  const { handleSelect, isSelected } = useEventFilter({
+    key: 'sort',
+    type: 'single',
+  });
 
-  return SORT_OPTIONS.map(([label, value]) => (
-    <S.Button
-      key={value}
-      onClick={() => setSortValue(value)}
-      $isActive={value === sortValue}
-    >
-      {label}
-    </S.Button>
-  ));
+  return (
+    <S.Container>
+      {SORT_OPTIONS.map(([label, value]) => (
+        <S.Button
+          key={value}
+          onClick={() => handleSelect(value)}
+          $isActive={isSelected(value)}
+        >
+          {label}
+        </S.Button>
+      ))}
+    </S.Container>
+  );
 };
 
 export default Sort;

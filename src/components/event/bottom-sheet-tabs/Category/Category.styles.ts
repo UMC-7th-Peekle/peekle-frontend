@@ -1,8 +1,13 @@
 import styled from 'styled-components';
 
-export const Button = styled.button<{ $isActive: boolean }>`
-  align-self: flex-start;
+export const Container = styled.section`
+  display: flex;
+  flex-direction: column;
   gap: 28px;
+`;
+
+export const Button = styled.button<{ $isActive: boolean }>`
+  height: 22px;
   ${({ $isActive, theme }) =>
     $isActive ? theme.typeFace.body['18SB'] : theme.typeFace.body['18R']};
   color: ${({ $isActive, theme }) =>

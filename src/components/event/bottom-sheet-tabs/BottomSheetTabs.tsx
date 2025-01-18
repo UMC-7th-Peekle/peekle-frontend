@@ -1,15 +1,19 @@
 import * as S from './BottomSheetTabs.styles';
-import { useTabsStore, alert } from '@/stores';
+import { useTabsStore } from '@/stores';
+import { useBottomSheetStore } from '@/stores';
+import { useEventFilter } from '@/hooks';
 
 import { Tabs } from '@/components';
 import Sort from './Sort/Sort';
 import Category from './Category/Category';
-// import Duration from './Duration/Duration';
+import Duration from './Duration/Duration';
 import Price from './Price/Price';
 import Location from './Location/Location';
 
 export const BottomSheetTabs = () => {
   const { activeTab } = useTabsStore();
+  const { setIsBottomSheetOpen } = useBottomSheetStore();
+  const { clearFilter } = useEventFilter();
 
   return (
     <>
@@ -28,7 +32,7 @@ export const BottomSheetTabs = () => {
           <Category />
         </Tabs.Panel>
         <Tabs.Panel value={'duration'}>
-          <div>요소3</div>
+          <Duration />
         </Tabs.Panel>
         <Tabs.Panel value={'price'}>
           <Price />
@@ -38,13 +42,13 @@ export const BottomSheetTabs = () => {
         </Tabs.Panel>
       </Tabs>
       <S.BtnContainer>
-        <S.IconBtn>
+        <S.IconBtn onClick={clearFilter}>
           <S.ResetIcon />
           <S.ResetText>초기화</S.ResetText>
         </S.IconBtn>
         <button
           onClick={() => {
-            alert('활동 보기');
+            setIsBottomSheetOpen(false);
           }}
         >
           {} 개 활동 보기

@@ -1,15 +1,13 @@
 import * as S from './Select.styles';
-import { useEffect } from 'react';
-import { SelectProps } from '@/types/common';
-import { useBottomSheetStore, useTabsStore } from '@/stores';
-import { useQueryState } from 'nuqs';
 import {
   SORT_OPTIONS,
   CATEGORY_OPTIONS,
   PRICE_OPTIONS,
   LOCATION_OPTIONS,
-  DURATION_OPTIONS,
-} from '@/constants/common';
+} from '@/constants/event';
+import { SelectProps } from '@/types/common';
+import { useBottomSheetStore, useTabsStore } from '@/stores';
+import { useEventFilter } from '@/hooks';
 
 /**
  * select가 이벤트 외에도 쓰인다면 리팩토링 필요
@@ -21,53 +19,56 @@ const getLabel = (option: string, value: string, defaultLabel: string) => {
     category: CATEGORY_OPTIONS,
     price: PRICE_OPTIONS,
     location: LOCATION_OPTIONS,
-    duration: DURATION_OPTIONS,
   } as const;
 
-  return (
-    optionsMap[option as keyof typeof optionsMap].find(
-      ([, v]) => v === value,
-    )?.[0] ?? defaultLabel
-  );
+  if (option === 'duration') {
+    return value === 'all' ? '기간' : value.split(',').join('~');
+  }
+
+  if (option === 'sort' || option === 'price') {
+    return (
+      optionsMap[option as keyof typeof optionsMap].find(
+        ([, v]) => v === value,
+      )?.[0] ?? defaultLabel
+    );
+  }
+
+  // 중복가능 값이면 (카테고리, 지역) 라벨을 찾아서 join
+  const labels = value
+    .split(',')
+    .map(
+      (val) =>
+        optionsMap[option as keyof typeof optionsMap].find(
+          ([, v]) => v === val,
+        )?.[0],
+    )
+    .filter(Boolean);
+
+  return labels.length ? labels.join(', ') : defaultLabel;
 };
 
 export const Select = ({ option, defaultValue, defaultLabel }: SelectProps) => {
-  const [value, setValue] = useQueryState(option);
+  const { storedValue } = useEventFilter({
+    key: option,
+    type:
+      option === 'category' || option === 'location' ? 'multiple' : 'single',
+  });
   const { setIsBottomSheetOpen } = useBottomSheetStore();
   const { setActiveTab } = useTabsStore();
-
-  // 초기화 및 세션스토리지 동기화
-  useEffect(() => {
-    const storedValue = sessionStorage.getItem(option);
-    if (storedValue) {
-      setValue(storedValue);
-    } else {
-      setValue(defaultValue);
-      sessionStorage.setItem(option, defaultValue);
-    }
-  }, [setValue, defaultValue, option]);
-
-  // value가 변경될 때마다 세션스토리지 업데이트
-  useEffect(() => {
-    if (value) {
-      sessionStorage.setItem(option, value);
-    }
-  }, [value, option]);
 
   const handleSelectClick = () => {
     setActiveTab(option); // 클릭한 Select의 option을 activeTab으로 설정
     setIsBottomSheetOpen(true); //bottomSheet 열기
   };
 
-  const label = getLabel(option, value ?? '', defaultLabel);
+  const currentValue = storedValue ?? defaultValue;
+  const label = getLabel(option, currentValue, defaultLabel);
+
+  const hasChanged = currentValue !== defaultValue;
 
   return (
-    <S.Select
-      key={option}
-      onClick={handleSelectClick}
-      $isActive={value !== defaultValue}
-    >
-      {value !== defaultValue ? label : defaultLabel}
+    <S.Select onClick={handleSelectClick} $isActive={hasChanged}>
+      {hasChanged ? label : defaultLabel}
       <S.ArrowDownIcon />
     </S.Select>
   );

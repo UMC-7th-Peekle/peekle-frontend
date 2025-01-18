@@ -1,19 +1,26 @@
 import * as S from './Category.styles';
-import { useQueryState } from 'nuqs';
-import { CATEGORY_OPTIONS } from '@/constants/common';
+import useEventFilter from '@/hooks/event/useEventFilter';
+import { CATEGORY_OPTIONS } from '@/constants/event';
 
 const Category = () => {
-  const [categoryValue, setCategoryValue] = useQueryState('category');
+  const { handleSelect, isSelected } = useEventFilter({
+    key: 'category',
+    type: 'multiple',
+  });
 
-  return CATEGORY_OPTIONS.map(([label, value]) => (
-    <S.Button
-      key={value}
-      onClick={() => setCategoryValue(value)}
-      $isActive={value === categoryValue}
-    >
-      {label}
-    </S.Button>
-  ));
+  return (
+    <S.Container>
+      {CATEGORY_OPTIONS.map(([label, value]) => (
+        <S.Button
+          key={value}
+          onClick={() => handleSelect(value)}
+          $isActive={isSelected(value)}
+        >
+          {label}
+        </S.Button>
+      ))}
+    </S.Container>
+  );
 };
 
 export default Category;

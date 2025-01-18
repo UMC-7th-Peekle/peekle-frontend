@@ -17,6 +17,7 @@ export const Select = styled.div<{ $isActive: boolean }>`
   border-radius: ${({ theme }) => theme.borderRadius.xlg};
   ${({ $isActive, theme }) =>
     $isActive ? theme.typeFace.body['16SB'] : theme.typeFace.body['16R']};
+  cursor: pointer;
 `;
 
 export const ArrowDownIcon = styled(ArrowDownSVG)`
