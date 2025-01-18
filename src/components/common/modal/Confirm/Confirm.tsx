@@ -1,5 +1,5 @@
 import * as S from './Confirm.styles';
-import ModalPortal from '../ModalPortal/ModalPortal';
+import { Portal } from '@/components';
 import { useConfirmStore } from '@/stores';
 
 const Confirm = () => {
@@ -8,9 +8,9 @@ const Confirm = () => {
   if (!isOpen) return null;
 
   return (
-    <ModalPortal onClose={close}>
+    <Portal onClose={close} type="modal">
       <S.ConfirmContainer>{content}</S.ConfirmContainer>
-    </ModalPortal>
+    </Portal>
   );
 };
 

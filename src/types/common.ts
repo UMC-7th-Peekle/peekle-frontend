@@ -1,11 +1,20 @@
 import { ReactNode } from 'react';
+import {
+  SORT_OPTIONS,
+  CATEGORY_OPTIONS,
+  DURATION_OPTIONS,
+  PRICE_OPTIONS,
+  LOCATION_OPTIONS,
+} from '@/constants/common';
 
-// modal
-export interface ModalPortalProps {
+// Portal
+export interface PortalProps {
   children: ReactNode;
   onClose?: () => void;
+  type: 'modal' | 'bottom-sheet'; //index.html의 id
 }
 
+// modal
 export interface AlertStore {
   isOpen: boolean;
   message: string;
@@ -78,6 +87,12 @@ export type SelectOption =
   | 'duration'
   | 'price'
   | 'location';
+
+export type SortValue = (typeof SORT_OPTIONS)[number][1];
+export type CategoryValue = (typeof CATEGORY_OPTIONS)[number][1];
+export type DurationValue = (typeof DURATION_OPTIONS)[number][1];
+export type PriceValue = (typeof PRICE_OPTIONS)[number][1];
+export type LocationValue = (typeof LOCATION_OPTIONS)[number][1];
 
 export interface SelectProps {
   option: SelectOption; // select 종류 === 쿼리 파람 키

@@ -15,6 +15,8 @@ export const ListContainer = styled.header`
 
 export const PanelContainer = styled.section`
   padding: 0 20px;
+  display: flex;
+  flex-direction: column;
 `;
 
 export const TriggerBtn = styled.button<{ $isActive: boolean }>`

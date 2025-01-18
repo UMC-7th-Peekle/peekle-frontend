@@ -1,9 +1,9 @@
-import * as S from './ModalPortal.styles';
+import * as S from './Portal.styles';
 import { useCallback, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { ModalPortalProps } from '@/types/common';
+import { PortalProps } from '@/types/common';
 
-const ModalPortal = ({ children, onClose }: ModalPortalProps) => {
+const Portal = ({ children, onClose, type }: PortalProps) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
   const handleClickOutside = useCallback(
@@ -20,7 +20,7 @@ const ModalPortal = ({ children, onClose }: ModalPortalProps) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [onClose, handleClickOutside]);
 
-  const modalRoot = document.getElementById('modal') as HTMLElement;
+  const modalRoot = document.getElementById(type) as HTMLElement;
 
   return createPortal(
     <S.Overlay ref={modalRef}>{children}</S.Overlay>,
@@ -28,4 +28,4 @@ const ModalPortal = ({ children, onClose }: ModalPortalProps) => {
   );
 };
 
-export default ModalPortal;
+export default Portal;

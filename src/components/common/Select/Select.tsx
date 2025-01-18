@@ -3,8 +3,34 @@ import { useEffect } from 'react';
 import { SelectProps } from '@/types/common';
 import { useBottomSheetStore, useTabsStore } from '@/stores';
 import { useQueryState } from 'nuqs';
+import {
+  SORT_OPTIONS,
+  CATEGORY_OPTIONS,
+  PRICE_OPTIONS,
+  LOCATION_OPTIONS,
+  DURATION_OPTIONS,
+} from '@/constants/common';
 
-// select가 이벤트 외에도 쓰인다면 리팩토링 필요
+/**
+ * select가 이벤트 외에도 쓰인다면 리팩토링 필요
+ */
+
+const getLabel = (option: string, value: string, defaultLabel: string) => {
+  const optionsMap = {
+    sort: SORT_OPTIONS,
+    category: CATEGORY_OPTIONS,
+    price: PRICE_OPTIONS,
+    location: LOCATION_OPTIONS,
+    duration: DURATION_OPTIONS,
+  } as const;
+
+  return (
+    optionsMap[option as keyof typeof optionsMap].find(
+      ([, v]) => v === value,
+    )?.[0] ?? defaultLabel
+  );
+};
+
 export const Select = ({ option, defaultValue, defaultLabel }: SelectProps) => {
   const [value, setValue] = useQueryState(option);
   const { setIsBottomSheetOpen } = useBottomSheetStore();
@@ -33,13 +59,15 @@ export const Select = ({ option, defaultValue, defaultLabel }: SelectProps) => {
     setIsBottomSheetOpen(true); //bottomSheet 열기
   };
 
+  const label = getLabel(option, value ?? '', defaultLabel);
+
   return (
     <S.Select
       key={option}
       onClick={handleSelectClick}
       $isActive={value !== defaultValue}
     >
-      {defaultLabel}
+      {value !== defaultValue ? label : defaultLabel}
       <S.ArrowDownIcon />
     </S.Select>
   );

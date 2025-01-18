@@ -1,5 +1,5 @@
 import * as S from './Alert.styles';
-import ModalPortal from '../ModalPortal/ModalPortal';
+import { Portal } from '@/components';
 import { useAlertStore } from '@/stores';
 
 const Alert = () => {
@@ -8,13 +8,13 @@ const Alert = () => {
   if (!isOpen) return null;
 
   return (
-    <ModalPortal onClose={close}>
+    <Portal onClose={close} type="modal">
       <S.AlertContainer>
         <S.WarningIcon />
         <S.AlertMessage>{message}</S.AlertMessage>
         <S.CheckedBtn onClick={close}>확인</S.CheckedBtn>
       </S.AlertContainer>
-    </ModalPortal>
+    </Portal>
   );
 };
 

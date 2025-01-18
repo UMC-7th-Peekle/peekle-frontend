@@ -1,6 +1,6 @@
 import * as S from './BottomSheet.styles';
 import { ReactNode, useState, useEffect } from 'react';
-import { ModalPortal } from '@/components';
+import { Portal } from '@/components';
 import { useBottomSheetStore } from '@/stores';
 
 const BottomSheet = ({ children }: { children: ReactNode }) => {
@@ -23,12 +23,12 @@ const BottomSheet = ({ children }: { children: ReactNode }) => {
   if (!isRendered) return null;
 
   return (
-    <ModalPortal onClose={() => setIsBottomSheetOpen(false)}>
+    <Portal onClose={() => setIsBottomSheetOpen(false)} type="bottom-sheet">
       <S.BottomSheet $isOpen={isBottomSheetOpen}>
         <S.LineIcon />
         {children}
       </S.BottomSheet>
-    </ModalPortal>
+    </Portal>
   );
 };
 

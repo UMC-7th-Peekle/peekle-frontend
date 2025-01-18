@@ -16,7 +16,7 @@ export const BottomSheet = styled.div<{ $isOpen: boolean }>`
   bottom: 0;
   left: 0;
   width: 100%;
-  z-index: 3;
+  z-index: 6;
   display: flex;
   flex-direction: column;
   align-items: center;
