@@ -64,7 +64,7 @@ export const StyledCalendar = styled(Calendar)`
 
   /* 주 뷰 */
   .react-calendar__month-view__weekdays {
-    height: 48px !important;
+    height: 48px;
     abbr {
       ${({ theme }) => theme.typeFace.body['16R']};
       color: ${({ theme }) => theme.color.gray[400]};
@@ -81,7 +81,13 @@ export const StyledCalendar = styled(Calendar)`
 
   /* 일 뷰 */
   .react-calendar__tile {
-    width: 40px !important;
+    &.selected:not(.react-calendar__tile--rangeStart):not(
+        .react-calendar__tile--rangeEnd
+      ) {
+      background: ${({ theme }) => theme.color.primary[500]};
+      color: ${({ theme }) => theme.color.gray[0]};
+      border-radius: ${({ theme }) => theme.borderRadius.md};
+    }
   }
 
   // 주말은 색 다르게 하는 게 좋을 것 같아서 임의로 넣음
@@ -101,11 +107,9 @@ export const StyledCalendar = styled(Calendar)`
   .react-calendar__tile:enabled:hover,
   .react-calendar__tile--now:enabled:hover {
     background: ${({ theme }) => theme.color.gray[0]};
+
     &.react-calendar__tile--range {
-      background: ${({ theme }) => theme.color.primary[200]};
-    }
-    &.react-calendar__tile--rangeStart {
-      background: ${({ theme }) => theme.color.primary[500]};
+      background: ${({ theme }) => theme.color.primary[100]};
     }
   }
 
@@ -127,33 +131,16 @@ export const StyledCalendar = styled(Calendar)`
     } */
   }
 
-  .react-calendar__tile--hasActive {
-    border-radius: ${({ theme }) => theme.borderRadius.md};
-    background: ${({ theme }) => theme.color.primary[500]};
-    abbr {
-      color: ${({ theme }) => theme.color.gray[0]};
-      ${({ theme }) => theme.typeFace.body['18SB']};
-    }
-    /* background: ${({ theme }) => theme.color.gray[0]};
-    abbr {
-      padding: 8.5px 10px;
-      color: ${({ theme }) => theme.color.gray[0]};
-      ${({ theme }) => theme.typeFace.body['18SB']};
-      border-radius: ${({ theme }) => theme.borderRadius.xxlg};
-      border: 2px solid ${({ theme }) => theme.color.primary[500]};
-      background: ${({ theme }) => theme.color.primary[500]};
-    } */
-  }
-
   .react-calendar__tile--range {
-    background: ${({ theme }) => theme.color.primary[100]};
     border-radius: 0;
+    background: ${({ theme }) => theme.color.primary[100]};
 
     &.react-calendar__tile--now {
       background: ${({ theme }) => theme.color.primary[100]};
       border: none;
       abbr {
         background: ${({ theme }) => theme.color.primary[100]};
+        color: ${({ theme }) => theme.color.primary[500]};
         ${({ theme }) => theme.typeFace.body['18SB']};
       }
     }
@@ -203,6 +190,7 @@ export const StyledCalendar = styled(Calendar)`
     /* range start === range end 일 때 */
     &.react-calendar__tile--rangeStart {
       border-radius: ${({ theme }) => theme.borderRadius.md};
+      background: red;
     }
   }
 `;

@@ -21,7 +21,7 @@ const Duration = () => {
   });
 
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
-
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null); // 스타일용
   // ui 표시용 YYYY-MM-DD (요일) 형식
   const startDateWithDayOfWeek = dateRange[0]
     ? formatDateWithDayOfWeek(dateRange[0])
@@ -104,6 +104,19 @@ const Duration = () => {
     return day < 10 ? `0${day}` : `${day}`;
   };
 
+  // 처음 선택한 날짜 색 바꾸는 용도
+  const handleDayClick = (value: Date) => {
+    setSelectedDate(value);
+    setDateRange([value, null]);
+  };
+
+  const getTileClassName = ({ date }: { date: Date }) => {
+    if (selectedDate && date.toDateString() === selectedDate.toDateString()) {
+      return 'selected';
+    }
+    return '';
+  };
+
   return (
     <S.Container>
       <S.TopContainer>
@@ -121,9 +134,13 @@ const Duration = () => {
         <S.DateBtnContainer>
           <span>{startDateWithDayOfWeek}</span>
           {storedValue === 'all' ? (
-            <button onClick={() => setIsCalendarOpen(true)}>
-              {'기간 추가'}
-            </button>
+            isCalendarOpen ? (
+              <span>{endDateWithDayOfWeek} </span>
+            ) : (
+              <button onClick={() => setIsCalendarOpen(true)}>
+                {'기간 추가'}
+              </button>
+            )
           ) : (
             <span>{endDateWithDayOfWeek}</span>
           )}
@@ -133,6 +150,8 @@ const Duration = () => {
         <S.StyledCalendar
           onChange={(value) => handleCalendarChange(value as Date)}
           value={dateRange}
+          onClickDay={handleDayClick}
+          tileClassName={getTileClassName}
           locale="ko-KR"
           view="month"
           formatDay={formatCalendarDay}
