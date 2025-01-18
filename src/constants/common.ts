@@ -6,14 +6,14 @@ export const SORT_OPTIONS = {
 } as const;
 
 export const CATEGORY_OPTIONS = {
-  카테고리: 'all',
+  전체: 'all',
   교육: 'education',
   문화: 'culture',
   활동: 'activity',
 } as const;
 
 export const PRICE_OPTIONS = {
-  비용: 'all',
+  전체: 'all',
   무료: 'free',
   유료: 'paid',
 } as const;

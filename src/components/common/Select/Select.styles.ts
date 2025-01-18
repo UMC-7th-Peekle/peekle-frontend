@@ -8,17 +8,15 @@ export const Select = styled.div<{ $isActive: boolean }>`
   align-items: center;
   gap: 6px;
   color: ${({ $isActive, theme }) =>
-    $isActive ? theme.color.gray[0] : theme.color.gray[500]};
+    $isActive ? theme.color.gray[0] : theme.color.gray[400]};
   border: 1px solid
     ${({ $isActive, theme }) => !$isActive && theme.color.gray[100]};
   border-radius: ${({ theme }) => theme.borderRadius.xlg};
   ${({ $isActive, theme }) =>
     $isActive ? theme.typeFace.body['16SB'] : theme.typeFace.body['16R']};
-  background: red;
 `;
 
 export const ArrowDownIcon = styled(ArrowDownSVG)`
   width: 16px;
   height: 16px;
-  /* color: ${({ theme }) => theme.color.gray[500]}; */
 `;

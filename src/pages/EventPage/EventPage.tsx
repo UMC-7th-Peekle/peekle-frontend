@@ -2,9 +2,11 @@ import * as S from './EventPage.styles';
 import { EventCard, BottomSheet, Tabs, Select } from '@/components';
 import { events } from '@/sample-data/event';
 import { useTabsStore } from '@/stores';
+import { useQueryState } from 'nuqs';
 
 export const EventPage = () => {
   const { activeTab } = useTabsStore();
+  const [, setSortValue] = useQueryState('sort');
 
   return (
     <S.EventPageContainer>
@@ -41,7 +43,7 @@ export const EventPage = () => {
             <Tabs.Trigger value={'location'} label="지역" />
           </Tabs.List>
           <Tabs.Panel value={'sort'}>
-            <div>요소1</div>
+            <button onClick={() => setSortValue('lower_price')}>요소1</button>
           </Tabs.Panel>
           <Tabs.Panel value={'category'}>
             <div>요소2</div>
