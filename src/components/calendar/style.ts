@@ -142,7 +142,7 @@ export const StyledCalendar = styled(Calendar)<{
     height: ${(props) => props.rangeHeight || '65%'};
     background-color: ${(props) => props.theme.color.primary['100']};
     z-index: 10;
-    display: ${(props) => (props.isOnly ? 'block' : 'none')};
+    display: ${(props) => (props.isOnly ? 'none' : 'block')};
   }
 
   .react-calendar__tile.endDay::after {

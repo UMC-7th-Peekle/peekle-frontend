@@ -29,7 +29,7 @@ export default function Calendar() {
         onChange={setValue}
         value={value}
         formatDay={(_, date) => `${date.getDate()}`}
-        isOnly={isSameDay(startDay, endDay) || Boolean(startDay)}
+        isOnly={!startDay || (startDay && !endDay)}
         prevLabel={<StyledArrowLeft />}
         nextLabel={<StyledArrowRight />}
         onClickDay={handleTileClick}
