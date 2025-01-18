@@ -1,22 +1,21 @@
-import { useState } from 'react';
 import { StyledCheckboxCard, CardText } from './style';
 import Checkbox from '@/components/input/Checkbox';
 
 interface CheckboxCardProps {
   text?: string;
+  isChecked: boolean;
+  toggleCheckbox: () => void;
 }
 
-export default function CheckboxCard({ text = '' }: CheckboxCardProps) {
-  const [isChecked, setIsChecked] = useState(false);
-
-  const toggleCheckbox = () => {
-    setIsChecked((prev) => !prev);
-  };
-
+export default function CheckboxCard({
+  text = '',
+  isChecked,
+  toggleCheckbox,
+}: CheckboxCardProps) {
   return (
-    <StyledCheckboxCard isChecked={isChecked}>
+    <StyledCheckboxCard $isChecked={isChecked}>
       <Checkbox isChecked={isChecked} toggleCheckbox={toggleCheckbox} />
-      <CardText isChecked={isChecked}>{text}</CardText>
+      <CardText $isChecked={isChecked}>{text}</CardText>
     </StyledCheckboxCard>
   );
 }

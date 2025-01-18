@@ -1,14 +1,15 @@
 import styled from 'styled-components';
 import Check from '@/assets/images/icons/check.svg?react';
 
-export const StyledCheckbox = styled.div<{ isChecked: boolean }>`
+// Checkbox 컨테이너
+export const StyledCheckbox = styled.div<{ $isChecked: boolean }>`
   width: 22px;
   height: 22px;
-  border: ${({ isChecked, theme }) =>
-    isChecked ? 'none' : `2px solid ${theme.color.gray['100']}`};
+  border: ${({ $isChecked, theme }) =>
+    $isChecked ? 'none' : `2px solid ${theme.color.gray['100']}`};
   border-radius: 0.25rem;
-  background-color: ${({ isChecked, theme }) =>
-    isChecked ? theme.color.primary['500'] : 'transparent'};
+  background-color: ${({ $isChecked, theme }) =>
+    $isChecked ? theme.color.primary['500'] : 'transparent'};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -19,15 +20,17 @@ export const StyledCheckbox = styled.div<{ isChecked: boolean }>`
     transform 0.1s ease;
 
   &:hover {
-    border-color: ${({ isChecked, theme }) =>
-      isChecked ? 'transparent' : theme.color.primary['300']};
+    border-color: ${({ $isChecked, theme }) =>
+      $isChecked ? 'transparent' : theme.color.primary['300']};
   }
 `;
 
-export const StyledIcon = styled(Check)<{ isChecked: boolean }>`
-  width: 40px;
-  height: 32px;
-  opacity: ${({ isChecked }) => (isChecked ? 1 : 0)};
+// 체크 아이콘
+export const StyledIcon = styled(Check)<{ $isChecked: boolean }>`
+  width: 16px;
+  height: 16px;
+  fill: ${({ theme }) => theme.color.gray['0']};
+  opacity: ${({ $isChecked }) => ($isChecked ? 1 : 0)};
   transition:
     opacity 0.1s ease,
     transform 0.1s ease;

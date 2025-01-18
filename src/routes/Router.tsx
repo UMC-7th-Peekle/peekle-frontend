@@ -1,7 +1,9 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Layout from '@/layouts/Layout';
 import { HomePage } from '@/pages';
-import ComponentsPage from '@/pages/TestPage/ComponentsPage';
+import InputComponentsPage from '@/pages/TestPage/InputComponentsPage';
+import CalendarPage from '@/pages/TestPage/CalendarPage';
+import { SearchBarPage } from '@/pages/TestPage/SearchBarPage';
 
 const ProtectedPage = ({ children }: { children: React.ReactNode }) => {
   return children;
@@ -31,8 +33,16 @@ const router = createBrowserRouter(
           // element: <SignInPage />
         },
         {
-          path: '/test/components',
-          element: <ComponentsPage />,
+          path: '/test/input-components',
+          element: <InputComponentsPage />,
+        },
+        {
+          path: '/test/calendar',
+          element: <CalendarPage />,
+        },
+        {
+          path: '/test/searchbar',
+          element: <SearchBarPage />,
         },
       ],
     },

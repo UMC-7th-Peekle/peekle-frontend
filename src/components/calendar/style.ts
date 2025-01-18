@@ -1,7 +1,12 @@
 import styled from 'styled-components';
 import Calendar from 'react-calendar';
+import ArrowLeft from '@/assets/images/icons/arrow-left.svg?react';
+import ArrowRight from '@/assets/images/icons/arrow-right.svg?react';
 
-export const StyledCalendar = styled(Calendar)<{ rangeHeight?: string }>`
+export const StyledCalendar = styled(Calendar)<{
+  rangeHeight?: string;
+  isOnly: boolean;
+}>`
   border: none;
   width: 100%;
   max-width: 412px;
@@ -25,6 +30,7 @@ export const StyledCalendar = styled(Calendar)<{ rangeHeight?: string }>`
       font-size: 1.125rem; /* 18px */
       font-weight: 600;
       background-color: ${(props) => props.theme.color.gray['0']};
+      pointer-events: none;
     }
 
     /* 년도 넘기는 버튼 숨기기 */
@@ -34,11 +40,28 @@ export const StyledCalendar = styled(Calendar)<{ rangeHeight?: string }>`
     }
 
     /* 달 넘기는 버튼 스타일 */
-    .react-calendar__navigation__arrow {
-      color: ${(props) => props.theme.color.gray['500']};
-      font-size: 1.5rem;
-      font-weight: 400;
-      background-color: ${(props) => props.theme.color.gray['0']};
+    .react-calendar__navigation__prev-button,
+    .react-calendar__navigation__next-button {
+      background: none;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    /* 왼쪽 화살표 버튼 */
+    .react-calendar__navigation__prev-button {
+      &::before {
+        content: '';
+      }
+    }
+
+    /* 오른쪽 화살표 버튼 */
+    .react-calendar__navigation__next-button {
+      &::before {
+        content: '';
+      }
     }
   }
 
@@ -59,7 +82,7 @@ export const StyledCalendar = styled(Calendar)<{ rangeHeight?: string }>`
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      z-index: 2;
+      z-index: 100;
     }
   }
 
@@ -106,8 +129,9 @@ export const StyledCalendar = styled(Calendar)<{ rangeHeight?: string }>`
     height: ${(props) => props.rangeHeight || '65%'};
     border-radius: 50%;
     background-color: ${(props) => props.theme.color.primary['500']};
-    z-index: 1;
+    z-index: 50;
   }
+
   .react-calendar__tile.startDay::after {
     content: '';
     position: absolute;
@@ -117,8 +141,10 @@ export const StyledCalendar = styled(Calendar)<{ rangeHeight?: string }>`
     width: 50%;
     height: ${(props) => props.rangeHeight || '65%'};
     background-color: ${(props) => props.theme.color.primary['100']};
-    z-index: 0;
+    z-index: 10;
+    display: ${(props) => (props.isOnly ? 'block' : 'none')};
   }
+
   .react-calendar__tile.endDay::after {
     content: '';
     position: absolute;
@@ -128,7 +154,7 @@ export const StyledCalendar = styled(Calendar)<{ rangeHeight?: string }>`
     width: 50%;
     height: ${(props) => props.rangeHeight || '65%'};
     background-color: ${(props) => props.theme.color.primary['100']};
-    z-index: 0;
+    z-index: 10;
   }
 
   .selectedDay {
@@ -153,5 +179,28 @@ export const StyledCalendar = styled(Calendar)<{ rangeHeight?: string }>`
     abbr {
       text-decoration: none;
     }
+  }
+`;
+
+/* 화살표 아이콘 스타일 */
+export const StyledArrowLeft = styled(ArrowLeft)`
+  width: 18px;
+  height: 18px;
+  path {
+    stroke: ${(props) => props.theme.color.gray['500']};
+  }
+  &:hover path {
+    stroke: ${(props) => props.theme.color.gray['600']};
+  }
+`;
+
+export const StyledArrowRight = styled(ArrowRight)`
+  width: 18px;
+  height: 18px;
+  path {
+    stroke: ${(props) => props.theme.color.gray['500']};
+  }
+  &:hover path {
+    stroke: ${(props) => props.theme.color.gray['600']};
   }
 `;

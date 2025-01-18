@@ -1,14 +1,14 @@
 import { StyledCheckbox, StyledIcon } from './style';
 
-export default function Checkbox({ isChecked, toggleCheckbox }: props) {
-  return (
-    <StyledCheckbox onClick={toggleCheckbox} isChecked={isChecked}>
-      <StyledIcon isChecked={isChecked} />
-    </StyledCheckbox>
-  );
-}
-
-interface props {
+interface Props {
   isChecked: boolean;
   toggleCheckbox: VoidFunction;
+}
+
+export default function Checkbox({ isChecked, toggleCheckbox }: Props) {
+  return (
+    <StyledCheckbox onClick={toggleCheckbox} $isChecked={isChecked}>
+      <StyledIcon $isChecked={isChecked} />
+    </StyledCheckbox>
+  );
 }
