@@ -16,6 +16,9 @@ export const RadioWrapper = styled.label<RadioWrapperProps>`
       ? props.theme.color.gray['900']
       : props.theme.color.gray['400']};
   font-size: 1.125rem;
+  transition:
+    color 0.2s ease,
+    font-weight 0.2s ease;
 `;
 
 export const RadioInput = styled.input.attrs({ type: 'radio' })`
@@ -45,6 +48,9 @@ export const RadioIcon = styled.span<RadioIconProps>`
         ? props.theme.color.primary['500']
         : props.theme.color.gray['200']};
   background-color: #fff;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
 
   &:after {
     content: '';
@@ -57,5 +63,8 @@ export const RadioIcon = styled.span<RadioIconProps>`
     height: 0.688rem;
     border-radius: 50%;
     background-color: ${(props) => props.theme.color.primary['500']};
+    transition:
+      background-color 0.2s ease,
+      transform 0.2s ease;
   }
 `;

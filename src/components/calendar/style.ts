@@ -3,10 +3,13 @@ import Calendar from 'react-calendar';
 
 export const StyledCalendar = styled(Calendar)<{ rangeHeight?: string }>`
   border: none;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 412px;
+  width: 100%;
+  max-width: 412px;
   height: 351px;
+
+  @media (min-width: 412px) {
+    width: 412px;
+  }
 
   /* 네비게이션 스타일 */
   .react-calendar__navigation {
@@ -83,10 +86,12 @@ export const StyledCalendar = styled(Calendar)<{ rangeHeight?: string }>`
   .react-calendar__tile.in-range::before {
     content: '';
     position: absolute;
-    width: 100%;
+    width: 120%;
+    left: -10%;
     height: ${(props) => props.rangeHeight || '65%'};
     background-color: ${(props) => props.theme.color.primary['100']};
     z-index: 0;
+    border-color: ${(props) => props.theme.color.primary['100']};
   }
 
   /* startDay, endDay 스타일 */

@@ -19,18 +19,20 @@ export default function CalendarComponent() {
     date.getTime() > startDay.getTime() && date.getTime() < endDay.getTime();
 
   return (
-    <StyledCalendar
-      rangeHeight="66%" // 선택된 날짜 원, 범위 높이 조정
-      onChange={onChange}
-      value={value}
-      formatDay={(_, date) => `${date.getDate()}`}
-      tileClassName={({ date }) => {
-        if (isSameDay(date, today)) return 'today';
-        if (isSameDay(date, startDay)) return 'selectedDay startDay';
-        if (isSameDay(date, endDay)) return 'selectedDay endDay';
-        if (isInRange(date)) return 'in-range';
-        return '';
-      }}
-    />
+    <div>
+      <StyledCalendar
+        rangeHeight="66%" // 선택된 날짜 원, 범위 높이 조정
+        onChange={onChange}
+        value={value}
+        formatDay={(_, date) => `${date.getDate()}`}
+        tileClassName={({ date }) => {
+          if (isSameDay(date, today)) return 'today';
+          if (isSameDay(date, startDay)) return 'selectedDay startDay';
+          if (isSameDay(date, endDay)) return 'selectedDay endDay';
+          if (isInRange(date)) return 'in-range';
+          return '';
+        }}
+      />
+    </div>
   );
 }
