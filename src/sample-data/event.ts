@@ -1,11 +1,11 @@
 export const events = [
   {
-    category: '교육',
+    category: 'education',
     date: '12월 6일 (화) 오후 2시',
     time: '매일 오전 11시 30분 ~ 오후 5시',
     location: '동작구',
     center: '동작50플러스센터',
-    price: '무료',
+    price: '50000',
     images: [
       'https://www.kcie.or.kr/assets/pc/images/yeouitv/visit_main.png?v0.3',
       'https://www.choicenews.co.kr/news/photo/202409/135923_98910_4746.jpg',
@@ -21,16 +21,16 @@ export const events = [
 ※ 강좌수료 시 수료자에게 오픈 단톡방 안내링크 발송
 ※ 우선신청기회는 오픈단톡방 통해 별도 안내
 ※ 일자리참여 가산점 부여는 일관련 교육 및 공공일자리 등 공통.`,
-    startDate: '2025-12-06',
-    endDate: '2025-12-30',
+    startDate: '2025-12-06T00:00:00+09:00',
+    endDate: '2025-12-30T00:00:00+09:00',
   },
   {
-    category: '교육',
+    category: 'education',
     date: '12월 6일 (화) 오후 2시',
     time: '매일 오전 11시 30분 ~ 오후 5시',
     location: '동작구',
     center: '동작50플러스센터',
-    price: '무료',
+    price: '40000',
     images: [
       'https://www.choicenews.co.kr/news/photo/202409/135923_98910_4746.jpg',
       'https://www.kcie.or.kr/assets/pc/images/yeouitv/visit_main.png?v0.3',
@@ -46,16 +46,16 @@ export const events = [
 ※ 강좌수료 시 수료자에게 오픈 단톡방 안내링크 발송
 ※ 우선신청기회는 오픈단톡방 통해 별도 안내
 ※ 일자리참여 가산점 부여는 일관련 교육 및 공공일자리 등 공통.`,
-    startDate: '2025-01-06',
-    endDate: '2025-01-14',
+    startDate: '2025-01-06T00:00:00+09:00',
+    endDate: '2025-01-14T00:00:00+09:00',
   },
   {
-    category: '교육',
+    category: 'activity',
     date: '12월 6일 (화) 오후 2시',
     time: '매일 오전 11시 30분 ~ 오후 5시',
     location: '동작구',
     center: '동작50플러스센터',
-    price: '무료',
+    price: '0',
     images: [],
     title: '신중년 전환기 노후연금과 자산관리',
     description: `참여자 특전
@@ -68,7 +68,7 @@ export const events = [
 ※ 강좌수료 시 수료자에게 오픈 단톡방 안내링크 발송
 ※ 우선신청기회는 오픈단톡방 통해 별도 안내
 ※ 일자리참여 가산점 부여는 일관련 교육 및 공공일자리 등 공통.`,
-    startDate: '2025-02-06',
-    endDate: '2025-02-14',
+    startDate: '2025-02-06T00:00:00+09:00',
+    endDate: '2025-02-14T00:00:00+09:00',
   },
 ];

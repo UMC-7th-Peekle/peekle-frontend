@@ -21,7 +21,7 @@ const useEventFilter = ({
     if (queryValue) {
       setStoredValue(queryValue); // 쿼리값 있으면 -> 쿼리 사용
     } else if (storedValue) {
-      setQueryValue(storedValue); // 쿼리값 없으면 -> 세션스토리지 값 사용
+      setQueryValue(storedValue); // 쿼리값 없으면 -> 세션스토리지 값 사용해 쿼리 설정
     }
   }, [queryValue, setQueryValue, storedValue, setStoredValue]);
 
