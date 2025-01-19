@@ -3,21 +3,21 @@ import { EventCardProps } from '@/types/event';
 import { formatDateToMonthDay, priceFormatter } from '@/utils';
 import { events } from '@/sample-data/event';
 import { EventData } from '@/types/event';
+import { useNavigate } from 'react-router-dom';
 
 export const EventCard = ({ id }: EventCardProps) => {
+  const navigate = useNavigate();
   const eventInfo = events.find((event: EventData) => event.id === id);
   if (!eventInfo) return;
 
   const { images, title, startDate, endDate, location, price } = eventInfo;
   return (
-    <S.EventCard>
-      <S.ImageContainer className="image-container">
-        {images[0] ? (
+    <S.EventCard onClick={() => navigate(`/event/${id}`)}>
+      <S.ImageContainer>
+        {images[0] ? ( // 썸네일 이미지 있으면 그거 쓰기
           <S.Image src={images[0]} alt={`${title}-img`} />
         ) : (
-          <S.EmptyImageContainer>
-            <S.DefaultImageIcon />
-          </S.EmptyImageContainer>
+          <S.DefaultImageIcon />
         )}
       </S.ImageContainer>
       <S.Info>

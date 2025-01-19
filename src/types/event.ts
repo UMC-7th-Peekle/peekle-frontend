@@ -47,3 +47,17 @@ export interface MyLocationStore {
   myLocation: MyLocation | null;
   setMyLocation: (location: MyLocation) => void;
 }
+
+// ImageSlider
+export interface ImageSliderProps {
+  images: string[];
+  title: string; // 접근성용
+}
+
+// FilePagination
+export interface FilePaginationProps {
+  fileLength: number;
+  currentPage: number;
+  onPrevPage: () => void;
+  onNextPage: () => void;
+}

@@ -9,3 +9,5 @@ export { default as confirm } from './confirm';
 
 export { default as calculateDistance } from './calculateDistance';
 export { default as priceFormatter } from './priceFormatter';
+export { default as copyToClipboard } from './copyToClipBoard';
+export { default as getLabelFromValue } from './getLabelFromValue';

@@ -29,7 +29,7 @@ export const BottomSheet = styled.div<{ $isOpen: boolean }>`
     width: 100%;
   } //자식요소가 width를 100%로 채우게
 
-  animation: ${({ $isOpen }) => ($isOpen ? slideIn : slideOut)} 0.3s ease;
+  animation: ${({ $isOpen }) => ($isOpen ? slideIn : slideOut)} 0.2s ease;
   transform: translateY(
     ${({ $isOpen }) => ($isOpen ? '0' : '100%')}
   ); // 애니메이션 끝난 상태 유지

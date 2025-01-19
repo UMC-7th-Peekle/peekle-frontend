@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, SVGAttributes } from 'react';
 import {
   SORT_OPTIONS,
   CATEGORY_OPTIONS,
@@ -101,4 +101,17 @@ export interface SelectProps {
   option: SelectOption; // select 종류 === 쿼리 파람 키
   defaultValue: string; // 기본값
   defaultLabel: string; // 기본 라벨
+}
+
+// ToggleHeart
+export interface ToggleHeartProps {
+  size: number;
+  borderColor: string;
+  isActive: boolean;
+  onClick: () => void;
+}
+
+export interface HeartSVGProps extends SVGAttributes<SVGElement> {
+  $size?: number;
+  $borderColor?: string;
 }
