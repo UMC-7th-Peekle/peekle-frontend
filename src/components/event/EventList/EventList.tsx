@@ -7,7 +7,7 @@ import { useMyLocationStore } from '@/stores';
 import { calculateDistance } from '@/utils';
 import { useFilteredEventStore } from '@/stores';
 
-const EventList = () => {
+const EventList = ({ isSearchPage = false }: { isSearchPage?: boolean }) => {
   // 필터 상태
   const [sortQuery] = useQueryState('sort');
   const [categoryQuery] = useQueryState('category');
@@ -15,8 +15,10 @@ const EventList = () => {
   const [priceQuery] = useQueryState('price');
   const [locationQuery] = useQueryState('location');
 
+  const [searchQuery] = useQueryState('q');
+
   const { myLocation } = useMyLocationStore();
-  const { setFilteredEvent } = useFilteredEventStore(); // 전역 필터딩 행사들
+  const { filteredEvent, setFilteredEvent } = useFilteredEventStore(); // 전역 필터딩 행사들
 
   // 필터링된 이벤트를 useMemo로 메모이제이션
   const filteredEvents = useMemo(() => {
@@ -53,9 +55,14 @@ const EventList = () => {
         if (!locations.includes(event.location)) return false;
       }
 
+      // 검색어 필터
+      if (searchQuery && searchQuery.length >= 2) {
+        if (!event.title.includes(searchQuery)) return false;
+      }
+
       return true;
     });
-  }, [categoryQuery, durationQuery, priceQuery, locationQuery]);
+  }, [categoryQuery, durationQuery, priceQuery, locationQuery, searchQuery]);
 
   // 정렬된 이벤트도 useMemo로 메모이제이션
   const sortedEvents = useMemo(() => {
@@ -123,14 +130,41 @@ const EventList = () => {
   // 필터링/정렬된 결과를 전역 상태에 반영
   useEffect(() => {
     setFilteredEvent(sortedEvents);
-  }, [sortedEvents, setFilteredEvent]);
+  }, [filteredEvent, sortedEvents, setFilteredEvent]);
+
+  const handleCardClick = () => {
+    if (isSearchPage) {
+      const recentSearch = JSON.parse(
+        localStorage.getItem('recent-search') ?? '[]',
+      );
+      localStorage.setItem(
+        'recent-search',
+        JSON.stringify([...new Set([searchQuery, ...recentSearch])]),
+      );
+    }
+  };
 
   return (
     <S.Container>
       {sortedEvents.length > 0 ? (
-        sortedEvents.map((event) => <EventCard key={event.id} id={event.id} />)
+        sortedEvents.map((event) => (
+          <EventCard
+            key={event.id}
+            id={event.id}
+            onClick={() => handleCardClick()}
+          />
+        ))
       ) : (
-        <S.EmptyText>선택하신 조건에 맞는 행사가 없습니다.</S.EmptyText>
+        <S.EmptyContainer>
+          {isSearchPage ? (
+            <>
+              <S.WarningIcon />
+              <S.EmptyText>검색 결과가 없습니다.</S.EmptyText>
+            </>
+          ) : (
+            <S.EmptyText>선택하신 조건에 맞는 행사가 없습니다.</S.EmptyText>
+          )}
+        </S.EmptyContainer>
       )}
     </S.Container>
   );

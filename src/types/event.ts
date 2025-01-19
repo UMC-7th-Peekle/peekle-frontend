@@ -16,6 +16,7 @@ export interface EventData {
 }
 export interface EventCardProps {
   id: string;
+  onClick: () => void;
 }
 
 export interface FilteredEventStore {

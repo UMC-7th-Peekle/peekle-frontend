@@ -16,10 +16,9 @@ export const ListContainer = styled.header`
 `;
 
 export const PanelContainer = styled.section`
-  padding: 0 20px;
+  padding: 0 20px 30px 20px;
   display: flex;
   flex-direction: column;
-  /* background-color: red; */
 `;
 
 export const TriggerBtn = styled.button<{ $isActive: boolean }>`

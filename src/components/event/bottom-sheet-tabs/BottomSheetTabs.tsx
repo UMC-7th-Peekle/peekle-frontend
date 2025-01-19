@@ -1,6 +1,6 @@
 import * as S from './BottomSheetTabs.styles';
 import { useTabsStore } from '@/stores';
-import { useBottomSheetStore } from '@/stores';
+import { useBottomSheetStore, useFilteredEventStore } from '@/stores';
 import { useEventFilter } from '@/hooks';
 
 import { Tabs } from '@/components';
@@ -13,6 +13,7 @@ import Location from './Location/Location';
 export const BottomSheetTabs = () => {
   const { activeTab } = useTabsStore();
   const { setActiveBottomSheet } = useBottomSheetStore();
+  const { filteredEvent } = useFilteredEventStore();
   const { clearFilter } = useEventFilter();
 
   return (
@@ -51,7 +52,7 @@ export const BottomSheetTabs = () => {
             setActiveBottomSheet(null);
           }}
         >
-          {} 개 활동 보기
+          {filteredEvent.length}개 활동 보기
         </button>
       </S.BtnContainer>
     </S.Container>
