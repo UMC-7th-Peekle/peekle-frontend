@@ -1,7 +1,7 @@
-export interface Event {
+export interface EventData {
   id: string;
   category: string;
-  date: string;
+  StartDateTime: string;
   time: string;
   location: string;
   center: string;
@@ -15,17 +15,12 @@ export interface Event {
   endDate: string;
 }
 export interface EventCardProps {
-  category: string;
-  date: string;
-  time: string;
-  location: string;
-  center: string;
-  price: string;
-  images: string[];
-  title: string;
-  description: string;
-  startDate: string;
-  endDate: string;
+  id: string;
+}
+
+export interface FilteredEventStore {
+  filteredEvent: EventData[];
+  setFilteredEvent: (event: EventData[]) => void;
 }
 
 export type DateRange = [Date | null, Date | null];
@@ -38,7 +33,17 @@ export interface UseEventFilterProps {
   type?: FilterType;
 }
 
-// 위치 동의
+// Map
 export interface LocationConfirmProps {
   onLocationAllow: () => void;
+}
+
+export interface MyLocation {
+  latitude: number;
+  longitude: number;
+}
+
+export interface MyLocationStore {
+  myLocation: MyLocation | null;
+  setMyLocation: (location: MyLocation) => void;
 }

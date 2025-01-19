@@ -1,12 +1,13 @@
 export const events = [
   {
+    id: '1',
     category: 'education',
-    date: '12월 6일 (화) 오후 2시',
+    StartDateTime: '1월 27일 (화) 오전 11시 30분',
     time: '매일 오전 11시 30분 ~ 오후 5시',
     location: '동작구',
-    latitude: 37.4787739084,
-    longitude: 126.8865152102,
-    center: '동작50플러스센터',
+    latitude: 37.49887944,
+    longitude: 126.9516345,
+    center: '동작문화센터',
     price: '50000',
     images: [
       'https://www.kcie.or.kr/assets/pc/images/yeouitv/visit_main.png?v0.3',
@@ -23,17 +24,18 @@ export const events = [
 ※ 강좌수료 시 수료자에게 오픈 단톡방 안내링크 발송
 ※ 우선신청기회는 오픈단톡방 통해 별도 안내
 ※ 일자리참여 가산점 부여는 일관련 교육 및 공공일자리 등 공통.`,
-    startDate: '2025-12-06T00:00:00+09:00',
-    endDate: '2025-12-30T00:00:00+09:00',
+    startDate: '2025-01-27T00:00:00+09:00',
+    endDate: '2025-02-27T00:00:00+09:00',
   },
   {
+    id: '2',
     category: 'culture',
-    date: '12월 6일 (화) 오후 2시',
-    time: '매일 오전 11시 30분 ~ 오후 5시',
-    location: '동작구',
-    latitude: 37.474123839839,
-    longitude: 126.8845127349,
-    center: '동작50플러스센터',
+    StartDateTime: '3월 2일 (화) 오전 11시',
+    time: '매주 오전 11시 ~ 오후 5시',
+    location: '강남구',
+    latitude: 37.495188,
+    longitude: 127.0332163,
+    center: '강남주민센터',
     price: '40000',
     images: [
       'https://www.choicenews.co.kr/news/photo/202409/135923_98910_4746.jpg',
@@ -50,16 +52,17 @@ export const events = [
 ※ 강좌수료 시 수료자에게 오픈 단톡방 안내링크 발송
 ※ 우선신청기회는 오픈단톡방 통해 별도 안내
 ※ 일자리참여 가산점 부여는 일관련 교육 및 공공일자리 등 공통.`,
-    startDate: '2025-01-06T00:00:00+09:00',
-    endDate: '2025-01-14T00:00:00+09:00',
+    startDate: '2025-03-02T00:00:00+09:00',
+    endDate: '2025-03-14T00:00:00+09:00',
   },
   {
+    id: '3',
     category: 'activity',
-    date: '12월 6일 (화) 오후 2시',
-    time: '매일 오전 11시 30분 ~ 오후 5시',
+    StartDateTime: '4월 6일 (화) 오후 2시',
+    time: '매일 오후 2시 ~ 오후 5시',
     location: '동작구',
-    latitude: 37.483750642873,
-    longitude: 126.87975991786,
+    latitude: 37.512952,
+    longitude: 126.941571,
     center: '동작50플러스센터',
     price: '0',
     images: [],
@@ -74,7 +77,7 @@ export const events = [
 ※ 강좌수료 시 수료자에게 오픈 단톡방 안내링크 발송
 ※ 우선신청기회는 오픈단톡방 통해 별도 안내
 ※ 일자리참여 가산점 부여는 일관련 교육 및 공공일자리 등 공통.`,
-    startDate: '2025-02-06T00:00:00+09:00',
-    endDate: '2025-02-14T00:00:00+09:00',
+    startDate: '2025-04-06T00:00:00+09:00',
+    endDate: '2025-04-14T00:00:00+09:00',
   },
 ];

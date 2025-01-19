@@ -69,14 +69,13 @@ export const PREDEFINED_RANGES = {
 
 // Marker
 export const MAP_MARKERS = {
-  my_location: `data:image/svg+xml,${encodeURIComponent(
-    `<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="none" viewBox="0 0 36 36">
+  my_location: `
+    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="none" viewBox="0 0 36 36">
       <circle cx="18" cy="18" r="18" fill="#1855DA" opacity=".3"/>
       <circle cx="18" cy="18" r="7.5" fill="#1855DA" stroke="#fff" stroke-width="3"/>
     </svg>`,
-  )}`,
-  activity: `data:image/svg+xml,${encodeURIComponent(
-    `<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" fill="none" viewBox="0 0 44 44">
+  activity: `
+    <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" fill="none" viewBox="0 0 44 44">
       <g filter="url(#a)">
         <rect width="36" height="36" x="4" fill="#4AA662" rx="18"/>
         <rect width="33" height="33" x="5.5" y="1.5" stroke="#fff" stroke-width="3" rx="16.5"/>
@@ -95,9 +94,8 @@ export const MAP_MARKERS = {
         </filter>
       </defs>
     </svg>`,
-  )}`,
-  culture: `data:image/svg+xml,${encodeURIComponent(
-    `<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" fill="none" viewBox="0 0 44 44">
+  culture: `
+    <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" fill="none" viewBox="0 0 44 44">
       <g filter="url(#a)">
         <rect width="36" height="36" x="4" fill="#4AA662" rx="18"/>
         <rect width="33" height="33" x="5.5" y="1.5" stroke="#fff" stroke-width="3" rx="16.5"/>
@@ -116,9 +114,8 @@ export const MAP_MARKERS = {
         </filter>
       </defs>
     </svg>`,
-  )}`,
-  education: `data:image/svg+xml,${encodeURIComponent(
-    `<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" fill="none" viewBox="0 0 44 44">
+  education: `
+    <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" fill="none" viewBox="0 0 44 44">
       <g filter="url(#a)">
         <rect width="36" height="36" x="4" fill="#4AA662" rx="18"/>
         <rect width="33" height="33" x="5.5" y="1.5" stroke="#fff" stroke-width="3" rx="16.5"/>
@@ -137,5 +134,4 @@ export const MAP_MARKERS = {
         </filter>
       </defs>
     </svg>`,
-  )}`,
 };
