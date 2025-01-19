@@ -66,10 +66,13 @@ export interface TabListProps {
 
 // BottomSheet
 export interface BottomSheetStore {
-  isBottomSheetOpen: boolean;
-  activeTab: string; // BottomSheet에서 쓰이는 탭 (어떤 탭 활성화 할건지)
-  setIsBottomSheetOpen: (issBottomSheetOpen: boolean) => void;
-  setActiveTab: (tab: string) => void;
+  activeBottomSheet: string | null; // 현재 활성화된 BottomSheet (없으면 null)
+  setActiveBottomSheet: (sheet: string | null) => void; // 활성화된 BottomSheet 설정
+}
+
+export interface BottomSheetProps {
+  id: string;
+  children: ReactNode;
 }
 
 // Chip

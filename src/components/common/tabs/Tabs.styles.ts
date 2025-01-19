@@ -8,6 +8,7 @@ export const TabsContainer = styled.section`
 `;
 
 export const ListContainer = styled.header`
+  width: 100%;
   display: flex;
   gap: 16px;
   border-bottom: 1px solid ${({ theme }) => theme.color.gray[50]};

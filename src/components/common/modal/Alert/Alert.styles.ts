@@ -3,6 +3,9 @@ import WarningSVG from '@/assets/images/icons/warning.svg?react';
 
 export const AlertContainer = styled.div`
   position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
   justify-content: center;

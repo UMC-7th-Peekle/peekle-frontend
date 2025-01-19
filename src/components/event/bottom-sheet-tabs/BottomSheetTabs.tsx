@@ -12,11 +12,11 @@ import Location from './Location/Location';
 
 export const BottomSheetTabs = () => {
   const { activeTab } = useTabsStore();
-  const { setIsBottomSheetOpen } = useBottomSheetStore();
+  const { setActiveBottomSheet } = useBottomSheetStore();
   const { clearFilter } = useEventFilter();
 
   return (
-    <>
+    <S.Container>
       <Tabs defaultValue={activeTab} option="이벤트 필터 탭">
         <Tabs.List>
           <Tabs.Trigger value={'sort'} label="정렬" />
@@ -48,13 +48,13 @@ export const BottomSheetTabs = () => {
         </S.IconBtn>
         <button
           onClick={() => {
-            setIsBottomSheetOpen(false);
+            setActiveBottomSheet(null);
           }}
         >
           {} 개 활동 보기
         </button>
       </S.BtnContainer>
-    </>
+    </S.Container>
   );
 };
 

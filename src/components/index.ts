@@ -12,3 +12,6 @@ export { default as Select } from './common/Select/Select';
 // event
 export { default as EventCard } from './event/EventCard/EventCard';
 export { default as BottomSheetTabs } from './event/bottom-sheet-tabs/BottomSheetTabs';
+export { default as Selects } from './event/Selects';
+export { default as EventList } from './event/EventList/EventList';
+export { default as LocationConfirm } from './event/modal/LocationConfirm';

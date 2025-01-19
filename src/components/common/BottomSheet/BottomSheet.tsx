@@ -1,15 +1,17 @@
 import * as S from './BottomSheet.styles';
-import { ReactNode, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { BottomSheetProps } from '@/types/common';
 import { Portal } from '@/components';
 import { useBottomSheetStore } from '@/stores';
 
-const BottomSheet = ({ children }: { children: ReactNode }) => {
-  const { isBottomSheetOpen, setIsBottomSheetOpen } = useBottomSheetStore();
-  const [isRendered, setIsRendered] = useState(isBottomSheetOpen); // 애니메이션 후 렌더링 상태
+const BottomSheet = ({ id, children }: BottomSheetProps) => {
+  const { activeBottomSheet, setActiveBottomSheet } = useBottomSheetStore();
+  const isOpen = activeBottomSheet === id;
+  const [isRendered, setIsRendered] = useState(false); // 애니메이션 후 렌더링 상태
 
   // 애니메이션 후 렌더링 상태 관리
   useEffect(() => {
-    if (isBottomSheetOpen) {
+    if (isOpen) {
       setIsRendered(true); // BottomSheet가 열릴 때 바로 렌더링
       return;
     } else {
@@ -18,13 +20,13 @@ const BottomSheet = ({ children }: { children: ReactNode }) => {
       }, 300); // 애니메이션 시간 (300ms)
       return () => clearTimeout(timer);
     }
-  }, [isBottomSheetOpen, setIsBottomSheetOpen]);
+  }, [isOpen, isRendered]);
 
   if (!isRendered) return null;
 
   return (
-    <Portal onClose={() => setIsBottomSheetOpen(false)} type="bottom-sheet">
-      <S.BottomSheet $isOpen={isBottomSheetOpen}>
+    <Portal onClose={() => setActiveBottomSheet(null)} type="bottom-sheet">
+      <S.BottomSheet $isOpen={isOpen}>
         <S.LineIcon />
         {children}
       </S.BottomSheet>
@@ -38,7 +40,9 @@ export default BottomSheet;
  * 사용 예시
  * import { BottomSheet } from '@/components'
  *
- * <BottomSheet>
+ * <button onClick={() => setActiveBottomSheet('sheet1')}>Open Sheet 1</button>
+ *
+ * <BottomSheet id="sheet1">
  *  <S.Content>
  *    blabla
  *  </S.Content>

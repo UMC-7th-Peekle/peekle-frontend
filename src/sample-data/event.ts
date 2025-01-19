@@ -4,6 +4,8 @@ export const events = [
     date: '12월 6일 (화) 오후 2시',
     time: '매일 오전 11시 30분 ~ 오후 5시',
     location: '동작구',
+    latitude: 37.4787739084,
+    longitude: 126.8865152102,
     center: '동작50플러스센터',
     price: '50000',
     images: [
@@ -25,10 +27,12 @@ export const events = [
     endDate: '2025-12-30T00:00:00+09:00',
   },
   {
-    category: 'education',
+    category: 'culture',
     date: '12월 6일 (화) 오후 2시',
     time: '매일 오전 11시 30분 ~ 오후 5시',
     location: '동작구',
+    latitude: 37.474123839839,
+    longitude: 126.8845127349,
     center: '동작50플러스센터',
     price: '40000',
     images: [
@@ -54,6 +58,8 @@ export const events = [
     date: '12월 6일 (화) 오후 2시',
     time: '매일 오전 11시 30분 ~ 오후 5시',
     location: '동작구',
+    latitude: 37.483750642873,
+    longitude: 126.87975991786,
     center: '동작50플러스센터',
     price: '0',
     images: [],

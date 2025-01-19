@@ -21,7 +21,7 @@ const Alert = () => {
 export default Alert;
 
 /** 사용법
- * import { alert } from '@/stores/common/modal/useAlertStore';
+ * import { alert } from '@/utils';
  *
  * alert('두 글자 이상 입력해주세요.')
  */

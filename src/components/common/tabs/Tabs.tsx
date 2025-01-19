@@ -31,8 +31,9 @@ export default Tabs;
 /**
  * 사용 예시
  * import { Tabs } from '@/components'
+ * import { useTabsStore } from '@/stores';
  * 
- * const { activeTab } = useBottomSheetStore(); // 전역 상태로 선택됨 탭 관리
+ * const { activeTab } = useTabsStore(); // 전역 상태로 선택됨 탭 관리
  * 
  * <Tabs defaultValue={activeTab} option="이벤트 필터 탭">
     <Tabs.List>

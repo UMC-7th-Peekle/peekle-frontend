@@ -1,7 +1,16 @@
 import styled from 'styled-components';
 import resetSVG from '@/assets/images/icons/reset.svg?react';
 
-export const Container = styled.section``;
+export const Container = styled.section`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  // Tabs 컨테이너가 남은 공간을 채우도록 함
+  & > div:first-child {
+    flex: 1;
+  }
+`;
 
 export const BtnContainer = styled.div`
   display: flex;
@@ -9,7 +18,6 @@ export const BtnContainer = styled.div`
   padding: 20px 16px;
   align-items: center;
   gap: 8px;
-  margin-top: 20px;
 `;
 
 export const IconBtn = styled.button`

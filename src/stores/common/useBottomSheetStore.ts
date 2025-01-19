@@ -2,11 +2,8 @@ import { create } from 'zustand';
 import { BottomSheetStore } from '@/types/common';
 
 const useBottomSheetStore = create<BottomSheetStore>((set) => ({
-  isBottomSheetOpen: false,
-  activeTab: 'sort',
-  setIsBottomSheetOpen: (isBottomSheetOpen: boolean) =>
-    set({ isBottomSheetOpen }),
-  setActiveTab: (tab) => set({ activeTab: tab }),
+  activeBottomSheet: null, // 처음엔 아무 BottomSheet도 열려 있지 않음
+  setActiveBottomSheet: (sheet) => set({ activeBottomSheet: sheet }), // BottomSheet를 하나만 활성화
 }));
 
 export default useBottomSheetStore;

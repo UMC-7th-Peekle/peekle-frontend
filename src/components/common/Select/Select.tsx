@@ -8,7 +8,7 @@ import {
 import { SelectProps } from '@/types/common';
 import { useBottomSheetStore, useTabsStore } from '@/stores';
 import { useEventFilter } from '@/hooks';
-
+import { BOTTOM_SHEET_ID_EVENT_FILTER } from '@/constants/event';
 /**
  * select가 이벤트 외에도 쓰인다면 리팩토링 필요
  */
@@ -53,12 +53,12 @@ export const Select = ({ option, defaultValue, defaultLabel }: SelectProps) => {
     type:
       option === 'category' || option === 'location' ? 'multiple' : 'single',
   });
-  const { setIsBottomSheetOpen } = useBottomSheetStore();
+  const { setActiveBottomSheet } = useBottomSheetStore();
   const { setActiveTab } = useTabsStore();
 
   const handleSelectClick = () => {
     setActiveTab(option); // 클릭한 Select의 option을 activeTab으로 설정
-    setIsBottomSheetOpen(true); //bottomSheet 열기
+    setActiveBottomSheet(BOTTOM_SHEET_ID_EVENT_FILTER); //bottomSheet 열기
   };
 
   const currentValue = storedValue ?? defaultValue;

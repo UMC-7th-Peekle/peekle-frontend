@@ -17,7 +17,8 @@ const Confirm = () => {
 export default Confirm;
 
 /** 사용 예시
- * import { useConfirmStore, confirm } from '@/stores/common/modal/useConfirmStore';
+ * import { useConfirmStore } from '@/stores';
+ * import { confirm } from '@/utils';
  *
  * const { close } = useConfirmStore(); // 모달 닫는 함수
  *
@@ -38,15 +39,6 @@ export default Confirm;
  *    close(); // 모달 닫기
  *  };
  *
- * confirm (
- *  <S.ModalContainer>
- *    <S.ModalTitle>허용하시겠습니까?</S.ModalTitle>
- *    <S.BtnContainer>
- *      <S.AllowBtn onClick={handleAllowBtn}>허용</S.AllowBtn>
- *      <S.NotAllowBtn onClick={handleNotAllowBtn}>허용 안 함</S.NotAllowBtn>
- *    </S.BtnContainer>
- *  </S.ModalContainer>
- * )
  *
  * return (
  *   <>
