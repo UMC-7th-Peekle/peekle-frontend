@@ -2,7 +2,7 @@ import ToggleSearch from '@/components/community/toggle-search';
 import * as S from './style';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
-import BodySection from '@/pages/community/container/BodySection';
+import BodySection from '@/pages/community/container/body-section';
 
 export default function CommunityPage() {
   const navigate = useNavigate();
@@ -13,7 +13,7 @@ export default function CommunityPage() {
         <S.Title>게시판</S.Title>
         <ToggleSearch onClick={() => navigate(ROUTES.COMMUNITY_SEARCH)} />
       </S.Appbar>
-      <BodySection />
+      <BodySection.None />
     </S.MainContainer>
   );
 }
