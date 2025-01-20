@@ -13,7 +13,7 @@ import { theme } from '@/styles/theme';
 import GlobalStyles from '@/styles/GlobalStyles';
 import '@/styles/fonts.css';
 import { Alert, Confirm } from '@/components';
-import Router from '@/routes/router';
+import Router from '@/routes/Router';
 function App() {
   const [isOpen, setIsOpen] = useState<boolean>(false); // ReactQueryDevtoolsPanel 열고 닫기
 

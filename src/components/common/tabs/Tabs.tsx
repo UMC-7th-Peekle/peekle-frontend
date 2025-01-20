@@ -2,9 +2,9 @@ import * as S from './Tabs.style';
 import { useState } from 'react';
 import { TabsContext } from './context/tabs-context';
 import { TabsProps } from '@/types/common';
-import List from '@/components/common/tabs/components/list';
-import Trigger from '@/components/common/tabs/components/trigger';
-import Panel from '@/components/common/tabs/components/panel';
+import List from '@/components/common/tabs/components/List';
+import Trigger from '@/components/common/tabs/components/Trigger';
+import Panel from '@/components/common/tabs/components/Panel';
 
 const Tabs = ({ option, defaultValue, children }: TabsProps) => {
   const [selectedValue, setSelectedValue] = useState(defaultValue);

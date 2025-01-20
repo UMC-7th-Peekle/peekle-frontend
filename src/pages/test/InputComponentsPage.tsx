@@ -20,8 +20,15 @@ export default function InputComponentsPage() {
     setIsChecked((prev) => !prev);
   };
 
-  const handleSearchSubmit = (query: string) => {
-    console.log(`검색 결과: ${query}`);
+  // query - 최근 검색어, key - 페이지명과 같은 구분 지을 수 있는 key 값
+  const handleSearchSubmit = (query: string, key: string) => {
+    const prevQuery = JSON.parse(localStorage.getItem(key) || '[]') as string[];
+    const newQuery = [
+      query,
+      ...prevQuery.filter((item) => item !== query),
+    ].slice(0, 10);
+    localStorage.setItem(key, JSON.stringify(newQuery));
+    console.log(`검색 결과: ${newQuery}`);
   };
 
   return (
