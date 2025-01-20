@@ -22,7 +22,7 @@ export { default as ToggleHeart } from './common/input/toggle-heart';
 // event
 export { default as EventCard } from './event/card';
 export { default as BottomSheetTabs } from './event/bottom-sheet-tabs';
-export { default as Selects } from './event/selects';
+export { default as Selects } from './event/Selects';
 export { default as EventList } from './event/list';
 export { default as LocationConfirm } from './event/location-confirm';
 export { default as FilePagination } from './event/file-pagenation';

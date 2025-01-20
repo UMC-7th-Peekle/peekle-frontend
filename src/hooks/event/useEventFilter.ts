@@ -18,10 +18,8 @@ const useEventFilter = ({
 
   useEffect(() => {
     if (queryValue) {
-      console.log('queryValue를 적용', queryValue);
       setStoredValue(queryValue); // 쿼리값 있으면 -> 쿼리 사용
     } else if (storedValue) {
-      console.log('storedValue를 적용', storedValue);
       setQueryValue(storedValue); // 쿼리값 없으면 -> 세션스토리지 값 사용해 쿼리 설정
     }
   }, [queryValue, setQueryValue, storedValue, setStoredValue]);

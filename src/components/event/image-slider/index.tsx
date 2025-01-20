@@ -27,8 +27,8 @@ const ImageSlider = ({ images, title = 'event' }: ImageSliderProps) => {
           drag="x"
           dragConstraints={{ left: 0, right: 0 }}
           onDragEnd={(_, info) => {
-            if (info.offset.x < -50) slideImage(1);
-            if (info.offset.x > 50) slideImage(-1);
+            if (info.offset.x < -100) slideImage(1);
+            if (info.offset.x > 100) slideImage(-1);
           }}
           initial={{
             opacity: 0,

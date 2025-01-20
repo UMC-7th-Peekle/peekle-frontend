@@ -1,5 +1,5 @@
 import { PanelContainer } from '../style';
-import { useTabsContext } from '../context/TabsContext';
+import { useTabsContext } from '../context/tabsContext';
 import { TabPanelProps } from '@/types/common';
 
 const Panel = ({ value, children }: TabPanelProps) => {
