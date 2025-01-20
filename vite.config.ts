@@ -10,5 +10,5 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
-  base: '/peekle/', // 앱 이름
+  base: '/', // 앱 이름
 });
