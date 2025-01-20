@@ -1,9 +1,12 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Layout from '@/layouts/Layout';
-import { EventPage, EventMapPage } from '@/pages';
-import InputComponentsPage from '@/pages/TestPage/InputComponentsPage';
-import CalendarPage from '@/pages/TestPage/CalendarPage';
-import { SearchBarPage } from '@/pages/TestPage/SearchBarPage';
+import InputComponentsPage from '@/pages/test/InputComponentsPage';
+import CalendarPage from '@/pages/test/CalendarPage';
+import { SearchBarPage } from '@/pages/test/SearchBarPage';
+import Layout from '@/layouts/outlet';
+import EventMapPage from '@/pages/event/EventMapPage';
+import EventPage from '@/pages/event/EventPage';
+import CommunityPage from '@/pages/community/page';
+import UserPage from '@/pages/user/page';
 
 const ProtectedPage = ({ children }: { children: React.ReactNode }) => {
   // 로그인 여부 확인해 페이지 보호 필요
@@ -38,6 +41,14 @@ const router = createBrowserRouter(
           // element: <SignInPage />
         },
         {
+          path: '/community',
+          element: <CommunityPage />,
+        },
+        {
+          path: '/user',
+          element: <UserPage />,
+        },
+        {
           path: '/test/input-components',
           element: <InputComponentsPage />,
         },
@@ -53,7 +64,7 @@ const router = createBrowserRouter(
     },
   ],
   {
-    basename: import.meta.env.BASE_URL,
+    basename: import.meta.env.PUBLIC_URL,
   },
 );
 

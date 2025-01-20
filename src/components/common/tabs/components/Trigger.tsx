@@ -1,6 +1,6 @@
-import { TriggerBtn } from '../Tabs.styles';
+import { TriggerBtn } from '../Tabs.style';
 import { TabTriggerProps } from '@/types/common';
-import { useTabsContext } from '../context/TabsContext';
+import { useTabsContext } from '../context/tabs-context';
 
 const Trigger = ({ value, label, onClick }: TabTriggerProps) => {
   const { selectedValue, setSelectedValue, option } = useTabsContext();

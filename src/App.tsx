@@ -8,12 +8,12 @@ import { NuqsAdapter } from 'nuqs/adapters/react-router/v7';
 import { ErrorBoundary } from 'react-error-boundary';
 import queryClient from './lib/tanstack-query/queryClient';
 import { DeferredLoader, ErrorFallback } from './components';
-import Router from './routes/Router';
 import { ThemeProvider } from 'styled-components';
 import { theme } from '@/styles/theme';
 import GlobalStyles from '@/styles/GlobalStyles';
 import '@/styles/fonts.css';
 import { Alert, Confirm } from '@/components';
+import Router from '@/routes/router';
 function App() {
   const [isOpen, setIsOpen] = useState<boolean>(false); // ReactQueryDevtoolsPanel 열고 닫기
 
