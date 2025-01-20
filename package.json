@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build --base=/peekle/",
+    "build": "tsc -b && vite build --base=/",
     "format": "prettier --cache --write \"**/*.{js,jsx,ts,tsx}\"",
     "lint": "eslint --cache --fix \"**/*.{js,jsx,ts,tsx}\"",
     "preview": "vite preview",
@@ -16,7 +16,6 @@
     "axios": "^1.7.9",
     "endpoint-client": "^0.1.1",
     "framer-motion": "^11.18.1",
-    "lodash": "^4.17.21",
     "nuqs": "^2.3.1",
     "react": "^18.3.1",
     "react-calendar": "^5.1.0",
@@ -36,7 +35,6 @@
     "@eslint/js": "^9.17.0",
     "@hookform/resolvers": "^3.9.1",
     "@tanstack/react-query-devtools": "^5.62.15",
-    "@types/lodash": "^4.17.14",
     "@types/navermaps": "^3.7.8",
     "@types/node": "^22.10.5",
     "@types/react": "^19.0.2",
@@ -65,5 +63,6 @@
       "eslint --cache --fix",
       "prettier --cache --write"
     ]
-  }
+  },
+  "packageManager": "yarn@4.5.3+sha512.3003a14012e2987072d244c720506549c1aab73ee728208f1b2580a9fd67b92d61ba6b08fe93f6dce68fd771e3af1e59a0afa28dd242dd0940d73b95fedd4e90"
 }

@@ -7,6 +7,9 @@ import {
   EventScrapPage,
   EventDetailPage,
 } from '@/pages';
+import InputComponentsPage from '@/pages/TestPage/InputComponentsPage';
+import CalendarPage from '@/pages/TestPage/CalendarPage';
+import { SearchBarPage } from '@/pages/TestPage/SearchBarPage';
 
 const ProtectedPage = ({ children }: { children: React.ReactNode }) => {
   // 로그인 여부 확인해 페이지 보호 필요
@@ -51,6 +54,18 @@ const router = createBrowserRouter(
         {
           path: '/auth/signin',
           // element: <SignInPage />
+        },
+        {
+          path: '/test/input-components',
+          element: <InputComponentsPage />,
+        },
+        {
+          path: '/test/calendar',
+          element: <CalendarPage />,
+        },
+        {
+          path: '/test/searchbar',
+          element: <SearchBarPage />,
         },
       ],
     },

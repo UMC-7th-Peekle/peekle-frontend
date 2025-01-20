@@ -16,17 +16,14 @@ export interface EventData {
   startDate: string;
   endDate: string;
 }
+
+export type DateRange = [Date | null, Date | null];
+
+// event-card
 export interface EventCardProps {
   id: string;
   onClick?: () => void;
 }
-
-export interface FilteredEventStore {
-  filteredEvent: EventData[];
-  setFilteredEvent: (event: EventData[]) => void;
-}
-
-export type DateRange = [Date | null, Date | null];
 
 // event-filter
 type FilterType = 'single' | 'multiple';
