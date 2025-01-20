@@ -1,17 +1,24 @@
 import * as S from './style';
 import { useEffect, useState } from 'react';
 import { DURATION_OPTIONS, PREDEFINED_RANGES } from '@/constants/event';
-import { Chip } from '@/components';
+import { Chip, DateList } from '@/components';
 import { DateRange } from '@/types/event';
-import { formatDate, formatDateWithDayOfWeek } from '@/utils';
-import useEventFilter from '@/hooks/event/useEventFilter';
+import {
+  formatDate,
+  formatDateWithDayOfWeek,
+  isInRange,
+  isSameDay,
+} from '@/utils';
+import { useEventFilter } from '@/hooks';
+
+const today = new Date();
 
 const getDateRangeFromStoredValue = (storedValue: string) => {
   if (storedValue && storedValue !== 'all') {
     const [start, end] = storedValue.split(',').map((date) => new Date(date));
     return [start, end];
   }
-  return [new Date(), null]; // 초기값
+  return [today, null]; // 초기값
 };
 
 const Duration = () => {
@@ -21,11 +28,8 @@ const Duration = () => {
   });
 
   const [dateRange, setDateRange] = useState<DateRange>(() => {
-    if (storedValue && storedValue !== 'all') {
-      const [start, end] = storedValue.split(',').map((date) => new Date(date));
-      return [start, end];
-    }
-    return [new Date(), null]; // 초기값
+    const range = getDateRangeFromStoredValue(storedValue);
+    return [range[0] ?? null, range[1] ?? null] as DateRange;
   });
 
   useEffect(() => {
@@ -72,7 +76,7 @@ const Duration = () => {
   const handleChipSelect = (value: string) => {
     if (value === 'all') {
       handleSelect('all');
-      setDateRange([new Date(), null]);
+      setDateRange([today, null]);
       setIsCalendarOpen(false);
       return;
     }
@@ -88,7 +92,7 @@ const Duration = () => {
 
   // 캘린더 날짜 선택
   const handleCalendarChange = (value: Date) => {
-    if (!dateRange[0] || dateRange[1]) {
+    if (!dateRange[0] || (dateRange[0] && dateRange[1])) {
       setDateRange([value, null]);
     } else {
       const [start] = dateRange;
@@ -129,18 +133,25 @@ const Duration = () => {
           ))}
         </S.ChipContainer>
         <S.DateBtnContainer>
-          <span>{startDateWithDayOfWeek}</span>
+          <DateList date={startDateWithDayOfWeek} />
           {storedValue === 'all' ? (
-            <button onClick={() => setIsCalendarOpen(true)}>
-              {'기간 추가'}
-            </button>
+            <DateList.Plus
+              isFocus={isCalendarOpen}
+              onClick={() => setIsCalendarOpen(true)}
+            />
           ) : (
-            <span>{endDateWithDayOfWeek}</span>
+            <DateList date={endDateWithDayOfWeek} />
           )}
         </S.DateBtnContainer>
       </S.TopContainer>
       {isCalendarOpen && (
         <S.StyledCalendar
+          rangeHeight="66%"
+          isOnly={
+            !dateRange[0] ||
+            (dateRange[0] && !dateRange[1]) ||
+            isSameDay(dateRange[0], dateRange[1])
+          }
           onChange={(value) => handleCalendarChange(value as Date)}
           value={dateRange}
           locale="ko-KR"
@@ -148,8 +159,25 @@ const Duration = () => {
           formatDay={formatCalendarDay}
           // showNeighboringMonth={false} /* 이전 달 다음 달 보이지 않게 */
           calendarType="gregory" /* 일요일부터 시작 */
+          prevLabel={<S.StyledArrowLeft />}
+          nextLabel={<S.StyledArrowRight />}
           prev2Label={null} /* 년 단위 이동 없앰 */
           next2Label={null} /* 년 단위 이동 없앰 */
+          tileClassName={({ date }) => {
+            const isStart = isSameDay(date, dateRange[0]);
+            const isEnd = isSameDay(date, dateRange[1]);
+            const inRange =
+              dateRange[0] &&
+              dateRange[1] &&
+              isInRange(date, dateRange[0], dateRange[1]);
+            const isToday = isSameDay(date, today);
+
+            if (isStart) return 'selectedDay startDay';
+            if (isEnd) return 'selectedDay endDay';
+            if (inRange) return isToday ? 'in-range' : 'in-range';
+            if (isToday) return 'today';
+            return '';
+          }}
         />
       )}
     </S.Container>

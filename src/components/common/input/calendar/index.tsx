@@ -1,6 +1,5 @@
 import { StyledCalendar, StyledArrowLeft, StyledArrowRight } from './style';
-import { isSameDay } from '@/utils/date/isSameDay';
-import { isInRange } from '@/utils/date/isInRange';
+import { isSameDay, isInRange } from '@/utils';
 import { useState } from 'react';
 import { useDateStore } from './store';
 

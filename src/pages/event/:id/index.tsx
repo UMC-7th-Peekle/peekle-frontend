@@ -73,7 +73,9 @@ const EventDetailPage = () => {
             </S.InfoRow>
             <S.InfoRow>
               <S.CoinIcon />
-              <S.InfoRowText>{priceFormatter(price)}원</S.InfoRowText>
+              <S.InfoRowText>
+                {price === '0' ? '무료' : `${priceFormatter(price)}원`}
+              </S.InfoRowText>
             </S.InfoRow>
           </S.Info>
         </S.InfoContainer>

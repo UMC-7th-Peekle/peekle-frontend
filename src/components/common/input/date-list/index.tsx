@@ -4,24 +4,24 @@ import {
   DateListTextPlus,
   PlusIcon,
 } from './style';
-import { formatDate } from '@/utils/date/formatDate';
 
 interface Props {
-  date?: Date | null;
+  date?: string | null;
   isFocus?: boolean;
+  onClick?: () => void;
 }
 
 const DateList = ({ date, isFocus = false }: Props) => {
   return (
     <DateListCard isFocus={isFocus}>
-      <DateListText>{formatDate(date)}</DateListText>
+      <DateListText>{date}</DateListText>
     </DateListCard>
   );
 };
 
-DateList.Plus = ({ isFocus = false }: Props) => {
+DateList.Plus = ({ isFocus = false, onClick }: Props) => {
   return (
-    <DateListCard isFocus={isFocus}>
+    <DateListCard isFocus={isFocus} onClick={onClick}>
       <DateListTextPlus>{'기간 추가'}</DateListTextPlus>
       <PlusIcon />
     </DateListCard>

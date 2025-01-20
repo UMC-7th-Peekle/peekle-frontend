@@ -1,4 +1,4 @@
-export const isInRange = (
+const isInRange = (
   date: Date | null,
   start: Date | null,
   end: Date | null,
@@ -6,3 +6,5 @@ export const isInRange = (
   if (!date || !start || !end) return false;
   return date.getTime() > start.getTime() && date.getTime() < end.getTime();
 };
+
+export default isInRange;

@@ -18,7 +18,7 @@ export default function CalendarPage() {
     <section>
       <DateListContainer>
         {startDay ? (
-          <DateList date={startDay} isFocus={!startDay} />
+          <DateList ㄹ={startDay} isFocus={!startDay} />
         ) : (
           <DateList.Plus isFocus={!startDay} />
         )}

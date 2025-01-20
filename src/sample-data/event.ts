@@ -65,7 +65,7 @@ export const events = [
     longitude: 126.941571,
     center: '동작50플러스센터',
     price: '0',
-    images: [],
+    images: [''],
     title: '신중년 전환기 노후연금과 자산관리',
     description: `참여자 특전
 

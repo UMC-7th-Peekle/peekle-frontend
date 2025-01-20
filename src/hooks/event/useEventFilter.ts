@@ -8,7 +8,6 @@ const useEventFilter = ({
   key = 'sort',
   type = 'single',
 }: UseEventFilterProps = {}) => {
-  // sessionStorage.clear();
   const [queryValue, setQueryValue] = useQueryState(key);
   const [storedValue, setStoredValue] = useSessionStorageState(
     `event-filter-${key}`,
@@ -27,11 +26,12 @@ const useEventFilter = ({
 
   const handleSelect = (newValue: string) => {
     if (type === 'single') {
+      console.log('newValue', newValue);
       setQueryValue(newValue);
       return;
     }
 
-    // 중복 가능 필터일때 (카테고리, 지역)
+    // 중복 허용 값일때
     if (newValue === 'all') {
       setQueryValue('all');
       return;
@@ -39,7 +39,6 @@ const useEventFilter = ({
 
     const currentValues = queryValue?.split(',') ?? ['all'];
 
-    // 전체가 선택된 상태면
     if (currentValues.includes('all')) {
       setQueryValue(newValue);
       return;
