@@ -13,7 +13,6 @@ export const Header = styled.header`
   align-items: center;
   justify-content: space-between;
   height: 48px;
-  padding: 0px 20px;
 `;
 
 export const ShareBtn = styled(ShareSVG)`
@@ -26,11 +25,12 @@ export const MainSection = styled.section`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  position: relative;
 `;
 
 export const InfoContainer = styled.article`
   display: flex;
-  padding: 24px 20px 32px 20px;
+  padding: 24px 0px 32px 0px;
   flex-direction: column;
   align-items: flex-start;
   align-self: stretch;
@@ -101,7 +101,7 @@ export const Separator = styled.div`
 
 export const DescriptionContainer = styled.article`
   display: flex;
-  padding: 32px 20px 48px 20px;
+  padding: 32px 0px 48px 0px;
   flex-direction: column;
   align-items: flex-start;
   gap: 16px;
@@ -119,6 +119,13 @@ export const Description = styled.p`
 
 // 하단 버튼 컨테이너
 export const BottomContainer = styled.div`
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  border-top: 1px solid ${theme.color.gray[100]};
+  background: ${theme.color.gray[0]};
   display: flex;
   padding: 16px 16px 16px 24px;
   align-items: center;
@@ -138,6 +145,7 @@ export const ShareContainer = styled.div`
   flex-direction: column;
   align-items: flex-start;
   gap: 24px;
+  padding: 0 20px;
   color: ${theme.color.gray[900]};
 `;
 
@@ -148,7 +156,7 @@ export const ShareTitle = styled.h2`
 export const ShareOptions = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   gap: 20px;
 `;
 

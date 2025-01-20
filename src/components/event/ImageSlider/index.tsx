@@ -6,6 +6,7 @@ import { ImageSliderProps } from '@/types/event';
 
 const ImageSlider = ({ images, title = 'event' }: ImageSliderProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [direction] = useState(0);
 
   const slideImage = (direction: number) => {
     setCurrentIndex((prevIndex) => {
@@ -20,17 +21,21 @@ const ImageSlider = ({ images, title = 'event' }: ImageSliderProps) => {
 
   return (
     <S.ImageContainer>
-      <AnimatePresence initial={false}>
+      <AnimatePresence initial={false} custom={direction}>
         <motion.div
           key={currentIndex}
           drag="x"
           dragConstraints={{ left: 0, right: 0 }}
-          dragElastic={1}
           onDragEnd={(_, info) => {
-            if (info.offset.x < -100) slideImage(1);
-            if (info.offset.x > 100) slideImage(-1);
+            if (info.offset.x < -50) slideImage(1);
+            if (info.offset.x > 50) slideImage(-1);
           }}
-          animate={{ opacity: 1 }}
+          initial={{
+            opacity: 0,
+          }}
+          animate={{
+            opacity: 1,
+          }}
           transition={{ duration: 0.3 }}
         >
           {images[currentIndex] ? (

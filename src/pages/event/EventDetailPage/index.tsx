@@ -3,7 +3,12 @@ import { useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { ToggleHeart, BottomSheet, ImageSlider } from '@/components';
 import { BOTTOM_SHEET_ID_EVENT_SHARE } from '@/constants/event';
-import { getLabelFromValue } from '@/utils';
+import {
+  getLabelFromValue,
+  copyToClipboard,
+  alert,
+  priceFormatter,
+} from '@/utils';
 import { useBottomSheetStore } from '@/stores';
 import { events } from '@/sample-data/event';
 
@@ -25,8 +30,13 @@ const EventDetailPage = () => {
     description,
   } = event;
 
+  const handleShareKakao = () => {
+    console.log('카카오톡으로 공유하기'); // api 연동 필요
+  };
+
   const handleCopyLink = () => {
-    console.log('링크 복사');
+    copyToClipboard(window.location.href);
+    alert('링크가 복사되었습니다.'); // 임시 알림 추가
   };
 
   const handleToggleHeart = () => {
@@ -36,7 +46,7 @@ const EventDetailPage = () => {
   return (
     <>
       <S.Header>
-        <></> // 뒤로가기 버튼
+        뒤로가기 버튼
         <S.ShareBtn
           onClick={() => setActiveBottomSheet(BOTTOM_SHEET_ID_EVENT_SHARE)}
         />
@@ -63,7 +73,7 @@ const EventDetailPage = () => {
             </S.InfoRow>
             <S.InfoRow>
               <S.CoinIcon />
-              <S.InfoRowText>{price}</S.InfoRowText>
+              <S.InfoRowText>{priceFormatter(price)}원</S.InfoRowText>
             </S.InfoRow>
           </S.Info>
         </S.InfoContainer>
@@ -89,10 +99,10 @@ const EventDetailPage = () => {
         <S.ShareContainer>
           <S.ShareTitle>공유하기</S.ShareTitle>
           <S.ShareOptions>
-            <S.ShareOption>
+            <S.ShareOption onClick={handleShareKakao}>
               <S.KakaoIcon />
               <S.ShareOptionText>카카오톡으로 공유하기</S.ShareOptionText>
-              // api 연동 필요
+              {/* api 연동 필요 */}
             </S.ShareOption>
             <S.ShareOption onClick={handleCopyLink}>
               <S.LinkIcon />

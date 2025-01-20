@@ -37,7 +37,9 @@ export const EventCard = ({ id, onClick }: EventCardProps) => {
             <S.Seperater>|</S.Seperater>
             <S.IconText>
               <S.CoinIcon />
-              <S.Text>{price === '0' ? '무료' : priceFormatter(price)}</S.Text>
+              <S.Text>
+                {price === '0' ? '무료' : priceFormatter(price)}원
+              </S.Text>
             </S.IconText>
           </S.IconTextWrapper>
         </S.Top>

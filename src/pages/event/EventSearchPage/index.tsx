@@ -1,7 +1,7 @@
 import * as S from './style';
 import { useEffect, useRef, useState } from 'react';
 import { useQueryState } from 'nuqs';
-import { EventList } from '@/components';
+import { EventList, Selects } from '@/components';
 import { useFilteredEventStore } from '@/stores';
 import { alert } from '@/utils';
 
@@ -99,6 +99,7 @@ const EventSearchPage = () => {
   return (
     <S.Container>
       <Search />
+      <Selects />
       {!isSearched &&
         (recentSearch.length > 0 ? (
           <S.RecentSearchContainer>
