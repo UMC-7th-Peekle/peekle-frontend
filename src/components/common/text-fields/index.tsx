@@ -4,7 +4,7 @@ import { useTextFields } from './useTextFields.ts';
 interface SearchProps {
   queryKey: string;
   placeholder?: string;
-  onQuerySubmit?: (query: string) => void;
+  onQuerySubmit?: (query: string, key: string) => void;
 }
 
 export const TextFields = ({

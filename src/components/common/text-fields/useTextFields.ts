@@ -3,7 +3,7 @@ import { useQueryState } from 'nuqs';
 
 interface UseTextFieldsProps {
   queryKey: string;
-  onQuerySubmit?: (query: string) => void;
+  onQuerySubmit?: (query: string, key: string) => void;
 }
 
 export const useTextFields = ({
@@ -12,7 +12,7 @@ export const useTextFields = ({
 }: UseTextFieldsProps) => {
   const [query, setQuery] = useQueryState(queryKey);
   const [inputValue, setInputValue] = useState(query ?? '');
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const timeoutRef = useRef<number | null>(null);
 
   // 상태 초기화
   useEffect(() => {
@@ -36,7 +36,7 @@ export const useTextFields = ({
       clearTimeout(timeoutRef.current);
     }
 
-    timeoutRef.current = setTimeout(() => {
+    timeoutRef.current = window.setTimeout(() => {
       setQuery(value);
     }, 300);
   };
@@ -48,7 +48,7 @@ export const useTextFields = ({
         clearTimeout(timeoutRef.current);
       }
       setQuery(inputValue);
-      onQuerySubmit(inputValue);
+      onQuerySubmit(inputValue, queryKey);
     }
   };
 
