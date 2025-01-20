@@ -70,6 +70,7 @@ const GlobalStyles = createGlobalStyle`
     border: none;
     padding: 0;
     display: inline-block;
+    background: transparent;
     cursor: pointer;
   }
 

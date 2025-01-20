@@ -1,11 +1,12 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Layout from '@/layouts/Layout';
-import { HomePage } from '@/pages';
+import { EventPage, EventMapPage } from '@/pages';
 import InputComponentsPage from '@/pages/TestPage/InputComponentsPage';
 import CalendarPage from '@/pages/TestPage/CalendarPage';
 import { SearchBarPage } from '@/pages/TestPage/SearchBarPage';
 
 const ProtectedPage = ({ children }: { children: React.ReactNode }) => {
+  // 로그인 여부 확인해 페이지 보호 필요
   return children;
 };
 
@@ -21,8 +22,12 @@ const router = createBrowserRouter(
       // errorElement: <NotFoundPage />,
       children: [
         {
-          index: true,
-          element: <HomePage />,
+          path: '/event',
+          element: <EventPage />,
+        },
+        {
+          path: '/event/map',
+          element: <EventMapPage />,
         },
         {
           path: '/auth/signup',

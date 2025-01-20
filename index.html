@@ -5,9 +5,21 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Peekle</title>
+    <style>
+      #bottom-sheet {
+        position: relative;
+        z-index: 5;
+      }
+      #modal {
+        position: relative;
+        z-index: 10;
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>
+    <div id="bottom-sheet"></div>
+    <div id="modal"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
