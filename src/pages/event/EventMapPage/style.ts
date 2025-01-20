@@ -11,11 +11,14 @@ export const Container = styled.section`
 
 export const Map = styled.div`
   width: 100%;
-  height: 100vh;
+  height: calc(100vh - 50px); // 헤더 영역 빼기
 `;
 
-export const MyLocationIcon = styled(MyLocationSVG)`
+export const MyLocationIcon = styled(MyLocationSVG)<{
+  $bottomSheetHeight: number | 'auto';
+}>`
   position: absolute;
   left: 24px;
-  bottom: 24px;
+  bottom: ${({ $bottomSheetHeight }) =>
+    $bottomSheetHeight === 'auto' ? '24px' : `${24 + $bottomSheetHeight}px`};
 `;

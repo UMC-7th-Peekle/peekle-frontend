@@ -1,10 +1,18 @@
 import * as S from './Duration.styles';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DURATION_OPTIONS, PREDEFINED_RANGES } from '@/constants/event';
 import { Chip } from '@/components';
 import { DateRange } from '@/types/event';
 import { formatDate, formatDateWithDayOfWeek } from '@/utils';
 import useEventFilter from '@/hooks/event/useEventFilter';
+
+const getDateRangeFromStoredValue = (storedValue: string) => {
+  if (storedValue && storedValue !== 'all') {
+    const [start, end] = storedValue.split(',').map((date) => new Date(date));
+    return [start, end];
+  }
+  return [new Date(), null]; // 초기값
+};
 
 const Duration = () => {
   const { storedValue, setStoredValue, handleSelect } = useEventFilter({
@@ -19,6 +27,11 @@ const Duration = () => {
     }
     return [new Date(), null]; // 초기값
   });
+
+  useEffect(() => {
+    const [start, end] = getDateRangeFromStoredValue(storedValue);
+    setDateRange([start, end]);
+  }, [storedValue]);
 
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
@@ -71,9 +84,6 @@ const Duration = () => {
     const dateString = `${formatDate(predefinedStart)},${formatDate(predefinedEnd)}`;
     setStoredValue(dateString);
     handleSelect(dateString);
-    setStoredValue(
-      `${formatDate(predefinedStart)},${formatDate(predefinedEnd)}`,
-    );
   };
 
   // 캘린더 날짜 선택

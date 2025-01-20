@@ -1,13 +1,18 @@
 import * as S from './style';
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { BottomSheet, LocationConfirm, Selects, EventCard } from '@/components';
+import {
+  MapBottomSheet,
+  LocationConfirm,
+  Selects,
+  EventCard,
+} from '@/components';
 import {
   useBottomSheetStore,
   useFilteredEventStore,
   useMyLocationStore,
 } from '@/stores';
 import { confirm } from '@/utils';
-import { BOTTOM_SHEET_ID_EVENT_INFO, MAP_MARKERS } from '@/constants/event';
+import { MAP_MARKERS, BOTTOM_SHEET_ID_EVENT_INFO } from '@/constants/event';
 import { EventData } from '@/types/event';
 import { theme } from '@/styles/theme';
 
@@ -24,7 +29,7 @@ const getMarkerIcon = (category: string) => {
 let mapInstance: naver.maps.Map | null = null;
 
 const EventMapPage = () => {
-  const { setActiveBottomSheet } = useBottomSheetStore();
+  const { setActiveBottomSheet, bottomSheetHeight } = useBottomSheetStore();
   const [isLoading, setIsLoading] = useState(true);
   const [selectedEvent, setSelectedEvent] = useState<EventData | null>(null);
   const markers = useMemo(() => new Map<string, naver.maps.Marker>(), []); // 마커들
@@ -158,6 +163,7 @@ const EventMapPage = () => {
 
       // 이벤트 마커들
       filteredEvent.forEach((event) => {
+        console.log(event);
         const markerOptions = {
           position: new naver.maps.LatLng(event.latitude, event.longitude),
           map: mapInstance as naver.maps.Map,
@@ -250,11 +256,21 @@ const EventMapPage = () => {
   return (
     <S.Container>
       <Selects />
-      {isLoading ? <p>로딩 중...</p> : <S.Map id="map" />}
-      <S.MyLocationIcon onClick={handleMyLocationClick} />
-      <BottomSheet id={BOTTOM_SHEET_ID_EVENT_INFO}>
+      {isLoading ? (
+        <p>로딩 중...</p>
+      ) : (
+        <>
+          <S.Map id="map" />
+          <S.MyLocationIcon
+            $bottomSheetHeight={bottomSheetHeight}
+            onClick={handleMyLocationClick}
+          />
+        </>
+      )}
+
+      <MapBottomSheet id={BOTTOM_SHEET_ID_EVENT_INFO}>
         <EventCard id={selectedEvent?.id as string} />
-      </BottomSheet>
+      </MapBottomSheet>
     </S.Container>
   );
 };

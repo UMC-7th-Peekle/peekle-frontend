@@ -68,6 +68,8 @@ export interface TabListProps {
 export interface BottomSheetStore {
   activeBottomSheet: string | null; // 현재 활성화된 BottomSheet (없으면 null)
   setActiveBottomSheet: (sheet: string | null) => void; // 활성화된 BottomSheet 설정
+  bottomSheetHeight: number | 'auto'; // BottomSheet 높이
+  setBottomSheetHeight: (height: number | 'auto') => void; // BottomSheet 높이 설정
 }
 
 export interface BottomSheetProps {

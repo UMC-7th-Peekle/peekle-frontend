@@ -40,7 +40,7 @@ export const FILTER_KEYS = [
 
 // BottomSheet
 export const BOTTOM_SHEET_ID_EVENT_FILTER = 'event-filter';
-export const BOTTOM_SHEET_ID_EVENT_INFO = 'event-info';
+export const BOTTOM_SHEET_ID_EVENT_INFO = 'event-info'; // map에서 사용
 export const BOTTOM_SHEET_ID_EVENT_SHARE = 'event-share';
 
 // Chip

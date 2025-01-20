@@ -1,3 +1,5 @@
+import { ReactNode } from 'react';
+
 export interface EventData {
   id: string;
   category: string;
@@ -61,4 +63,9 @@ export interface FilePaginationProps {
   currentPage: number;
   onPrevPage: () => void;
   onNextPage: () => void;
+}
+
+// MapBottomSheet
+export interface MapBottomSheetProps {
+  children: ReactNode;
 }

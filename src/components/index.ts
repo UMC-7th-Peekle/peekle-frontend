@@ -18,3 +18,4 @@ export { default as EventList } from './event/EventList/EventList';
 export { default as LocationConfirm } from './event/modal/LocationConfirm';
 export { default as FilePagination } from './event/FilePagination';
 export { default as ImageSlider } from './event/ImageSlider';
+export { default as MapBottomSheet } from './event/MapBottomSheet/MapBottomSheet';
