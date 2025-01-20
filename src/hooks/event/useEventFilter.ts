@@ -25,7 +25,6 @@ const useEventFilter = ({
   }, [queryValue, setQueryValue, storedValue, setStoredValue]);
 
   const handleSelect = (newValue: string) => {
-    console.log('newValue', newValue);
     if (type === 'single') {
       setQueryValue(newValue);
       return;

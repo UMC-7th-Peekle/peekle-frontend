@@ -4,17 +4,16 @@ import {
   DateListTextPlus,
   PlusIcon,
 } from '@/components/common/date-list/style';
-import { formatDate } from '@/utils/date/formatDate';
 
 interface Props {
-  date?: Date | null;
+  content: string;
   isFocus?: boolean;
 }
 
-export function DateList({ date, isFocus = false }: Props) {
+export function DateList({ content, isFocus = false }: Props) {
   return (
     <DateListCard isFocus={isFocus}>
-      <DateListText>{formatDate(date)}</DateListText>
+      <DateListText>{content}</DateListText>
     </DateListCard>
   );
 }

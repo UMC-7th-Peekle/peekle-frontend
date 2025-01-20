@@ -19,6 +19,12 @@ export interface EventData {
 
 export type DateRange = [Date | null, Date | null];
 
+// filteredEvent
+export interface FilteredEventStore {
+  filteredEvent: EventData[];
+  setFilteredEvent: (event: EventData[]) => void;
+}
+
 // event-card
 export interface EventCardProps {
   id: string;
