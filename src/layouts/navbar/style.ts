@@ -12,6 +12,7 @@ export const NavbarContainer = styled.nav`
   width: 100%;
   height: 72px;
   background-color: ${theme.color.gray[0]};
+  box-shadow: 0 -4px 10px 0 rgba(0, 0, 0, 0.05);
 `;
 
 export const NavItem = styled.div`

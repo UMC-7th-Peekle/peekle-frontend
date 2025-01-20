@@ -12,8 +12,11 @@ export const ROUTES = {
   SIGN_IN: '/auth/sign-in',
   SIGN_UP: '/auth/sign-up',
   AUTH_CALLBACK: '/auth/callback',
-  USER: '/:nickname',
   USER_FOLLOW: '/:nickname/follow',
+  EVENT: '/event',
+  COMMUNITY: '/community',
+  COMMUNITY_SEARCH: '/community/search',
+  USER: '/user',
   NOT_FOUND: '*',
 };
 

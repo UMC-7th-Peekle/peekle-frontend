@@ -46,10 +46,10 @@ export const theme: DefaultTheme = {
         letter-spacing: -0.02rem;
       `,
       '24': css`
-        font-weight: 700;
-        font-size: 1.5rem;
         line-height: 1.6;
         letter-spacing: -0.02rem;
+        font-weight: 700;
+        font-size: 1.5rem;
       `,
       '22': css`
         font-weight: 700;
