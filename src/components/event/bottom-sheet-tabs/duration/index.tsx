@@ -15,7 +15,9 @@ const today = new Date();
 
 const getDateRangeFromStoredValue = (storedValue: string) => {
   if (storedValue && storedValue !== 'all') {
-    const [start, end] = storedValue.split(',').map((date) => new Date(date));
+    const [start, end] = storedValue
+      .split(',')
+      .map((date: string) => new Date(date));
     return [start, end];
   }
   return [today, null]; // 초기값

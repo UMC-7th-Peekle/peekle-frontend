@@ -32,11 +32,11 @@ export const LOCATION_OPTIONS = [
   ['광진 / 성동 / 중랑 / 동대문', 'gwangjin'],
 ];
 
-export const FILTER_KEYS = [
+export const EVENT_FILTER_KEYS = [
   'sort',
   'category',
-  'duration',
   'price',
+  'duration',
   'location',
 ];
 

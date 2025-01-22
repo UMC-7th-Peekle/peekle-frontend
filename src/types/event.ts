@@ -56,6 +56,13 @@ export interface FilterTabsStore {
   setActiveTab: (tab: string) => void;
 }
 
+export type EventFilterKeys =
+  | 'sort'
+  | 'category'
+  | 'duration'
+  | 'price'
+  | 'location';
+
 // 데이터
 export interface EventData {
   id: string;
@@ -89,11 +96,11 @@ export interface EventCardProps {
 }
 
 // event-filter
-type FilterType = 'single' | 'multiple';
+export type EventFilterType = 'single' | 'multiple';
 
 export interface UseEventFilterProps {
-  key?: string;
-  type?: FilterType;
+  key?: EventFilterKeys;
+  type?: EventFilterType;
 }
 
 // Map

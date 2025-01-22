@@ -1,14 +1,10 @@
 import * as S from './style';
-import { useEffect, useCallback, useMemo } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import { LocationConfirm } from '@/components';
-import {
-  useBottomSheetStore,
-  useFilteredEventStore,
-  useMyLocationStore,
-  useMapStore,
-} from '@/stores';
+import { useBottomSheetStore, useMyLocationStore, useMapStore } from '@/stores';
 import { confirm, getMarker, getCurrentPosition } from '@/utils';
 import { BOTTOM_SHEET_ID_EVENT_INFO } from '@/constants/event';
+import { useEventFilter } from '@/hooks';
 import { EventData } from '@/types/event';
 import { theme } from '@/styles/theme';
 
@@ -23,10 +19,11 @@ const EventMap = () => {
   const { setActiveBottomSheet, bottomSheetHeight } = useBottomSheetStore();
   const { selectedEvent, setSelectedEvent } = useMapStore();
   const { myLocation, setMyLocation } = useMyLocationStore();
-  const { filteredEvent } = useFilteredEventStore();
-  const markers = useMemo(() => new Map<string, naver.maps.Marker>(), []); // 마커들
+  const { sortedEvents } = useEventFilter();
+  const [markers] = useState<Map<string, naver.maps.Marker>>(
+    new Map<string, naver.maps.Marker>(),
+  );
 
-  console.log(filteredEvent);
   // 마커 클릭 이벤트
   const handleMarkerClick = useCallback(
     (mapEvent: EventData) => {
@@ -43,8 +40,8 @@ const EventMap = () => {
       }
 
       setSelectedEvent(mapEvent); // 새 이벤트 선택
-      const newMarker = markers.get(mapEvent.id);
 
+      const newMarker = markers.get(mapEvent.id);
       if (newMarker) {
         const markerContent = document.createElement('div');
         markerContent.innerHTML = `
@@ -153,7 +150,7 @@ const EventMap = () => {
       markers.set('my_location_marker', myLocMarker);
 
       // 이벤트 마커들
-      filteredEvent.forEach((event: EventData) => {
+      sortedEvents.forEach((event: EventData) => {
         const markerOptions = {
           position: new naver.maps.LatLng(event.latitude, event.longitude),
           map: mapInstance as naver.maps.Map,
@@ -173,8 +170,37 @@ const EventMap = () => {
         );
       });
     },
-    [handleMarkerClick, markers, filteredEvent],
+    [handleMarkerClick, markers, sortedEvents],
   );
+
+  // sortedEvents 변경시 마커 업데이트
+  useEffect(() => {
+    if (!mapInstance || !sortedEvents) return;
+
+    // 기존 마커 제거
+    markers.forEach((marker) => marker.setMap(null));
+    markers.clear();
+
+    // 새로운 마커 생성
+    sortedEvents.forEach((event) => {
+      const marker = new naver.maps.Marker({
+        position: new naver.maps.LatLng(event.latitude, event.longitude),
+        map: mapInstance as naver.maps.Map,
+        icon: {
+          content: getMarker(event.category),
+          size: new naver.maps.Size(36, 36),
+          origin: new naver.maps.Point(0, 0),
+          anchor: new naver.maps.Point(18, 18),
+        },
+      });
+
+      // 마커 클릭 이벤트 등록
+      naver.maps.Event.addListener(marker, 'click', () =>
+        handleMarkerClick(event),
+      );
+      markers.set(event.id, marker);
+    });
+  }, [sortedEvents, handleMarkerClick, markers]);
 
   const handleLocationSuccess = useCallback(
     async (position: GeolocationPosition) => {

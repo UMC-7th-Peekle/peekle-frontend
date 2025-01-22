@@ -4,7 +4,7 @@ import {
   PRICE_OPTIONS,
   LOCATION_OPTIONS,
 } from '@/constants/event';
-import { FilterChipProps } from '@/types/event';
+import { EventFilterKeys, FilterChipProps } from '@/types/event';
 import { useBottomSheetStore, useFilterTabsStore } from '@/stores';
 import { useEventFilter } from '@/hooks';
 import { BOTTOM_SHEET_ID_EVENT_FILTER } from '@/constants/event';
@@ -48,7 +48,7 @@ export const FilterChip = ({
   defaultLabel,
 }: FilterChipProps) => {
   const { storedValue } = useEventFilter({
-    key: option,
+    key: option as EventFilterKeys,
     type:
       option === 'category' || option === 'location' ? 'multiple' : 'single',
   });

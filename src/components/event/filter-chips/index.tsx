@@ -9,13 +9,15 @@ import { useEventFilter } from '@/hooks';
 import { SORT_OPTIONS, BOTTOM_SHEET_ID_EVENT_FILTER } from '@/constants/event';
 
 const FilterChips = () => {
-  const { handleSelect } = useEventFilter({
+  const { handleSelect, storedValue } = useEventFilter({
     key: 'sort',
     type: 'single',
   });
 
   const handleSortChange = (value: string) => {
-    handleSelect(value);
+    if (value !== storedValue) {
+      handleSelect(value);
+    }
   };
 
   return (
