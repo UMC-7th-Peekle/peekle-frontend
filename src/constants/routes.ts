@@ -16,6 +16,7 @@ export const ROUTES = {
   EVENT: '/event',
   COMMUNITY: '/community',
   COMMUNITY_SEARCH: '/community/search',
+  COMMUNITY_LIKE: '/community/like',
   USER: '/user',
   NOT_FOUND: '*',
 };

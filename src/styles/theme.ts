@@ -68,8 +68,8 @@ export const theme: DefaultTheme = {
       '18SB': css`
         font-weight: 600;
         font-size: 1.125rem;
-        line-height: 1.5;
-        letter-spacing: -0.02;
+        line-height: 1.6875rem;
+        letter-spacing: -0.02em;
       `,
       '18R': css`
         font-weight: 400;

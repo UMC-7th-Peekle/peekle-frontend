@@ -12,6 +12,7 @@ export const NoneContainer = styled.div`
 export const SubTitle = styled.h2`
   color: ${theme.color.gray[500]};
   margin-top: 86px;
+  margin-bottom: 36px;
   ${({ theme }) => theme.typeFace.body['18R']};
   white-space: pre-wrap;
   text-align: center;

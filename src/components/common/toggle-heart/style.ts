@@ -14,7 +14,6 @@ export const IconWrapper = styled.div`
     /* 기본 상태 */
     path {
       stroke: ${theme.color.gray[600]};
-      stroke-width: 2px;
     }
   }
 

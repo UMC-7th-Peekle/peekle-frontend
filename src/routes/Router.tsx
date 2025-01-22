@@ -5,10 +5,9 @@ import { SearchBarPage } from '@/pages/test/SearchBarPage';
 import Layout from '@/layouts/outlet';
 import EventMapPage from '@/pages/event/EventMapPage';
 import EventPage from '@/pages/event/EventPage';
-import CommunityPage from '@/pages/community';
 import UserPage from '@/pages/user/page';
-import CommunitySearchPage from '@/pages/community/search';
 import { ROUTES } from '@/constants/routes';
+import { CommunityLikePage, CommunityPage, CommunitySearchPage } from '@/pages';
 
 const ProtectedPage = ({ children }: { children: React.ReactNode }) => {
   // 로그인 여부 확인해 페이지 보호 필요
@@ -49,6 +48,10 @@ const router = createBrowserRouter(
         {
           path: ROUTES.COMMUNITY_SEARCH,
           element: <CommunitySearchPage />,
+        },
+        {
+          path: ROUTES.COMMUNITY_LIKE,
+          element: <CommunityLikePage />,
         },
         {
           path: '/user',

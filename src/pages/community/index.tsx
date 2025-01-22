@@ -3,6 +3,7 @@ import * as S from './style';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
 import BodySection from '@/pages/community/container/body-section';
+import ToggleHeart from '@/components/common/toggle-heart';
 
 export default function CommunityPage() {
   const navigate = useNavigate();
@@ -11,7 +12,10 @@ export default function CommunityPage() {
     <S.MainContainer>
       <S.Appbar>
         <S.Title>게시판</S.Title>
-        <ToggleSearch onClick={() => navigate(ROUTES.COMMUNITY_SEARCH)} />
+        <S.AppbarIcon>
+          <ToggleHeart onClick={() => navigate(ROUTES.COMMUNITY_LIKE)} />
+          <ToggleSearch onClick={() => navigate(ROUTES.COMMUNITY_SEARCH)} />
+        </S.AppbarIcon>
       </S.Appbar>
       <BodySection.None />
     </S.MainContainer>

@@ -8,6 +8,7 @@ export { default as Confirm } from './common/modal/confirm';
 export { default as Portal } from './common/portal';
 export { default as Chip } from './common/chip';
 export { default as Select } from './common/select';
+export { default as ToggleHeadr } from './common/toggle-heart';
 
 // event
 export { default as EventCard } from './event/event-card';
@@ -22,3 +23,7 @@ export { default as CheckboxCard } from './common/checkbox-card/index';
 export { default as DateList } from './common/date-list/index';
 export { default as Radio } from './common/radio/index';
 export { default as TextFields } from './common/text-fields/index';
+
+// community
+export { default as ToggleSearch } from './community/toggle-search';
+export { default as EditButton } from './community/edit-button';
