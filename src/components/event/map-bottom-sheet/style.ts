@@ -11,13 +11,13 @@ const slideOut = keyframes`
   to { transform: translateY(100%); }
 `;
 
-export const BottomSheet = styled.div<{ $isOpen: boolean }>`
+export const MapBottomSheet = styled.div<{ $isOpen: boolean }>`
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
   height: auto;
-  z-index: 6;
+  z-index: 101;
   display: flex;
   flex-direction: column;
   align-items: center;

@@ -20,6 +20,8 @@ const EventList = ({ isSearchPage = false }: { isSearchPage?: boolean }) => {
   const { myLocation } = useMyLocationStore();
   const { filteredEvent, setFilteredEvent } = useFilteredEventStore(); // 전역 필터딩 행사들
 
+  console.log(filteredEvent);
+
   // 필터링된 이벤트를 useMemo로 메모이제이션
   const filteredEvents = useMemo(() => {
     return events.filter((event) => {
@@ -76,14 +78,14 @@ const EventList = ({ isSearchPage = false }: { isSearchPage?: boolean }) => {
         if (endDateDiff !== 0) return endDateDiff;
         // 시작/종료 시간이 같으면 거리순
         const distanceA = calculateDistance(
-          myLocation.latitude,
-          myLocation.longitude,
+          myLocation.lat(),
+          myLocation.lng(),
           a.latitude,
           a.longitude,
         );
         const distanceB = calculateDistance(
-          myLocation.latitude,
-          myLocation.longitude,
+          myLocation.lat(),
+          myLocation.lng(),
           b.latitude,
           b.longitude,
         );
@@ -103,14 +105,14 @@ const EventList = ({ isSearchPage = false }: { isSearchPage?: boolean }) => {
       }
       if (sortQuery === 'shortest_distance' && myLocation) {
         const distanceA = calculateDistance(
-          myLocation.latitude,
-          myLocation.longitude,
+          myLocation.lat(),
+          myLocation.lng(),
           a.latitude,
           a.longitude,
         );
         const distanceB = calculateDistance(
-          myLocation.latitude,
-          myLocation.longitude,
+          myLocation.lat(),
+          myLocation.lng(),
           b.latitude,
           b.longitude,
         );

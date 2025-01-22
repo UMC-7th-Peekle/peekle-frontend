@@ -97,18 +97,20 @@ export interface UseEventFilterProps {
 }
 
 // Map
+export type MapInstance = naver.maps.Map;
+
+export interface MapStore {
+  selectedEvent: EventData | null;
+  setSelectedEvent: (event: EventData) => void;
+}
+
 export interface LocationConfirmProps {
   onLocationAllow: () => void;
 }
 
-export interface MyLocation {
-  latitude: number;
-  longitude: number;
-}
-
 export interface MyLocationStore {
-  myLocation: MyLocation | null;
-  setMyLocation: (location: MyLocation) => void;
+  myLocation: naver.maps.LatLng | null;
+  setMyLocation: (location: naver.maps.LatLng) => void;
 }
 
 // MapBottomSheet

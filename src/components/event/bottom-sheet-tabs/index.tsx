@@ -4,7 +4,6 @@ import { useBottomSheetStore, useFilteredEventStore } from '@/stores';
 import { useEventFilter } from '@/hooks';
 
 import { FilterTabs } from '@/components';
-import Sort from './sort';
 import Category from './category';
 import Duration from './duration';
 import Price from './price';
@@ -20,15 +19,11 @@ export const BottomSheetTabs = () => {
     <S.Container>
       <FilterTabs defaultValue={activeTab} option="이벤트 필터 탭">
         <FilterTabs.List>
-          <FilterTabs.Trigger value={'sort'} label="정렬" />
           <FilterTabs.Trigger value={'category'} label="카테고리" />
           <FilterTabs.Trigger value={'duration'} label="기간" />
           <FilterTabs.Trigger value={'price'} label="비용" />
           <FilterTabs.Trigger value={'location'} label="지역" />
         </FilterTabs.List>
-        <FilterTabs.Panel value={'sort'}>
-          <Sort />
-        </FilterTabs.Panel>
         <FilterTabs.Panel value={'category'}>
           <Category />
         </FilterTabs.Panel>

@@ -1,4 +1,4 @@
-export const getLocationPosition = (): Promise<GeolocationPosition> => {
+const getCurrentPosition = (): Promise<GeolocationPosition> => {
   return new Promise((resolve, reject) => {
     if (!navigator.geolocation) {
       reject(new Error('Geolocation이 지원되지 않습니다'));
@@ -7,7 +7,9 @@ export const getLocationPosition = (): Promise<GeolocationPosition> => {
 
     navigator.geolocation.getCurrentPosition(
       (position) => resolve(position),
-      (error) => reject(error),
+      (error) => reject(new Error(`Geolocation 에러: ${error.message}`)),
     );
   });
 };
+
+export default getCurrentPosition;

@@ -8,13 +8,15 @@ const MapBottomSheet = ({ id, children }: BottomSheetProps) => {
     useBottomSheetStore();
   const isOpen = activeBottomSheet === id;
   const [isRendered, setIsRendered] = useState(false); // 애니메이션 후 렌더링 상태
-
   const bottomSheetRef = useRef<HTMLDivElement>(null); // 높이 기록용
-
   // 애니메이션 후 렌더링 상태 관리
   useEffect(() => {
     if (isOpen) {
       setIsRendered(true); // BottomSheet가 열릴 때 바로 렌더링
+      if (bottomSheetRef.current) {
+        const height = bottomSheetRef.current.offsetHeight;
+        setBottomSheetHeight(height);
+      }
       return;
     } else {
       const timer = setTimeout(() => {
@@ -22,25 +24,18 @@ const MapBottomSheet = ({ id, children }: BottomSheetProps) => {
       }, 300); // 애니메이션 시간 (300ms)
       return () => clearTimeout(timer);
     }
-  }, [isOpen, isRendered]);
-
-  useEffect(() => {
-    if (bottomSheetRef.current) {
-      const calculatedHeight = bottomSheetRef.current.offsetHeight;
-      setBottomSheetHeight(calculatedHeight);
-    }
-  }, [setBottomSheetHeight]);
+  }, [isOpen, isRendered, setBottomSheetHeight]);
 
   if (!isRendered) return null;
 
   return (
-    <S.BottomSheet $isOpen={isOpen}>
+    <S.MapBottomSheet ref={bottomSheetRef} $isOpen={isOpen}>
       <S.LineIcon />
       <button onClick={() => setActiveBottomSheet(null)}>
         임시 맵바텀시트 닫기 버튼
       </button>
       {children}
-    </S.BottomSheet>
+    </S.MapBottomSheet>
   );
 };
 
