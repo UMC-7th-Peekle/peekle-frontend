@@ -30,4 +30,4 @@ export { default as MapBottomSheet } from './event/map-bottom-sheet';
 export { default as FilterChip } from './event/filter-chip';
 export { default as FilterChips } from './event/filter-chips';
 export { default as FilterTabs } from './event/filter-tabs';
-export { default as EventMap } from './event/EventMap';
+export { default as EventMap } from './event/event-map';

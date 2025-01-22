@@ -147,7 +147,7 @@ const EventMap = () => {
           anchor: new naver.maps.Point(18, 18),
         },
       });
-      markers.set('my_location_marker', myLocMarker);
+      markers.set('my_location', myLocMarker);
 
       // 이벤트 마커들
       sortedEvents.forEach((event: EventData) => {
@@ -178,7 +178,11 @@ const EventMap = () => {
     if (!mapInstance || !sortedEvents) return;
 
     // 기존 마커 제거
-    markers.forEach((marker) => marker.setMap(null));
+    markers.forEach((marker, key) => {
+      if (key !== 'my_location') {
+        marker.setMap(null); // 'my_location' 마커는 건드리지 않음
+      }
+    });
     markers.clear();
 
     // 새로운 마커 생성
