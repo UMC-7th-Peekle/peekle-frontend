@@ -1,42 +1,55 @@
 import * as S from './style';
-import { BottomSheet, Select, BottomSheetTabs } from '@/components';
-import { BOTTOM_SHEET_ID_EVENT_FILTER } from '@/constants/event';
+import {
+  BottomSheet,
+  Dropdown,
+  FilterChip,
+  BottomSheetTabs,
+} from '@/components';
+import { useEventFilter } from '@/hooks';
+import { SORT_OPTIONS, BOTTOM_SHEET_ID_EVENT_FILTER } from '@/constants/event';
 
-const Selects = () => {
+const FilterChips = () => {
+  const { handleSelect } = useEventFilter({
+    key: 'sort',
+    type: 'single',
+  });
+
+  const handleSortChange = (value: string) => {
+    handleSelect(value);
+  };
+
   return (
     <>
-      <S.SelectWapper>
-        <Select
-          key={'sort'}
-          option={'sort'}
-          defaultValue={'latest'}
-          defaultLabel={'가까운 날짜순'}
+      <S.FilterChipsWrapper>
+        <Dropdown
+          list={SORT_OPTIONS}
+          onSelect={(value) => handleSortChange(value)}
         />
-        <Select
+        <FilterChip
           key={'category'}
           option={'category'}
           defaultValue={'all'}
           defaultLabel={'카테고리'}
         />
-        <Select
+        <FilterChip
           key={'duration'}
           option={'duration'}
           defaultValue={'all'}
           defaultLabel={'기간'}
         />
-        <Select
+        <FilterChip
           key={'price'}
           option={'price'}
           defaultValue={'all'}
           defaultLabel={'비용'}
         />
-        <Select
+        <FilterChip
           key={'location'}
           option={'location'}
           defaultValue={'all'}
           defaultLabel={'지역'}
         />
-      </S.SelectWapper>
+      </S.FilterChipsWrapper>
       <BottomSheet id={BOTTOM_SHEET_ID_EVENT_FILTER}>
         <BottomSheetTabs />
       </BottomSheet>
@@ -44,4 +57,4 @@ const Selects = () => {
   );
 };
 
-export default Selects;
+export default FilterChips;

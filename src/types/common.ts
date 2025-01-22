@@ -1,17 +1,9 @@
-import { ReactNode, SVGAttributes } from 'react';
-import {
-  SORT_OPTIONS,
-  CATEGORY_OPTIONS,
-  DURATION_OPTIONS,
-  PRICE_OPTIONS,
-  LOCATION_OPTIONS,
-} from '@/constants/event';
-
 // Portal
 export interface PortalProps {
-  children: ReactNode;
+  children: React.ReactNode;
   onClose?: () => void;
-  type: 'modal' | 'bottom-sheet'; //index.html의 id
+  type: 'modal' | 'other-portal'; //index.html의 id
+  isDropdown?: boolean;
 }
 
 // modal
@@ -25,43 +17,8 @@ export interface AlertStore {
 export interface ConfirmStore {
   isOpen: boolean;
   content: React.ReactNode;
-  show: (content: ReactNode) => void;
+  show: (content: React.ReactNode) => void;
   close: () => void;
-}
-
-// Tabs
-export interface TabStore {
-  // 전역
-  activeTab: string; // 어떤 탭 활성화 할건지
-  setActiveTab: (tab: string) => void;
-}
-
-export interface TabsContextType {
-  // Tabs 내부
-  selectedValue: string; // 내부 식별자
-  setSelectedValue: (value: string) => void;
-  option: string; // tab 종류 - 접근성용 e.g.이벤트 필터 탭
-}
-
-export interface TabsProps {
-  option: string;
-  defaultValue: string;
-  children: React.ReactNode;
-}
-
-export interface TabTriggerProps {
-  value: string;
-  label: string; // ui에 표시할 값
-  onClick?: () => void;
-}
-
-export interface TabPanelProps {
-  value: string;
-  children: React.ReactNode;
-}
-
-export interface TabListProps {
-  children: React.ReactElement<TabTriggerProps>[];
 }
 
 // BottomSheet
@@ -74,7 +31,7 @@ export interface BottomSheetStore {
 
 export interface BottomSheetProps {
   id: string;
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
 // Chip
@@ -85,24 +42,17 @@ export interface ChipProps {
   onSelect: (value: string) => void; // 선택 시 호출되는 함수
 }
 
-// Select
-export type SelectOption =
-  | 'sort'
-  | 'category'
-  | 'duration'
-  | 'price'
-  | 'location';
+// Dropdown
+export interface DropdownItem {
+  label: string; // UI에 표시될 이름
+  value: string; // 고유 값
+}
 
-export type SortValue = (typeof SORT_OPTIONS)[number][1];
-export type CategoryValue = (typeof CATEGORY_OPTIONS)[number][1];
-export type DurationValue = (typeof DURATION_OPTIONS)[number][1];
-export type PriceValue = (typeof PRICE_OPTIONS)[number][1];
-export type LocationValue = (typeof LOCATION_OPTIONS)[number][1];
-
-export interface SelectProps {
-  option: SelectOption; // select 종류 === 쿼리 파람 키
-  defaultValue: string; // 기본값
-  defaultLabel: string; // 기본 라벨
+export interface DropdownProps {
+  list: DropdownItem[];
+  onClick?: () => void;
+  onSelect?: (value: string) => void; // 항목 클릭 시 실행할 함수
+  width?: string;
 }
 
 // ToggleHeart
@@ -113,7 +63,7 @@ export interface ToggleHeartProps {
   onClick: () => void;
 }
 
-export interface HeartSVGProps extends SVGAttributes<SVGElement> {
+export interface HeartSVGProps extends React.SVGAttributes<SVGElement> {
   $size?: number;
   $borderColor?: string;
 }

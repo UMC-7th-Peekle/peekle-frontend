@@ -1,9 +1,9 @@
 import { PanelContainer } from '../style';
-import { useTabsContext } from '../context/tabsContext';
-import { TabPanelProps } from '@/types/common';
+import { FilterTabsPanelProps } from '@/types/event';
+import useFilterTabsStore from '../store/useFilterTabsStore';
 
-const Panel = ({ value, children }: TabPanelProps) => {
-  const { selectedValue, option } = useTabsContext();
+const Panel = ({ value, children }: FilterTabsPanelProps) => {
+  const { selectedValue, option } = useFilterTabsStore();
 
   if (value !== selectedValue) return null;
 

@@ -1,7 +1,7 @@
 import * as S from './style';
 import { useEffect, useRef, useState } from 'react';
 import { useQueryState } from 'nuqs';
-import { EventList, Selects } from '@/components';
+import { EventList, FilterChips } from '@/components';
 import { useFilteredEventStore } from '@/stores';
 import { alert } from '@/utils';
 import { EventData } from '@/types/event';
@@ -87,7 +87,8 @@ const EventSearchPage = () => {
     setRecentSearch([]);
   };
 
-  const handleRemoveRecentSearch = (search: string) => {
+  const handleRemoveRecentSearch = (search: string, e: React.MouseEvent) => {
+    e.stopPropagation();
     const newSearches = recentSearch.filter((item) => item !== search);
     localStorage.setItem('recent-search', JSON.stringify(newSearches));
     setRecentSearch(newSearches);
@@ -100,7 +101,7 @@ const EventSearchPage = () => {
   return (
     <S.Container>
       <Search />
-      <Selects />
+      <FilterChips />
       {!isSearched &&
         (recentSearch.length > 0 ? (
           <S.RecentSearchContainer>
@@ -115,7 +116,9 @@ const EventSearchPage = () => {
                   onClick={() => handleRecentSearchClick(search)}
                 >
                   <S.RecentSearchText>{search}</S.RecentSearchText>
-                  <S.XIcon onClick={() => handleRemoveRecentSearch(search)} />
+                  <S.XIcon
+                    onClick={(e) => handleRemoveRecentSearch(search, e)}
+                  />
                 </S.RecentSearchRow>
               ))}
             </S.RecentSearchTextContainer>

@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   MapBottomSheet,
   LocationConfirm,
-  Selects,
+  FilterChips,
   EventCard,
 } from '@/components';
 import {
@@ -254,7 +254,7 @@ const EventMapPage = () => {
 
   return (
     <S.Container>
-      <Selects />
+      <FilterChips />
       {isLoading ? (
         <p>로딩 중...</p>
       ) : (

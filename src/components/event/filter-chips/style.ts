@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const SelectWapper = styled.div`
+export const FilterChipsWrapper = styled.div`
   display: flex;
   gap: 8px;
   overflow-x: auto;

@@ -22,7 +22,7 @@ const getDateRangeFromStoredValue = (storedValue: string) => {
 };
 
 const Duration = () => {
-  const { storedValue, setStoredValue, handleSelect } = useEventFilter({
+  const { storedValue, handleSelect } = useEventFilter({
     key: 'duration',
     type: 'single',
   });
@@ -74,19 +74,18 @@ const Duration = () => {
 
   // Chip 클릭
   const handleChipSelect = (value: string) => {
+    setIsCalendarOpen(false);
+
     if (value === 'all') {
       handleSelect('all');
       setDateRange([today, null]);
-      setIsCalendarOpen(false);
       return;
     }
 
-    setIsCalendarOpen(true);
     const range = PREDEFINED_RANGES[value as keyof typeof PREDEFINED_RANGES];
     const [predefinedStart, predefinedEnd] = range;
     setDateRange([predefinedStart, predefinedEnd]);
     const dateString = `${formatDate(predefinedStart)},${formatDate(predefinedEnd)}`;
-    setStoredValue(dateString);
     handleSelect(dateString);
   };
 
@@ -101,12 +100,10 @@ const Duration = () => {
       if (start > end) {
         setDateRange([end, start]);
         const dateString = `${formatDate(end)},${formatDate(start)}`;
-        setStoredValue(dateString);
         handleSelect(dateString);
       } else {
         setDateRange([start, end]);
         const dateString = `${formatDate(start)},${formatDate(end)}`;
-        setStoredValue(dateString);
         handleSelect(dateString);
       }
     }

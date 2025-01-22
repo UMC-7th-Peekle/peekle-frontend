@@ -1,9 +1,9 @@
 import { TriggerBtn } from '../style';
-import { TabTriggerProps } from '@/types/common';
-import { useTabsContext } from '../context/tabsContext';
+import { FilterTabsTriggerProps } from '@/types/event';
+import useFilterTabsStore from '../store/useFilterTabsStore';
 
-const Trigger = ({ value, label, onClick }: TabTriggerProps) => {
-  const { selectedValue, setSelectedValue, option } = useTabsContext();
+const Trigger = ({ value, label, onClick }: FilterTabsTriggerProps) => {
+  const { selectedValue, setSelectedValue, option } = useFilterTabsStore();
   const isActive = selectedValue === value;
 
   const onSelect = () => {

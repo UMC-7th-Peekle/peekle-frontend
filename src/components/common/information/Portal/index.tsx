@@ -3,7 +3,12 @@ import { useCallback, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { PortalProps } from '@/types/common';
 
-const Portal = ({ children, onClose, type }: PortalProps) => {
+const Portal = ({
+  children,
+  onClose,
+  type,
+  isDropdown = false,
+}: PortalProps) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
   const handleClickOutside = useCallback(
@@ -23,7 +28,9 @@ const Portal = ({ children, onClose, type }: PortalProps) => {
   const modalRoot = document.getElementById(type) as HTMLElement;
 
   return createPortal(
-    <S.Overlay ref={modalRef}>{children}</S.Overlay>,
+    <S.Overlay ref={modalRef} $isDropdown={isDropdown}>
+      {children}
+    </S.Overlay>,
     modalRoot,
   );
 };

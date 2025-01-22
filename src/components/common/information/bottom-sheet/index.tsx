@@ -25,7 +25,7 @@ const BottomSheet = ({ id, children }: BottomSheetProps) => {
   if (!isRendered) return null;
 
   return (
-    <Portal onClose={() => setActiveBottomSheet(null)} type="bottom-sheet">
+    <Portal onClose={() => setActiveBottomSheet(null)} type="other-portal">
       <S.BottomSheet $isOpen={isOpen}>
         <S.LineIcon />
         {children}

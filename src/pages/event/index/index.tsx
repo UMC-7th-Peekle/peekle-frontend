@@ -1,10 +1,10 @@
 import * as S from './style';
-import { EventList, Selects } from '@/components';
+import { EventList, FilterChips } from '@/components';
 
 const EventPage = () => {
   return (
     <S.EventPageContainer>
-      <Selects />
+      <FilterChips />
       <EventList />
     </S.EventPageContainer>
   );

@@ -1,9 +1,9 @@
 import { ListContainer } from '../style';
-import { useTabsContext } from '../context/tabsContext';
-import { TabListProps } from '@/types/common';
+import useFilterTabsStore from '../store/useFilterTabsStore';
+import { FilterTabsListProps } from '@/types/event';
 
-const List = ({ children }: TabListProps) => {
-  const { option } = useTabsContext();
+const List = ({ children }: FilterTabsListProps) => {
+  const { option } = useFilterTabsStore();
 
   return (
     <ListContainer

@@ -1,39 +1,34 @@
 import * as S from './style';
-import { useState } from 'react';
-import { TabsContext } from './context/tabsContext';
-import { TabsProps } from '@/types/common';
+import { FilterTabsProps } from '@/types/event';
+import useFilterTabsStore from './store/useFilterTabsStore';
 import List from './components/List';
 import Trigger from './components/Trigger';
 import Panel from './components/Panel';
+import { useEffect } from 'react';
 
-const Tabs = ({ option, defaultValue, children }: TabsProps) => {
-  const [selectedValue, setSelectedValue] = useState(defaultValue);
+const FilterTabs = ({ option, defaultValue, children }: FilterTabsProps) => {
+  const { setSelectedValue, setOption } = useFilterTabsStore();
 
-  const providerValue = {
-    selectedValue,
-    setSelectedValue,
-    option,
-  };
+  useEffect(() => {
+    setSelectedValue(defaultValue);
+    setOption(option);
+  }, [defaultValue, option, setSelectedValue, setOption]);
 
-  return (
-    <TabsContext.Provider value={providerValue}>
-      <S.TabsContainer>{children}</S.TabsContainer>
-    </TabsContext.Provider>
-  );
+  return <S.TabsContainer>{children}</S.TabsContainer>;
 };
 
-Tabs.List = List;
-Tabs.Trigger = Trigger;
-Tabs.Panel = Panel;
+FilterTabs.List = List;
+FilterTabs.Trigger = Trigger;
+FilterTabs.Panel = Panel;
 
-export default Tabs;
+export default FilterTabs;
 
 /**
  * 사용 예시
- * import { Tabs } from '@/components'
- * import { useTabsStore } from '@/stores';
+ * import { FilterTabs } from '@/components'
+ * import { useFilterTabsStore } from '@/stores';
  * 
- * const { activeTab } = useTabsStore(); // 전역 상태로 선택됨 탭 관리
+ * const { activeTab } = useFilterTabsStore(); // 전역 상태로 선택됨 탭 관리
  * 
  * <Tabs defaultValue={activeTab} option="이벤트 필터 탭">
     <Tabs.List>

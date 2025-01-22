@@ -13,3 +13,5 @@ export { default as copyToClipboard } from './copyToClipBoard';
 export { default as getLabelFromValue } from './getLabelFromValue';
 export { default as isInRange } from './isInDateRange';
 export { default as isSameDay } from './isSameDay';
+
+export { getLocationPosition } from './location';

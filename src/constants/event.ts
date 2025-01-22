@@ -1,10 +1,12 @@
-// Select
+// FilterChips
+// Dropdown
 export const SORT_OPTIONS = [
-  ['가까운 날짜순', 'latest'],
-  ['낮은 금액순', 'lowest_price'],
-  ['가까운 거리순', 'shortest_distance'],
+  { label: '가까운 날짜순', value: 'latest' }, // 기본값
+  { label: '낮은 금액순', value: 'lowest_price' },
+  { label: '가까운 거리순', value: 'shortest_distance' },
 ];
 
+// FilterChip
 export const CATEGORY_OPTIONS = [
   ['전체', 'all'],
   ['교육', 'education'],
@@ -43,7 +45,7 @@ export const BOTTOM_SHEET_ID_EVENT_FILTER = 'event-filter';
 export const BOTTOM_SHEET_ID_EVENT_INFO = 'event-info'; // map에서 사용
 export const BOTTOM_SHEET_ID_EVENT_SHARE = 'event-share';
 
-// Chip
+// Duration에서 쓰는 Chip
 export const DURATION_OPTIONS = [
   ['전체', 'all'],
   ['오늘', 'today'],

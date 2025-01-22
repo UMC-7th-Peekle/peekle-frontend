@@ -95,7 +95,6 @@ const useEventFilter = ({
 
   return {
     storedValue,
-    setStoredValue,
     handleSelect,
     isSelected,
     clearFilter,
