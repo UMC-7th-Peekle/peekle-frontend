@@ -6,7 +6,7 @@ export const Overlay = styled.div<{ $isDropdown: boolean }>`
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 5;
+  z-index: 111;
   background: ${({ $isDropdown }) =>
     $isDropdown
       ? 'transparent' // dropdown은 배경 없음

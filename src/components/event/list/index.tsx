@@ -15,12 +15,10 @@ const EventList = ({ isSearchPage = false }: { isSearchPage?: boolean }) => {
   const [priceQuery] = useQueryState('price');
   const [locationQuery] = useQueryState('location');
 
-  const [searchQuery] = useQueryState('q');
+  const [searchQuery] = useQueryState('event-search');
 
   const { myLocation } = useMyLocationStore();
   const { filteredEvent, setFilteredEvent } = useFilteredEventStore(); // 전역 필터딩 행사들
-
-  console.log(filteredEvent);
 
   // 필터링된 이벤트를 useMemo로 메모이제이션
   const filteredEvents = useMemo(() => {

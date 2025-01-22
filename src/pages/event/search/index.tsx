@@ -1,82 +1,12 @@
 import * as S from './style';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { useQueryState } from 'nuqs';
-import { EventList, FilterChips } from '@/components';
-import { useFilteredEventStore } from '@/stores';
-import { alert } from '@/utils';
-import { EventData } from '@/types/event';
-
-// 임시 검색
-export interface SearchProps {
-  queryKey: string;
-  placeholder?: string;
-}
-
-const Search = () => {
-  const [query, setQuery] = useQueryState('q');
-  const [inputValue, setInputValue] = useState(query ?? '');
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const { filteredEvent, setFilteredEvent } = useFilteredEventStore();
-
-  // query 변경 시 inputValue 업데이트 - 검색 기록 클릭 대응
-  useEffect(() => {
-    setInputValue(query ?? '');
-  }, [query]);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setInputValue(value); // input 값은 즉시 업데이트
-
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-
-    timeoutRef.current = setTimeout(() => {
-      setQuery(value);
-    }, 300);
-  };
-
-  const handleSearch = () => {
-    if (inputValue.length < 2) {
-      alert('두 글자 이상 입력해주세요.');
-      return;
-    }
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-    setQuery(inputValue); // 현재 input 값으로 즉시 쿼리 업데이트
-    const searchResult = filteredEvent.filter((event: EventData) =>
-      event.title.includes(inputValue),
-    );
-    setFilteredEvent(searchResult);
-    const recentSearch = JSON.parse(
-      localStorage.getItem('recent-search') || '[]',
-    );
-    localStorage.setItem(
-      'recent-search',
-      JSON.stringify([...new Set([inputValue, ...recentSearch])]),
-    );
-  };
-
-  return (
-    <S.SearchContainer role="search" aria-label="검색">
-      <input
-        id="search-input"
-        type="search"
-        value={inputValue}
-        onChange={handleChange}
-        placeholder="관심있는 활동 검색"
-        aria-label="검색어 입력"
-        autoComplete="off"
-      />
-      <button onClick={handleSearch}>검색</button>
-    </S.SearchContainer>
-  );
-};
+import { EventList } from '@/components';
+import { SearchBar } from '@/layouts/search-bar';
 
 const EventSearchPage = () => {
   // 쿼리 파람으로 검색 여부 확인
-  const [query, setQuery] = useQueryState('q');
+  const [query, setQuery] = useQueryState('event-search');
   const isSearched = !!query;
   const [recentSearch, setRecentSearch] = useState<string[]>(() =>
     JSON.parse(localStorage.getItem('recent-search') ?? '[]'),
@@ -100,8 +30,9 @@ const EventSearchPage = () => {
 
   return (
     <S.Container>
-      <Search />
-      <FilterChips />
+      <S.HeaderContainer>
+        <SearchBar queryKey="event-search" placeholder="관심있는 활동 검색" />
+      </S.HeaderContainer>
       {!isSearched &&
         (recentSearch.length > 0 ? (
           <S.RecentSearchContainer>

@@ -1,5 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { useQueryState } from 'nuqs';
+import { useFilteredEventStore } from '@/stores';
+import { alert } from '@/utils';
+import { EventData } from '@/types/event';
 
 interface UseTextFieldsProps {
   queryKey: string;
@@ -13,8 +16,9 @@ export const useTextFields = ({
   const [query, setQuery] = useQueryState(queryKey);
   const [inputValue, setInputValue] = useState(query ?? '');
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const { filteredEvent, setFilteredEvent } = useFilteredEventStore();
 
-  // 상태 초기화
+  // query 변경 시 inputValue 업데이트 - 검색 기록 클릭 대응
   useEffect(() => {
     setInputValue(query ?? '');
   }, [query]);
@@ -41,14 +45,33 @@ export const useTextFields = ({
     }, 300);
   };
 
+  const handleSubmit = () => {
+    if (inputValue.length < 2) {
+      alert('두 글자 이상 입력해주세요.');
+      return;
+    }
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    setQuery(inputValue); // 현재 input 값으로 즉시 쿼리 업데이트
+    const searchResult = filteredEvent.filter((event: EventData) =>
+      event.title.includes(inputValue),
+    );
+    setFilteredEvent(searchResult);
+    const recentSearch = JSON.parse(
+      localStorage.getItem('recent-search') || '[]',
+    );
+    localStorage.setItem(
+      'recent-search',
+      JSON.stringify([...new Set([inputValue, ...recentSearch])]),
+    );
+    onQuerySubmit?.(inputValue);
+  };
+
   // Enter 키 처리
   const handleKeyDown = (key: string) => {
     if (key === 'Enter') {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-      setQuery(inputValue);
-      onQuerySubmit(inputValue);
+      handleSubmit();
     }
   };
 
@@ -58,5 +81,5 @@ export const useTextFields = ({
     setQuery('');
   };
 
-  return { inputValue, handleChange, handleKeyDown, handleClear };
+  return { inputValue, handleChange, handleKeyDown, handleSubmit, handleClear };
 };

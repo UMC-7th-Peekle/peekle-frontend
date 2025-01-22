@@ -5,6 +5,17 @@ import XSVG from '@/assets/images/icons/X.svg?react';
 export const Container = styled.section`
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+export const HeaderContainer = styled.section`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
 `;
 
 export const SearchContainer = styled.section`
@@ -13,6 +24,7 @@ export const SearchContainer = styled.section`
 `;
 
 export const RecentSearchContainer = styled.section`
+  margin-top: 24px;
   display: flex;
   width: 100%;
   flex-direction: column;

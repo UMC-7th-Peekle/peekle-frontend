@@ -26,7 +26,7 @@ const EventMap = () => {
   const { filteredEvent } = useFilteredEventStore();
   const markers = useMemo(() => new Map<string, naver.maps.Marker>(), []); // 마커들
 
-  // console.log(bottomSheetHeight);
+  console.log(filteredEvent);
   // 마커 클릭 이벤트
   const handleMarkerClick = useCallback(
     (mapEvent: EventData) => {

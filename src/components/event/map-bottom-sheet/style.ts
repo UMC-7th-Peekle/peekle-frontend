@@ -13,7 +13,7 @@ const slideOut = keyframes`
 
 export const MapBottomSheet = styled.div<{ $isOpen: boolean }>`
   position: fixed;
-  bottom: 0;
+  bottom: 72px;
   left: 0;
   width: 100%;
   height: auto;

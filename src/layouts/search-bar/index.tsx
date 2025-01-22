@@ -5,24 +5,28 @@ import TextFields from '@/components/common/input/text-fields';
 interface SearchBarProps {
   queryKey: string;
   placeholder?: string;
-  mapPagePath: string; // Map 아이콘 클릭 시 이동할 경로
   onQuerySubmit?: (query: string) => void;
 }
 
 export const SearchBar = ({
   queryKey,
   placeholder = '관심 있는 활동 검색',
-  mapPagePath,
   onQuerySubmit = () => {},
 }: SearchBarProps) => {
   const navigate = useNavigate();
 
+  // 뒤로가기 버튼 따로 제작 필요
   const handleBackClick = () => {
     navigate(-1);
   };
 
   const handleMapClick = () => {
-    navigate(mapPagePath);
+    navigate('/event/map');
+  };
+
+  const handleTextFieldsClick = () => {
+    console.log('click');
+    navigate('/event/search');
   };
 
   return (
@@ -32,6 +36,7 @@ export const SearchBar = ({
         queryKey={queryKey}
         placeholder={placeholder}
         onQuerySubmit={onQuerySubmit}
+        onClick={handleTextFieldsClick}
       />
       <S.MapIcon onClick={handleMapClick} />
     </S.SearchBarWrapper3>
@@ -42,13 +47,12 @@ export const SearchBar = ({
 export const SearchBarMap = ({
   queryKey,
   placeholder = '관심 있는 활동 검색',
-  mapPagePath,
   onQuerySubmit = () => {},
 }: SearchBarProps) => {
   const navigate = useNavigate();
 
   const handleMapClick = () => {
-    navigate(mapPagePath);
+    navigate('/event/map');
   };
 
   return (

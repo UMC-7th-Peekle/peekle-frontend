@@ -11,8 +11,10 @@ import {
 } from '@/utils';
 import { useBottomSheetStore } from '@/stores';
 import { events } from '@/sample-data/event';
+import { useNavigate } from 'react-router-dom';
 
 const EventDetailPage = () => {
+  const navigate = useNavigate();
   const [isLiked, setIsLiked] = useState(false); // 임시 하트 토글
   const { setActiveBottomSheet } = useBottomSheetStore();
   const { id } = useParams();
@@ -46,7 +48,7 @@ const EventDetailPage = () => {
   return (
     <>
       <S.Header>
-        뒤로가기 버튼
+        <button onClick={() => navigate(-1)}>임시 뒤로가기 버튼</button>
         <S.ShareBtn
           onClick={() => setActiveBottomSheet(BOTTOM_SHEET_ID_EVENT_SHARE)}
         />

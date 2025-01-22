@@ -33,7 +33,6 @@ export const Dropdown = ({ list, onClick, onSelect, width }: DropdownProps) => {
 
     setSelectedValue(item.value);
     onSelect?.(item.value);
-    console.log('handleItemClick');
     setIsOpen(false);
   };
 

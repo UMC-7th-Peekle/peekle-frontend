@@ -19,6 +19,7 @@ const MapBottomSheet = ({ id, children }: BottomSheetProps) => {
       }
       return;
     } else {
+      setBottomSheetHeight('auto');
       const timer = setTimeout(() => {
         setIsRendered(false); // 애니메이션 종료 후 렌더링 중지
       }, 300); // 애니메이션 시간 (300ms)

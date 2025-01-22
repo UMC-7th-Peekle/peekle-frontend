@@ -2,8 +2,8 @@ import styled, { keyframes } from 'styled-components';
 import LineSVG from '@/assets/images/icons/line.svg?react';
 
 const slideIn = keyframes`
-  from { transform: translateY(100%); }
-  to { transform: translateY(0); }
+   from { transform: translateY(100%); }
+   to { transform: translateY(0); }
 `;
 
 const slideOut = keyframes`
@@ -13,11 +13,11 @@ const slideOut = keyframes`
 
 export const BottomSheet = styled.div<{ $isOpen: boolean }>`
   position: fixed;
-  bottom: 0;
+  bottom: 72px;
   left: 0;
   width: 100%;
   height: auto;
-  z-index: 6;
+  z-index: 112;
   display: flex;
   flex-direction: column;
   align-items: center;

@@ -14,7 +14,7 @@ export const AlertContainer = styled.div`
   gap: 16px;
   border-radius: ${({ theme }) => theme.borderRadius.lg};
   background: ${({ theme }) => theme.color.gray[0]};
-  z-index: 11;
+  z-index: 121;
   text-align: center;
 `;
 
