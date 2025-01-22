@@ -17,7 +17,7 @@ export const MapBottomSheet = styled.div<{ $isOpen: boolean }>`
   left: 0;
   width: 100%;
   height: auto;
-  z-index: 101;
+  z-index: 101; // 네이버 지도 위
   display: flex;
   flex-direction: column;
   align-items: center;

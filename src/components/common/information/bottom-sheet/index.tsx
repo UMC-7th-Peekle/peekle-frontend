@@ -1,7 +1,6 @@
 import * as S from './style';
 import { useState, useEffect } from 'react';
 import { BottomSheetProps } from '@/types/common';
-import { Portal } from '@/components';
 import { useBottomSheetStore } from '@/stores';
 
 const BottomSheet = ({ id, children }: BottomSheetProps) => {
@@ -25,12 +24,12 @@ const BottomSheet = ({ id, children }: BottomSheetProps) => {
   if (!isRendered) return null;
 
   return (
-    <Portal onClose={() => setActiveBottomSheet(null)} type="other-portal">
+    <S.Overlay onClick={() => setActiveBottomSheet(null)}>
       <S.BottomSheet $isOpen={isOpen}>
         <S.LineIcon />
         {children}
       </S.BottomSheet>
-    </Portal>
+    </S.Overlay>
   );
 };
 

@@ -8,7 +8,7 @@ export const FilterChipsWrapper = styled.div`
   margin: 0 -16px; // 패딩 영역 밖으로 확장
   padding: 0 16px; // Wapper 내부 패딩
 
-  &::-webkit-scrollbar {
+  /* &::-webkit-scrollbar {
     display: none; // 스크롤바 숨기기
-  }
+  } */
 `;

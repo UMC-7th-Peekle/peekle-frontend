@@ -11,13 +11,23 @@ const slideOut = keyframes`
   to { transform: translateY(100%); }
 `;
 
+export const Overlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.25);
+  z-index: 101; // 네이버 지도 위
+`;
+
 export const BottomSheet = styled.div<{ $isOpen: boolean }>`
   position: fixed;
   bottom: 72px;
   left: 0;
   width: 100%;
   height: auto;
-  z-index: 112;
+  z-index: 102;
   display: flex;
   flex-direction: column;
   align-items: center;
