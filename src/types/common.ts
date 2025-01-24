@@ -29,6 +29,18 @@ export interface BottomSheetStore {
   setBottomSheetHeight: (height: number | 'auto') => void; // BottomSheet 높이 설정
 }
 
+export interface BottomSheetMetrics {
+  touchStart: {
+    sheetY: number; // touchstart에서 BottomSheet의 최상단 모서리 Y값
+    touchY: number; // touchstart에서 터치 포인트 Y값
+  };
+  touchMove: {
+    prevTouchY?: number; // 다음 touchmove 이벤트 핸들러에서 필요한 터치 포인트 Y값을 저장
+    movingDirection: 'none' | 'down' | 'up'; // 유저가 터치를 움직이고 있는 방향
+  };
+  isContentAreaTouched: boolean; // 컨텐츠 영역을 터치하고 있음을 기록
+}
+
 export interface BottomSheetProps {
   id: string;
   children: React.ReactNode;

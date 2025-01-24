@@ -23,6 +23,7 @@ export const BackIcon = styled(Back)`
   width: 24px;
   height: 24px;
   cursor: pointer;
+  flex-shrink: 0;
 
   &:hover path {
     stroke: ${({ theme }) => theme.color.primary['900']};
@@ -33,6 +34,7 @@ export const MapIcon = styled(Map)`
   width: 28px;
   height: 28px;
   cursor: pointer;
+  flex-shrink: 0;
 
   &:hover path {
     stroke: ${({ theme }) => theme.color.primary['900']};

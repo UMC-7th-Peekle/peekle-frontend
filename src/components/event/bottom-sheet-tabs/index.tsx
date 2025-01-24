@@ -15,6 +15,8 @@ export const BottomSheetTabs = () => {
   const { filteredEvent } = useFilteredEventStore();
   const { clearFilter } = useEventFilter();
 
+  console.log(filteredEvent);
+
   return (
     <S.Container>
       <FilterTabs defaultValue={activeTab} option="이벤트 필터 탭">
