@@ -50,9 +50,9 @@ export default BottomSheet;
 
 /**
  * 사용 예시
- * import { BottomSheet } from '@/components'
+ * import { BottomSheet, Button } from '@/components'
  *
- * <button onClick={() => setActiveBottomSheet('sheet1')}>Open Sheet 1</button>
+ * <Button onClick={() => setActiveBottomSheet('sheet1')}>Open Sheet 1</Button>
  *
  * <BottomSheet id="sheet1">
  *  <S.Content>

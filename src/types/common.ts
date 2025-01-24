@@ -79,3 +79,20 @@ export interface HeartSVGProps extends React.SVGAttributes<SVGElement> {
   $size?: number;
   $borderColor?: string;
 }
+
+// Button
+type BtnColor = 'primary400' | 'primary500' | 'primary700' | 'gray50' | 'none';
+type BtnSize = 'small' | 'medium';
+
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  color: BtnColor;
+  size: BtnSize;
+  width: string;
+}
+
+export interface StyledButtonProps {
+  $color: BtnColor;
+  $size: BtnSize;
+  $width: string;
+}
