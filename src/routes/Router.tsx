@@ -9,6 +9,9 @@ import {
 } from '@/pages';
 import CommunityPage from '@/pages/community/page';
 import UserPage from '@/pages/user/page';
+import OnboardingPage from '@/pages/onboarding';
+import PhoneNumberPage from '@/pages/auth/phone-number';
+import CertifyPage from '@/pages/auth/certify';
 
 const ProtectedPage = ({ children }: { children: React.ReactNode }) => {
   // 로그인 여부 확인해 페이지 보호 필요
@@ -26,6 +29,18 @@ const router = createBrowserRouter(
       ),
       // errorElement: <NotFoundPage />,
       children: [
+        {
+          path: '/onboading',
+          element: <OnboardingPage />,
+        },
+        {
+          path: '/auth/phone-number',
+          element: <PhoneNumberPage />,
+        },
+        {
+          path: '/auth/certify',
+          element: <CertifyPage />,
+        },
         {
           path: '/event',
           element: <EventPage />,
