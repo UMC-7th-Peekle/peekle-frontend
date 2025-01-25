@@ -10,6 +10,7 @@ import {
 } from '@/pages';
 import CommunityPage from '@/pages/community/page';
 import UserPage from '@/pages/user/page';
+import { ErrorFallback } from '@/components';
 
 const ProtectedPage = ({ children }: { children: React.ReactNode }) => {
   // 로그인 여부 확인해 페이지 보호 필요
@@ -25,7 +26,7 @@ const router = createBrowserRouter(
           <Layout />
         </ProtectedPage>
       ),
-      errorElement: <NotFoundPage />,
+      errorElement: <ErrorFallback />,
       children: [
         {
           path: '/event',
@@ -62,6 +63,10 @@ const router = createBrowserRouter(
         {
           path: '/user',
           element: <UserPage />,
+        },
+        {
+          path: '*',
+          element: <NotFoundPage />, // 404는 라우트로 처리
         },
       ],
     },
