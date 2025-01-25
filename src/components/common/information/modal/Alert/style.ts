@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import WarningSVG from '@/assets/images/icons/warning.svg?react';
+import CameraSVG from '@/assets/images/icons/camera.svg?react';
 import { theme } from '@/styles/theme';
 
 export const AlertContainer = styled.div`
@@ -32,9 +33,15 @@ export const WarningIcon = styled(WarningSVG)`
   height: 32px;
 `;
 
+export const CameraIcon = styled(CameraSVG)`
+  width: 32px;
+  height: 32px;
+`;
+
 export const AlertMessage = styled.p`
   ${({ theme }) => theme.typeFace.subTitle[20]};
   color: ${({ theme }) => theme.color.gray[600]};
+  white-space: pre-wrap; // 입력받은 문자열 줄바꿈 유지
 `;
 
 export const OneBtn = styled.button`

@@ -7,17 +7,18 @@ export interface PortalProps {
 }
 
 // modal
+export type AlertIconType = 'none' | 'warning' | 'camera';
 export interface AlertStore {
   isOpen: boolean;
   message: string;
-  showWarningIcon: boolean;
+  iconType: AlertIconType;
   btnText1: string;
   btnText2?: string;
   onClickBtn1?: () => void;
   onClickBtn2?: () => void;
   show: (options: {
     message: string;
-    showWarningIcon: boolean;
+    iconType: AlertIconType;
     btnText1: string;
     btnText2?: string;
     onClickBtn1?: () => void;
@@ -123,4 +124,9 @@ export interface StyledButtonProps {
   $color: BtnColor;
   $size: BtnSize;
   $width: string;
+}
+
+// Backward
+export interface BackSVGProps {
+  $size?: string;
 }

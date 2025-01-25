@@ -4,14 +4,14 @@ import { AlertStore } from '@/types/common';
 const useAlertStore = create<AlertStore>((set) => ({
   isOpen: false,
   message: '',
-  showWarningIcon: false,
+  iconType: 'none',
   btnText1: '',
   btnText2: undefined,
   onClickBtn1: undefined,
   onClickBtn2: undefined,
   show: ({
     message,
-    showWarningIcon,
+    iconType,
     btnText1,
     btnText2,
     onClickBtn1,
@@ -20,7 +20,7 @@ const useAlertStore = create<AlertStore>((set) => ({
     set({
       isOpen: true,
       message,
-      showWarningIcon,
+      iconType,
       btnText1,
       btnText2,
       onClickBtn1,
@@ -31,6 +31,7 @@ const useAlertStore = create<AlertStore>((set) => ({
     set({
       isOpen: false,
       message: '',
+      iconType: 'none',
       btnText1: '',
       btnText2: undefined,
       onClickBtn1: undefined,

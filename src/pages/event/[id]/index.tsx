@@ -40,7 +40,7 @@ const EventDetailPage = () => {
     copyToClipboard(window.location.href);
     alert(
       '링크가 복사되었습니다.',
-      false,
+      'warning',
       '취소',
       '확인',
       () => {

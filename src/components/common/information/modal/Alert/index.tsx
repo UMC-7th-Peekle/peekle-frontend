@@ -6,7 +6,7 @@ const Alert = () => {
   const {
     isOpen,
     message,
-    showWarningIcon,
+    iconType,
     btnText1,
     btnText2,
     onClickBtn1,
@@ -30,7 +30,11 @@ const Alert = () => {
     <Portal onClose={close} type="modal">
       <S.AlertContainer>
         <S.InfoContainer>
-          {showWarningIcon && <S.WarningIcon />}
+          {iconType === 'warning' ? (
+            <S.WarningIcon />
+          ) : (
+            iconType === 'camera' && <S.CameraIcon />
+          )}
           <S.AlertMessage>{message}</S.AlertMessage>
         </S.InfoContainer>
         <S.ButtonContainer>
@@ -54,17 +58,13 @@ export default Alert;
  * import { alert } from '@/utils';
  *
  * alert(
-      '링크가 복사되었습니다.', //메시지
-      false, //warningIcon 넣을건지
-      '취소', // 왼쪽 버튼 텍스트 (gray200)
-      '확인', // 오른쪽 버튼 텍스트 (primary500)
-      () => {
-        console.log('btn1클릭'); // 왼쪽 버튼 클릭시 핸들러 - 안 넣으면 클릭시 닫히기만 함
-      },
-      () => {
-        console.log('btn2클릭'); // 오른쪽 버튼 클릭시 핸들러 - 안 넣으면 클릭시 닫히기만 함
-      },
-    );
+    '피클에서 기기의\n사진과 동영상에 엑세스하도록\n허용하시겠습니까?',
+    'camera', // 아이콘 종류 'camera' | 'warning' | 'none'
+    '허용안함', // 왼쪽 버튼 텍스트 (gray200)
+    '허용', // 오른쪽 버튼 텍스트 (primary500)
+    () => {console.log('btn1 클릭')}, // 왼쪽 버튼 클릭 핸들러 - 생략시 close만 됨
+    () => {console.log('btn1 클릭')}, // 오른쪽 버튼 클릭 핸들러 - 생략시 close만 됨
+  );
 
-    alert('두 글자 이상 입력해주세요.', true, '확인'); // 오른쪽 버튼 텍스트 안 넣으면 primary500으로 버튼 하나만 뜸 
+    alert('두 글자 이상 입력해주세요.', 'none', '확인'); // 오른쪽 버튼 텍스트 안 넣으면 primary500으로 버튼 하나만 뜸 
  */

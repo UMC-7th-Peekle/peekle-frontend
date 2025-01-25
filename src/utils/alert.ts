@@ -1,8 +1,9 @@
 import { useAlertStore } from '@/stores';
+import { AlertIconType } from '@/types/common';
 
 const alert = (
   message: string,
-  showWarningIcon: boolean,
+  iconType: AlertIconType,
   btnText1: string,
   btnText2?: string,
   onClickBtn1?: () => void,
@@ -14,7 +15,7 @@ const alert = (
   }
   store.show({
     message,
-    showWarningIcon,
+    iconType,
     btnText1,
     btnText2,
     onClickBtn1,
