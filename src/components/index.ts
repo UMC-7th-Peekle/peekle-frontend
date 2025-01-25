@@ -18,6 +18,7 @@ export { default as Radio } from './common/input/radio';
 export { default as TextFields } from './common/input/text-fields';
 export { default as ToggleHeart } from './common/input/toggle-heart';
 export { default as Dropdown } from './common/input/dropdown';
+export { default as ToggleHeadr } from './common/toggle-heart';
 
 // event
 export { default as EventCard } from './event/card';
