@@ -2,11 +2,11 @@ import * as S from './style';
 import { useToastStore } from '@/stores';
 
 const Toast = () => {
-  const { isOpen, message } = useToastStore();
+  const { isOpen, message, isFadingOut } = useToastStore();
 
   if (!isOpen) return null;
 
-  return <S.Toast>{message}</S.Toast>;
+  return <S.Toast className={isFadingOut ? 'fade-out' : ''}>{message}</S.Toast>;
 };
 
 export default Toast;

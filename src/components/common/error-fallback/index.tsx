@@ -1,11 +1,19 @@
 import * as S from './style';
 import { useRouteError } from 'react-router-dom';
-import { isNetworkError, isServerError } from '@/utils/error';
+import { isNetworkError, isServerError, toast } from '@/utils';
 import { Button, Backward } from '@/components';
 
 const ErrorFallback = ({ error: propsError }: { error?: Error }) => {
   const routeError = useRouteError();
   const error = propsError ?? routeError;
+
+  const handleRefresh = () => {
+    if (isNetworkError(error as Error)) {
+      toast('네트워크 연결을 확인해주세요');
+      return;
+    }
+    window.location.reload();
+  };
 
   const ErrorMessage = ({
     icon: Icon,
@@ -26,7 +34,7 @@ const ErrorFallback = ({ error: propsError }: { error?: Error }) => {
   return (
     <>
       <S.BackwardWrapper>
-        <Backward size={'28px'} />
+        <Backward size={'28px'} isErrorFallback={true} />
       </S.BackwardWrapper>
       <S.ErrorContainer role="alert" aria-live="assertive" aria-atomic="true">
         <S.ErrorInfo>
@@ -47,7 +55,12 @@ const ErrorFallback = ({ error: propsError }: { error?: Error }) => {
             />
           )}
         </S.ErrorInfo>
-        <Button color="primary500" size="xsmall" width="143px">
+        <Button
+          color="primary500"
+          size="xsmall"
+          width="143px"
+          onClick={handleRefresh}
+        >
           새로고침
         </Button>
       </S.ErrorContainer>

@@ -1,12 +1,18 @@
 import * as S from './style';
 import { useNavigate } from 'react-router-dom';
 
-const Backward = ({ size }: { size?: string }) => {
+const Backward = ({
+  size,
+  isErrorFallback = false,
+}: {
+  size?: string;
+  isErrorFallback?: boolean;
+}) => {
   const navigate = useNavigate();
 
-  const handleBackClick = () => {
-    navigate(-1);
-  };
+  const handleBackClick = () =>
+    isErrorFallback ? window.history.back() : navigate(-1);
+
   return <S.BackIcon $size={size} onClick={handleBackClick} />;
 };
 export default Backward;

@@ -5,12 +5,12 @@ export { default as Backward } from './common/backward';
 // navigation
 export { default as Chip } from './common/navigation/chip';
 export { default as Select } from './event/filter-chip';
-
 // information
 export { default as BottomSheet } from './common/information/bottom-sheet';
 export { default as Alert } from './common/information/modal/alert';
 export { default as Confirm } from './common/information/modal/confirm';
 export { default as Portal } from './common/information/portal';
+export { default as Toast } from './common/information/toast';
 // input
 export { default as Calendar } from './common/input/calendar';
 export { default as CheckBox } from './common/input/checkbox';

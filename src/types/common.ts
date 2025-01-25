@@ -37,8 +37,9 @@ export interface ConfirmStore {
 // Toast
 export interface ToastStore {
   isOpen: boolean;
+  isFadingOut: boolean;
   message: string;
-  show: (message: string, showWarningIcon: boolean) => void;
+  show: (message: string) => void;
   close: () => void;
 }
 

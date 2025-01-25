@@ -1,12 +1,12 @@
-import { useConfirmStore } from '@/stores';
-import { ReactNode } from 'react';
+import { useToastStore } from '@/stores';
 
-const toast = (content: ReactNode) => {
-  const store = useConfirmStore.getState();
+const toast = (message: string) => {
+  const store = useToastStore.getState();
   if (store.isOpen) {
-    store.close(); // 이전 confirm 닫고
+    console.log('이전 토스트 열려있음');
+    store.close(); // 이전 toast 닫고
   }
-  store.show(content); // 새 confirm을 열기
+  store.show(message); // 새 toast 열기
 };
 
 export default toast;

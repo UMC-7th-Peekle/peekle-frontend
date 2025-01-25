@@ -1,5 +1,6 @@
 import { APIResponseError } from 'endpoint-client';
 import { QueryClient, QueryCache } from '@tanstack/react-query';
+import { toast } from '@/utils';
 
 const queryClient = new QueryClient({
   queryCache: new QueryCache({
@@ -13,7 +14,7 @@ const queryClient = new QueryClient({
 
       // 백그라운드 refetch error
       if (query.state.data !== undefined) {
-        console.log(error);
+        toast(`에러가 발생했습니다: ${error.message}`);
       }
     },
   }),

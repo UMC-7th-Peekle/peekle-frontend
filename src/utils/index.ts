@@ -8,6 +8,7 @@ export { default as isSameDay } from './isSameDay';
 
 export { default as alert } from './alert';
 export { default as confirm } from './confirm';
+export { default as toast } from './toast';
 
 export { isNetworkError, isServerError } from './error';
 
