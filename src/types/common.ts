@@ -10,7 +10,19 @@ export interface PortalProps {
 export interface AlertStore {
   isOpen: boolean;
   message: string;
-  show: (message: string, showWarningIcon: boolean) => void;
+  showWarningIcon: boolean;
+  btnText1: string;
+  btnText2?: string;
+  onClickBtn1?: () => void;
+  onClickBtn2?: () => void;
+  show: (options: {
+    message: string;
+    showWarningIcon: boolean;
+    btnText1: string;
+    btnText2?: string;
+    onClickBtn1?: () => void;
+    onClickBtn2?: () => void;
+  }) => void;
   close: () => void;
 }
 

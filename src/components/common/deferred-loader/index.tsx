@@ -9,7 +9,7 @@ const Loader = () => {
       aria-busy="true"
       aria-label="로더"
     >
-      <S.LoaderText>로딩 중입니다</S.LoaderText>
+      <S.LoaderText>임시 켁스트: 로딩중입니다</S.LoaderText>
     </S.Loader>
   );
 };
