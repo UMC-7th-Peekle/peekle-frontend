@@ -7,7 +7,6 @@ import {
   EventScrapPage,
   EventDetailPage,
 } from '@/pages';
-import CommunityPage from '@/pages/community/page';
 import UserPage from '@/pages/user/page';
 import { ROUTES } from '@/constants/routes';
 import { CommunityLikePage, CommunityPage, CommunitySearchPage } from '@/pages';

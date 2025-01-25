@@ -1,18 +1,30 @@
 import * as S from './style';
 
-export default function EditButton({ text }: EditButtonProps) {
+export default function EditButton({
+  text = '글 쓰기',
+  onClick = () => {},
+}: EditButtonProps) {
   return (
-    <S.RectTypeContainer>
+    <S.DefaultTypeContainer onClick={onClick}>
+      <S.PenIcon />
+      <S.ButtonText>{text}</S.ButtonText>
+    </S.DefaultTypeContainer>
+  );
+}
+
+EditButton.RectType = function RectType({
+  text = '글 쓰러 가기',
+  onClick = () => {},
+}: EditButtonProps) {
+  return (
+    <S.RectTypeContainer onClick={onClick}>
       <S.PenIcon />
       <S.ButtonText>{text}</S.ButtonText>
     </S.RectTypeContainer>
   );
-}
-
-EditButton.RectType = function RectType({ text }: EditButtonProps) {
-  return <EditButton text={text} />;
 };
 
 interface EditButtonProps {
-  text: string;
+  text?: string;
+  onClick?: () => void;
 }
