@@ -6,6 +6,7 @@ import {
   EventSearchPage,
   EventScrapPage,
   EventDetailPage,
+  NotFoundPage,
 } from '@/pages';
 import CommunityPage from '@/pages/community/page';
 import UserPage from '@/pages/user/page';
@@ -24,7 +25,7 @@ const router = createBrowserRouter(
           <Layout />
         </ProtectedPage>
       ),
-      // errorElement: <NotFoundPage />,
+      errorElement: <NotFoundPage />,
       children: [
         {
           path: '/event',

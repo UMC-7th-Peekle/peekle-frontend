@@ -3,8 +3,8 @@ import { ButtonProps } from '@/types/common';
 
 export const Button = ({
   color = 'none',
-  size = 'medium',
-  width = '412px',
+  size = 'medium', // 높이 결정
+  width = '412px', // 너비 결정
   children,
   disabled,
   ...props
@@ -26,10 +26,22 @@ export default Button;
 
 /**
  * 사용 예시
- * <Button color="none" size="small" width="106px" disabled={[변수]} onClick={clearFilter}>
+ * <Button color="primary500" size="small" width="106px" disabled={[변수]} onClick={clearFilter}>
  * </Button>
  *
- * 라인 버튼
- * <Button color="primary400" size="small" width="106px" disabled={[변수]} onClick={clearFilter}>
+ * // 비었는데 글자색 primary500 버튼
+ * <Button
+ *   color="primary500Line"
+ *   size="small"
+ *   width=""
+ * >
  * </Button>
+ *
+ * // grya50인데 글자색 primary500 버튼
+ * <Button color="gray50TextGray400" size="small" width="">
+ *
+ * // 카카오시작
+ * <Button color="yellow" size="small" width="356px">
+ * // 전화번호시작
+ * <Button color="gray50" size="small" width="356px">
  */

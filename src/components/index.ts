@@ -1,14 +1,16 @@
-//common
+// common
 export { default as DeferredLoader } from './common/deferred-loader';
 export { default as ErrorFallback } from './common/error-fallback';
+export { default as Backward } from './common/backward';
 // navigation
 export { default as Chip } from './common/navigation/chip';
 export { default as Select } from './event/filter-chip';
+
 // information
 export { default as BottomSheet } from './common/information/bottom-sheet';
-export { default as Alert } from './common/information/modal/Alert';
-export { default as Confirm } from './common/information/modal/Confirm';
-export { default as Portal } from './common/information/Portal';
+export { default as Alert } from './common/information/modal/alert';
+export { default as Confirm } from './common/information/modal/confirm';
+export { default as Portal } from './common/information/portal';
 // input
 export { default as Calendar } from './common/input/calendar';
 export { default as CheckBox } from './common/input/checkbox';

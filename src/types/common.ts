@@ -10,7 +10,7 @@ export interface PortalProps {
 export interface AlertStore {
   isOpen: boolean;
   message: string;
-  show: (message: string) => void;
+  show: (message: string, showWarningIcon: boolean) => void;
   close: () => void;
 }
 
@@ -18,6 +18,14 @@ export interface ConfirmStore {
   isOpen: boolean;
   content: React.ReactNode;
   show: (content: React.ReactNode) => void;
+  close: () => void;
+}
+
+// Toast
+export interface ToastStore {
+  isOpen: boolean;
+  message: string;
+  show: (message: string, showWarningIcon: boolean) => void;
   close: () => void;
 }
 
@@ -81,8 +89,16 @@ export interface HeartSVGProps extends React.SVGAttributes<SVGElement> {
 }
 
 // Button
-type BtnColor = 'primary400' | 'primary500' | 'primary700' | 'gray50' | 'none';
-type BtnSize = 'small' | 'medium';
+type BtnColor =
+  | 'primary400Line'
+  | 'primary500'
+  | 'primary500Line'
+  | 'primary700'
+  | 'gray50'
+  | 'gray50TextGray400'
+  | 'yellow'
+  | 'none';
+type BtnSize = 'xsmall' | 'small' | 'medium';
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {

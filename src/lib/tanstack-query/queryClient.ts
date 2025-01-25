@@ -1,5 +1,6 @@
 import { APIResponseError } from 'endpoint-client';
 import { QueryClient, QueryCache } from '@tanstack/react-query';
+import { alert } from '@/utils';
 
 const queryClient = new QueryClient({
   queryCache: new QueryCache({
@@ -11,9 +12,9 @@ const queryClient = new QueryClient({
         }
       }
 
-      // 백그라운드 refetch error 처리 논의 필요
+      // 백그라운드 refetch error
       if (query.state.data !== undefined) {
-        alert(error);
+        alert(error.message);
       }
     },
   }),
