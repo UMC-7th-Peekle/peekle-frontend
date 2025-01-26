@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import ArrowDownSVG from '@/assets/images/icons/arrow-down.svg?react';
 
-export const Select = styled.div<{ $isActive: boolean }>`
+export const FilterChip = styled.div<{ $isActive: boolean }>`
   display: flex;
   padding: 8px 12px;
   height: 40px;

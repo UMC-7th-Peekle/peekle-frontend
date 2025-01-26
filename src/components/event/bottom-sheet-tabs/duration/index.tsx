@@ -14,13 +14,16 @@ import { useEventFilter } from '@/hooks';
 const today = new Date();
 
 const getDateRangeFromStoredValue = (storedValue: string) => {
-  if (storedValue && storedValue !== 'all') {
+  if (storedValue && storedValue !== 'all' && !storedValue.endsWith('DD')) {
     const [start, end] = storedValue
       .split(',')
       .map((date: string) => new Date(date));
     return [start, end];
   }
-  return [today, null]; // 초기값
+  if (storedValue.endsWith('DD')) {
+    return [today, null];
+  }
+  return [today, new Date(new Date().setFullYear(2999))];
 };
 
 const Duration = () => {
@@ -29,40 +32,62 @@ const Duration = () => {
     type: 'single',
   });
 
+  const [selectedChip, setSelectedChip] = useState<string>('all');
   const [dateRange, setDateRange] = useState<DateRange>(() => {
     const range = getDateRangeFromStoredValue(storedValue);
     return [range[0] ?? null, range[1] ?? null] as DateRange;
   });
 
-  useEffect(() => {
-    const [start, end] = getDateRangeFromStoredValue(storedValue);
-    setDateRange([start, end]);
-  }, [storedValue]);
-
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+
+  useEffect(() => {
+    const decodedValue = storedValue.replace('%2C', ',');
+    const [storedStart, storedEnd] = decodedValue.split(',');
+
+    if (storedValue === 'all') {
+      setSelectedChip('all');
+    } else if (storedValue.endsWith('DD')) {
+      setSelectedChip('custom');
+    } else {
+      let matched = false;
+      for (const [key, value] of Object.entries(PREDEFINED_RANGES)) {
+        const [predefinedStart, predefinedEnd] = value;
+        if (
+          formatDate(new Date(storedStart)) === formatDate(predefinedStart) &&
+          formatDate(new Date(storedEnd)) === formatDate(predefinedEnd)
+        ) {
+          setSelectedChip(key);
+          matched = true;
+          break;
+        }
+      }
+      if (!matched) {
+        setSelectedChip('custom');
+      }
+    }
+  }, [storedValue, dateRange]);
 
   // ui 표시용 YYYY-MM-DD (요일) 형식
   const startDateWithDayOfWeek = dateRange[0]
     ? formatDateWithDayOfWeek(dateRange[0])
-    : 'YYYY-MM-DD';
+    : formatDateWithDayOfWeek(today);
   const endDateWithDayOfWeek = dateRange[1]
     ? formatDateWithDayOfWeek(dateRange[1])
-    : 'YYYY-MM-DD';
+    : formatDateWithDayOfWeek(new Date(new Date().setFullYear(2999)));
 
   // 날짜 범위와 Chip 상태 매칭
   const getMatchingChip = (dateRange: DateRange) => {
     const [start, end] = dateRange;
-    // 날짜가 없으면 'all' 반환
-    if (!start || !end) {
-      return 'all';
-    }
+
+    if (selectedChip === 'all') return 'all';
+
+    if (!start || !end || selectedChip === 'custom') return 'custom';
 
     for (const [, value] of DURATION_OPTIONS) {
-      if (value === 'all') continue;
+      if (value === 'custom') continue;
 
       const [predefinedStart, predefinedEnd] =
         PREDEFINED_RANGES[value as keyof typeof PREDEFINED_RANGES];
-
       if (
         formatDate(start) === formatDate(predefinedStart) &&
         formatDate(end) === formatDate(predefinedEnd)
@@ -70,16 +95,26 @@ const Duration = () => {
         return value;
       }
     }
+
     // 매칭되는 기간이 없으면 어떤 Chip도 active X
     return 'null';
   };
 
   // Chip 클릭
   const handleChipSelect = (value: string) => {
+    setSelectedChip(value);
     setIsCalendarOpen(false);
 
     if (value === 'all') {
       handleSelect('all');
+      const endDate = new Date(today); // 복제
+      endDate.setFullYear(2999);
+      setDateRange([today, endDate]);
+      return;
+    }
+
+    if (value === 'custom') {
+      handleSelect(`${formatDate(today)}, YYYY-MM-DD`);
       setDateRange([today, null]);
       return;
     }
@@ -93,12 +128,13 @@ const Duration = () => {
 
   // 캘린더 날짜 선택
   const handleCalendarChange = (value: Date) => {
-    if (!dateRange[0] || (dateRange[0] && dateRange[1])) {
+    if (!dateRange[0]) {
+      // 첫 번째 날짜가 선택되지 않았다면 첫 번째 날짜로 설정
       setDateRange([value, null]);
-    } else {
-      const [start] = dateRange;
+    } else if (!dateRange[1]) {
+      // 두 번째 날짜가 없다면 두 번째 날짜로 설정
+      const start = dateRange[0];
       const end = value;
-
       if (start > end) {
         setDateRange([end, start]);
         const dateString = `${formatDate(end)},${formatDate(start)}`;
@@ -108,6 +144,9 @@ const Duration = () => {
         const dateString = `${formatDate(start)},${formatDate(end)}`;
         handleSelect(dateString);
       }
+    } else {
+      // 두 날짜가 모두 선택되었으면, 첫 번째 날짜와 두 번째 날짜를 다시 설정
+      setDateRange([value, null]);
     }
   };
 
@@ -132,14 +171,30 @@ const Duration = () => {
           ))}
         </S.ChipContainer>
         <S.DateBtnContainer>
-          <DateList date={startDateWithDayOfWeek} />
-          {storedValue === 'all' ? (
-            <DateList.Plus
-              isFocus={isCalendarOpen}
-              onClick={() => setIsCalendarOpen(true)}
-            />
+          {selectedChip === 'custom' ? (
+            <>
+              <DateList
+                isFocus={isCalendarOpen && !dateRange[1]}
+                date={startDateWithDayOfWeek}
+              />
+              {dateRange[1] ? (
+                <DateList
+                  isFocus={!!dateRange[1]}
+                  date={endDateWithDayOfWeek}
+                  onClick={() => setIsCalendarOpen(true)}
+                />
+              ) : (
+                <DateList.Plus
+                  isFocus={!isCalendarOpen}
+                  onClick={() => setIsCalendarOpen(true)}
+                />
+              )}
+            </>
           ) : (
-            <DateList date={endDateWithDayOfWeek} />
+            <>
+              <DateList date={startDateWithDayOfWeek} />
+              <DateList date={endDateWithDayOfWeek} />
+            </>
           )}
         </S.DateBtnContainer>
       </S.TopContainer>

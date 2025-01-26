@@ -8,8 +8,8 @@ export const formatDate = (date: Date | null) => {
 };
 
 // YYYY-MM-DD 형식 문자열을 MM월 DD일 형식으로 변환
-export const formatDateToMonthDay = (date: string) => {
-  const formattedDate = date.slice(0, 10); // 날짜까지
+export const formatDateToMonthDay = (dateString: string) => {
+  const formattedDate = dateString.slice(0, 10); // 날짜까지
   const [, month, day] = formattedDate.split('-');
   return `${parseInt(month, 10)}월 ${parseInt(day, 10)}일`;
 };
@@ -24,4 +24,13 @@ export const formatDateWithDayOfWeek = (date: Date | null) => {
   const dayOfWeek = days[date.getDay()];
 
   return `${year}-${month}-${day} (${dayOfWeek})`;
+};
+
+// YYYY-MM-DD 형식 문자열을 MM.DD 형식으로 변환
+export const formatDateToShort = (dateString: string) => {
+  const date = new Date(dateString);
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+
+  return `${month}.${day}`;
 };

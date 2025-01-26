@@ -8,30 +8,28 @@ const BottomSheet = ({ id, children }: BottomSheetProps) => {
   const { activeBottomSheet, setActiveBottomSheet } = useBottomSheetStore();
   const isOpen = activeBottomSheet === id;
   const [isRendered, setIsRendered] = useState(false); // 애니메이션 후 렌더링 상태
-  const { setShouldShowNavbar } = useNavbarStore();
+  const { shouldShowNavbar, setShouldShowNavbar } = useNavbarStore();
   const { sheetRef, contentRef } = useBottomSheet();
 
   // 애니메이션 후 렌더링 상태 관리
   useEffect(() => {
     if (isOpen) {
       setIsRendered(true); // BottomSheet가 열릴 때 바로 렌더링
-      setShouldShowNavbar(false); // 네비게이션바 숨기기
+      if (shouldShowNavbar) setShouldShowNavbar(false); // 네비게이션바 숨기기
       return;
     } else {
       const timer = setTimeout(() => {
         setIsRendered(false); // 애니메이션 종료 후 렌더링 중지
-        setShouldShowNavbar(true);
+        if (shouldShowNavbar) setShouldShowNavbar(true);
       }, 300); // 애니메이션 시간 (300ms)
       return () => clearTimeout(timer);
     }
-  }, [isOpen, isRendered, setShouldShowNavbar]);
+  }, [isOpen, isRendered, setShouldShowNavbar, shouldShowNavbar]);
 
   if (!isRendered) return null;
 
-  // console.log(sheetRef.current?.getBoundingClientRect().y);
-
   return (
-    <S.Overlay onClick={() => setActiveBottomSheet(null)}>
+    <S.Overlay $isOpen={isOpen} onClick={() => setActiveBottomSheet(null)}>
       <S.BottomSheet
         ref={sheetRef}
         onClick={(e) => e.stopPropagation()}

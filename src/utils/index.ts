@@ -2,6 +2,7 @@ export {
   formatDate,
   formatDateToMonthDay,
   formatDateWithDayOfWeek,
+  formatDateToShort,
 } from './dateFormatter';
 export { default as isInRange } from './isInDateRange';
 export { default as isSameDay } from './isSameDay';

@@ -57,6 +57,7 @@ export const BOTTOM_SHEET_ID_EVENT_SHARE = 'event-share';
 // Duration에서 쓰는 Chip
 export const DURATION_OPTIONS = [
   ['전체', 'all'],
+  ['직접 입력', 'custom'],
   ['오늘', 'today'],
   ['1주', 'one_week'],
   ['1개월', 'one_month'],
@@ -64,6 +65,7 @@ export const DURATION_OPTIONS = [
 ];
 
 export const PREDEFINED_RANGES = {
+  all: [new Date(), new Date(new Date().setFullYear(2999))],
   today: [new Date(), new Date()], // 오늘이 기준
   one_week: [
     new Date(),

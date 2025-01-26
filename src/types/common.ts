@@ -119,13 +119,13 @@ export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   color: BtnColor;
   size: BtnSize;
-  width: string;
+  width?: string;
 }
 
 export interface StyledButtonProps {
   $color: BtnColor;
   $size: BtnSize;
-  $width: string;
+  $width?: string;
 }
 
 // Backward

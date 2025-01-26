@@ -3,6 +3,7 @@ import styled from 'styled-components';
 export const Chip = styled.button<{ $isActive: boolean }>`
   padding: 8px 14px;
   border-radius: ${({ theme }) => theme.borderRadius.xlg};
+  white-space: nowrap;
   color: ${({ $isActive, theme }) =>
     $isActive ? theme.color.primary[600] : theme.color.gray[400]};
   ${({ $isActive, theme }) =>

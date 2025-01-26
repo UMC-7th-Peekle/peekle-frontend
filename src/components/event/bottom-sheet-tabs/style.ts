@@ -5,6 +5,7 @@ export const Container = styled.section`
   display: flex;
   flex-direction: column;
   gap: 20px;
+  overflow-x: hidden;
 
   // Tabs 컨테이너가 남은 공간을 채우도록 함
   & > div:first-child {

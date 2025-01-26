@@ -8,6 +8,7 @@ import { EventFilterKeys, FilterChipProps } from '@/types/event';
 import { useBottomSheetStore, useFilterTabsStore } from '@/stores';
 import { useEventFilter } from '@/hooks';
 import { BOTTOM_SHEET_ID_EVENT_FILTER } from '@/constants/event';
+import { formatDateToShort } from '@/utils';
 
 const getLabel = (option: string, value: string, defaultLabel: string) => {
   const optionsMap = {
@@ -17,7 +18,14 @@ const getLabel = (option: string, value: string, defaultLabel: string) => {
   } as const;
 
   if (option === 'duration') {
-    return value === 'all' ? '기간' : value.split(',').join('~');
+    if (value === 'all') {
+      return '기간';
+    }
+    const dates = value.split(',');
+    const formattedStartDate = formatDateToShort(dates[0]);
+    const formattedEndDate = formatDateToShort(dates[1]);
+
+    return `${formattedStartDate}~${formattedEndDate}`;
   }
 
   if (option === 'price') {
@@ -70,10 +78,10 @@ export const FilterChip = ({
   const hasChanged = currentValue !== defaultValue;
 
   return (
-    <S.Select onClick={handleSelectClick} $isActive={hasChanged}>
+    <S.FilterChip onClick={handleSelectClick} $isActive={hasChanged}>
       {hasChanged ? label : defaultLabel}
       <S.ArrowDownIcon />
-    </S.Select>
+    </S.FilterChip>
   );
 };
 

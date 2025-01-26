@@ -36,7 +36,7 @@ const ImageSlider = ({ images, title = 'event' }: ImageSliderProps) => {
           animate={{
             opacity: 1,
           }}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: 0.2 }}
         >
           {images[currentIndex] ? (
             <S.Image

@@ -22,7 +22,14 @@ export const TopContainer = styled.section`
 export const ChipContainer = styled.div`
   display: flex;
   gap: 8px;
-  ${theme.typeFace.body['18SB']};
+  width: 100%;
+  margin: 0 -20px; // 패딩 영역 밖으로 확장
+  padding: 0 20px 0 20px;
+
+  overflow-x: scroll;
+  &::-webkit-scrollbar {
+    display: none; // 스크롤바 숨기기
+  }
 `;
 
 export const DateBtnContainer = styled.div`

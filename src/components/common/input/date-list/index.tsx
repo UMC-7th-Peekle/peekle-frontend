@@ -11,9 +11,9 @@ interface Props {
   onClick?: () => void;
 }
 
-const DateList = ({ date, isFocus = false }: Props) => {
+const DateList = ({ date, isFocus = false, onClick }: Props) => {
   return (
-    <DateListCard isFocus={isFocus}>
+    <DateListCard isFocus={isFocus} onClick={onClick}>
       <DateListText>{date}</DateListText>
     </DateListCard>
   );
@@ -22,7 +22,7 @@ const DateList = ({ date, isFocus = false }: Props) => {
 DateList.Plus = ({ isFocus = false, onClick }: Props) => {
   return (
     <DateListCard isFocus={isFocus} onClick={onClick}>
-      <DateListTextPlus>{'기간 추가'}</DateListTextPlus>
+      <DateListTextPlus>기간 추가</DateListTextPlus>
       <PlusIcon />
     </DateListCard>
   );
