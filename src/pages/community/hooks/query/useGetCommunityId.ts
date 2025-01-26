@@ -1,7 +1,7 @@
 import { AxiosError, AxiosRequestConfig } from 'axios';
 import { UndefinedInitialDataOptions } from '@tanstack/react-query';
 import z, { ZodError, ZodSchema, ZodTypeDef } from 'zod';
-import { ApiError, usePeekleQeury } from '@/hooks/usePeekleQeury';
+import { ApiError, usePeekleQuery } from '@/hooks/usePeekleQuery';
 
 /**
  * API 응답 타입 정의
@@ -73,7 +73,7 @@ export function useGetCommunityId<TRaw, TData = TRaw>({
     },
   };
 
-  return usePeekleQeury<
+  return usePeekleQuery<
     GetCommunityIdResponse<TRaw>,
     GetCommunityIdResponse<TData>,
     AxiosError | ApiError | ZodError
