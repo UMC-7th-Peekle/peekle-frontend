@@ -13,6 +13,11 @@ const DefaultTypeContainer = styled.button`
   align-items: center;
   justify-content: center;
   gap: 8px;
+  transition: filter 0.2s ease;
+
+  &:active {
+    filter: brightness(0.9);
+  }
 `;
 
 const RectTypeContainer = styled(DefaultTypeContainer)`

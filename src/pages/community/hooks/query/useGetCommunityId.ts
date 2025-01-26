@@ -1,15 +1,16 @@
 import { clientAuth } from '@/apis/client';
+import { formatDateCardTime } from '@/utils/dateFormatter';
 import { useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 
 // Zod 스키마 정의
 const ArticleSchema = z.object({
-  articleId: z.number(),
+  articleId: z.number().transform((value) => value.toString()),
   title: z.string(),
   content: z.string(),
   authorId: z.number(),
   communityId: z.number(),
-  createdAt: z.string().transform(formatDate), // 변환 추가
+  createdAt: z.string().transform(formatDateCardTime),
   updatedAt: z.string(),
   isAnonymous: z.boolean().optional(),
 });

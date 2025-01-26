@@ -27,3 +27,10 @@ export const Title = styled.h1`
   color: ${theme.color.gray[900]};
   font-size: ${theme.typeFace.subTitle[24]};
 `;
+
+export const EditButtonWrapper = styled.div`
+  position: fixed;
+  bottom: 88px;
+  right: 16px;
+  z-index: 1000;
+`;

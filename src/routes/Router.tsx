@@ -7,6 +7,8 @@ import {
   EventScrapPage,
   EventDetailPage,
   NotFoundPage,
+  CommunityEditPage,
+  CommunityDetailPage,
 } from '@/pages';
 import UserPage from '@/pages/user/page';
 import { ROUTES } from '@/constants/routes';
@@ -68,6 +70,14 @@ const router = createBrowserRouter(
         {
           path: ROUTES.COMMUNITY_LIKE,
           element: <CommunityLikePage />,
+        },
+        {
+          path: ROUTES.COMMUNITY_EDIT,
+          element: <CommunityEditPage />,
+        },
+        {
+          path: ROUTES.COMMUNITY_DETAIL,
+          element: <CommunityDetailPage />,
         },
         {
           path: '/user',

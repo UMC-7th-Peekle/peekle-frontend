@@ -3,12 +3,16 @@ import * as S from './style';
 import { ReactNode } from 'react';
 
 const BodySection = ({ children }: BodySectionProps) => {
-  return <S.Container>${children}</S.Container>;
+  return <S.Container>{children}</S.Container>;
 };
 
 interface BodySectionProps {
   children?: ReactNode;
 }
+
+BodySection.Skeleton = () => {
+  return <></>;
+};
 
 BodySection.None = () => {
   return (

@@ -2,6 +2,7 @@ import { theme } from '@/styles/theme';
 import styled from 'styled-components';
 
 export const NavbarContainer = styled.nav`
+  position: fixed;
   display: flex;
   justify-content: center;
   gap: 72px;
