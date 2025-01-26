@@ -1,7 +1,23 @@
 import styled from 'styled-components';
-import ArrowDownSVG from '@/assets/images/icons/arrow-down.svg?react';
 import { theme } from '@/styles/theme';
+import ArrowDownSVG from '@/assets/images/icons/arrow-down.svg?react';
+import HamburgerSVG from '@/assets/images/icons/hamburger.svg?react';
 
+// 이벤트 페이지 드롭다운
+export const EventDropdown = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: ${theme.color.gray[600]};
+  ${theme.typeFace.body['16SB']}
+`;
+
+export const HamburgerIcon = styled(HamburgerSVG)`
+  width: 20px;
+  height: 20px;
+`;
+
+// 일반 드롭다운
 export const Dropdown = styled.div<{ $isActive: boolean; $width?: string }>`
   position: relative;
   display: flex;
@@ -11,14 +27,13 @@ export const Dropdown = styled.div<{ $isActive: boolean; $width?: string }>`
   justify-content: center;
   align-items: center;
   gap: 6px;
-  color: ${({ $isActive, theme }) =>
+  color: ${({ $isActive }) =>
     $isActive ? theme.color.gray[0] : theme.color.gray[400]};
-  background: ${({ $isActive, theme }) =>
+  background: ${({ $isActive }) =>
     $isActive ? theme.color.primary[500] : theme.color.gray[0]};
-  border: 1px solid
-    ${({ $isActive, theme }) => !$isActive && theme.color.gray[100]};
-  border-radius: ${({ theme }) => theme.borderRadius.xlg};
-  ${({ $isActive, theme }) =>
+  border: 1px solid ${({ $isActive }) => !$isActive && theme.color.gray[100]};
+  border-radius: ${theme.borderRadius.xlg};
+  ${({ $isActive }) =>
     $isActive ? theme.typeFace.body['16SB'] : theme.typeFace.body['16R']};
   cursor: pointer;
 `;
@@ -30,7 +45,8 @@ export const ArrowDownIcon = styled(ArrowDownSVG)`
 
 export const List = styled.ul<{ $dropdownRect?: DOMRect }>`
   position: absolute;
-  top: ${({ $dropdownRect }) => $dropdownRect?.bottom ?? 40}px;
+  top: ${({ $dropdownRect }) =>
+    $dropdownRect?.bottom ? `calc(${$dropdownRect.bottom}px + 15px)` : '100px'};
   left: ${({ $dropdownRect }) => $dropdownRect?.left ?? 0}px;
   width: 186px;
   z-index: 11;

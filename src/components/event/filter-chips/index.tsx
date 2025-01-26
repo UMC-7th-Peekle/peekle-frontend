@@ -22,36 +22,40 @@ const FilterChips = () => {
 
   return (
     <>
-      <S.FilterChipsWrapper>
+      <S.filterChipsContainer>
         <Dropdown
           list={SORT_OPTIONS}
           onSelect={(value) => handleSortChange(value)}
+          isEventPage={true}
         />
-        <FilterChip
-          key={'category'}
-          option={'category'}
-          defaultValue={'all'}
-          defaultLabel={'카테고리'}
-        />
-        <FilterChip
-          key={'duration'}
-          option={'duration'}
-          defaultValue={'all'}
-          defaultLabel={'기간'}
-        />
-        <FilterChip
-          key={'price'}
-          option={'price'}
-          defaultValue={'all'}
-          defaultLabel={'비용'}
-        />
-        <FilterChip
-          key={'location'}
-          option={'location'}
-          defaultValue={'all'}
-          defaultLabel={'지역'}
-        />
-      </S.FilterChipsWrapper>
+        <S.LineIcon />
+        <S.FilterChipsWrapper>
+          <FilterChip
+            key={'category'}
+            option={'category'}
+            defaultValue={'all'}
+            defaultLabel={'카테고리'}
+          />
+          <FilterChip
+            key={'duration'}
+            option={'duration'}
+            defaultValue={'all'}
+            defaultLabel={'기간'}
+          />
+          <FilterChip
+            key={'price'}
+            option={'price'}
+            defaultValue={'all'}
+            defaultLabel={'비용'}
+          />
+          <FilterChip
+            key={'location'}
+            option={'location'}
+            defaultValue={'all'}
+            defaultLabel={'지역'}
+          />
+        </S.FilterChipsWrapper>
+      </S.filterChipsContainer>
       <BottomSheet id={BOTTOM_SHEET_ID_EVENT_FILTER}>
         <BottomSheetTabs />
       </BottomSheet>
