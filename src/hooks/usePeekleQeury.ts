@@ -40,7 +40,7 @@ export interface ApiError {
  * @typeParam TData - `queryOptions.select` 함수를 정의하여 변환한 값의 타입입니다. 기본값은 `TRaw`와 동일합니다.
  * @typeParam TQueryKey - `queryKey`의 타입을 바꾸고 싶다면 사용합니다. 기본 타입은 기본 제공되는 `QueryKey`입니다.
  */
-export function useStuQuery<
+export function usePeekleQeury<
   TRaw,
   TData = TRaw,
   TError = AxiosError | ApiError,

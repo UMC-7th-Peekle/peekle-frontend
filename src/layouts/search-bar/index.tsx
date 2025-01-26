@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import * as S from './style';
 import TextFields from '@/components/common/input/text-fields';
+import Backward from '@/components/common/backward';
 
 interface SearchBarProps {
   queryKey: string;
@@ -15,11 +16,6 @@ export const SearchBar = ({
 }: SearchBarProps) => {
   const navigate = useNavigate();
 
-  // 뒤로가기 버튼 따로 제작 필요
-  const handleBackClick = () => {
-    navigate(-1);
-  };
-
   const handleMapClick = () => {
     navigate('/event/map');
   };
@@ -31,7 +27,7 @@ export const SearchBar = ({
 
   return (
     <S.SearchBarWrapper3>
-      <S.BackIcon onClick={handleBackClick} />
+      <Backward />
       <TextFields
         queryKey={queryKey}
         placeholder={placeholder}

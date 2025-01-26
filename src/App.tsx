@@ -12,7 +12,7 @@ import { ThemeProvider } from 'styled-components';
 import { theme } from '@/styles/theme';
 import GlobalStyles from '@/styles/GlobalStyles';
 import '@/styles/fonts.css';
-import { Alert, Confirm } from '@/components';
+import { Alert, Confirm, Toast } from '@/components';
 import Router from '@/routes/Router';
 
 function App() {
@@ -29,6 +29,7 @@ function App() {
                 <Suspense fallback={<DeferredLoader />}>
                   <Alert />
                   <Confirm />
+                  <Toast />
                   <Router />
                 </Suspense>
               </NuqsAdapter>

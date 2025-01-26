@@ -38,7 +38,18 @@ const EventDetailPage = () => {
 
   const handleCopyLink = () => {
     copyToClipboard(window.location.href);
-    alert('링크가 복사되었습니다.'); // 임시 알림 추가
+    alert(
+      '링크가 복사되었습니다.',
+      'warning',
+      '취소',
+      '확인',
+      () => {
+        console.log('btn1클릭');
+      },
+      () => {
+        console.log('btn2클릭');
+      },
+    ); // 임시 알림 추가
   };
 
   const handleToggleHeart = () => {

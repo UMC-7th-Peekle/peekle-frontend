@@ -47,7 +47,7 @@ export const useTextFields = ({
 
   const handleSubmit = () => {
     if (inputValue.length < 2) {
-      alert('두 글자 이상 입력해주세요.');
+      alert('두 글자 이상 입력해주세요.', 'none', '확인');
       return;
     }
     if (timeoutRef.current) {

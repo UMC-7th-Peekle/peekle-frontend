@@ -1,8 +1,17 @@
-// import * as S from './style';
+import * as S from './style';
 import { useState } from 'react';
 
 const Loader = () => {
-  return <p>로딩</p>;
+  return (
+    <S.Loader
+      role="status"
+      aria-live="polite"
+      aria-busy="true"
+      aria-label="로더"
+    >
+      <S.LoaderText>임시 켁스트: 로딩중입니다</S.LoaderText>
+    </S.Loader>
+  );
 };
 
 const DeferredLoader = () => {
@@ -11,7 +20,7 @@ const DeferredLoader = () => {
   const handleDeferred = () => {
     setTimeout(() => {
       setIsDeferred(true);
-    }, 200);
+    }, 300);
   };
 
   if (!isDeferred) {

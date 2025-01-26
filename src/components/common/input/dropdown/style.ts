@@ -32,16 +32,16 @@ export const List = styled.ul<{ $dropdownRect?: DOMRect }>`
   position: absolute;
   top: ${({ $dropdownRect }) => $dropdownRect?.bottom ?? 40}px;
   left: ${({ $dropdownRect }) => $dropdownRect?.left ?? 0}px;
-  width: 100%;
+  width: 186px;
   z-index: 11;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  width: 186px;
   padding: 20px;
   gap: 16px;
   background: ${theme.color.gray[0]};
   border-radius: ${({ theme }) => theme.borderRadius.lg};
+  box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.25);
   cursor: pointer;
 `;
 
