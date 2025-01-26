@@ -1,9 +1,14 @@
 import EditButton from '@/components/community/edit-button';
 import * as S from './style';
+import { ReactNode } from 'react';
 
-const BodySection = () => {
-  return <div>Default BodySection</div>;
+const BodySection = ({ children }: BodySectionProps) => {
+  return <S.Container>${children}</S.Container>;
 };
+
+interface BodySectionProps {
+  children?: ReactNode;
+}
 
 BodySection.None = () => {
   return (
