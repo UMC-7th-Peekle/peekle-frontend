@@ -18,12 +18,7 @@ export const useTextFields = ({
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { filteredEvent, setFilteredEvent } = useFilteredEventStore();
 
-  // query 변경 시 inputValue 업데이트 - 검색 기록 클릭 대응
-  useEffect(() => {
-    setInputValue(query ?? '');
-  }, [query]);
-
-  // timeoutRef 정리
+  // unmount시 timeoutRef 정리
   useEffect(() => {
     return () => {
       if (timeoutRef.current) {
@@ -31,6 +26,11 @@ export const useTextFields = ({
       }
     };
   }, []);
+
+  // query 변경 시 inputValue 업데이트 - 이전 검색 기록 클릭 대응
+  useEffect(() => {
+    if (query) setInputValue(query);
+  }, [query]);
 
   // 검색 입력 핸들러
   const handleChange = (value: string) => {

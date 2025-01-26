@@ -69,8 +69,12 @@ const useEventFilter = ({
       }
 
       // 검색 필터
-      if (searchQuery && searchQuery.length >= 2) {
-        if (!event.title.includes(searchQuery)) return false;
+      if (searchQuery) {
+        if (searchQuery.length < 2) {
+          return false;
+        } else {
+          if (!event.title.includes(searchQuery)) return false;
+        }
       }
 
       return true;
