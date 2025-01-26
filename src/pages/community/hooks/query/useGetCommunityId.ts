@@ -2,38 +2,6 @@ import { clientAuth } from '@/apis/client';
 import { useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 
-import {
-  format,
-  differenceInMinutes,
-  differenceInHours,
-  differenceInDays,
-  isSameYear,
-} from 'date-fns';
-
-// 시간 변환 함수
-const formatDate = (createdAt: string): string => {
-  const now = new Date();
-  const date = new Date(createdAt);
-
-  const minutesDiff = differenceInMinutes(now, date);
-  const hoursDiff = differenceInHours(now, date);
-  const daysDiff = differenceInDays(now, date);
-
-  if (minutesDiff < 60) {
-    return `${minutesDiff}분 전`;
-  } else if (hoursDiff < 24) {
-    return `${hoursDiff}시간 전`;
-  } else if (daysDiff === 1) {
-    return `어제 ${format(date, 'HH:mm')}`;
-  } else if (daysDiff <= 3) {
-    return `${daysDiff}일 전 ${format(date, 'HH:mm')}`;
-  } else if (isSameYear(now, date)) {
-    return `${format(date, 'MM/dd HH:mm')}`;
-  } else {
-    return `${format(date, 'yyyy/MM/dd HH:mm')}`;
-  }
-};
-
 // Zod 스키마 정의
 const ArticleSchema = z.object({
   articleId: z.number(),
