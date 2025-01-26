@@ -17,64 +17,59 @@ const ProtectedPage = ({ children }: { children: React.ReactNode }) => {
   return children;
 };
 
-const router = createBrowserRouter(
-  [
-    {
-      path: '/',
-      element: (
-        <ProtectedPage>
-          <Layout />
-        </ProtectedPage>
-      ),
-      errorElement: <ErrorFallback />,
-      children: [
-        {
-          path: '/event',
-          element: <EventPage />,
-        },
-        {
-          path: '/event/map',
-          element: <EventMapPage />,
-        },
-        {
-          path: '/event/search',
-          element: <EventSearchPage />,
-        },
-        {
-          path: '/event/scrap',
-          element: <EventScrapPage />,
-        },
-        {
-          path: '/event/:id',
-          element: <EventDetailPage />,
-        },
-        {
-          path: '/auth/signup',
-          // element: <SignUpPage />
-        },
-        {
-          path: '/auth/signin',
-          // element: <SignInPage />
-        },
-        {
-          path: '/community',
-          element: <CommunityPage />,
-        },
-        {
-          path: '/user',
-          element: <UserPage />,
-        },
-        {
-          path: '*',
-          element: <NotFoundPage />, // 404는 라우트로 처리
-        },
-      ],
-    },
-  ],
+const router = createBrowserRouter([
   {
-    basename: import.meta.env.PUBLIC_URL,
+    path: '/',
+    element: (
+      <ProtectedPage>
+        <Layout />
+      </ProtectedPage>
+    ),
+    errorElement: <ErrorFallback />,
+    children: [
+      {
+        path: '/event',
+        element: <EventPage />,
+      },
+      {
+        path: '/event/map',
+        element: <EventMapPage />,
+      },
+      {
+        path: '/event/search',
+        element: <EventSearchPage />,
+      },
+      {
+        path: '/event/scrap',
+        element: <EventScrapPage />,
+      },
+      {
+        path: '/event/:id',
+        element: <EventDetailPage />,
+      },
+      {
+        path: '/auth/signup',
+        // element: <SignUpPage />
+      },
+      {
+        path: '/auth/signin',
+        // element: <SignInPage />
+      },
+      {
+        path: '/community',
+        element: <CommunityPage />,
+      },
+      {
+        path: '/user',
+        element: <UserPage />,
+      },
+      {
+        path: '*',
+        element: <NotFoundPage />, // 404는 라우트로 처리
+      },
+    ],
   },
-);
+]);
 
 const Router = () => {
   return <RouterProvider router={router} />;

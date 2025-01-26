@@ -28,7 +28,7 @@ const getLabel = (option: string, value: string, defaultLabel: string) => {
     );
   }
 
-  // 중복가능 값이면 (카테고리, 지역) 라벨을 찾아서 join
+  // 중복가능 값이면 (카테고리, 지역) 개수로 표시
   const labels = value
     .split(',')
     .map(
@@ -39,7 +39,11 @@ const getLabel = (option: string, value: string, defaultLabel: string) => {
     )
     .filter(Boolean);
 
-  return labels.length ? labels.join(', ') : defaultLabel;
+  return labels.length > 1
+    ? `${option === 'category' ? '카테고리' : '지역'} ${labels.length}`
+    : labels.length === 1
+      ? labels
+      : defaultLabel;
 };
 
 export const FilterChip = ({

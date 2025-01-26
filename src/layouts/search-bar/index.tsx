@@ -21,7 +21,6 @@ export const SearchBar = ({
   };
 
   const handleTextFieldsClick = () => {
-    console.log('click');
     navigate('/event/search');
   };
 

@@ -50,8 +50,6 @@ export const Dropdown = ({
   const DropdownComponent = isEventPage ? S.EventDropdown : S.Dropdown;
   const IconComponent = isEventPage ? S.HamburgerIcon : S.ArrowDownIcon;
 
-  console.log(dropdownRect?.bottom);
-
   return (
     <DropdownComponent
       ref={dropdownRef}

@@ -40,6 +40,15 @@ export const EVENT_FILTER_KEYS = [
   'location',
 ];
 
+// 기본 필터값
+export const DEFAULT_FILTERS = {
+  sort: 'latest',
+  category: 'all',
+  duration: 'all',
+  price: 'all',
+  location: 'all',
+};
+
 // BottomSheet
 export const BOTTOM_SHEET_ID_EVENT_FILTER = 'event-filter';
 export const BOTTOM_SHEET_ID_EVENT_INFO = 'event-info'; // map에서 사용
