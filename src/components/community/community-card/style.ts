@@ -69,13 +69,13 @@ const Date = styled.p`
 const Thumbnail = styled.div<ThumbnailProps>`
   width: 80px;
   height: 80px;
-  background-image: url(${(props) => props.imageUrl});
+  background-image: url(${(props) => props.image});
   background-size: cover;
   background-position: center;
   border-radius: 8px;
 `;
 interface ThumbnailProps {
-  imageUrl: string;
+  image: string;
 }
 
 export {

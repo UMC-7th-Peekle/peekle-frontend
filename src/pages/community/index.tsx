@@ -10,8 +10,7 @@ import { EditButton } from '@/components';
 
 export default function CommunityPage() {
   const navigate = useNavigate();
-  const communityId = 1; // 임시로 설정
-  const { data, error, isLoading } = useGetCommunityId(communityId);
+  const { data, error, isLoading } = useGetCommunityId(1);
 
   // 로딩 상태 처리
   if (isLoading)

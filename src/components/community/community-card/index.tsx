@@ -24,7 +24,7 @@ export default function CommunityCard({
         <S.Date>{date}</S.Date>
       </S.LeftContainer>
       <S.RightContainer>
-        <S.Thumbnail imageUrl={imgUrl || defaultImageUrl} />
+        <S.Thumbnail image={imgUrl || defaultImageUrl} />
         <S.CounterContainer>
           <LikeCounter />
           <CommentCounter />

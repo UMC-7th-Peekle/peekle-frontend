@@ -15,7 +15,7 @@ BodySection.Skeleton = () => {
   return (
     <BodySection>
       {Array.from({ length: 5 }, (_, index) => (
-        <CommunityCardSkeleton key={index} />
+        <CommunityCardSkeleton key={`skeleton-${index}`} />
       ))}
     </BodySection>
   );

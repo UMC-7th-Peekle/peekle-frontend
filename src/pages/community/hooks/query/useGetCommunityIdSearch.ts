@@ -57,7 +57,6 @@ export const useGetCommunityIdSearch = ({
     queryKey: ['community', communityId, query],
     queryFn: () => getCommunityIdSearch(communityId, query),
     enabled: isQueryValid,
-    staleTime: 1000 * 60 * 5,
   });
 };
 
