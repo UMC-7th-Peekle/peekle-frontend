@@ -1,56 +1,29 @@
 import * as S from './style';
-import { useGetCommunityId } from '@/pages/community/hooks/query/useGetCommunityId';
-import { Backward, TextFields } from '@/components';
-import { useQueryState } from 'nuqs';
-import { useState } from 'react';
+import { useGetCommunityIdSearch } from '@/pages/community/hooks/query/useGetCommunityIdSearch';
+import { Backward, CommunityCard, TextFields } from '@/components';
 import * as SS from '../../event/search/style';
+import BodySection from '../container/body-section';
+import { useRecentSearch } from '@/hooks';
 
 export default function CommunitySearchPage() {
-  const communityId = 1; // 임시로 설정
-  const { data, error, isLoading } = useGetCommunityId(communityId);
+  const {
+    query,
+    isSearched,
+    recentSearch,
+    handleClear,
+    handleRemoveRecentSearch,
+    handleRecentSearchClick,
+  } = useRecentSearch({
+    queryKey: 'community-search',
+    localKey: 'recent-community-search',
+  });
 
-  console.log(data);
+  const { data, error, isLoading } = useGetCommunityIdSearch({
+    communityId: 1,
+    query: query ?? '',
+  });
 
-  // 쿼리 파람으로 검색 여부 확인
-  const [query, setQuery] = useQueryState('community-search');
-  const isSearched = !!query;
-  const [recentSearch, setRecentSearch] = useState<string[]>(() =>
-    JSON.parse(localStorage.getItem('recent-community-search') ?? '[]'),
-  );
-
-  const handleClear = () => {
-    localStorage.removeItem('recent-community-search');
-    setRecentSearch([]);
-  };
-
-  const handleRemoveRecentSearch = (search: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    const newSearches = recentSearch.filter((item) => item !== search);
-    localStorage.setItem(
-      'recent-community-search',
-      JSON.stringify(newSearches),
-    );
-    setRecentSearch(newSearches);
-  };
-
-  const handleRecentSearchClick = (search: string) => {
-    setQuery(search);
-  };
-
-  // 로딩 상태 처리
-  if (isLoading)
-    return (
-      <>
-        <S.MainContainer>
-          <S.Appbar>
-            <Backward size={'28px'} />
-          </S.Appbar>
-        </S.MainContainer>
-      </>
-    );
-
-  // 에러 상태 처리
-  if (error) return <></>;
+  console.log(data?.success.articles);
 
   return (
     <>
@@ -89,6 +62,25 @@ export default function CommunitySearchPage() {
           ) : (
             <SS.EmptyText>최근 검색 내역이 없습니다.</SS.EmptyText>
           ))}
+        {error && (
+          <BodySection.None
+            subTitle={`"${query}"에 관한\n첫 게시글을 작성해보세요!`}
+          ></BodySection.None>
+        )}
+        {isLoading && <BodySection.Skeleton />}
+        {isSearched && data?.success?.articles.length && (
+          <BodySection>
+            {data.success.articles.map((article) => (
+              <CommunityCard
+                key={article.articleId}
+                articleId={article.articleId}
+                title={article.title}
+                content={article.content}
+                date={article.createdAt}
+              />
+            ))}
+          </BodySection>
+        )}
       </S.MainContainer>
     </>
   );

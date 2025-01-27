@@ -21,13 +21,17 @@ BodySection.Skeleton = () => {
   );
 };
 
-BodySection.None = () => {
+BodySection.None = ({ subTitle }: BodySectionNoneProps) => {
   return (
     <S.NoneContainer>
-      <S.SubTitle>첫 번째 게시글을{'\n'}작성해보세요!</S.SubTitle>
+      <S.SubTitle>{subTitle}</S.SubTitle>
       <EditButton.RectType></EditButton.RectType>
     </S.NoneContainer>
   );
 };
+
+interface BodySectionNoneProps {
+  subTitle: string;
+}
 
 export default BodySection;

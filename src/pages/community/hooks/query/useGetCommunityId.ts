@@ -9,10 +9,10 @@ const ArticleSchema = z.object({
   title: z.string(),
   content: z.string(),
   authorId: z.number(),
+  isAnonymous: z.boolean().optional(),
   communityId: z.number(),
   createdAt: z.string().transform(formatDateCardTime),
   updatedAt: z.string(),
-  isAnonymous: z.boolean().optional(),
 });
 
 const SuccessResponseSchema = z.object({
@@ -33,7 +33,7 @@ export type CommunityResponse = z.infer<typeof CommunityResponseSchema>;
 export type Article = z.infer<typeof ArticleSchema>;
 
 // API 호출 함수
-const fetchCommunityById = async (
+const getCommunityId = async (
   communityId: number,
 ): Promise<CommunityResponse> => {
   const response = await clientAuth<CommunityResponse>({
@@ -50,6 +50,6 @@ const fetchCommunityById = async (
 export const useGetCommunityId = (communityId: number) => {
   return useQuery({
     queryKey: ['community', communityId],
-    queryFn: () => fetchCommunityById(communityId),
+    queryFn: () => getCommunityId(communityId),
   });
 };

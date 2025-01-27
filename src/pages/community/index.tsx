@@ -59,7 +59,7 @@ export default function CommunityPage() {
           </>
         ) : (
           // 아무 게시글도 없을 때
-          <BodySection.None />
+          <BodySection.None subTitle={'첫 번째 게시글을\n작성해보세요!'} />
         )}
       </S.MainContainer>
       {data?.success?.articles.length && (
