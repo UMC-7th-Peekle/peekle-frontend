@@ -14,16 +14,12 @@ import { useEventFilter } from '@/hooks';
 const today = new Date();
 
 const getDateRangeFromStoredValue = (storedValue: string) => {
-  if (storedValue && storedValue !== 'all' && !storedValue.endsWith('DD')) {
-    const [start, end] = storedValue
-      .split(',')
-      .map((date: string) => new Date(date));
-    return [start, end];
-  }
-  if (storedValue.endsWith('DD')) {
-    return [today, null];
-  }
-  return [today, new Date(new Date().setFullYear(2999))];
+  if (storedValue === 'all')
+    return [today, new Date(new Date().setFullYear(2999))];
+  if (storedValue.endsWith('DD')) return [today, null];
+
+  const [start, end] = storedValue.split(',').map((date) => new Date(date));
+  return [start, end];
 };
 
 const Duration = () => {
@@ -49,21 +45,13 @@ const Duration = () => {
     } else if (storedValue.endsWith('DD')) {
       setSelectedChip('custom');
     } else {
-      let matched = false;
-      for (const [key, value] of Object.entries(PREDEFINED_RANGES)) {
-        const [predefinedStart, predefinedEnd] = value;
-        if (
-          formatDate(new Date(storedStart)) === formatDate(predefinedStart) &&
-          formatDate(new Date(storedEnd)) === formatDate(predefinedEnd)
-        ) {
-          setSelectedChip(key);
-          matched = true;
-          break;
-        }
-      }
-      if (!matched) {
-        setSelectedChip('custom');
-      }
+      const matchedChip = Object.entries(PREDEFINED_RANGES).find(
+        ([, [start, end]]) =>
+          formatDate(new Date(storedStart)) === formatDate(start) &&
+          formatDate(new Date(storedEnd)) === formatDate(end),
+      );
+
+      setSelectedChip(matchedChip ? matchedChip[0] : 'custom');
     }
   }, [storedValue, dateRange]);
 
@@ -77,27 +65,17 @@ const Duration = () => {
 
   // 날짜 범위와 Chip 상태 매칭
   const getMatchingChip = (dateRange: DateRange) => {
-    const [start, end] = dateRange;
-
     if (selectedChip === 'all') return 'all';
+    if (!dateRange[0] || !dateRange[1] || selectedChip === 'custom')
+      return 'custom';
 
-    if (!start || !end || selectedChip === 'custom') return 'custom';
+    const match = Object.entries(PREDEFINED_RANGES).find(
+      ([, [start, end]]) =>
+        formatDate(dateRange[0]) === formatDate(start) &&
+        formatDate(dateRange[1]) === formatDate(end),
+    );
 
-    for (const [, value] of DURATION_OPTIONS) {
-      if (value === 'custom') continue;
-
-      const [predefinedStart, predefinedEnd] =
-        PREDEFINED_RANGES[value as keyof typeof PREDEFINED_RANGES];
-      if (
-        formatDate(start) === formatDate(predefinedStart) &&
-        formatDate(end) === formatDate(predefinedEnd)
-      ) {
-        return value;
-      }
-    }
-
-    // 매칭되는 기간이 없으면 어떤 Chip도 active X
-    return 'null';
+    return match ? match[0] : 'null';
   };
 
   // Chip 클릭
@@ -106,24 +84,17 @@ const Duration = () => {
     setIsCalendarOpen(false);
 
     if (value === 'all') {
+      setDateRange([today, new Date(new Date().setFullYear(2999))]);
       handleSelect('all');
-      const endDate = new Date(today); // 복제
-      endDate.setFullYear(2999);
-      setDateRange([today, endDate]);
-      return;
-    }
-
-    if (value === 'custom') {
-      handleSelect(`${formatDate(today)}, YYYY-MM-DD`);
+    } else if (value === 'custom') {
       setDateRange([today, null]);
-      return;
+      handleSelect(`${formatDate(today)}, YYYY-MM-DD`);
+    } else {
+      const range = PREDEFINED_RANGES[value as keyof typeof PREDEFINED_RANGES];
+      const [predefinedStart, predefinedEnd] = range;
+      setDateRange([predefinedStart, predefinedEnd]);
+      handleSelect(`${formatDate(range[0])},${formatDate(range[1])}`);
     }
-
-    const range = PREDEFINED_RANGES[value as keyof typeof PREDEFINED_RANGES];
-    const [predefinedStart, predefinedEnd] = range;
-    setDateRange([predefinedStart, predefinedEnd]);
-    const dateString = `${formatDate(predefinedStart)},${formatDate(predefinedEnd)}`;
-    handleSelect(dateString);
   };
 
   // 캘린더 날짜 선택
