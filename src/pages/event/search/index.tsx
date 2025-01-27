@@ -9,18 +9,18 @@ const EventSearchPage = () => {
   const [query, setQuery] = useQueryState('event-search');
   const isSearched = !!query;
   const [recentSearch, setRecentSearch] = useState<string[]>(() =>
-    JSON.parse(localStorage.getItem('recent-search') ?? '[]'),
+    JSON.parse(localStorage.getItem('recent-event-search') ?? '[]'),
   );
 
   const handleClear = () => {
-    localStorage.removeItem('recent-search');
+    localStorage.removeItem('recent-event-search');
     setRecentSearch([]);
   };
 
   const handleRemoveRecentSearch = (search: string, e: React.MouseEvent) => {
     e.stopPropagation();
     const newSearches = recentSearch.filter((item) => item !== search);
-    localStorage.setItem('recent-search', JSON.stringify(newSearches));
+    localStorage.setItem('recent-event-search', JSON.stringify(newSearches));
     setRecentSearch(newSearches);
   };
 
@@ -31,7 +31,11 @@ const EventSearchPage = () => {
   return (
     <S.Container>
       <S.HeaderContainer>
-        <SearchBar queryKey="event-search" placeholder="관심있는 활동 검색" />
+        <SearchBar
+          queryKey="event-search"
+          localKey="recent-event-search"
+          placeholder="관심있는 활동 검색"
+        />
       </S.HeaderContainer>
       {!isSearched &&
         (recentSearch.length > 0 ? (

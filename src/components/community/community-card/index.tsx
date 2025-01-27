@@ -47,12 +47,12 @@ export const CommunityCardSkeleton = () => {
   return (
     <S.Container to="#">
       <S.LeftContainer>
-        <Skeleton width="60%" height="20px" style={{ marginBottom: '8px' }} />{' '}
-        <Skeleton count={2} height="15px" style={{ marginBottom: '12px' }} />{' '}
-        <Skeleton width="40%" height="14px" />
+        <Skeleton width="180px" height="20px" style={{ marginBottom: '8px' }} />
+        <Skeleton width="200px" height="40px" style={{ marginBottom: '8px' }} />
+        <Skeleton width="40px" height="20px" />
       </S.LeftContainer>
       <S.RightContainer>
-        <Skeleton width="80px" height="80px" style={{ borderRadius: '8px' }} />{' '}
+        <Skeleton width="80px" height="80px" style={{ borderRadius: '8px' }} />
         <S.CounterContainer>
           <Skeleton circle width="20px" height="20px" />
           <Skeleton circle width="20px" height="20px" />

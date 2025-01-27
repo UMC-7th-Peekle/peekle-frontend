@@ -6,6 +6,9 @@ interface SearchProps {
   placeholder?: string;
   onQuerySubmit?: (query: string) => void;
   onClick?: () => void; // 클릭시 검색 페이지로 이동
+  max_width?: number;
+  min_width?: number;
+  localKey: string;
 }
 
 export const TextFields = ({
@@ -13,15 +16,19 @@ export const TextFields = ({
   placeholder = '관심 있는 활동 검색',
   onQuerySubmit = () => {},
   onClick,
+  max_width,
+  min_width,
+  localKey,
 }: SearchProps) => {
   const { inputValue, handleChange, handleKeyDown, handleClear } =
     useTextFields({
       queryKey,
+      localKey,
       onQuerySubmit,
     });
 
   return (
-    <S.SearchWrapper>
+    <S.SearchWrapper max_width={max_width} min_width={min_width}>
       <S.SearchIcon />
       <S.SearchInput
         id="search-input"

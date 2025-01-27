@@ -7,10 +7,12 @@ import { EventData } from '@/types/event';
 interface UseTextFieldsProps {
   queryKey: string;
   onQuerySubmit?: (query: string) => void;
+  localKey: string;
 }
 
 export const useTextFields = ({
   queryKey,
+  localKey,
   onQuerySubmit = () => {},
 }: UseTextFieldsProps) => {
   const [query, setQuery] = useQueryState(queryKey);
@@ -58,11 +60,9 @@ export const useTextFields = ({
       event.title.includes(inputValue),
     );
     setFilteredEvent(searchResult);
-    const recentSearch = JSON.parse(
-      localStorage.getItem('recent-search') || '[]',
-    );
+    const recentSearch = JSON.parse(localStorage.getItem(localKey) || '[]');
     localStorage.setItem(
-      'recent-search',
+      localKey,
       JSON.stringify([...new Set([inputValue, ...recentSearch])]),
     );
     onQuerySubmit?.(inputValue);

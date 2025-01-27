@@ -1,6 +1,7 @@
 import EditButton from '@/components/community/edit-button';
 import * as S from './style';
 import { ReactNode } from 'react';
+import { CommunityCardSkeleton } from '@/components/community/community-card';
 
 const BodySection = ({ children }: BodySectionProps) => {
   return <S.Container>{children}</S.Container>;
@@ -11,7 +12,13 @@ interface BodySectionProps {
 }
 
 BodySection.Skeleton = () => {
-  return <></>;
+  return (
+    <BodySection>
+      {Array.from({ length: 5 }, (_, index) => (
+        <CommunityCardSkeleton key={index} />
+      ))}
+    </BodySection>
+  );
 };
 
 BodySection.None = () => {

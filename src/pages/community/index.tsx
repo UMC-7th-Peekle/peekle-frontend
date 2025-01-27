@@ -14,7 +14,21 @@ export default function CommunityPage() {
   const { data, error, isLoading } = useGetCommunityId(communityId);
 
   // 로딩 상태 처리
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading)
+    return (
+      <>
+        <S.MainContainer>
+          <S.Appbar>
+            <S.Title>게시판</S.Title>
+            <S.AppbarIcon>
+              <ToggleHeart onClick={() => navigate(ROUTES.COMMUNITY_LIKE)} />
+              <ToggleSearch onClick={() => navigate(ROUTES.COMMUNITY_SEARCH)} />
+            </S.AppbarIcon>
+          </S.Appbar>
+          <BodySection.Skeleton />
+        </S.MainContainer>
+      </>
+    );
 
   // 에러 상태 처리
   if (error) return <p>Error: {String(error.message)}</p>;
@@ -44,7 +58,7 @@ export default function CommunityPage() {
             </BodySection>
           </>
         ) : (
-          // 아무 게시글도 없을 때때
+          // 아무 게시글도 없을 때
           <BodySection.None />
         )}
       </S.MainContainer>

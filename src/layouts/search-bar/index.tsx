@@ -7,10 +7,12 @@ interface SearchBarProps {
   queryKey: string;
   placeholder?: string;
   onQuerySubmit?: (query: string) => void;
+  localKey: string;
 }
 
 export const SearchBar = ({
   queryKey,
+  localKey,
   placeholder = '관심 있는 활동 검색',
   onQuerySubmit = () => {},
 }: SearchBarProps) => {
@@ -33,6 +35,7 @@ export const SearchBar = ({
         placeholder={placeholder}
         onQuerySubmit={onQuerySubmit}
         onClick={handleTextFieldsClick}
+        localKey={localKey}
       />
       <S.MapIcon onClick={handleMapClick} />
     </S.SearchBarWrapper3>
@@ -44,6 +47,7 @@ export const SearchBarMap = ({
   queryKey,
   placeholder = '관심 있는 활동 검색',
   onQuerySubmit = () => {},
+  localKey,
 }: SearchBarProps) => {
   const navigate = useNavigate();
 
@@ -55,6 +59,7 @@ export const SearchBarMap = ({
     <S.SearchBarWrapper2>
       <TextFields
         queryKey={queryKey}
+        localKey={localKey}
         placeholder={placeholder}
         onQuerySubmit={onQuerySubmit}
       />
