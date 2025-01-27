@@ -6,7 +6,11 @@ const EventPage = () => {
   return (
     <S.EventPageContainer>
       <S.HeaderContainer>
-        <SearchBar queryKey="event-search" placeholder="관심있는 활동 검색" />
+        <SearchBar
+          queryKey="event-search"
+          localKey="recent-event-search"
+          placeholder="관심있는 활동 검색"
+        />
         <FilterChips />
       </S.HeaderContainer>
       <EventList />
