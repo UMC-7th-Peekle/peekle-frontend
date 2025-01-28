@@ -13,11 +13,11 @@ interface BodySectionProps {
 
 BodySection.Skeleton = () => {
   return (
-    <BodySection>
-      {Array.from({ length: 5 }, (_, index) => (
-        <CommunityCardSkeleton key={`skeleton-${index}`} />
+    <S.Container>
+      {Array.from(Array(10).keys()).map((_, i) => (
+        <CommunityCardSkeleton key={'CommunityCardSkeleton' + i} />
       ))}
-    </BodySection>
+    </S.Container>
   );
 };
 

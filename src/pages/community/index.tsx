@@ -20,8 +20,8 @@ export default function CommunityPage() {
           <S.Appbar>
             <S.Title>게시판</S.Title>
             <S.AppbarIcon>
-              <ToggleHeart onClick={() => navigate(ROUTES.COMMUNITY_LIKE)} />
-              <ToggleSearch onClick={() => navigate(ROUTES.COMMUNITY_SEARCH)} />
+              <ToggleHeart />
+              <ToggleSearch />
             </S.AppbarIcon>
           </S.Appbar>
           <BodySection.Skeleton />

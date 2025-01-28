@@ -1,7 +1,7 @@
 import Heart from '@/assets/images/icons/heart.svg?react';
 import * as S from './style';
 
-export default function ToggleHeart({ onClick }: Props) {
+export default function ToggleHeart({ onClick = () => {} }: Props) {
   return (
     <S.IconWrapper onClick={onClick}>
       <Heart />
@@ -10,5 +10,5 @@ export default function ToggleHeart({ onClick }: Props) {
 }
 
 interface Props {
-  onClick: () => void;
+  onClick?: () => void;
 }

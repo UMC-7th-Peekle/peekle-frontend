@@ -1,7 +1,7 @@
 import Search from '@/assets/images/icons/search.svg?react';
 import * as S from './style';
 
-export default function ToggleSearch({ onClick }: Props) {
+export default function ToggleSearch({ onClick = () => {} }: Props) {
   return (
     <S.IconWrapper onClick={onClick}>
       <Search />
@@ -10,5 +10,5 @@ export default function ToggleSearch({ onClick }: Props) {
 }
 
 interface Props {
-  onClick: () => void;
+  onClick?: () => void;
 }
