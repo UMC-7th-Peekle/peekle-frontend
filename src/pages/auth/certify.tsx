@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
-const api = process.env.VITE_API_URL;
+const api = import.meta.env.VITE_API_URL;
 
 const CertifyPage = () => {
   const location = useLocation();
