@@ -32,6 +32,10 @@ const GlobalStyles = createGlobalStyle`
       background: ${({ theme }) => theme.color.gray['500']};
       cursor: pointer;
     }
+
+    // 추가: 터치 하이라이트 제거 (Android & Chrome 대응)
+    -webkit-tap-highlight-color: transparent;
+    -webkit-focus-ring-color: transparent;
   }
 
   body {

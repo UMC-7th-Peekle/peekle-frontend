@@ -6,9 +6,10 @@ import {
   EventSearchPage,
   EventScrapPage,
   EventDetailPage,
+  NotFoundPage,
 } from '@/pages';
-import CommunityPage from '@/pages/community/page';
 import UserPage from '@/pages/user/page';
+<<<<<<< HEAD
 import OnboardingPage from '@/pages/onboarding';
 import PhoneNumberPage from '@/pages/auth/phone-number';
 import CertifyPage from '@/pages/auth/certify';
@@ -24,6 +25,11 @@ import RequestPage from '@/pages/user/request';
 import TouPage from '@/pages/user/tou';
 import ManagePage from '@/pages/user/manage';
 import ResignPage from '@/pages/user/resign';
+=======
+import { ROUTES } from '@/constants/routes';
+import { CommunityLikePage, CommunityPage, CommunitySearchPage } from '@/pages';
+import { ErrorFallback } from '@/components';
+>>>>>>> 5639856a6561e53b13e7054401a1296f23bd24ea
 
 const ProtectedPage = ({ children }: { children: React.ReactNode }) => {
   // 로그인 여부 확인해 페이지 보호 필요
@@ -39,7 +45,7 @@ const router = createBrowserRouter(
           <Layout />
         </ProtectedPage>
       ),
-      // errorElement: <NotFoundPage />,
+      errorElement: <ErrorFallback />,
       children: [
         {
           index: true,
@@ -106,14 +112,23 @@ const router = createBrowserRouter(
           // element: <SignInPage />
         },
         {
-          path: '/community',
+          path: ROUTES.COMMUNITY,
           element: <CommunityPage />,
+        },
+        {
+          path: ROUTES.COMMUNITY_SEARCH,
+          element: <CommunitySearchPage />,
+        },
+        {
+          path: ROUTES.COMMUNITY_LIKE,
+          element: <CommunityLikePage />,
         },
         {
           path: '/user',
           element: <UserPage />,
         },
         {
+<<<<<<< HEAD
           path: '/user/edit',
           element: <EditPage />,
         },
@@ -136,6 +151,10 @@ const router = createBrowserRouter(
         {
           path: '/auth/resign',
           element: <ResignPage />,
+=======
+          path: '*',
+          element: <NotFoundPage />, // 404는 라우트로 처리
+>>>>>>> 5639856a6561e53b13e7054401a1296f23bd24ea
         },
       ],
     },

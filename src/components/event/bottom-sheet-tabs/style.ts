@@ -20,19 +20,13 @@ export const BtnContainer = styled.div`
   gap: 8px;
 `;
 
-export const IconBtn = styled.button`
+export const ClearWrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 14px 14px 15px 18px;
-  color: ${({ theme }) => theme.color.gray[400]};
 `;
 
-export const ResetIcon = styled(resetSVG)`
+export const ClearIcon = styled(resetSVG)`
   width: 15.238px;
   height: 15.238px;
-`;
-
-export const ResetText = styled.span`
-  ${({ theme }) => theme.typeFace.body['18SB']};
 `;

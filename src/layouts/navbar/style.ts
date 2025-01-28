@@ -13,6 +13,7 @@ export const NavbarContainer = styled.nav`
   height: 72px;
   background-color: ${theme.color.gray[0]};
   z-index: 120; // 모달 다음으로 가강 위에 위치하게
+  box-shadow: 0 -4px 10px 0 rgba(0, 0, 0, 0.05);
 `;
 
 export const NavItem = styled.div`

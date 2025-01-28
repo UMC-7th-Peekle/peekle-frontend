@@ -7,10 +7,23 @@ export interface PortalProps {
 }
 
 // modal
+export type AlertIconType = 'none' | 'warning' | 'camera';
 export interface AlertStore {
   isOpen: boolean;
   message: string;
-  show: (message: string) => void;
+  iconType: AlertIconType;
+  btnText1: string;
+  btnText2?: string;
+  onClickBtn1?: () => void;
+  onClickBtn2?: () => void;
+  show: (options: {
+    message: string;
+    iconType: AlertIconType;
+    btnText1: string;
+    btnText2?: string;
+    onClickBtn1?: () => void;
+    onClickBtn2?: () => void;
+  }) => void;
   close: () => void;
 }
 
@@ -21,12 +34,33 @@ export interface ConfirmStore {
   close: () => void;
 }
 
+// Toast
+export interface ToastStore {
+  isOpen: boolean;
+  isFadingOut: boolean;
+  message: string;
+  show: (message: string) => void;
+  close: () => void;
+}
+
 // BottomSheet
 export interface BottomSheetStore {
   activeBottomSheet: string | null; // 현재 활성화된 BottomSheet (없으면 null)
   setActiveBottomSheet: (sheet: string | null) => void; // 활성화된 BottomSheet 설정
   bottomSheetHeight: number | 'auto'; // BottomSheet 높이
   setBottomSheetHeight: (height: number | 'auto') => void; // BottomSheet 높이 설정
+}
+
+export interface BottomSheetMetrics {
+  touchStart: {
+    sheetY: number; // touchstart에서 BottomSheet의 최상단 모서리 Y값
+    touchY: number; // touchstart에서 터치 포인트 Y값
+  };
+  touchMove: {
+    prevTouchY?: number; // 다음 touchmove 이벤트 핸들러에서 필요한 터치 포인트 Y값을 저장
+    movingDirection: 'none' | 'down' | 'up'; // 유저가 터치를 움직이고 있는 방향
+  };
+  isContentAreaTouched: boolean; // 컨텐츠 영역을 터치하고 있음을 기록
 }
 
 export interface BottomSheetProps {
@@ -66,4 +100,34 @@ export interface ToggleHeartProps {
 export interface HeartSVGProps extends React.SVGAttributes<SVGElement> {
   $size?: number;
   $borderColor?: string;
+}
+
+// Button
+type BtnColor =
+  | 'primary400Line'
+  | 'primary500'
+  | 'primary500Line'
+  | 'primary700'
+  | 'gray50'
+  | 'gray50TextGray400'
+  | 'yellow'
+  | 'none';
+type BtnSize = 'xsmall' | 'small' | 'medium';
+
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  color: BtnColor;
+  size: BtnSize;
+  width: string;
+}
+
+export interface StyledButtonProps {
+  $color: BtnColor;
+  $size: BtnSize;
+  $width: string;
+}
+
+// Backward
+export interface BackSVGProps {
+  $size?: string;
 }
