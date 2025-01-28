@@ -5,20 +5,22 @@ import { z } from 'zod';
 
 // Zod 스키마 정의
 const ArticleSchema = z.object({
-  articleId: z.number().transform((value) => value.toString()),
+  articleId: z.string().transform((value) => value.toString()),
   title: z.string(),
   content: z.string(),
-  authorId: z.number(),
+  authorId: z.number().int(),
   isAnonymous: z.boolean().optional(),
-  communityId: z.number(),
+  communityId: z.string(),
   createdAt: z.string().transform(formatDateCardTime),
   updatedAt: z.string(),
+  articleComments: z.number().int(),
+  articleLikes: z.number().int(),
 });
 
 const SuccessResponseSchema = z.object({
   message: z.string(),
   articles: z.array(ArticleSchema),
-  nextCursor: z.number(),
+  nextCursor: z.string(),
   hasNextPage: z.boolean(),
 });
 
@@ -34,7 +36,7 @@ export type Article = z.infer<typeof ArticleSchema>;
 
 // API 호출 함수
 const getCommunityId = async (
-  communityId: number,
+  communityId: string,
 ): Promise<CommunityResponse> => {
   const response = await clientAuth<CommunityResponse>({
     method: 'GET',
@@ -47,9 +49,13 @@ const getCommunityId = async (
 };
 
 // useQuery 훅 생성
-export const useGetCommunityId = (communityId: number) => {
+export const useGetCommunityId = ({ communityId }: UseGetCommunityIdProps) => {
   return useQuery({
     queryKey: ['community', communityId],
     queryFn: () => getCommunityId(communityId),
   });
 };
+
+interface UseGetCommunityIdProps {
+  communityId: string;
+}
