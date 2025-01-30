@@ -7,9 +7,9 @@ export { default as Chip } from './common/navigation/chip';
 export { default as Select } from './event/filter-chip';
 // information
 export { default as BottomSheet } from './common/information/bottom-sheet';
-export { default as Alert } from './common/information/modal/alert';
-export { default as Confirm } from './common/information/modal/confirm';
-export { default as Portal } from './common/information/portal';
+export { default as Alert } from './common/information/modal/Alert';
+export { default as Confirm } from './common/information/modal/Confirm';
+export { default as Portal } from './common/information/Portal';
 export { default as Toast } from './common/information/toast';
 // input
 export { default as Calendar } from './common/input/calendar';
@@ -20,6 +20,7 @@ export { default as Radio } from './common/input/radio';
 export { default as TextFields } from './common/input/text-fields';
 export { default as ToggleHeart } from './common/input/toggle-heart';
 export { default as Dropdown } from './common/input/dropdown';
+export { default as ToggleHeadr } from './common/toggle-heart';
 export { default as Button } from './common/input/button';
 
 // event

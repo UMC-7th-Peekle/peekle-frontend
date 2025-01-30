@@ -148,6 +148,7 @@ const Duration = () => {
                 isFocus={isCalendarOpen && !dateRange[1]}
                 date={startDateWithDayOfWeek}
               />
+              <S.DateListLine />
               {dateRange[1] ? (
                 <DateList
                   isFocus={!!dateRange[1]}
@@ -164,6 +165,7 @@ const Duration = () => {
           ) : (
             <>
               <DateList date={startDateWithDayOfWeek} />
+              <S.DateListLine />
               <DateList date={endDateWithDayOfWeek} />
             </>
           )}

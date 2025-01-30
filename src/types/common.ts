@@ -105,6 +105,7 @@ export interface HeartSVGProps extends React.SVGAttributes<SVGElement> {
 
 // Button
 type BtnColor =
+  | 'black'
   | 'primary400Line'
   | 'primary500'
   | 'primary500Line'

@@ -8,8 +8,9 @@ import {
   EventDetailPage,
   NotFoundPage,
 } from '@/pages';
-import CommunityPage from '@/pages/community/page';
 import UserPage from '@/pages/user/page';
+import { ROUTES } from '@/constants/routes';
+import { CommunityLikePage, CommunityPage, CommunitySearchPage } from '@/pages';
 import { ErrorFallback } from '@/components';
 
 const ProtectedPage = ({ children }: { children: React.ReactNode }) => {
@@ -56,8 +57,16 @@ const router = createBrowserRouter([
         // element: <SignInPage />
       },
       {
-        path: '/community',
+        path: ROUTES.COMMUNITY,
         element: <CommunityPage />,
+      },
+      {
+        path: ROUTES.COMMUNITY_SEARCH,
+        element: <CommunitySearchPage />,
+      },
+      {
+        path: ROUTES.COMMUNITY_LIKE,
+        element: <CommunityLikePage />,
       },
       {
         path: '/user',

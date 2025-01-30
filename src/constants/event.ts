@@ -9,9 +9,9 @@ export const SORT_OPTIONS = [
 // FilterChip
 export const CATEGORY_OPTIONS = [
   ['전체', 'all'],
-  ['교육', 'education'],
-  ['문화', 'culture'],
-  ['활동', 'activity'],
+  ['교육', '1'],
+  ['문화', '2'],
+  ['활동', '5'],
 ] as const;
 
 export const PRICE_OPTIONS = [
@@ -22,14 +22,14 @@ export const PRICE_OPTIONS = [
 
 export const LOCATION_OPTIONS = [
   ['전체', 'all'],
-  ['강남 / 서초 / 양재', 'gangnam'], // 고유 키 필요
-  ['잠실 / 송파 / 강동', 'jamsil'],
-  ['동작 / 관악 / 사당', 'dongjak'],
-  ['마포 / 서대문 / 은평', 'mapo'],
-  ['종로 / 중구 / 용산', 'jongno'],
-  ['강서 / 금천 / 양천', 'gangseo'],
-  ['영등포 / 구로 / 신도림', 'yeongdeungpo'],
-  ['광진 / 성동 / 중랑 / 동대문', 'gwangjin'],
+  ['잠실 / 송파 / 강동', '18'],
+  ['마포 / 서대문 / 은평', '19'],
+  ['강서 / 금천 / 양천', '20'],
+  ['광진 / 성동 / 중랑 / 동대문', '21'],
+  ['강남 / 서초 / 양재', '22'],
+  ['동작 / 관악 / 사당', '23'],
+  ['종로 / 중구 / 용산', '24'],
+  ['영등포 / 구로 / 신도림', '25'],
 ] as const;
 
 // 기본 필터값

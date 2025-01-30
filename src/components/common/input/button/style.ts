@@ -10,6 +10,10 @@ const disabledStyle = css`
 `;
 
 const colorStyles = {
+  black: css`
+    background: ${theme.color.gray[900]};
+    color: ${theme.color.gray[0]};
+  `,
   primary400Line: css`
     background: none;
     color: ${theme.color.primary[400]};

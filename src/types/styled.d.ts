@@ -58,6 +58,7 @@ declare module 'styled-components' {
       };
     };
     borderRadius: {
+      xsm: string; //4px
       sm: string; //8px
       md: string; //10px
       lg: string; //16px

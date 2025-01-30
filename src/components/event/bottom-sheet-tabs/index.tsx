@@ -46,7 +46,7 @@ export const BottomSheetTabs = () => {
           </S.ClearWrapper>
         </Button>
         <Button
-          color="primary500"
+          color="black"
           size="small"
           width="266px"
           onClick={() => {

@@ -20,7 +20,8 @@ client.interceptors.request.use(
   (config: CustomInternalAxiosRequestConfig) => {
     if (config.requireAuth && localStorage.getItem('accessToken')) {
       // 로그인 로직 구현 전에는 accessToken 변수에 임시 토큰 넣어서 테스트하시면 됩니다.
-      const accessToken = localStorage.getItem('accessToken');
+      // const accessToken = localStorage.getItem('accessToken');
+      const accessToken = import.meta.env.VITE_ACCESS_TOKEN;
       config.headers = config.headers || {};
       config.headers.Authorization = `Bearer ${accessToken}`;
     } else {
