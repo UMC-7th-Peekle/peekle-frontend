@@ -4,7 +4,7 @@ import {
   UndefinedInitialDataOptions,
   useQuery,
 } from '@tanstack/react-query';
-import { clientAuth } from '@/apis/client.ts';
+import { clientAuth, client } from '@/apis/client';
 
 // TODO: Move ApiResponse and ApiError to global scope
 /**
@@ -59,6 +59,36 @@ export function usePeekleQuery<
       // Axios 요청 수행
       const response = (await clientAuth<ApiResponse<TRaw>>(requestConfig))
         .data;
+
+      // API 응답 실패 처리
+      if (!response.isSuccess) throw response as ApiError;
+
+      // 성공 시 데이터 반환
+      return response.data;
+    },
+    ...queryOptions,
+  });
+}
+
+// auth 필요 없는 쿼리
+export function usePeekleNoAuthQuery<
+  TRaw,
+  TData = TRaw,
+  TError = AxiosError | ApiError,
+  TQueryKey extends QueryKey = QueryKey,
+>(
+  queryKey: TQueryKey,
+  requestConfig: AxiosRequestConfig,
+  queryOptions?: Omit<
+    UndefinedInitialDataOptions<TRaw, TError, TData, TQueryKey>,
+    'queryKey' | 'queryFn'
+  >,
+) {
+  return useQuery({
+    queryKey,
+    queryFn: async () => {
+      // Axios 요청 수행
+      const response = (await client<ApiResponse<TRaw>>(requestConfig)).data;
 
       // API 응답 실패 처리
       if (!response.isSuccess) throw response as ApiError;

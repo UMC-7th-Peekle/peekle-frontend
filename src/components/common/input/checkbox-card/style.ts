@@ -1,35 +1,39 @@
 import styled from 'styled-components';
+import { theme } from '@/styles/theme';
+import Check from '@/assets/images/icons/check.svg?react';
 
 // CheckboxCard 컨테이너 스타일
-export const StyledCheckboxCard = styled.div<{ $isChecked: boolean }>`
+export const StyledCheckboxCard = styled.button<{
+  $isChecked: boolean;
+  $isLastCard: boolean;
+}>`
   display: flex;
   align-items: center;
-  width: 181px;
-  height: 55px;
-  padding: 1rem;
-  border: 1px solid
-    ${({ $isChecked, theme }) =>
-      $isChecked ? theme.color.primary['500'] : theme.color.gray['100']};
-  border-radius: 0.5rem;
-  background-color: ${({ $isChecked, theme }) =>
-    $isChecked ? theme.color.primary['50'] : 'transparent'};
+  width: 100%;
+  height: 56px;
+  padding: 16px 14px;
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
+  border: ${({ $isChecked }) =>
+    $isChecked
+      ? `2px solid ${theme.color.gray[900]}`
+      : `1px solid ${theme.color.gray[100]}`};
+  border-radius: ${theme.borderRadius.sm};
+  white-space: nowrap;
   cursor: pointer;
-  transition:
-    border-color 0.2s ease,
-    background-color 0.2s ease;
-
-  &:hover {
-    border-color: ${({ $isChecked, theme }) =>
-      $isChecked ? theme.color.primary['500'] : theme.color.gray['200']};
-  }
 `;
 
 // Card 문구 스타일
 export const CardText = styled.span<{ $isChecked: boolean }>`
-  margin-left: 0.5rem;
-  font-size: 1rem;
-  font-weight: 500;
-  color: ${({ $isChecked, theme }) =>
-    $isChecked ? theme.color.gray['900'] : theme.color.gray['400']};
-  user-select: none;
+  color: ${({ $isChecked }) =>
+    $isChecked ? theme.color.gray[900] : theme.color.gray[400]};
+  ${({ $isChecked }) =>
+    $isChecked ? theme.typeFace.body['15B'] : theme.typeFace.body['15M']};
+`;
+
+// 체크 아이콘
+export const CheckIcon = styled(Check)`
+  width: 24px;
+  height: 24px;
 `;

@@ -3,7 +3,13 @@ import { useState, useRef } from 'react';
 import { DropdownProps, DropdownItem } from '@/types/common';
 import { Portal } from '@/components';
 
-export const Dropdown = ({ list, onClick, onSelect, width }: DropdownProps) => {
+export const Dropdown = ({
+  list,
+  isEventPage = false,
+  onClick,
+  onSelect,
+  width,
+}: DropdownProps) => {
   const defaultLabel = list[0].label;
   const defaultValue = list[0].value;
   const [selectedValue, setSelectedValue] = useState(defaultValue);
@@ -41,18 +47,22 @@ export const Dropdown = ({ list, onClick, onSelect, width }: DropdownProps) => {
 
   const hasChanged = selectedLabel !== defaultLabel;
 
+  const DropdownComponent = isEventPage ? S.EventDropdown : S.Dropdown;
+  const IconComponent = isEventPage ? S.HamburgerIcon : S.ArrowDownIcon;
+
   return (
-    <S.Dropdown
+    <DropdownComponent
       ref={dropdownRef}
       role="button"
       aria-label={`${defaultValue}-dropdown`}
       aria-expanded={isOpen}
       onClick={(e) => handleToggleDropdown(e)}
-      $isActive={hasChanged}
-      $width={width}
+      $isActive={!isEventPage && hasChanged}
+      $width={!isEventPage ? width : undefined}
     >
+      {isEventPage && <IconComponent />}
       {selectedLabel}
-      <S.ArrowDownIcon />
+      {!isEventPage && <IconComponent />}
       {isOpen && (
         <Portal
           type="other-portal"
@@ -74,7 +84,7 @@ export const Dropdown = ({ list, onClick, onSelect, width }: DropdownProps) => {
           </S.List>
         </Portal>
       )}
-    </S.Dropdown>
+    </DropdownComponent>
   );
 };
 

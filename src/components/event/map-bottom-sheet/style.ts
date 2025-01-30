@@ -1,5 +1,5 @@
 import styled, { keyframes } from 'styled-components';
-import LineSVG from '@/assets/images/icons/line.svg?react';
+import LineSVG from '@/assets/images/icons/horizontal-line.svg?react';
 
 const slideIn = keyframes`
   from { transform: translateY(100%); }

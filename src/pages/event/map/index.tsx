@@ -1,6 +1,5 @@
 import * as S from './style';
-import { MapBottomSheet, FilterChips, EventMap, EventCard } from '@/components';
-import { SearchBar } from '@/layouts/search-bar';
+import { MapBottomSheet, Filter, EventMap, EventCard } from '@/components';
 import { useMapStore, useBottomSheetStore } from '@/stores';
 import { BOTTOM_SHEET_ID_EVENT_INFO } from '@/constants/event';
 
@@ -11,12 +10,8 @@ const EventMapPage = () => {
   return (
     <S.Container>
       <S.HeaderContainer>
-        <SearchBar
-          queryKey="event-search"
-          localKey="recent-event-key"
-          placeholder="관심있는 활동 검색"
-        />
-        <FilterChips />
+        // search
+        <Filter />
       </S.HeaderContainer>
       <EventMap />
       <MapBottomSheet id={BOTTOM_SHEET_ID_EVENT_INFO}>

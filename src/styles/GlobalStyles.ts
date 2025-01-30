@@ -76,6 +76,7 @@ const GlobalStyles = createGlobalStyle`
     display: inline-block;
     background: transparent;
     cursor: pointer;
+    user-select: none;
   }
 
   img {
@@ -85,7 +86,6 @@ const GlobalStyles = createGlobalStyle`
   ${mediaQuery.tablet`
     body {
       ${({ theme }) => theme.typeFace.subTitle['20']};
-      ${({ theme }) => theme.color.primary['400']};
     }
   `}
 `;

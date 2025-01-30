@@ -65,6 +65,7 @@ export interface BottomSheetMetrics {
 
 export interface BottomSheetProps {
   id: string;
+  shouldShowLine?: boolean;
   children: React.ReactNode;
 }
 
@@ -72,7 +73,7 @@ export interface BottomSheetProps {
 export interface ChipProps {
   label: string; // 내부 식별자 값
   value: string; // UI에 표시할 값
-  selectedValue: string; // 현재 선택된 값
+  isActive: boolean; // 현재 선택됐는지
   onSelect: (value: string) => void; // 선택 시 호출되는 함수
 }
 
@@ -84,6 +85,7 @@ export interface DropdownItem {
 
 export interface DropdownProps {
   list: DropdownItem[];
+  isEventPage?: boolean;
   onClick?: () => void;
   onSelect?: (value: string) => void; // 항목 클릭 시 실행할 함수
   width?: string;
@@ -104,6 +106,7 @@ export interface HeartSVGProps extends React.SVGAttributes<SVGElement> {
 
 // Button
 type BtnColor =
+  | 'black'
   | 'primary400Line'
   | 'primary500'
   | 'primary500Line'
@@ -118,13 +121,13 @@ export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   color: BtnColor;
   size: BtnSize;
-  width: string;
+  width?: string;
 }
 
 export interface StyledButtonProps {
   $color: BtnColor;
   $size: BtnSize;
-  $width: string;
+  $width?: string;
 }
 
 // Backward

@@ -1,5 +1,5 @@
 import { ListContainer } from '../style';
-import useFilterTabsStore from '../store/useFilterTabsStore';
+import useFilterTabsStore from '@/stores/event/useFilterTabsStore';
 import { FilterTabsListProps } from '@/types/event';
 
 const List = ({ children }: FilterTabsListProps) => {

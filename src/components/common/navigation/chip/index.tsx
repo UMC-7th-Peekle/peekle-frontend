@@ -1,9 +1,7 @@
 import * as S from './style';
 import { ChipProps } from '@/types/common';
 
-const Chip = ({ label, value, selectedValue, onSelect }: ChipProps) => {
-  const isActive = selectedValue === value;
-
+const Chip = ({ label, value, isActive, onSelect }: ChipProps) => {
   return (
     <S.Chip
       aria-label={label}
@@ -23,7 +21,7 @@ export default Chip;
     key={value}
     label={label}
     value={value}
-    selectedValue={getMatchingChip(dateRange)}
+    isActive={selectedValue === value}
     onSelect={() => handleChipSelect(value)}
   />
  */

@@ -1,40 +1,41 @@
 import * as S from './style';
-import { useFilterTabsStore } from '@/stores';
-import { useBottomSheetStore, useFilteredEventStore } from '@/stores';
-import { useEventFilter } from '@/hooks';
+import useEventFilter from '@/hooks/event/useEventFilter';
+import useFilterTabsStore from '@/stores/event/useFilterTabsStore';
+import useBottomSheetStore from '@/stores/common/useBottomSheetStore';
+import useFilteredEventStore from '@/stores/event/useFilteredEventStore';
 
 import { FilterTabs, Button } from '@/components';
-import Category from './category';
 import Duration from './duration';
 import Price from './price';
 import Location from './location';
 
 export const BottomSheetTabs = () => {
-  const { activeTab } = useFilterTabsStore();
   const { setActiveBottomSheet } = useBottomSheetStore();
   const { filteredEvent } = useFilteredEventStore();
   const { clearFilter } = useEventFilter();
+  const { selectedValue } = useFilterTabsStore();
+  console.log('selectedValue', selectedValue);
 
-  console.log(filteredEvent);
+  // console.log(filteredEvent);
   return (
     <S.Container>
-      <FilterTabs defaultValue={activeTab} option="이벤트 필터 탭">
+      <S.Header>
+        <S.Title>{selectedValue}</S.Title>
+        <S.XIcon onClick={() => setActiveBottomSheet(null)} />
+      </S.Header>
+      <FilterTabs defaultValue={'기간'} option="이벤트 필터 탭">
         <FilterTabs.List>
-          <FilterTabs.Trigger value={'category'} label="카테고리" />
-          <FilterTabs.Trigger value={'duration'} label="기간" />
-          <FilterTabs.Trigger value={'price'} label="비용" />
-          <FilterTabs.Trigger value={'location'} label="지역" />
+          <FilterTabs.Trigger value={'기간'} label="기간" />
+          <FilterTabs.Trigger value={'비용'} label="비용" />
+          <FilterTabs.Trigger value={'지역'} label="지역" />
         </FilterTabs.List>
-        <FilterTabs.Panel value={'category'}>
-          <Category />
-        </FilterTabs.Panel>
-        <FilterTabs.Panel value={'duration'}>
+        <FilterTabs.Panel value={'기간'}>
           <Duration />
         </FilterTabs.Panel>
-        <FilterTabs.Panel value={'price'}>
+        <FilterTabs.Panel value={'비용'}>
           <Price />
         </FilterTabs.Panel>
-        <FilterTabs.Panel value={'location'}>
+        <FilterTabs.Panel value={'지역'}>
           <Location />
         </FilterTabs.Panel>
       </FilterTabs>
@@ -46,7 +47,7 @@ export const BottomSheetTabs = () => {
           </S.ClearWrapper>
         </Button>
         <Button
-          color="primary500"
+          color="black"
           size="small"
           width="266px"
           onClick={() => {

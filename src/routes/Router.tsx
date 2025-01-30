@@ -35,140 +35,135 @@ const ProtectedPage = ({ children }: { children: React.ReactNode }) => {
   return children;
 };
 
-const router = createBrowserRouter(
-  [
-    {
-      path: '/',
-      element: (
-        <ProtectedPage>
-          <Layout />
-        </ProtectedPage>
-      ),
-      errorElement: <ErrorFallback />,
-      children: [
-        {
-          index: true,
-          element: <OnboardingPage />,
-        },
-        {
-          path: '/auth/phone-number',
-          element: <PhoneNumberPage />,
-        },
-        {
-          path: '/auth/certify',
-          element: <CertifyPage />,
-        },
-        {
-          path: '/auth/gender',
-          element: <GenderSelectionPage />,
-        },
-        {
-          path: '/auth/personal-data',
-          element: <PersonalDataPage />,
-        },
-        {
-          path: '/auth/tos',
-          element: <TosPage />,
-        },
-        {
-          path: '/auth/privacy',
-          element: <PrivacyPage />,
-        },
-        {
-          path: '/auth/terms-location',
-          element: <TermsLocationPage />,
-        },
-        {
-          path: '/auth/complete',
-          element: <CompletePage />,
-        },
-        {
-          path: '/event',
-          element: <EventPage />,
-        },
-        {
-          path: '/event/map',
-          element: <EventMapPage />,
-        },
-        {
-          path: '/event/search',
-          element: <EventSearchPage />,
-        },
-        {
-          path: '/event/scrap',
-          element: <EventScrapPage />,
-        },
-        {
-          path: '/event/:id',
-          element: <EventDetailPage />,
-        },
-        {
-          path: '/auth/signup',
-          // element: <SignUpPage />
-        },
-        {
-          path: '/auth/signin',
-          // element: <SignInPage />
-        },
-        {
-          path: ROUTES.COMMUNITY,
-          element: <CommunityPage />,
-        },
-        {
-          path: ROUTES.COMMUNITY_SEARCH,
-          element: <CommunitySearchPage />,
-        },
-        {
-          path: ROUTES.COMMUNITY_LIKE,
-          element: <CommunityLikePage />,
-        },
-        {
-          path: ROUTES.COMMUNITY_EDIT,
-          element: <CommunityEditPage />,
-        },
-        {
-          path: '/user',
-          element: <UserPage />,
-        },
-        {
-          path: '/user/edit',
-          element: <EditPage />,
-        },
-        {
-          path: '/auth/notice',
-          element: <NoticePage />,
-        },
-        {
-          path: '/auth/request',
-          element: <RequestPage />,
-        },
-        {
-          path: '/auth/tou',
-          element: <TouPage />,
-        },
-        {
-          path: '/auth/manage',
-          element: <ManagePage />,
-        },
-        {
-          path: '/auth/resign',
-          element: <ResignPage />,
-        },
-        {
-          path: '*',
-          element: <NotFoundPage />, // 404는 라우트로 처리
-        },
-      ],
-    },
-    {
-      path: ROUTES.COMMUNITY_DETAIL,
-      element: <CommunityDetailPage />,
-    },
-  ],
+const router = createBrowserRouter([
   {
-    basename: import.meta.env.PUBLIC_URL,
+    path: '/',
+    element: (
+      <ProtectedPage>
+        <Layout />
+      </ProtectedPage>
+    ),
+    errorElement: <ErrorFallback />,
+    children: [
+      {
+        index: true,
+        element: <OnboardingPage />,
+      },
+      {
+        path: '/auth/phone-number',
+        element: <PhoneNumberPage />,
+      },
+      {
+        path: '/auth/certify',
+        element: <CertifyPage />,
+      },
+      {
+        path: '/auth/gender',
+        element: <GenderSelectionPage />,
+      },
+      {
+        path: '/auth/personal-data',
+        element: <PersonalDataPage />,
+      },
+      {
+        path: '/auth/tos',
+        element: <TosPage />,
+      },
+      {
+        path: '/auth/privacy',
+        element: <PrivacyPage />,
+      },
+      {
+        path: '/auth/terms-location',
+        element: <TermsLocationPage />,
+      },
+      {
+        path: '/auth/complete',
+        element: <CompletePage />,
+      },
+      {
+        path: '/event',
+        element: <EventPage />,
+      },
+      {
+        path: '/event/map',
+        element: <EventMapPage />,
+      },
+      {
+        path: '/event/search',
+        element: <EventSearchPage />,
+      },
+      {
+        path: '/event/scrap',
+        element: <EventScrapPage />,
+      },
+      {
+        path: '/event/:id',
+        element: <EventDetailPage />,
+      },
+      {
+        path: '/auth/signup',
+        // element: <SignUpPage />
+      },
+      {
+        path: '/auth/signin',
+        // element: <SignInPage />
+      },
+      {
+        path: ROUTES.COMMUNITY,
+        element: <CommunityPage />,
+      },
+      {
+        path: ROUTES.COMMUNITY_SEARCH,
+        element: <CommunitySearchPage />,
+      },
+      {
+        path: ROUTES.COMMUNITY_LIKE,
+        element: <CommunityLikePage />,
+      },
+      {
+        path: ROUTES.COMMUNITY_EDIT,
+        element: <CommunityEditPage />,
+      },
+      {
+        path: '/user',
+        element: <UserPage />,
+      },
+      {
+        path: '/user/edit',
+        element: <EditPage />,
+      },
+      {
+        path: '/auth/notice',
+        element: <NoticePage />,
+      },
+      {
+        path: '/auth/request',
+        element: <RequestPage />,
+      },
+      {
+        path: '/auth/tou',
+        element: <TouPage />,
+      },
+      {
+        path: '/auth/manage',
+        element: <ManagePage />,
+      },
+      {
+        path: '/auth/resign',
+        element: <ResignPage />,
+      },
+      {
+        path: '*',
+        element: <NotFoundPage />, // 404는 라우트로 처리
+      },
+    ],
   },
-);
+  {
+    path: ROUTES.COMMUNITY_DETAIL,
+    element: <CommunityDetailPage />,
+  },
+]);
 
 const Router = () => {
   return <RouterProvider router={router} />;

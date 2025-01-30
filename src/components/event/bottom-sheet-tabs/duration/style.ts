@@ -8,26 +8,38 @@ import { theme } from '@/styles/theme';
 export const Container = styled.section`
   display: flex;
   flex-direction: column;
-  gap: 36px;
+  gap: 20px;
 `;
 
 export const TopContainer = styled.section`
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  margin: 0 -20px;
-  padding: 0 16px;
+  gap: 20px;
 `;
 
 export const ChipContainer = styled.div`
   display: flex;
   gap: 8px;
-  ${theme.typeFace.body['18SB']};
+  margin: 0 -20px; // 패딩 영역 밖으로 확장
+  padding: 0 20px; // 초기 위치 조정
+
+  overflow-x: scroll;
+  &::-webkit-scrollbar {
+    display: none; // 스크롤바 숨기기
+  }
 `;
 
 export const DateBtnContainer = styled.div`
   display: flex;
+  align-items: center;
+  align-self: stretch;
   gap: 8px;
+`;
+
+export const DateListLine = styled.div`
+  width: 8px;
+  height: 1.5px;
+  background: ${theme.color.gray['600']};
 `;
 
 //calendar
@@ -38,6 +50,7 @@ export const StyledCalendar = styled(Calendar)<{
   width: 100%;
   max-width: 412px;
   height: 351px;
+  margin-bottom: 45px; // 6주 뜨는 달 반영해 크게 잡음
   font-family: 'Pretendard', sans-serif;
   border: none;
 
@@ -46,7 +59,7 @@ export const StyledCalendar = styled(Calendar)<{
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 1rem;
+    margin-bottom: 0;
 
     /* 년/월 텍스트 중앙 정렬 */
     .react-calendar__navigation__label {
@@ -113,13 +126,14 @@ export const StyledCalendar = styled(Calendar)<{
     transform: translate(-50%, -50%);
     width: ${({ rangeHeight }) => rangeHeight || '65%'};
     height: ${({ rangeHeight }) => rangeHeight || '65%'};
-    border-radius: ${theme.borderRadius.xxlg};
-    background-color: ${theme.color.gray['0']};
-    border: 2px solid ${theme.color.primary['500']};
+    border-radius: ${theme.borderRadius.sm};
+    background-color: ${theme.color.gray['100']};
     z-index: 1;
   }
   .today {
-    color: ${theme.color.primary['500']};
+    abbr {
+      ${theme.typeFace.body['18SB']}
+    }
   }
 
   /* 범위 내 날짜 스타일 */
@@ -131,7 +145,6 @@ export const StyledCalendar = styled(Calendar)<{
     height: ${({ rangeHeight }) => rangeHeight || '65%'};
     background-color: ${theme.color.primary['100']};
     z-index: 0;
-    border-color: ${theme.color.primary['100']};
   }
 
   /* startDay, endDay 스타일 */
@@ -144,9 +157,16 @@ export const StyledCalendar = styled(Calendar)<{
     transform: translate(-50%, -50%);
     width: ${({ rangeHeight }) => rangeHeight || '65%'};
     height: ${({ rangeHeight }) => rangeHeight || '65%'};
-    border-radius: 50%;
-    background-color: ${theme.color.primary['500']};
-    z-index: 50;
+    border-radius: ${theme.borderRadius.sm};
+    background-color: ${theme.color.gray['900']};
+    z-index: 3;
+  }
+  .react-calendar__tile.startDay,
+  .react-calendar__tile.endDay {
+    abbr {
+      color: ${theme.color.gray['0']};
+      ${theme.typeFace.body['18SB']}
+    }
   }
 
   .react-calendar__tile.startDay::after {
@@ -158,7 +178,7 @@ export const StyledCalendar = styled(Calendar)<{
     width: 50%;
     height: ${({ rangeHeight }) => rangeHeight || '65%'};
     background-color: ${theme.color.primary['100']};
-    z-index: 10;
+    z-index: 2;
     display: ${({ isOnly }) => (isOnly ? 'none' : 'block')};
   }
 
@@ -171,13 +191,8 @@ export const StyledCalendar = styled(Calendar)<{
     width: 50%;
     height: ${({ rangeHeight }) => rangeHeight || '65%'};
     background-color: ${theme.color.primary['100']};
-    z-index: 10;
+    z-index: 2;
     display: ${({ isOnly }) => (isOnly ? 'none' : 'block')};
-  }
-
-  .selectedDay {
-    color: ${theme.color.gray['0']};
-    ${theme.typeFace.body['18SB']};
   }
 
   /* 월 뷰 */
@@ -194,14 +209,13 @@ export const StyledCalendar = styled(Calendar)<{
       color: ${theme.color.gray[400]};
       text-decoration: none;
     }
-    // 주말은 색 다르게 하는 게 좋을 것 같아서 임의로 넣음
-    .react-calendar__month-view__weekdays__weekday--weekend {
-      abbr {
-        color: ${theme.color.gray[900]};
-      }
-    }
   }
   // 주말은 색 다르게
+  .react-calendar__month-view__weekdays__weekday--weekend {
+    abbr {
+      color: ${theme.color.gray[900]};
+    }
+  }
   .react-calendar__month-view__days__day--weekend {
     abbr {
       color: ${theme.color.gray[900]};

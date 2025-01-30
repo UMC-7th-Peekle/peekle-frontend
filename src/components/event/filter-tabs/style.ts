@@ -4,7 +4,7 @@ export const TabsContainer = styled.section`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 32px;
+  gap: 20px;
 `;
 
 export const ListContainer = styled.header`
@@ -16,7 +16,8 @@ export const ListContainer = styled.header`
 `;
 
 export const PanelContainer = styled.section`
-  padding: 0 20px 30px 20px;
+  width: 100%;
+  padding: 0 20px;
   display: flex;
   flex-direction: column;
 `;
@@ -27,7 +28,7 @@ export const TriggerBtn = styled.button<{ $isActive: boolean }>`
   color: ${({ $isActive, theme }) =>
     $isActive ? theme.color.gray[900] : theme.color.gray[400]};
   padding: 8px 4px;
-  border-bottom: 4px solid
+  border-bottom: 3px solid
     ${({ $isActive, theme }) =>
-      $isActive ? theme.color.primary[500] : 'transparent'};
+      $isActive ? theme.color.gray[900] : 'transparent'};
 `;

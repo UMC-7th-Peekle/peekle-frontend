@@ -1,17 +1,13 @@
 import * as S from './style';
-import { EventList, FilterChips } from '@/components';
-import { SearchBar } from '@/layouts/search-bar';
+import { EventList, Filter } from '@/components';
+import Header from '@/layouts/header';
 
 const EventPage = () => {
   return (
     <S.EventPageContainer>
       <S.HeaderContainer>
-        <SearchBar
-          queryKey="event-search"
-          localKey="recent-event-search"
-          placeholder="관심있는 활동 검색"
-        />
-        <FilterChips />
+        <Header page="event" />
+        <Filter />
       </S.HeaderContainer>
       <EventList />
     </S.EventPageContainer>

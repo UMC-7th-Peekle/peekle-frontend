@@ -1,10 +1,10 @@
 import * as S from './style.ts';
 import { useTextFields } from './useTextFields.ts';
 
-interface SearchProps {
+interface TextFieldsProps {
   queryKey: string;
-  placeholder?: string;
   onQuerySubmit?: (query: string) => void;
+  placeholder?: string;
   onClick?: () => void; // 클릭시 검색 페이지로 이동
   max_width?: number;
   min_width?: number;
@@ -14,12 +14,12 @@ interface SearchProps {
 export const TextFields = ({
   queryKey,
   placeholder = '관심 있는 활동 검색',
-  onQuerySubmit = () => {},
   onClick,
   max_width,
   min_width,
   localKey,
-}: SearchProps) => {
+  onQuerySubmit = () => {},
+}: TextFieldsProps) => {
   const { inputValue, handleChange, handleKeyDown, handleClear } =
     useTextFields({
       queryKey,

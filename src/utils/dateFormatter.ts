@@ -16,8 +16,8 @@ export const formatDate = (date: Date | null) => {
 };
 
 // YYYY-MM-DD 형식 문자열을 MM월 DD일 형식으로 변환
-export const formatDateToMonthDay = (date: string) => {
-  const formattedDate = date.slice(0, 10); // 날짜까지
+export const formatDateToMonthDay = (dateString: string) => {
+  const formattedDate = dateString.slice(0, 10); // 날짜까지
   const [, month, day] = formattedDate.split('-');
   return `${parseInt(month, 10)}월 ${parseInt(day, 10)}일`;
 };
@@ -56,4 +56,12 @@ export const formatDateCardTime = (createdAt: string): string => {
   } else {
     return `${format(date, 'yyyy/MM/dd HH:mm')}`;
   }
+};
+// YYYY-MM-DD 형식 문자열을 MM.DD 형식으로 변환
+export const formatDateToShort = (dateString: string) => {
+  const date = new Date(dateString);
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+
+  return `${month}.${day}`;
 };

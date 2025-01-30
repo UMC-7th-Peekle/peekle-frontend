@@ -1,36 +1,27 @@
 import * as S from './style';
 import { useParams } from 'react-router-dom';
 import { useState } from 'react';
-import { ToggleHeart, BottomSheet, ImageSlider } from '@/components';
-import { BOTTOM_SHEET_ID_EVENT_SHARE } from '@/constants/event';
 import {
-  getLabelFromValue,
-  copyToClipboard,
-  alert,
-  priceFormatter,
-} from '@/utils';
+  ToggleHeart,
+  BottomSheet,
+  ImageSlider,
+  Backward,
+  Button,
+} from '@/components';
+import { BOTTOM_SHEET_ID_EVENT_SHARE } from '@/constants/event';
+import { copyToClipboard, toast, priceFormatter } from '@/utils';
 import { useBottomSheetStore } from '@/stores';
 import { events } from '@/sample-data/event';
-import { useNavigate } from 'react-router-dom';
 
 const EventDetailPage = () => {
-  const navigate = useNavigate();
   const [isLiked, setIsLiked] = useState(false); // 임시 하트 토글
   const { setActiveBottomSheet } = useBottomSheetStore();
   const { id } = useParams();
   const event = events.find((event) => event.id === id);
   if (!event) return;
 
-  const {
-    images,
-    category,
-    title,
-    StartDateTime,
-    time,
-    center,
-    price,
-    description,
-  } = event;
+  const { images, title, StartDateTime, time, center, price, description } =
+    event;
 
   const handleShareKakao = () => {
     console.log('카카오톡으로 공유하기'); // api 연동 필요
@@ -38,18 +29,7 @@ const EventDetailPage = () => {
 
   const handleCopyLink = () => {
     copyToClipboard(window.location.href);
-    alert(
-      '링크가 복사되었습니다.',
-      'warning',
-      '취소',
-      '확인',
-      () => {
-        console.log('btn1클릭');
-      },
-      () => {
-        console.log('btn2클릭');
-      },
-    ); // 임시 알림 추가
+    toast('링크가 복사되었습니다.');
   };
 
   const handleToggleHeart = () => {
@@ -59,7 +39,7 @@ const EventDetailPage = () => {
   return (
     <>
       <S.Header>
-        <button onClick={() => navigate(-1)}>임시 뒤로가기 버튼</button>
+        <Backward size={'28px'} />
         <S.ShareBtn
           onClick={() => setActiveBottomSheet(BOTTOM_SHEET_ID_EVENT_SHARE)}
         />
@@ -68,7 +48,7 @@ const EventDetailPage = () => {
       <S.MainSection>
         <ImageSlider images={images} title={title} />
         <S.InfoContainer>
-          <S.Category>{getLabelFromValue(category, 'category')}</S.Category>
+          <S.Category>{'임시 category'}</S.Category>
           <S.Title>{title}</S.Title>
           <S.Line />
           <S.Info>
@@ -107,7 +87,9 @@ const EventDetailPage = () => {
           size={24}
           borderColor={'theme.color.gray[500]'}
         />
-        <S.ApplyBtn>신청하기</S.ApplyBtn>
+        <Button color="primary500" size="small">
+          신청하기
+        </Button>
       </S.BottomContainer>
 
       <BottomSheet id={BOTTOM_SHEET_ID_EVENT_SHARE}>

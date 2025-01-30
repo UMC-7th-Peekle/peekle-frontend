@@ -89,6 +89,12 @@ export const theme: DefaultTheme = {
         line-height: 1.5;
         letter-spacing: -0.02rem;
       `,
+      '15B': css`
+        font-weight: 700;
+        font-size: 0.9375rem;
+        line-height: 1.5;
+        letter-spacing: -0.01875rem;
+      `,
       '15M': css`
         font-weight: 500;
         font-size: 0.9375rem;
@@ -136,6 +142,7 @@ export const theme: DefaultTheme = {
     },
   },
   borderRadius: {
+    xsm: '4px',
     sm: '8px',
     md: '10px',
     lg: '16px',
