@@ -10,7 +10,9 @@ const Column = styled.div`
   justify-content: center;
 `;
 
-const Heart = styled(HeartSvg)<{ isLiked: boolean }>`
+const Heart = styled(HeartSvg).withConfig({
+  shouldForwardProp: (prop) => prop !== 'isLiked',
+})<{ isLiked: boolean }>`
   width: 18px;
   path {
     fill: ${({ isLiked }) =>

@@ -21,7 +21,9 @@ const Container = styled.div`
   }
 `;
 
-const Heart = styled(HeartSvg)<{ isLiked: boolean }>`
+const Heart = styled(HeartSvg).withConfig({
+  shouldForwardProp: (prop) => prop !== 'isLiked',
+})<{ isLiked: boolean }>`
   path {
     fill: ${({ isLiked }) =>
       isLiked ? theme.color.sementic.red : theme.color.gray[200]};

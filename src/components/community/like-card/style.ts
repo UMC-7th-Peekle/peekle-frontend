@@ -1,7 +1,9 @@
 import { theme } from '@/styles/theme';
 import styled from 'styled-components';
 
-const Container = styled.div<{ isLiked: boolean }>`
+const Container = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== 'isLiked',
+})<{ isLiked: boolean }>`
   height: 35px;
   width: 62px;
   border-radius: 50px;
@@ -12,6 +14,7 @@ const Container = styled.div<{ isLiked: boolean }>`
   align-items: center;
   justify-content: center;
   gap: 8px;
+
   svg {
     width: 15px;
     height: 18px;

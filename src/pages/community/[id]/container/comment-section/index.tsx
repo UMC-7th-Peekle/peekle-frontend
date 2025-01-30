@@ -8,8 +8,8 @@ interface CommentSectionProps {
 export default function CommentSection({ comments }: CommentSectionProps) {
   return (
     <>
-      {comments.map((comment) => (
-        <CommentCard key={`${comment}`} comment={comment} />
+      {comments.map((comment, index) => (
+        <CommentCard key={`${index} + ${comment}`} comment={comment} />
       ))}
     </>
   );
