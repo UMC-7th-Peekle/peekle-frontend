@@ -1,5 +1,5 @@
 import * as S from './style';
-import { MapBottomSheet, FilterChips, EventMap, EventCard } from '@/components';
+import { MapBottomSheet, Filter, EventMap, EventCard } from '@/components';
 import { useMapStore, useBottomSheetStore } from '@/stores';
 import { BOTTOM_SHEET_ID_EVENT_INFO } from '@/constants/event';
 
@@ -11,7 +11,7 @@ const EventMapPage = () => {
     <S.Container>
       <S.HeaderContainer>
         // search
-        <FilterChips />
+        <Filter />
       </S.HeaderContainer>
       <EventMap />
       <MapBottomSheet id={BOTTOM_SHEET_ID_EVENT_INFO}>

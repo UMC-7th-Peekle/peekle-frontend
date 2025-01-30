@@ -8,23 +8,20 @@ import { theme } from '@/styles/theme';
 export const Container = styled.section`
   display: flex;
   flex-direction: column;
-  gap: 36px;
+  gap: 20px;
 `;
 
 export const TopContainer = styled.section`
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  margin: 0 -20px;
-  padding: 0 16px;
+  gap: 20px;
 `;
 
 export const ChipContainer = styled.div`
   display: flex;
   gap: 8px;
-  width: 100%;
   margin: 0 -20px; // 패딩 영역 밖으로 확장
-  padding: 0 20px 0 20px;
+  padding: 0 20px; // 초기 위치 조정
 
   overflow-x: scroll;
   &::-webkit-scrollbar {
@@ -53,6 +50,7 @@ export const StyledCalendar = styled(Calendar)<{
   width: 100%;
   max-width: 412px;
   height: 351px;
+  margin-bottom: 45px; // 6주 뜨는 달 반영해 크게 잡음
   font-family: 'Pretendard', sans-serif;
   border: none;
 
@@ -61,7 +59,7 @@ export const StyledCalendar = styled(Calendar)<{
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 1rem;
+    margin-bottom: 0;
 
     /* 년/월 텍스트 중앙 정렬 */
     .react-calendar__navigation__label {

@@ -1,6 +1,7 @@
 import styled, { css } from 'styled-components';
 import { StyledButtonProps } from '@/types/common';
 import { theme } from '@/styles/theme';
+import mediaQuery from '@/styles/mediaQuery';
 
 // 공동 disabled 스타일
 const disabledStyle = css`
@@ -54,20 +55,36 @@ const sizeStyles = {
     border-radius: ${theme.borderRadius.xlg};
     ${theme.typeFace.body['16SB']};
     padding: 10px 44px; // 실제 너비는 사용하는 컴포넌트에서 조정
+
+    ${mediaQuery.sMobile`
+      ${theme.typeFace.caption['13B']};
+    `}
   `,
   small: css`
     border-radius: ${theme.borderRadius.sm};
     ${theme.typeFace.body['18SB']};
     padding: 14px 0px 15px 0px; // 실제 너비는 사용하는 컴포넌트에서 조정
+
+    ${mediaQuery.sMobile`
+      ${theme.typeFace.caption['14B']};
+    `}
   `,
   medium: css`
     border-radius: ${theme.borderRadius.sm};
     ${theme.typeFace.body['18SB']};
     padding: 16px 24px;
+
+    ${mediaQuery.sMobile`
+      ${theme.typeFace.caption['14B']};
+    `}
   `,
   large: css`
     ${theme.typeFace.subTitle[20]};
     padding: 19px 0px 21px 0px;
+
+    ${mediaQuery.sMobile`
+      ${theme.typeFace.body['18SB']};
+    `}
   `,
 };
 
@@ -75,7 +92,9 @@ export const Button = styled.button<StyledButtonProps>`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: ${({ $width }) => $width};
+  flex: 1;
+  width: 100%;
+  max-width: ${({ $width }) => $width};
 
   &:disabled {
     ${disabledStyle}

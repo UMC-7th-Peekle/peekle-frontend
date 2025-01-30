@@ -4,7 +4,6 @@ export { default as ErrorFallback } from './common/error-fallback';
 export { default as Backward } from './common/backward';
 // navigation
 export { default as Chip } from './common/navigation/chip';
-export { default as Select } from './event/filter-chip';
 // information
 export { default as BottomSheet } from './common/information/bottom-sheet';
 export { default as Alert } from './common/information/modal/Alert';
@@ -31,7 +30,6 @@ export { default as LocationConfirm } from './event/location-confirm';
 export { default as FilePagination } from './event/file-pagenation';
 export { default as ImageSlider } from './event/image-slider';
 export { default as MapBottomSheet } from './event/map-bottom-sheet';
-export { default as FilterChip } from './event/filter-chip';
-export { default as FilterChips } from './event/filter-chips';
 export { default as FilterTabs } from './event/filter-tabs';
+export { default as Filter } from './event/filter';
 export { default as EventMap } from './event/event-map';

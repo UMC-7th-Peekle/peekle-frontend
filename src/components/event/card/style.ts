@@ -1,16 +1,16 @@
 import styled from 'styled-components';
-import locationSVG from '@/assets/images/icons/location.svg?react';
-import coinSVG from '@/assets/images/icons/coin.svg?react';
+import { theme } from '@/styles/theme';
 import DefaultImageSVG from '@/assets/images/event/card/default-image-icon.svg?react';
 
 export const EventCard = styled.div`
   display: flex;
-  gap: 16px;
+  gap: 20px;
+  align-self: stretch;
 `;
 
 export const ImageContainer = styled.div`
-  width: 116px;
-  height: 116px;
+  width: 96px;
+  height: 96px;
   overflow: hidden;
   display: flex;
   justify-content: center;
@@ -33,52 +33,28 @@ export const DefaultImageIcon = styled(DefaultImageSVG)`
 export const Info = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 6px 0;
-  gap: 4px;
-`;
-
-export const Top = styled.div`
-  display: flex;
-  gap: 4px;
-`;
-
-export const IconTextWrapper = styled.div`
-  display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
-`;
-
-export const IconText = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  color: ${({ theme }) => theme.color.gray[400]};
-`;
-
-export const LocationIcon = styled(locationSVG)`
-  width: 16px;
-  height: 16px;
-`;
-
-export const CoinIcon = styled(coinSVG)`
-  width: 16px;
-  height: 16px;
-`;
-
-export const Text = styled.span`
-  ${({ theme }) => theme.typeFace.caption['14R']}
-`;
-
-export const Seperater = styled.span`
-  color: ${({ theme }) => theme.color.gray[400]};
+  flex: 1 0 0;
 `;
 
 export const Title = styled.div`
-  ${({ theme }) => theme.typeFace.body['18SB']}
+  ${({ theme }) => theme.typeFace.body['16SB']}
   color: ${({ theme }) => theme.color.gray[900]};
 `;
 
-export const Date = styled.div`
-  ${({ theme }) => theme.typeFace.body['15M']}
-  color: ${({ theme }) => theme.color.gray[400]};
+export const SubInfoWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+export const SubInfo = styled.div`
+  display: flex;
+  padding: 6px 10px;
+  align-items: center;
+  border-radius: ${theme.borderRadius.xsm};
+  background-color: ${theme.color.gray[50]};
+  color: ${theme.color.gray[500]};
+  ${({ theme }) => theme.typeFace.caption['13B']}
 `;

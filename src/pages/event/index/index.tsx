@@ -1,5 +1,5 @@
 import * as S from './style';
-import { EventList, FilterChips } from '@/components';
+import { EventList, Filter } from '@/components';
 import Header from '@/layouts/header';
 
 const EventPage = () => {
@@ -7,7 +7,7 @@ const EventPage = () => {
     <S.EventPageContainer>
       <S.HeaderContainer>
         <Header page="event" />
-        <FilterChips />
+        <Filter />
       </S.HeaderContainer>
       <EventList />
     </S.EventPageContainer>

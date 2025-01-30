@@ -65,6 +65,7 @@ export interface BottomSheetMetrics {
 
 export interface BottomSheetProps {
   id: string;
+  shouldShowLine?: boolean;
   children: React.ReactNode;
 }
 
@@ -72,7 +73,7 @@ export interface BottomSheetProps {
 export interface ChipProps {
   label: string; // 내부 식별자 값
   value: string; // UI에 표시할 값
-  selectedValue: string; // 현재 선택된 값
+  isActive: boolean; // 현재 선택됐는지
   onSelect: (value: string) => void; // 선택 시 호출되는 함수
 }
 

@@ -9,12 +9,7 @@ import {
   Button,
 } from '@/components';
 import { BOTTOM_SHEET_ID_EVENT_SHARE } from '@/constants/event';
-import {
-  getLabelFromValue,
-  copyToClipboard,
-  toast,
-  priceFormatter,
-} from '@/utils';
+import { copyToClipboard, toast, priceFormatter } from '@/utils';
 import { useBottomSheetStore } from '@/stores';
 import { events } from '@/sample-data/event';
 
@@ -25,16 +20,8 @@ const EventDetailPage = () => {
   const event = events.find((event) => event.id === id);
   if (!event) return;
 
-  const {
-    images,
-    category,
-    title,
-    StartDateTime,
-    time,
-    center,
-    price,
-    description,
-  } = event;
+  const { images, title, StartDateTime, time, center, price, description } =
+    event;
 
   const handleShareKakao = () => {
     console.log('카카오톡으로 공유하기'); // api 연동 필요
@@ -61,7 +48,7 @@ const EventDetailPage = () => {
       <S.MainSection>
         <ImageSlider images={images} title={title} />
         <S.InfoContainer>
-          <S.Category>{getLabelFromValue(category, 'category')}</S.Category>
+          <S.Category>{'임시 category'}</S.Category>
           <S.Title>{title}</S.Title>
           <S.Line />
           <S.Info>

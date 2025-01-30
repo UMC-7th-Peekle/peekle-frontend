@@ -1,20 +1,25 @@
-import { StyledCheckboxCard, CardText } from './style';
-import Checkbox from '@/components/common/input/checkbox';
+import { StyledCheckboxCard, CardText, CheckIcon } from './style';
 interface CheckboxCardProps {
-  text?: string;
+  text: string;
   isChecked: boolean;
-  toggleCheckbox: () => void;
+  isLastCard?: boolean;
+  onClick: () => void;
 }
 
 export default function CheckboxCard({
   text = '',
   isChecked,
-  toggleCheckbox,
+  isLastCard = false,
+  onClick,
 }: CheckboxCardProps) {
   return (
-    <StyledCheckboxCard $isChecked={isChecked}>
-      <Checkbox isChecked={isChecked} toggleCheckbox={toggleCheckbox} />
+    <StyledCheckboxCard
+      onClick={onClick}
+      $isChecked={isChecked}
+      $isLastCard={isLastCard}
+    >
       <CardText $isChecked={isChecked}>{text}</CardText>
+      {isChecked && <CheckIcon />}
     </StyledCheckboxCard>
   );
 }

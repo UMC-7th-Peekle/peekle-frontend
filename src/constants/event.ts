@@ -1,73 +1,59 @@
-// FilterChips
-// Dropdown
 export const SORT_OPTIONS = [
-  { label: '가까운 날짜순', value: 'latest' }, // 기본값
-  { label: '낮은 금액순', value: 'lowest_price' },
-  { label: '가까운 거리순', value: 'shortest_distance' },
+  '가까운 날짜순',
+  '낮은 금액순',
+  '가까운 거리순',
 ] as const;
 
-// FilterChip
-export const CATEGORY_OPTIONS = [
-  ['전체', 'all'],
-  ['교육', '1'],
-  ['문화', '2'],
-  ['활동', '5'],
-] as const;
+export const CATEGORY_OPTIONS = ['전체', '교육', '문화', '활동'] as const;
 
-export const PRICE_OPTIONS = [
-  ['전체', 'all'],
-  ['무료', 'free'],
-  ['유료', 'paid'],
-] as const;
+export const PRICE_OPTIONS = ['전체', '무료', '유료'] as const;
 
 export const LOCATION_OPTIONS = [
-  ['전체', 'all'],
+  ['전체', '전체'],
   ['잠실 / 송파 / 강동', '18'],
   ['마포 / 서대문 / 은평', '19'],
   ['강서 / 금천 / 양천', '20'],
-  ['광진 / 성동 / 중랑 / 동대문', '21'],
   ['강남 / 서초 / 양재', '22'],
   ['동작 / 관악 / 사당', '23'],
   ['종로 / 중구 / 용산', '24'],
   ['영등포 / 구로 / 신도림', '25'],
+  ['광진 / 성동 / 중랑 / 동대문', '21'],
 ] as const;
 
 // 기본 필터값
 export const DEFAULT_FILTERS = {
-  sort: 'latest',
-  category: 'all',
-  duration: 'all',
-  price: 'all',
-  location: 'all',
+  정렬: '가까운 날짜순',
+  카테고리: '전체',
+  기간: '전체',
+  가격: '전체',
+  지역: '전체',
 } as const;
 
 // BottomSheet
 export const BOTTOM_SHEET_ID_EVENT_FILTER = 'event-filter';
+export const BOTTOM_SHEET_ID_EVENT_SORT = 'event-sort';
 export const BOTTOM_SHEET_ID_EVENT_INFO = 'event-info'; // map에서 사용
 export const BOTTOM_SHEET_ID_EVENT_SHARE = 'event-share';
 
 // Duration에서 쓰는 Chip
 export const DURATION_OPTIONS = [
-  ['전체', 'all'],
-  ['직접 입력', 'custom'],
-  ['오늘', 'today'],
-  ['1주', 'one_week'],
-  ['1개월', 'one_month'],
-  ['3개월', 'three_month'],
+  '전체',
+  '직접 입력',
+  '오늘',
+  '1주',
+  '1개월',
+  '3개월',
 ] as const;
 
 export const PREDEFINED_RANGES = {
-  all: [new Date(), new Date(new Date().setFullYear(2999))],
-  today: [new Date(), new Date()], // 오늘이 기준
-  one_week: [
-    new Date(),
-    new Date(new Date().setDate(new Date().getDate() + 7)),
-  ],
-  one_month: [
+  전체: [new Date(), new Date(new Date().setFullYear(2999))],
+  오늘: [new Date(), new Date()], // 오늘이 기준
+  '1주': [new Date(), new Date(new Date().setDate(new Date().getDate() + 7))],
+  '1개월': [
     new Date(),
     new Date(new Date().setMonth(new Date().getMonth() + 1)),
   ],
-  three_month: [
+  '3개월': [
     new Date(),
     new Date(new Date().setMonth(new Date().getMonth() + 3)),
   ],

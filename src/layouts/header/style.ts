@@ -7,7 +7,7 @@ import SearchSVG from '@/assets/images/icons/search.svg?react';
 export const HeaderContainer = styled.header`
   display: flex;
   height: 44px;
-  padding: 8px 0;
+  padding: 16px 0;
   align-items: center;
   gap: 8px;
   align-self: stretch;
@@ -32,6 +32,7 @@ export const IconWrapper = styled.span`
   display: flex;
   align-items: center;
   gap: 24px;
+  color: ${theme.color.gray[600]};
 `;
 
 const IconStyle = css`

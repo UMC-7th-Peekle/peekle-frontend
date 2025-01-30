@@ -46,6 +46,7 @@ declare module 'styled-components' {
         '18R': FlattenSimpleInterpolation;
         '16SB': FlattenSimpleInterpolation;
         '16R': FlattenSimpleInterpolation;
+        '15B': FlattenSimpleInterpolation;
         '15M': FlattenSimpleInterpolation;
       };
       caption: {

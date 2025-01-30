@@ -1,28 +1,13 @@
-import {
-  CATEGORY_OPTIONS,
-  DURATION_OPTIONS,
-  PRICE_OPTIONS,
-  LOCATION_OPTIONS,
-} from '@/constants/event';
-
-// FilterChip
-export interface FilterChipProps {
-  option: string;
-  defaultValue: string;
-  defaultLabel: string;
+// CheckItem
+export interface CheckItemProps {
+  text: string;
+  onClick: () => void;
+  isActive: boolean;
 }
-
-// FilterChips
-export type FilterChipsOption = 'category' | 'duration' | 'price' | 'location';
-
-export type CategoryValue = (typeof CATEGORY_OPTIONS)[number][1];
-export type DurationValue = (typeof DURATION_OPTIONS)[number][1];
-export type PriceValue = (typeof PRICE_OPTIONS)[number][1];
-export type LocationValue = (typeof LOCATION_OPTIONS)[number][1];
 
 // FilterTabs
 // 내부 상태
-export interface FilterTabsStoreForChildren {
+export interface FilterTabsStore {
   selectedValue: string; // 내부 식별자
   setSelectedValue: (value: string) => void;
   option: string; // tab 종류 - 접근성용 e.g.이벤트 필터 탭
@@ -51,17 +36,7 @@ export interface FilterTabsListProps {
 }
 
 // 전역 상태
-export interface FilterTabsStore {
-  activeTab: string; // 어떤 탭 활성화 할건지
-  setActiveTab: (tab: string) => void;
-}
-
-export type EventFilterKeys =
-  | 'sort'
-  | 'category'
-  | 'duration'
-  | 'price'
-  | 'location';
+export type EventFilterKeys = '정렬' | '카테고리' | '기간' | '가격' | '지역';
 
 // 데이터
 export interface EventData {

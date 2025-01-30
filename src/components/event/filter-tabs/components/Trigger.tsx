@@ -1,6 +1,6 @@
 import { TriggerBtn } from '../style';
 import { FilterTabsTriggerProps } from '@/types/event';
-import useFilterTabsStore from '../store/useFilterTabsStore';
+import useFilterTabsStore from '@/stores/event/useFilterTabsStore';
 
 const Trigger = ({ value, label, onClick }: FilterTabsTriggerProps) => {
   const { selectedValue, setSelectedValue, option } = useFilterTabsStore();

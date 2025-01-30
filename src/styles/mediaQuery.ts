@@ -2,6 +2,8 @@ import { css } from 'styled-components';
 import { CSSValue, MediaQueryProps } from '@/types/style';
 
 const breakpoints: MediaQueryProps = {
+  xsMobile: 360,
+  sMobile: 390,
   mobile: 420,
   tablet: 800,
   laptop: 1600,

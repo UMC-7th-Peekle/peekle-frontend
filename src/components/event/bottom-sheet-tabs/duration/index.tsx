@@ -14,7 +14,7 @@ import { useEventFilter } from '@/hooks';
 const today = new Date();
 
 const getDateRangeFromStoredValue = (storedValue: string) => {
-  if (storedValue === 'all')
+  if (storedValue === '전체')
     return [today, new Date(new Date().setFullYear(2999))];
   if (storedValue.endsWith('DD')) return [today, null];
 
@@ -24,11 +24,11 @@ const getDateRangeFromStoredValue = (storedValue: string) => {
 
 const Duration = () => {
   const { storedValue, handleSelect } = useEventFilter({
-    key: 'duration',
+    key: '기간',
     type: 'single',
   });
 
-  const [selectedChip, setSelectedChip] = useState<string>('all');
+  const [selectedChip, setSelectedChip] = useState<string>('전체');
   const [dateRange, setDateRange] = useState<DateRange>(() => {
     const range = getDateRangeFromStoredValue(storedValue);
     return [range[0] ?? null, range[1] ?? null] as DateRange;
@@ -40,10 +40,10 @@ const Duration = () => {
     const decodedValue = storedValue.replace('%2C', ',');
     const [storedStart, storedEnd] = decodedValue.split(',');
 
-    if (storedValue === 'all') {
-      setSelectedChip('all');
+    if (storedValue === '전체') {
+      setSelectedChip('전체');
     } else if (storedValue.endsWith('DD')) {
-      setSelectedChip('custom');
+      setSelectedChip('직접 입력');
     } else {
       const matchedChip = Object.entries(PREDEFINED_RANGES).find(
         ([, [start, end]]) =>
@@ -51,7 +51,7 @@ const Duration = () => {
           formatDate(new Date(storedEnd)) === formatDate(end),
       );
 
-      setSelectedChip(matchedChip ? matchedChip[0] : 'custom');
+      setSelectedChip(matchedChip ? matchedChip[0] : '직접 입력');
     }
   }, [storedValue, dateRange]);
 
@@ -65,9 +65,9 @@ const Duration = () => {
 
   // 날짜 범위와 Chip 상태 매칭
   const getMatchingChip = (dateRange: DateRange) => {
-    if (selectedChip === 'all') return 'all';
-    if (!dateRange[0] || !dateRange[1] || selectedChip === 'custom')
-      return 'custom';
+    if (selectedChip === '전체') return '전체';
+    if (!dateRange[0] || !dateRange[1] || selectedChip === '직접 입력')
+      return '직접 입력';
 
     const match = Object.entries(PREDEFINED_RANGES).find(
       ([, [start, end]]) =>
@@ -83,12 +83,13 @@ const Duration = () => {
     setSelectedChip(value);
     setIsCalendarOpen(false);
 
-    if (value === 'all') {
+    if (value === '전체') {
       setDateRange([today, new Date(new Date().setFullYear(2999))]);
-      handleSelect('all');
-    } else if (value === 'custom') {
+      handleSelect('전체');
+    } else if (value === '직접 입력') {
       setDateRange([today, null]);
       handleSelect(`${formatDate(today)}, YYYY-MM-DD`);
+      setIsCalendarOpen(true);
     } else {
       const range = PREDEFINED_RANGES[value as keyof typeof PREDEFINED_RANGES];
       const [predefinedStart, predefinedEnd] = range;
@@ -131,18 +132,18 @@ const Duration = () => {
     <S.Container>
       <S.TopContainer>
         <S.ChipContainer>
-          {DURATION_OPTIONS.map(([label, value]) => (
+          {DURATION_OPTIONS.map((value: (typeof DURATION_OPTIONS)[number]) => (
             <Chip
               key={value}
-              label={label}
+              label={value}
               value={value}
-              selectedValue={getMatchingChip(dateRange)}
+              isActive={getMatchingChip(dateRange) === value}
               onSelect={() => handleChipSelect(value)}
             />
           ))}
         </S.ChipContainer>
         <S.DateBtnContainer>
-          {selectedChip === 'custom' ? (
+          {selectedChip === '직접 입력' ? (
             <>
               <DateList
                 isFocus={isCalendarOpen && !dateRange[1]}
@@ -153,13 +154,9 @@ const Duration = () => {
                 <DateList
                   isFocus={!!dateRange[1]}
                   date={endDateWithDayOfWeek}
-                  onClick={() => setIsCalendarOpen(true)}
                 />
               ) : (
-                <DateList.Plus
-                  isFocus={!isCalendarOpen}
-                  onClick={() => setIsCalendarOpen(true)}
-                />
+                <DateList.Plus isFocus={!isCalendarOpen} />
               )}
             </>
           ) : (

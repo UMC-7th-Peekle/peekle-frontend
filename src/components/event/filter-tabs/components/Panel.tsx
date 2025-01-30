@@ -1,6 +1,6 @@
-import { PanelContainer } from '../style';
 import { FilterTabsPanelProps } from '@/types/event';
-import useFilterTabsStore from '../store/useFilterTabsStore';
+import { PanelContainer } from '../style';
+import useFilterTabsStore from '@/stores/event/useFilterTabsStore';
 
 const Panel = ({ value, children }: FilterTabsPanelProps) => {
   const { selectedValue, option } = useFilterTabsStore();

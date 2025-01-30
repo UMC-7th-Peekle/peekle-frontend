@@ -12,7 +12,7 @@ import { events } from '@/sample-data/event';
 import { useQueryState } from 'nuqs';
 
 const useEventFilter = ({
-  key = 'sort',
+  key = '정렬',
   type = 'single',
 }: UseEventFilterProps = {}) => {
   const { myLocation } = useMyLocationStore();
@@ -37,14 +37,14 @@ const useEventFilter = ({
   const filteredEvents = useMemo(() => {
     return events.filter((event) => {
       // 카테고리 필터
-      if (filters.category !== 'all') {
-        const categories = filters.category.split(',');
+      if (filters.카테고리 !== '전체') {
+        const categories = filters.카테고리.split(',');
         if (!categories.includes(event.category)) return false;
       }
 
       // 기간 필터
-      if (filters.duration !== 'all') {
-        const [startFilter, endFilter] = filters.duration
+      if (filters.기간 !== '전체') {
+        const [startFilter, endFilter] = filters.기간
           .split(',')
           .map((date) => new Date(date));
         const eventStart = new Date(event.startDate);
@@ -54,8 +54,8 @@ const useEventFilter = ({
       }
 
       // 가격 필터
-      if (filters.price !== 'all') {
-        if (filters.price === 'free') {
+      if (filters.가격 !== '전체') {
+        if (filters.가격 === 'free') {
           if (event.price !== 'free') return false;
         } else {
           if (Number(event.price) <= 0) return false;
@@ -63,8 +63,8 @@ const useEventFilter = ({
       }
 
       // 위치 필터
-      if (filters.location !== 'all') {
-        const locations = filters.location.split(',');
+      if (filters.지역 !== '전체') {
+        const locations = filters.지역.split(',');
         if (!locations.includes(event.location)) return false;
       }
 
@@ -83,7 +83,7 @@ const useEventFilter = ({
 
   const sortedEvents = useMemo(() => {
     return [...filteredEvents].sort((a, b) => {
-      if (filters.sort === 'latest') {
+      if (filters.정렬 === 'latest') {
         const startDateDiff =
           new Date(a.startDate).getTime() - new Date(b.startDate).getTime();
         if (startDateDiff !== 0) return startDateDiff;
@@ -92,7 +92,7 @@ const useEventFilter = ({
         return endDateDiff;
       }
 
-      if (filters.sort === 'lowest_price') {
+      if (filters.정렬 === 'lowest_price') {
         const priceDiff = Number(a.price) - Number(b.price);
         if (priceDiff !== 0) return priceDiff;
         const startDateDiff =
@@ -100,7 +100,7 @@ const useEventFilter = ({
         return startDateDiff;
       }
 
-      if (filters.sort === 'shortest_distance' && myLocation) {
+      if (filters.정렬 === 'shortest_distance' && myLocation) {
         const distanceA = calculateDistance(
           myLocation.lat(),
           myLocation.lng(),
@@ -118,7 +118,7 @@ const useEventFilter = ({
 
       return 0;
     });
-  }, [filteredEvents, filters.sort, myLocation]);
+  }, [filteredEvents, filters.정렬, myLocation]);
 
   // 필터값 변경
   const handleSelect = (newValue: string) => {
@@ -128,16 +128,16 @@ const useEventFilter = ({
     }
 
     // 중복 허용 값일때
-    if (newValue === 'all') {
-      setSearchParams({ ...filters, [key]: 'all' });
+    if (newValue === '전체') {
+      setSearchParams({ ...filters, [key]: '전체' });
       return;
     }
 
     const currentValues = filters[key as EventFilterKeys]?.split(',') ?? [
-      'all',
+      '전체',
     ];
 
-    if (currentValues.includes('all')) {
+    if (currentValues.includes('전체')) {
       setSearchParams({
         ...filters,
         [key]: newValue,
@@ -150,7 +150,7 @@ const useEventFilter = ({
       const newValues = currentValues.filter((v) => v !== newValue);
       setSearchParams({
         ...filters,
-        [key]: newValues.length === 0 ? 'all' : newValues.join(','),
+        [key]: newValues.length === 0 ? '전체' : newValues.join(','),
       });
       return;
     }
@@ -169,8 +169,8 @@ const useEventFilter = ({
       return value === filters[key as EventFilterKeys];
     }
 
-    return value === 'all'
-      ? filters[key as EventFilterKeys] === 'all'
+    return value === '전체'
+      ? filters[key as EventFilterKeys] === '전체'
       : !!filters[key as EventFilterKeys]?.split(',').includes(value);
   };
 

@@ -2,8 +2,10 @@ import { create } from 'zustand';
 import { FilterTabsStore } from '@/types/event';
 
 const useFilterTabsStore = create<FilterTabsStore>((set) => ({
-  activeTab: 'sort',
-  setActiveTab: (tab) => set({ activeTab: tab }),
+  selectedValue: '',
+  setSelectedValue: (value: string) => set({ selectedValue: value }),
+  option: '',
+  setOption: (value: string) => set({ option: value }),
 }));
 
 export default useFilterTabsStore;
