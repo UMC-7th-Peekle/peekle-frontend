@@ -1,23 +1,20 @@
 import * as S from './style.ts';
 import { useTextFields } from './useTextFields.ts';
 
-interface SearchProps {
+interface TextFieldsProps {
   queryKey: string;
   placeholder?: string;
-  onQuerySubmit?: (query: string) => void;
   onClick?: () => void; // 클릭시 검색 페이지로 이동
 }
 
 export const TextFields = ({
   queryKey,
   placeholder = '관심 있는 활동 검색',
-  onQuerySubmit = () => {},
   onClick,
-}: SearchProps) => {
+}: TextFieldsProps) => {
   const { inputValue, handleChange, handleKeyDown, handleClear } =
     useTextFields({
       queryKey,
-      onQuerySubmit,
     });
 
   return (

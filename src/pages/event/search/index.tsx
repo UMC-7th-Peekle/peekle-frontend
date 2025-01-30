@@ -31,7 +31,11 @@ const EventSearchPage = () => {
   return (
     <S.Container>
       <S.HeaderContainer>
-        <SearchBar queryKey="event-search" placeholder="관심있는 활동 검색" />
+        <SearchBar
+          page="event"
+          queryKey="event-search"
+          placeholder="관심있는 활동 검색"
+        />
       </S.HeaderContainer>
       {!isSearched &&
         (recentSearch.length > 0 ? (
