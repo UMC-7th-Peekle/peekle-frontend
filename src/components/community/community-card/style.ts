@@ -78,6 +78,11 @@ interface ThumbnailProps {
   image: string;
 }
 
+const SizedBox = styled.div`
+  width: 80px;
+  height: 80px;
+`;
+
 export {
   LeftContainer,
   RightContainer,
@@ -87,4 +92,5 @@ export {
   CounterContainer,
   Date,
   Thumbnail,
+  SizedBox,
 };

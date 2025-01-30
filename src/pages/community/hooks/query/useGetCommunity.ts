@@ -3,24 +3,31 @@ import { formatDateCardTime } from '@/utils/dateFormatter';
 import { useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 
+const AuthorInfoSchema = z.object({
+  nickname: z.string(),
+  profileImage: z.string(),
+  authorId: z.number().int(),
+});
+
 // Zod 스키마 정의
 const ArticleSchema = z.object({
-  articleId: z.string().transform((value) => value.toString()),
+  articleId: z.number().int(),
   title: z.string(),
   content: z.string(),
-  authorId: z.number().int(),
   isAnonymous: z.boolean().optional(),
-  communityId: z.string(),
+  communityId: z.number(),
   createdAt: z.string().transform(formatDateCardTime),
   updatedAt: z.string(),
   articleComments: z.number().int(),
   articleLikes: z.number().int(),
+  thumbnail: z.string().nullable(),
+  authorInfo: AuthorInfoSchema,
 });
 
 const SuccessResponseSchema = z.object({
   message: z.string(),
   articles: z.array(ArticleSchema),
-  nextCursor: z.string(),
+  nextCursor: z.number().nullable(),
   hasNextPage: z.boolean(),
 });
 
@@ -35,12 +42,19 @@ export type CommunityResponse = z.infer<typeof CommunityResponseSchema>;
 export type Article = z.infer<typeof ArticleSchema>;
 
 // API 호출 함수
-const getCommunityId = async (
-  communityId: string,
-): Promise<CommunityResponse> => {
+const getCommunity = async ({
+  limit,
+  cursor,
+  communityId,
+}: UseGetCommunityIdProps): Promise<CommunityResponse> => {
   const response = await clientAuth<CommunityResponse>({
     method: 'GET',
-    url: `/community/${communityId}`,
+    url: `/community`,
+    params: {
+      limit,
+      cursor,
+      communityId,
+    },
   });
 
   // 응답 데이터 검증
@@ -49,13 +63,21 @@ const getCommunityId = async (
 };
 
 // useQuery 훅 생성
-export const useGetCommunityId = ({ communityId }: UseGetCommunityIdProps) => {
+export const useGetCommunity = ({
+  limit = 10,
+  cursor = null,
+  query = '',
+  communityId,
+}: UseGetCommunityIdProps) => {
   return useQuery({
-    queryKey: ['community', communityId],
-    queryFn: () => getCommunityId(communityId),
+    queryKey: ['community', communityId, limit, cursor, query],
+    queryFn: () => getCommunity({ limit, cursor, query, communityId }),
   });
 };
 
 interface UseGetCommunityIdProps {
-  communityId: string;
+  limit?: number;
+  cursor?: number | null;
+  query?: string | null;
+  communityId?: number | null;
 }

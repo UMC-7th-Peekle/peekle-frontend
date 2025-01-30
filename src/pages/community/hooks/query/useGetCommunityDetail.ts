@@ -3,17 +3,21 @@ import { formatDateCardTime } from '@/utils/dateFormatter';
 import { useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 
-// articlesData 스키마
-const ArticleDataSchema = z.object({
+// 댓글 요소 스키마
+const ArticleCommentSchema = z.object({
+  commentId: z.number(),
   articleId: z.number(),
-  title: z.string(),
-  content: z.string(),
+  parentCommentId: z.number().nullable(),
+  status: z.enum(['active', 'inactive', 'deleted']),
   authorId: z.number(),
-  isAnonymouse: z.boolean(),
-  communityId: z.number(),
+  isAnonymous: z.boolean(),
+  content: z.string(),
   createdAt: z.string().transform(formatDateCardTime),
-  updatedAt: z.string(),
+  updatedAt: z.string().transform(formatDateCardTime),
 });
+
+// 댓글 목록 스키마
+const ArticleCommentsSchema = z.array(ArticleCommentSchema);
 
 // 이미지 요소 스키마
 const ArticleImageSchema = z.object({
@@ -24,27 +28,18 @@ const ArticleImageSchema = z.object({
 // 이미지 배열 스키마
 const ArticleImagesSchema = z.array(ArticleImageSchema);
 
-// 개별 댓글 객체 스키마
-const ArticleCommentSchema = z.object({
-  commentId: z.number().int(),
-  articleId: z.number().int(),
-  parentCommentId: z.number().int().nullable(),
-  status: z.enum(['active', 'inactive', 'deleted']),
-  authorId: z.number().int(),
-  isAnonymous: z.boolean(),
-  content: z.string(),
-  createdAt: z.string().datetime(),
-  updatedAt: z.string().datetime(),
-});
-
-// 댓글 배열 스키마
-const ArticleCommentsSchema = z.array(ArticleCommentSchema);
-
-// 성공 응답 스키마
+// articlesData 스키마
 const ArticleSchema = z.object({
-  articleData: ArticleDataSchema, // 게시글 데이터
-  articleImages: ArticleImagesSchema, // 이미지 배열
-  articleComments: ArticleCommentsSchema, // 댓글 배열
+  articleId: z.number(),
+  title: z.string(),
+  content: z.string(),
+  authorId: z.number(),
+  isAnonymous: z.boolean(),
+  communityId: z.number(),
+  createdAt: z.string().transform(formatDateCardTime),
+  updatedAt: z.string(),
+  articleComments: ArticleCommentsSchema,
+  articleImages: ArticleImagesSchema,
 });
 
 // 성공 응답 스키마
@@ -62,14 +57,18 @@ const CommunityDetailRespSchema = z.object({
 
 // 데이터 타입 추출
 export type CommunityDetailResp = z.infer<typeof CommunityDetailRespSchema>;
+export type CommunityDetailArticle = z.infer<typeof ArticleSchema>;
+export type CommunityDetailComments = z.infer<typeof ArticleCommentsSchema>;
+export type CommunityDetailComment = z.infer<typeof ArticleCommentSchema>;
 
 // API 호출 함수
 const getCommunityDetail = async (
+  communityId: string,
   articleId: string,
 ): Promise<CommunityDetailResp> => {
   const resp = await clientAuth<CommunityDetailResp>({
     method: 'GET',
-    url: `/community/1/articles/${articleId}`,
+    url: `/community/${communityId}/articles/${articleId}`,
   });
 
   // 응답 데이터 검증
@@ -79,14 +78,16 @@ const getCommunityDetail = async (
 
 // useQuery 훅
 export const useGetCommunityDetail = ({
+  communityId,
   articleId,
 }: useGetCommunityDetailProps) => {
   return useQuery({
     queryKey: ['community-detail', articleId],
-    queryFn: () => getCommunityDetail(articleId),
+    queryFn: () => getCommunityDetail(communityId, articleId),
   });
 };
 
 interface useGetCommunityDetailProps {
+  communityId: string;
   articleId: string;
 }

@@ -6,28 +6,27 @@ import 'react-loading-skeleton/dist/skeleton.css';
 
 // 커뮤니티 게시판에 사용되는 Card 컴포넌트입니다
 export default function CommunityCard({
+  communityId,
   articleId,
   title,
   content,
   date,
-  imgUrl,
+  articleComments,
+  articleLikes,
+  thumbnail,
 }: CommunityCardProps) {
-  const defaultImageUrl =
-    'https://dummyimage.com/80x80/bfbfbf/c9c9c9.png&text=임시+이미지';
-
-  const id: string = articleId;
   return (
-    <S.Container to={`/community/${id}`}>
+    <S.Container to={`/community/${communityId}/${articleId}`}>
       <S.LeftContainer>
         <S.Title>{title}</S.Title>
         <S.Content>{content}</S.Content>
         <S.Date>{date}</S.Date>
       </S.LeftContainer>
       <S.RightContainer>
-        <S.Thumbnail image={imgUrl || defaultImageUrl} />
+        {thumbnail ? <S.Thumbnail image={thumbnail} /> : <S.SizedBox />}
         <S.CounterContainer>
-          <LikeCounter />
-          <CommentCounter />
+          <LikeCounter count={articleLikes} />
+          <CommentCounter count={articleComments} />
         </S.CounterContainer>
       </S.RightContainer>
     </S.Container>
@@ -35,11 +34,14 @@ export default function CommunityCard({
 }
 
 interface CommunityCardProps {
-  articleId: string;
+  communityId: number;
+  articleId: number;
   title: string;
   content: string;
   date: string;
-  imgUrl?: string;
+  articleComments: number;
+  articleLikes: number;
+  thumbnail?: string | null;
 }
 
 // CommunityCard.Skeleton 컴포넌트

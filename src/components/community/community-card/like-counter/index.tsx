@@ -1,10 +1,12 @@
 import * as S from './style';
-import Heart from '@/assets/images/icons/heart-filled.svg?react';
 
-export default function LikeCounter({ count = 0 }: LikeCounterProps) {
+export default function LikeCounter({
+  count = 0,
+  isLiked = false,
+}: LikeCounterProps) {
   return (
     <S.Container>
-      <Heart />
+      <S.Heart isLiked={isLiked} />
       <p>{count}</p>
     </S.Container>
   );
@@ -12,4 +14,5 @@ export default function LikeCounter({ count = 0 }: LikeCounterProps) {
 
 interface LikeCounterProps {
   count?: number;
+  isLiked?: boolean;
 }

@@ -1,9 +1,9 @@
 import * as S from './style';
-import { useGetCommunityIdSearch } from '@/pages/community/hooks/query/useGetCommunityIdSearch';
 import { Backward, CommunityCard, TextFields } from '@/components';
 import * as SS from '../../event/search/style';
 import BodySection from '../container/body-section';
 import { useRecentSearch } from '@/hooks';
+import { useGetCommunity } from '../hooks/query/useGetCommunity';
 
 export default function CommunitySearchPage() {
   const {
@@ -18,12 +18,11 @@ export default function CommunitySearchPage() {
     localKey: 'recent-community-search',
   });
 
-  const { data, error, isLoading } = useGetCommunityIdSearch({
-    communityId: 1,
+  const { data, error, isLoading } = useGetCommunity({
+    limit: 5,
     query: query ?? '',
+    communityId: 1,
   });
-
-  console.log(data?.success.articles);
 
   return (
     <>
@@ -72,11 +71,15 @@ export default function CommunitySearchPage() {
           <BodySection>
             {data.success.articles.map((article) => (
               <CommunityCard
-                key={article.articleId}
+                key={`${article.communityId} + ${article.articleId}`}
+                communityId={article.communityId}
                 articleId={article.articleId}
                 title={article.title}
                 content={article.content}
                 date={article.createdAt}
+                articleComments={article.articleComments}
+                articleLikes={article.articleLikes}
+                thumbnail={article.thumbnail}
               />
             ))}
           </BodySection>

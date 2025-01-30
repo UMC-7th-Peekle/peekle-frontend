@@ -11,6 +11,21 @@ import {
   CommunityDetailPage,
 } from '@/pages';
 import UserPage from '@/pages/user/page';
+import OnboardingPage from '@/pages/onboarding';
+import PhoneNumberPage from '@/pages/auth/phone-number';
+import CertifyPage from '@/pages/auth/certify';
+import GenderSelectionPage from '@/pages/auth/gender';
+import PersonalDataPage from '@/pages/auth/personal-data';
+import TosPage from '@/pages/auth/tos';
+import PrivacyPage from '@/pages/auth/privacy';
+import TermsLocationPage from '@/pages/auth/terms-location';
+import CompletePage from '@/pages/auth/complete';
+import EditPage from '@/pages/user/edit';
+import NoticePage from '@/pages/user/notice';
+import RequestPage from '@/pages/user/request';
+import TouPage from '@/pages/user/tou';
+import ManagePage from '@/pages/user/manage';
+import ResignPage from '@/pages/user/resign';
 import { ROUTES } from '@/constants/routes';
 import { CommunityLikePage, CommunityPage, CommunitySearchPage } from '@/pages';
 import { ErrorFallback } from '@/components';
@@ -31,6 +46,42 @@ const router = createBrowserRouter(
       ),
       errorElement: <ErrorFallback />,
       children: [
+        {
+          index: true,
+          element: <OnboardingPage />,
+        },
+        {
+          path: '/auth/phone-number',
+          element: <PhoneNumberPage />,
+        },
+        {
+          path: '/auth/certify',
+          element: <CertifyPage />,
+        },
+        {
+          path: '/auth/gender',
+          element: <GenderSelectionPage />,
+        },
+        {
+          path: '/auth/personal-data',
+          element: <PersonalDataPage />,
+        },
+        {
+          path: '/auth/tos',
+          element: <TosPage />,
+        },
+        {
+          path: '/auth/privacy',
+          element: <PrivacyPage />,
+        },
+        {
+          path: '/auth/terms-location',
+          element: <TermsLocationPage />,
+        },
+        {
+          path: '/auth/complete',
+          element: <CompletePage />,
+        },
         {
           path: '/event',
           element: <EventPage />,
@@ -76,18 +127,42 @@ const router = createBrowserRouter(
           element: <CommunityEditPage />,
         },
         {
-          path: ROUTES.COMMUNITY_DETAIL,
-          element: <CommunityDetailPage />,
-        },
-        {
           path: '/user',
           element: <UserPage />,
+        },
+        {
+          path: '/user/edit',
+          element: <EditPage />,
+        },
+        {
+          path: '/auth/notice',
+          element: <NoticePage />,
+        },
+        {
+          path: '/auth/request',
+          element: <RequestPage />,
+        },
+        {
+          path: '/auth/tou',
+          element: <TouPage />,
+        },
+        {
+          path: '/auth/manage',
+          element: <ManagePage />,
+        },
+        {
+          path: '/auth/resign',
+          element: <ResignPage />,
         },
         {
           path: '*',
           element: <NotFoundPage />, // 404는 라우트로 처리
         },
       ],
+    },
+    {
+      path: ROUTES.COMMUNITY_DETAIL,
+      element: <CommunityDetailPage />,
     },
   ],
   {

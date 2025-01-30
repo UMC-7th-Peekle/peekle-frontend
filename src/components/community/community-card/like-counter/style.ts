@@ -1,5 +1,6 @@
 import { theme } from '@/styles/theme';
 import styled from 'styled-components';
+import HeartSvg from '@/assets/images/icons/heart-filled.svg?react';
 
 const Container = styled.div`
   display: flex;
@@ -20,4 +21,11 @@ const Container = styled.div`
   }
 `;
 
-export { Container };
+const Heart = styled(HeartSvg)<{ isLiked: boolean }>`
+  path {
+    fill: ${({ isLiked }) =>
+      isLiked ? theme.color.sementic.red : theme.color.gray[200]};
+  }
+`;
+
+export { Container, Heart };

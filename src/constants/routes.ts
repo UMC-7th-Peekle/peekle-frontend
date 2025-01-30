@@ -17,7 +17,7 @@ export const ROUTES = {
   COMMUNITY: '/community',
   COMMUNITY_SEARCH: '/community/search',
   COMMUNITY_LIKE: '/community/like',
-  COMMUNITY_DETAIL: '/community/:id',
+  COMMUNITY_DETAIL: '/community/:communityId/:articleId',
   COMMUNITY_EDIT: '/community/edit',
   USER: '/user',
   NOT_FOUND: '*',
