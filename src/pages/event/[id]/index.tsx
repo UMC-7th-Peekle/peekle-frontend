@@ -9,12 +9,13 @@ import {
   Button,
 } from '@/components';
 import { BOTTOM_SHEET_ID_EVENT_SHARE } from '@/constants/event';
-import { copyToClipboard, toast, priceFormatter } from '@/utils';
+import { copyToClipboard, toast } from '@/utils';
 import { useBottomSheetStore } from '@/stores';
 import { events } from '@/sample-data/event';
 
 const EventDetailPage = () => {
   const [isLiked, setIsLiked] = useState(false); // 임시 하트 토글
+  const [isExpanded, setIsExpanded] = useState(false);
   const { setActiveBottomSheet } = useBottomSheetStore();
   const { id } = useParams();
   const event = events.find((event) => event.id === id);
@@ -24,12 +25,19 @@ const EventDetailPage = () => {
     event;
 
   const handleShareKakao = () => {
-    console.log('카카오톡으로 공유하기'); // api 연동 필요
+    console.log('카카오톡 로그인 클릭');
   };
 
   const handleCopyLink = () => {
     copyToClipboard(window.location.href);
     toast('링크가 복사되었습니다.');
+  };
+
+  const handleCopyAddress = () => {
+    copyToClipboard(
+      '서울시 동작구 노량진로 140 메가스터디타워 2층 (노량진동 57-1)',
+    );
+    toast('주소가 복사되었습니다.');
   };
 
   const handleToggleHeart = () => {
@@ -63,12 +71,25 @@ const EventDetailPage = () => {
             <S.InfoRow>
               <S.LocationIcon />
               <S.InfoRowText>{center}</S.InfoRowText>
+              <S.ArrowDownIcon
+                $isExpanded={isExpanded}
+                onClick={() => setIsExpanded(!isExpanded)}
+              />
+              <S.DetailAddressCard $isExpanded={isExpanded}>
+                <S.DetailAddressTextWrapper>
+                  <S.DetailAddressText>
+                    서울시 동작구 노량진로 140 메가스터디타워 2층 (노량진동
+                    57-1)
+                  </S.DetailAddressText>
+                  <S.DetailAddressCopyText onClick={handleCopyAddress}>
+                    주소 복사
+                  </S.DetailAddressCopyText>
+                </S.DetailAddressTextWrapper>
+              </S.DetailAddressCard>
             </S.InfoRow>
             <S.InfoRow>
               <S.CoinIcon />
-              <S.InfoRowText>
-                {price === '0' ? '무료' : `${priceFormatter(price)}원`}
-              </S.InfoRowText>
+              <S.InfoRowText>{price}</S.InfoRowText>
             </S.InfoRow>
           </S.Info>
         </S.InfoContainer>
@@ -88,17 +109,17 @@ const EventDetailPage = () => {
           borderColor={'theme.color.gray[500]'}
         />
         <Button color="primary500" size="small">
-          신청하기
+          홈페이지 이동
         </Button>
       </S.BottomContainer>
 
-      <BottomSheet id={BOTTOM_SHEET_ID_EVENT_SHARE}>
+      <BottomSheet id={BOTTOM_SHEET_ID_EVENT_SHARE} shouldShowLine={true}>
         <S.ShareContainer>
           <S.ShareTitle>공유하기</S.ShareTitle>
           <S.ShareOptions>
             <S.ShareOption onClick={handleShareKakao}>
               <S.KakaoIcon />
-              <S.ShareOptionText>카카오톡으로 공유하기</S.ShareOptionText>
+              <S.ShareOptionText>카카오톡</S.ShareOptionText>
               {/* api 연동 필요 */}
             </S.ShareOption>
             <S.ShareOption onClick={handleCopyLink}>

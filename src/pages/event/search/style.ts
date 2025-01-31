@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import XSVG from '@/assets/images/icons/X.svg?react';
 import RecentSVG from '@/assets/images/icons/recent.svg?react';
 import NoRecentSearchSVG from '@/assets/images/null/noRecentSearch.svg?react';
+import mediaQuery from '@/styles/mediaQuery';
 
 export const Container = styled.section`
   width: 100%;
@@ -89,4 +90,9 @@ export const XIcon = styled(XSVG)`
 export const NoRecentSearch = styled(NoRecentSearchSVG)`
   margin-top: 56px;
   align-self: center;
+  justify-self: center;
+
+  ${mediaQuery.sMobile`
+    margin-top: 0;
+  `};
 `;

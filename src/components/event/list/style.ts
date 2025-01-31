@@ -2,6 +2,9 @@ import styled from 'styled-components';
 import { theme } from '@/styles/theme';
 import NoFilteredResultSVG from '@/assets/images/null/noFilteredResult.svg?react';
 import NoSearchResultSVG from '@/assets/images/null/noSearchResult.svg?react';
+import NoLikeResultSVG from '@/assets/images/null/noLike.svg?react';
+
+import mediaQuery from '@/styles/mediaQuery';
 
 export const Container = styled.section``;
 
@@ -16,11 +19,17 @@ export const EventsContainer = styled.div`
 
 export const EmptyContainer = styled.div`
   align-self: center;
+  justify-self: center;
   margin-top: 56px;
+
+  ${mediaQuery.sMobile`
+    margin-top: 0;
+  `};
 `;
 
 export const NoSearchResult = styled(NoSearchResultSVG)``;
 export const NoFilteredResult = styled(NoFilteredResultSVG)``;
+export const NoLikeResult = styled(NoLikeResultSVG)``;
 
 export const EmptyText = styled.p`
   ${theme.typeFace.body['18R']}

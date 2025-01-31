@@ -58,7 +58,7 @@ export const BottomSheetHeader = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 12px 0 15px 0;
+  padding: 15px 0 18px 0;
   cursor: pointer;
 `;
 

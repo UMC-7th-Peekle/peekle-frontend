@@ -66,7 +66,7 @@ const EventSearchPage = () => {
         ) : (
           <S.NoRecentSearch />
         ))}
-      {isSearched && <EventList isSearchPage={true} />}
+      {isSearched && <EventList page={'search'} />}
     </S.Container>
   );
 };

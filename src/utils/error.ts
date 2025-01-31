@@ -3,5 +3,5 @@ export const isNetworkError = (error: Error): boolean => {
 };
 
 export const isServerError = (error: Error): boolean => {
-  return error.message.includes('500') || error.message.includes('404');
+  return error.message.includes('500');
 };

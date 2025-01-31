@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { EventCardProps } from '@/types/event';
-import { priceFormatter } from '@/utils';
 import { events } from '@/sample-data/event';
 import { EventData } from '@/types/event';
 
@@ -26,9 +25,7 @@ export const EventCard = ({ id, onClick }: EventCardProps) => {
         <S.Title>{title}</S.Title>
         <S.SubInfoWrapper>
           <S.SubInfo>{location}</S.SubInfo>
-          <S.SubInfo>
-            {price === '0' ? '무료' : `${priceFormatter(price)}원`}
-          </S.SubInfo>
+          <S.SubInfo>{price}</S.SubInfo>
         </S.SubInfoWrapper>
       </S.Info>
       <S.ImageContainer>

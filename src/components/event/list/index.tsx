@@ -4,9 +4,16 @@ import { EventCard, Filter } from '@/components';
 import { useEventFilter } from '@/hooks';
 import { EventData } from '@/types/event';
 
-const EventList = ({ isSearchPage = false }: { isSearchPage?: boolean }) => {
+const EventList = ({
+  page = 'index',
+}: {
+  page?: 'search' | 'scrap' | 'index';
+}) => {
   const { sortedEvents } = useEventFilter();
   const [searchQuery] = useQueryState('event-search');
+
+  const isSearchPage = page === 'search';
+  const isScrapPage = page === 'scrap';
 
   const handleCardClick = () => {
     if (isSearchPage) {
@@ -38,7 +45,13 @@ const EventList = ({ isSearchPage = false }: { isSearchPage?: boolean }) => {
         </>
       ) : (
         <S.EmptyContainer>
-          {isSearchPage ? <S.NoSearchResult /> : <S.NoFilteredResult />}
+          {isSearchPage ? (
+            <S.NoSearchResult />
+          ) : isScrapPage ? (
+            <S.NoLikeResult />
+          ) : (
+            <S.NoFilteredResult />
+          )}
         </S.EmptyContainer>
       )}
     </S.Container>
