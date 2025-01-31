@@ -10,14 +10,13 @@ const EventMapPage = () => {
   return (
     <S.Container>
       <S.HeaderContainer>
-        // search
         <Filter />
       </S.HeaderContainer>
       <EventMap />
       <MapBottomSheet id={BOTTOM_SHEET_ID_EVENT_INFO}>
         <EventCard
           onClick={() => setActiveBottomSheet(null)}
-          id={selectedEvent?.id as string}
+          id={selectedEvent?.eventId as bigint}
         />
       </MapBottomSheet>
     </S.Container>

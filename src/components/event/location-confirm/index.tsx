@@ -1,4 +1,5 @@
 import * as S from './style';
+import Button from '@/components/common/input/button';
 import { useConfirmStore } from '@/stores';
 import { LocationConfirmProps } from '@/types/event';
 
@@ -16,7 +17,10 @@ const LocationConfirm = ({ onLocationAllow }: LocationConfirmProps) => {
         </S.Description>
       </S.ConfirmInfo>
       <S.BtnContainer>
-        <S.ConfirmButton
+        <Button
+          color="primary500"
+          width="284px"
+          size="small"
           onClick={() => {
             sessionStorage.setItem('curr-location-agree', 'true');
             onLocationAllow();
@@ -24,15 +28,18 @@ const LocationConfirm = ({ onLocationAllow }: LocationConfirmProps) => {
           }}
         >
           앱 사용 중에만 허용
-        </S.ConfirmButton>
-        <S.NotConfirmButton
+        </Button>
+        <Button
+          color="none"
+          width="284px"
+          size="small"
           onClick={() => {
             sessionStorage.setItem('curr-location-agree', 'false');
             close();
           }}
         >
           허용 안 함
-        </S.NotConfirmButton>
+        </Button>
       </S.BtnContainer>
     </S.LocationConfirm>
   );

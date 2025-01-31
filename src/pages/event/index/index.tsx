@@ -1,8 +1,10 @@
 import * as S from './style';
+import { useNavigate } from 'react-router-dom';
 import { EventList, Filter, CategoryChips } from '@/components';
 import Header from '@/layouts/header';
 
 const EventPage = () => {
+  const navigate = useNavigate();
   return (
     <S.EventPageContainer>
       <S.HeaderContainer>
@@ -11,6 +13,7 @@ const EventPage = () => {
         <Filter />
       </S.HeaderContainer>
       <EventList />
+      <S.GoToMapButton onClick={() => navigate('/event/map')} />
     </S.EventPageContainer>
   );
 };

@@ -20,8 +20,8 @@ const EventMap = () => {
   const { selectedEvent, setSelectedEvent } = useMapStore();
   const { myLocation, setMyLocation } = useMyLocationStore();
   const { sortedEvents } = useEventFilter();
-  const [markers] = useState<Map<string, naver.maps.Marker>>(
-    new Map<string, naver.maps.Marker>(),
+  const [markers] = useState<Map<bigint, naver.maps.Marker>>(
+    new Map<bigint, naver.maps.Marker>(),
   );
 
   // 마커 클릭 이벤트
@@ -29,10 +29,10 @@ const EventMap = () => {
     (mapEvent: EventData) => {
       // 이전에 선택된 마커가 있다면 원래 아이콘으로 되돌리기
       if (selectedEvent) {
-        const prevMarker = markers.get(selectedEvent.id);
+        const prevMarker = markers.get(selectedEvent.eventId);
         // 원래 아이콘으로 되돌리기
         prevMarker?.setIcon({
-          content: getMarker(selectedEvent.category),
+          content: getMarker(selectedEvent.category.name),
           size: new naver.maps.Size(36, 36),
           origin: new naver.maps.Point(0, 0),
           anchor: new naver.maps.Point(18, 18),
@@ -41,7 +41,7 @@ const EventMap = () => {
 
       setSelectedEvent(mapEvent); // 새 이벤트 선택
 
-      const newMarker = markers.get(mapEvent.id);
+      const newMarker = markers.get(mapEvent.eventId);
       if (newMarker) {
         const markerContent = document.createElement('div');
         markerContent.innerHTML = `
@@ -147,7 +147,7 @@ const EventMap = () => {
           anchor: new naver.maps.Point(18, 18),
         },
       });
-      markers.set('my_location', myLocMarker);
+      markers.set(0n, myLocMarker); // 내 위치
 
       // 이벤트 마커들
       sortedEvents.forEach((event: EventData) => {
@@ -155,14 +155,14 @@ const EventMap = () => {
           position: new naver.maps.LatLng(event.latitude, event.longitude),
           map: mapInstance as naver.maps.Map,
           icon: {
-            content: getMarker(event.category),
+            content: getMarker(event.category.name),
             size: new naver.maps.Size(36, 36),
             origin: new naver.maps.Point(0, 0),
             anchor: new naver.maps.Point(18, 18),
           },
         };
         const marker = new naver.maps.Marker(markerOptions);
-        markers.set(event.id, marker); // 각 이벤트 마커들은 event id로 구분
+        markers.set(event.eventId, marker); // 각 이벤트 마커들은 event id로 구분
 
         // 이벤트 마커 클릭 이벤트
         naver.maps.Event.addListener(marker, 'click', () =>
@@ -179,7 +179,7 @@ const EventMap = () => {
 
     // 기존 마커 제거
     markers.forEach((marker, key) => {
-      if (key !== 'my_location') {
+      if (key !== 0n) {
         marker.setMap(null); // 'my_location' 마커는 건드리지 않음
       }
     });
@@ -191,7 +191,7 @@ const EventMap = () => {
         position: new naver.maps.LatLng(event.latitude, event.longitude),
         map: mapInstance as naver.maps.Map,
         icon: {
-          content: getMarker(event.category),
+          content: getMarker(event.category.name),
           size: new naver.maps.Size(36, 36),
           origin: new naver.maps.Point(0, 0),
           anchor: new naver.maps.Point(18, 18),
@@ -202,7 +202,7 @@ const EventMap = () => {
       naver.maps.Event.addListener(marker, 'click', () =>
         handleMarkerClick(event),
       );
-      markers.set(event.id, marker);
+      markers.set(event.eventId, marker);
     });
   }, [sortedEvents, handleMarkerClick, markers]);
 

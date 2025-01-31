@@ -5,11 +5,23 @@ export const SORT_OPTIONS = [
 ] as const;
 
 export const CATEGORY_OPTIONS = ['전체', '교육', '문화', '활동'] as const;
-
 export const PRICE_OPTIONS = ['전체', '무료', '유료'] as const;
 
 export const LOCATION_OPTIONS = [
-  ['전체', '전체'],
+  ['전체', '0'],
+  ['잠실 / 송파 / 강동', '18'],
+  ['마포 / 서대문 / 은평', '19'],
+  ['강서 / 금천 / 양천', '20'],
+  ['강남 / 서초 / 양재', '22'],
+  ['동작 / 관악 / 사당', '23'],
+  ['종로 / 중구 / 용산', '24'],
+  ['영등포 / 구로 / 신도림', '25'],
+  ['광진 / 성동 / 중랑 / 동대문', '21'],
+] as const;
+
+export const CATEGORY_OPTIONS_WITHOUT_ALL = ['교육', '문화', '활동'] as const;
+export const PRICE_OPTIONS_WITHOUT_ALL = ['무료', '유료'] as const;
+export const LOCATION_OPTIONS_WITHOUT_ALL = [
   ['잠실 / 송파 / 강동', '18'],
   ['마포 / 서대문 / 은평', '19'],
   ['강서 / 금천 / 양천', '20'],

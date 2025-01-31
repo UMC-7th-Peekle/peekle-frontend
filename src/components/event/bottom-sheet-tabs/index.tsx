@@ -14,7 +14,6 @@ export const BottomSheetTabs = () => {
   const { filteredEvent } = useFilteredEventStore();
   const { clearFilter } = useEventFilter();
   const { selectedValue } = useFilterTabsStore();
-  console.log('selectedValue', selectedValue);
 
   // console.log(filteredEvent);
   return (

@@ -1,22 +1,29 @@
 import * as S from './style';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FilePagination } from '@/components';
 import { ImageSliderProps } from '@/types/event';
 
 const ImageSlider = ({ images, title = 'event' }: ImageSliderProps) => {
+  // sequence 오름차순으로 정렬된 이미지 배열
+  const sortedImages = useMemo(
+    () => [...images].sort((a, b) => a.sequence - b.sequence),
+    [images],
+  );
+  const imageUrls = sortedImages.map((img) => img.imageUrl);
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction] = useState(0);
 
   const slideImage = (direction: number) => {
     setCurrentIndex((prevIndex) => {
       const newIndex = prevIndex + direction;
-      if (newIndex < 0 || newIndex >= images.length) return prevIndex;
+      if (newIndex < 0 || newIndex >= imageUrls.length) return prevIndex;
       return newIndex;
     });
   };
 
-  const hasImages = images.length > 0;
+  const hasImages = imageUrls.length > 0;
   const currentPage = hasImages ? currentIndex + 1 : 0;
 
   return (
@@ -40,7 +47,7 @@ const ImageSlider = ({ images, title = 'event' }: ImageSliderProps) => {
         >
           {images[currentIndex] ? (
             <S.Image
-              src={images[currentIndex]}
+              src={imageUrls[currentIndex]}
               alt={`${title}-img-${currentIndex}`}
             />
           ) : (

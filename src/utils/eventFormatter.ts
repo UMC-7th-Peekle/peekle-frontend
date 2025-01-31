@@ -4,11 +4,11 @@ import { formatDateToMonthDay } from './dateFormatter';
 
 // 행정구,자치구 추출
 export const getDistrict = (address: string) => {
-  return address.match(/(\S+)구/)?.[1];
+  return address.match(/(\S+)구/)?.[1] ?? '';
 };
 
 // 시작일시 추출
-export const getFirstDateTime = (schedule: EventSchedule) => {
+export const getStartDateTime = (schedule: EventSchedule) => {
   const { startDate, startTime } = schedule;
 
   const date = formatDateToMonthDay(startDate, true);

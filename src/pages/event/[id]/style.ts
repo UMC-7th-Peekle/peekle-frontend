@@ -155,7 +155,7 @@ export const Separator = styled.div`
   height: 12px;
 `;
 
-export const DescriptionContainer = styled.article`
+export const ContentContainer = styled.article`
   display: flex;
   padding: 32px 0px 130px;
   flex-direction: column;
@@ -165,11 +165,11 @@ export const DescriptionContainer = styled.article`
   color: ${theme.color.gray[900]};
 `;
 
-export const DescriptionTitle = styled.h2`
+export const ContentTitle = styled.h2`
   ${theme.typeFace.subTitle[20]}
 `;
 
-export const Description = styled.p`
+export const Content = styled.p`
   ${theme.typeFace.body['18R']}
 `;
 

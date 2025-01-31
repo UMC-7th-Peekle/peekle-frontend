@@ -39,7 +39,7 @@ const useEventFilter = ({
       // 카테고리 필터
       if (filters.카테고리 !== '전체') {
         const categories = filters.카테고리.split(',');
-        if (!categories.includes(event.category)) return false;
+        if (!categories.includes(event.category.name)) return false;
       }
 
       // 기간 필터
@@ -47,25 +47,25 @@ const useEventFilter = ({
         const [startFilter, endFilter] = filters.기간
           .split(',')
           .map((date) => new Date(date));
-        const eventStart = new Date(event.startDate);
-        const eventEnd = new Date(event.endDate);
+        const eventStart = new Date(event.eventSchedules[0].startDate);
+        const eventEnd = new Date(event.eventSchedules[0].endDate);
 
         if (eventStart < startFilter || eventEnd > endFilter) return false;
       }
 
       // 가격 필터
       if (filters.가격 !== '전체') {
-        if (filters.가격 === 'free') {
-          if (event.price !== 'free') return false;
+        if (filters.가격 === '무료') {
+          if (event.price !== 0) return false;
         } else {
           if (Number(event.price) <= 0) return false;
         }
       }
 
-      // 위치 필터
+      // 지역 필터
       if (filters.지역 !== '전체') {
-        const locations = filters.지역.split(',');
-        if (!locations.includes(event.location)) return false;
+        const locations = filters.지역;
+        if (Number(locations) !== event.locationGroupId) return false;
       }
 
       // 검색 필터
@@ -83,21 +83,29 @@ const useEventFilter = ({
 
   const sortedEvents = useMemo(() => {
     return [...filteredEvents].sort((a, b) => {
+      const eventScheduleA = a.eventSchedules[0];
+      const eventScheduleB = b.eventSchedules[0];
+
       if (filters.정렬 === 'latest') {
         const startDateDiff =
-          new Date(a.startDate).getTime() - new Date(b.startDate).getTime();
+          new Date(eventScheduleA.startDate).getTime() -
+          new Date(eventScheduleB.startDate).getTime();
         if (startDateDiff !== 0) return startDateDiff;
         const endDateDiff =
-          new Date(a.endDate).getTime() - new Date(b.endDate).getTime();
-        return endDateDiff;
+          new Date(eventScheduleA.endDate).getTime() -
+          new Date(eventScheduleB.endDate).getTime();
+        if (endDateDiff !== 0) return endDateDiff;
+        return a.title.localeCompare(b.title, 'ko');
       }
 
       if (filters.정렬 === 'lowest_price') {
         const priceDiff = Number(a.price) - Number(b.price);
         if (priceDiff !== 0) return priceDiff;
         const startDateDiff =
-          new Date(a.startDate).getTime() - new Date(b.startDate).getTime();
-        return startDateDiff;
+          new Date(eventScheduleA.startDate).getTime() -
+          new Date(eventScheduleB.startDate).getTime();
+        if (startDateDiff !== 0) return startDateDiff;
+        return a.title.localeCompare(b.title, 'ko');
       }
 
       if (filters.정렬 === 'shortest_distance' && myLocation) {
@@ -113,7 +121,17 @@ const useEventFilter = ({
           b.latitude,
           b.longitude,
         );
-        return distanceA - distanceB;
+        const distanceDiff = distanceA - distanceB;
+        if (distanceDiff !== 0) return distanceDiff;
+        const startDateDiff =
+          new Date(eventScheduleA.startDate).getTime() -
+          new Date(eventScheduleB.startDate).getTime();
+        if (startDateDiff !== 0) return startDateDiff;
+        const endDateDiff =
+          new Date(eventScheduleA.endDate).getTime() -
+          new Date(eventScheduleB.endDate).getTime();
+        if (endDateDiff !== 0) return endDateDiff;
+        return a.title.localeCompare(b.title, 'ko');
       }
 
       return 0;
@@ -128,7 +146,7 @@ const useEventFilter = ({
     }
 
     // 중복 허용 값일때
-    if (newValue === '전체') {
+    if (newValue === '전체' || newValue === '0') {
       setSearchParams({ ...filters, [key]: '전체' });
       return;
     }
@@ -165,13 +183,16 @@ const useEventFilter = ({
 
   // 선택 됐는지 여부
   const isSelected = (value: string) => {
+    const filterValue = filters[key as EventFilterKeys];
+
     if ((type as EventFilterType) === 'single') {
-      return value === filters[key as EventFilterKeys];
+      return value === filterValue;
     }
 
-    return value === '전체'
-      ? filters[key as EventFilterKeys] === '전체'
-      : !!filters[key as EventFilterKeys]?.split(',').includes(value);
+    if (value === '전체' || value === '0') {
+      return filterValue === '전체';
+    }
+    return filterValue ? filterValue.split(',').includes(value) : false;
   };
 
   const clearFilter = () => {

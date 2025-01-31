@@ -47,4 +47,5 @@ export const BtnContainer = styled.section`
   display: flex;
   flex-direction: column;
   gap: 24px;
+  width: 100%;
 `;

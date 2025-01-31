@@ -9,20 +9,42 @@ import {
   Button,
 } from '@/components';
 import { BOTTOM_SHEET_ID_EVENT_SHARE } from '@/constants/event';
-import { copyToClipboard, toast } from '@/utils';
+import {
+  copyToClipboard,
+  getStartDateTime,
+  formatSchedules,
+  toast,
+} from '@/utils';
 import { useBottomSheetStore } from '@/stores';
 import { events } from '@/sample-data/event';
+import { usePostScrapEvent } from '@/hooks/event/mutation/usePostScrapEvent';
+import { EventSchedule } from '@/types/event';
+import { priceFormatter } from '@/utils';
 
 const EventDetailPage = () => {
-  const [isLiked, setIsLiked] = useState(false); // 임시 하트 토글
   const [isExpanded, setIsExpanded] = useState(false);
   const { setActiveBottomSheet } = useBottomSheetStore();
+  const { scrapEvent, isPending } = usePostScrapEvent();
   const { id } = useParams();
-  const event = events.find((event) => event.id === id);
+  if (!id) return;
+  const event = events.find((event) => event.eventId === BigInt(id));
   if (!event) return;
 
-  const { images, title, StartDateTime, time, center, price, description } =
-    event;
+  const {
+    eventId,
+    eventImages,
+    title,
+    eventSchedules,
+    datailAddress,
+    eventUrl,
+    center,
+    category,
+    price,
+    content,
+  } = event;
+
+  const startDateTime = getStartDateTime(eventSchedules[0] as EventSchedule);
+  const time = formatSchedules(eventSchedules[0] as EventSchedule);
 
   const handleShareKakao = () => {
     console.log('카카오톡 로그인 클릭');
@@ -34,14 +56,18 @@ const EventDetailPage = () => {
   };
 
   const handleCopyAddress = () => {
-    copyToClipboard(
-      '서울시 동작구 노량진로 140 메가스터디타워 2층 (노량진동 57-1)',
-    );
+    copyToClipboard(datailAddress);
     toast('주소가 복사되었습니다.');
   };
 
-  const handleToggleHeart = () => {
-    setIsLiked(!isLiked);
+  const handleToggleHeart = async (eventId: bigint) => {
+    if (!isPending) {
+      await scrapEvent(eventId);
+    }
+  };
+
+  const handleMoveSiteClick = async () => {
+    window.open(eventUrl, '_blank'); // 새 탭에서 열기
   };
 
   return (
@@ -54,15 +80,15 @@ const EventDetailPage = () => {
       </S.Header>
 
       <S.MainSection>
-        <ImageSlider images={images} title={title} />
+        <ImageSlider images={eventImages} title={title} />
         <S.InfoContainer>
-          <S.Category>{'임시 category'}</S.Category>
+          <S.Category>{category.name}</S.Category>
           <S.Title>{title}</S.Title>
           <S.Line />
           <S.Info>
             <S.InfoRow>
               <S.DateIcon />
-              <S.InfoRowText>{StartDateTime}</S.InfoRowText>
+              <S.InfoRowText>{startDateTime}</S.InfoRowText>
             </S.InfoRow>
             <S.InfoRow>
               <S.TimeIcon />
@@ -77,10 +103,7 @@ const EventDetailPage = () => {
               />
               <S.DetailAddressCard $isExpanded={isExpanded}>
                 <S.DetailAddressTextWrapper>
-                  <S.DetailAddressText>
-                    서울시 동작구 노량진로 140 메가스터디타워 2층 (노량진동
-                    57-1)
-                  </S.DetailAddressText>
+                  <S.DetailAddressText>{datailAddress}</S.DetailAddressText>
                   <S.DetailAddressCopyText onClick={handleCopyAddress}>
                     주소 복사
                   </S.DetailAddressCopyText>
@@ -89,28 +112,30 @@ const EventDetailPage = () => {
             </S.InfoRow>
             <S.InfoRow>
               <S.CoinIcon />
-              <S.InfoRowText>{price}</S.InfoRowText>
+              <S.InfoRowText>{priceFormatter(price)}</S.InfoRowText>
             </S.InfoRow>
           </S.Info>
         </S.InfoContainer>
       </S.MainSection>
       <S.Separator />
 
-      <S.DescriptionContainer>
-        <S.DescriptionTitle>상세 정보</S.DescriptionTitle>
-        <S.Description>{description}</S.Description>
-      </S.DescriptionContainer>
+      <S.ContentContainer>
+        <S.ContentTitle>상세 정보</S.ContentTitle>
+        <S.Content>{content}</S.Content>
+      </S.ContentContainer>
 
       <S.BottomContainer>
         <ToggleHeart
-          isActive={isLiked}
-          onClick={handleToggleHeart}
+          isActive={false}
+          onClick={() => handleToggleHeart(eventId)}
           size={24}
           borderColor={'theme.color.gray[500]'}
         />
-        <Button color="primary500" size="small">
-          홈페이지 이동
-        </Button>
+        {eventUrl ? (
+          <Button color="primary500" size="small" onClick={handleMoveSiteClick}>
+            홈페이지 이동
+          </Button>
+        ) : null}
       </S.BottomContainer>
 
       <BottomSheet id={BOTTOM_SHEET_ID_EVENT_SHARE} shouldShowLine={true}>

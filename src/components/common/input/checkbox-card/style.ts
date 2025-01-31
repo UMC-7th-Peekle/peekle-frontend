@@ -8,14 +8,12 @@ export const StyledCheckboxCard = styled.button<{
   $isChecked: boolean;
   $isLastCard: boolean;
 }>`
+  width: 100%;
   display: flex;
   align-items: center;
-  width: 100%;
   height: 56px;
   padding: 16px 14px;
   justify-content: space-between;
-  align-items: center;
-  align-self: stretch;
   border: ${({ $isChecked }) =>
     $isChecked
       ? `2px solid ${theme.color.gray[900]}`
@@ -26,6 +24,7 @@ export const StyledCheckboxCard = styled.button<{
 
   ${mediaQuery.sMobile`
     height: 40px;
+    padding: 8px 7px;
   `}
 `;
 
@@ -53,6 +52,11 @@ export const CardText = styled.span<{ $isChecked: boolean }>`
 
 // 체크 아이콘
 export const CheckIcon = styled(Check)`
-  width: 24px;
+  width: 20px;
   height: 24px;
+
+  ${mediaQuery.sMobile`
+    width: 18px;
+    height: 23px;
+  `}
 `;

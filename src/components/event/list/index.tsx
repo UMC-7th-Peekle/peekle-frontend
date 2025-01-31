@@ -36,9 +36,9 @@ const EventList = ({
           <S.EventsContainer>
             {sortedEvents.map((event: EventData) => (
               <EventCard
-                key={event.id}
-                id={event.id}
-                onClick={() => handleCardClick()}
+                key={event.eventId}
+                id={event.eventId}
+                onClick={handleCardClick}
               />
             ))}
           </S.EventsContainer>
