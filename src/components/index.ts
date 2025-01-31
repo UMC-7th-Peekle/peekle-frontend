@@ -23,7 +23,7 @@ export { default as ToggleHeadr } from './common/toggle-heart';
 export { default as Button } from './common/input/button';
 
 // event
-export { default as EventCard } from './event/card';
+export { EventCard, EventCardSkeleton } from './event/card';
 export { default as BottomSheetTabs } from './event/bottom-sheet-tabs';
 export { default as EventList } from './event/list';
 export { default as LocationConfirm } from './event/location-confirm';
@@ -31,5 +31,6 @@ export { default as FilePagination } from './event/file-pagenation';
 export { default as ImageSlider } from './event/image-slider';
 export { default as MapBottomSheet } from './event/map-bottom-sheet';
 export { default as FilterTabs } from './event/filter-tabs';
+export { default as CategoryChips } from './event/category-chips';
 export { default as Filter } from './event/filter';
 export { default as EventMap } from './event/event-map';

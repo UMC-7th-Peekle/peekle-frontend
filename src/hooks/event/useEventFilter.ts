@@ -178,6 +178,26 @@ const useEventFilter = ({
     setSearchParams(DEFAULT_FILTERS);
   };
 
+  const activeFilterCount = useMemo(() => {
+    return Object.keys(filters).reduce((count, key) => {
+      if ((key as EventFilterKeys) === '정렬') return count; // 정렬 필터 제외
+      if ((key as EventFilterKeys) === '기간') {
+        return filters[key as EventFilterKeys] !==
+          DEFAULT_FILTERS[key as EventFilterKeys]
+          ? count + 1 // 기간 필터는 하나로 취급
+          : count;
+      }
+      if (
+        filters[key as EventFilterKeys] !==
+        DEFAULT_FILTERS[key as EventFilterKeys]
+      ) {
+        return count + filters[key as EventFilterKeys].split(',').length;
+      }
+
+      return count;
+    }, 0);
+  }, [filters]);
+
   return {
     storedValue: filters[key as EventFilterKeys],
     handleSelect,
@@ -185,6 +205,7 @@ const useEventFilter = ({
     sortedEvents,
     isSelected,
     clearFilter,
+    activeFilterCount,
   };
 };
 

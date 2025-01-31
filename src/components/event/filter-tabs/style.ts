@@ -1,3 +1,4 @@
+import mediaQuery from '@/styles/mediaQuery';
 import styled from 'styled-components';
 
 export const TabsContainer = styled.section`
@@ -5,6 +6,10 @@ export const TabsContainer = styled.section`
   flex-direction: column;
   align-items: flex-start;
   gap: 20px;
+
+  ${mediaQuery.sMobile`
+    gap: 15px;
+  `}
 `;
 
 export const ListContainer = styled.header`

@@ -28,6 +28,8 @@ const EventSearchPage = () => {
     setQuery(search);
   };
 
+  console.log('recentSearches', recentSearch);
+
   return (
     <S.Container>
       <S.HeaderContainer>
@@ -45,12 +47,15 @@ const EventSearchPage = () => {
               <S.ClearButton onClick={handleClear}>전체 삭제</S.ClearButton>
             </S.RecentSearchRow>
             <S.RecentSearchTextContainer>
-              {recentSearch.map((search: string) => (
+              {recentSearch.map((search: string, index: number) => (
                 <S.RecentSearchRow
-                  key={`${search}-${new Date().getTime()}`}
+                  key={`${search}-${index}`}
                   onClick={() => handleRecentSearchClick(search)}
                 >
-                  <S.RecentSearchText>{search}</S.RecentSearchText>
+                  <S.Left>
+                    <S.RecentIcon />
+                    <S.RecentSearchText>{search}</S.RecentSearchText>
+                  </S.Left>
                   <S.XIcon
                     onClick={(e) => handleRemoveRecentSearch(search, e)}
                   />
@@ -59,7 +64,7 @@ const EventSearchPage = () => {
             </S.RecentSearchTextContainer>
           </S.RecentSearchContainer>
         ) : (
-          <S.EmptyText>최근 검색 내역이 없습니다.</S.EmptyText>
+          <S.NoRecentSearch />
         ))}
       {isSearched && <EventList isSearchPage={true} />}
     </S.Container>

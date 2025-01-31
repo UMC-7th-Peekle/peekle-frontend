@@ -20,6 +20,11 @@ export const DateListCard = styled.div.withConfig({
 
   ${mediaQuery.sMobile`
     ${theme.typeFace.caption['14B']};
+    padding: 10px 8px;
+  `}
+
+  ${mediaQuery.xsMobile`
+     ${theme.typeFace.caption['12B']};
   `}
 `;
 
@@ -34,5 +39,12 @@ export const DateListTextPlus = styled.p`
 
 export const PlusIcon = styled(Plus)`
   width: 20px;
+  height: 20px;
+  flex-shrink: 0;
   color: ${theme.color.gray['400']};
+
+  ${mediaQuery.sMobile`
+    width: 10px;
+    height: 10px;
+  `}
 `;

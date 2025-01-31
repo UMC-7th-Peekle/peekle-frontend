@@ -22,13 +22,13 @@ export const SearchBar = ({
   };
 
   return (
-    <S.SearchBarWrapper3>
+    <S.SearchBarWrapper>
       <Backward />
       <TextFields
         queryKey={queryKey}
         placeholder={placeholder}
         onClick={handleTextFieldsClick}
       />
-    </S.SearchBarWrapper3>
+    </S.SearchBarWrapper>
   );
 };

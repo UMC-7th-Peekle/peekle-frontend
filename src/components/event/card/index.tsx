@@ -1,5 +1,7 @@
 import * as S from './style';
 import { useNavigate } from 'react-router-dom';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 import { EventCardProps } from '@/types/event';
 import { priceFormatter } from '@/utils';
 import { events } from '@/sample-data/event';
@@ -40,4 +42,23 @@ export const EventCard = ({ id, onClick }: EventCardProps) => {
   );
 };
 
-export default EventCard;
+export const EventCardSkeleton = () => {
+  return (
+    <S.EventCard>
+      <S.Info>
+        <Skeleton width="242px" height="24px" style={{ borderRadius: '4px' }} />
+        <S.SubInfoWrapper>
+          <Skeleton
+            width="53px"
+            height="30px"
+            style={{ borderRadius: '4px' }}
+          />
+          <Skeleton width="75px" height="30px" />
+        </S.SubInfoWrapper>
+      </S.Info>
+      <S.ImageContainer>
+        <Skeleton width="96px" height="96px" style={{ borderRadius: '8px' }} />
+      </S.ImageContainer>
+    </S.EventCard>
+  );
+};

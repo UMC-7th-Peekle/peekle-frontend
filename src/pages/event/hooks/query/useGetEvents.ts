@@ -7,10 +7,17 @@
 // } from '../../types';
 
 // // api 호출 함수
-// const getEvents = async (): Promise<EventsResponse> => {
+// const getEvents = async ({
+//   limit,
+//   cursor,
+// }: ): Promise<EventsResponse> => {
 //   const response = await client<EventsResponse>({
 //     method: 'GET',
-//     url: ``,
+//     url: `/community`,
+//     params: {
+//       limit,
+//       cursor,
+//     },
 //   });
 
 //   // 응답 데이터 검증
@@ -18,14 +25,19 @@
 //   return parsedData;
 // };
 
-// export const useGetEvents = () => {
+// export const useGetEvents = ({
+//   limit = 10,
+//   cursor = null,
+//   query = '',
+//   communityId,
+// }: ) => {
 //   return useSuspenseInfiniteQuery<
 //     EventsResponse,
 //     Error,
 //     InfiniteData<EventsResponse>,
 //     EventsQkType
 //   >({
-//     queryKey: ['events'],
-//     queryFn: () => getEvents(),
+//     queryKey: ['events', limit, cursor, query],
+//     queryFn: () => getEvents({ limit, cursor, query, communityId }),
 //   });
 // };

@@ -1,5 +1,6 @@
 import { css } from 'styled-components';
 import { CSSValue, MediaQueryProps } from '@/types/style';
+import { theme } from './theme';
 
 const breakpoints: MediaQueryProps = {
   xsMobile: 360,
@@ -14,9 +15,13 @@ const mediaQuery = Object.keys(breakpoints).reduce(
   (acc, label) => {
     acc[label] = (strings: TemplateStringsArray, ...values: CSSValue[]) => css`
       @media (max-width: ${breakpoints[label]}px) {
-        ${css`
+        /* ${css`
           ${strings[0]}${values.join('')}
-        `}
+        `} */
+        ${css(
+          strings,
+          ...values.map((v) => (typeof v === 'function' ? v(theme) : v)),
+        )}
       }
     `;
     return acc;
