@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { Button } from '@/components/common/input/button/index';
 
 const Container = styled.div`
   display: flex;
@@ -22,29 +23,22 @@ const Content = styled.div`
 `;
 
 const Message = styled.h1`
-  font-size: 18px;
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 700;
+  font-size: 24px;
   font-weight: bold;
   color: #333;
   text-align: center;
   margin-top: 0;
 `;
-
-const Button = styled.button`
-  background-color: #4aa662;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
+const ButtonWrapper = styled.div`
+  position: fixed;
+  bottom: 0;
+  left: 0;
   width: 100%;
-  max-width: 300px;
-
-  &:hover {
-    background-color: #3e8a54;
-  }
+  display: flex;
+  justify-content: center;
 `;
-
 const CompletePage = () => {
   const navigate = useNavigate();
   const handleStart = () => {
@@ -53,9 +47,22 @@ const CompletePage = () => {
   return (
     <Container>
       <Content>
-        <Message>가입을 환영합니다!</Message>
+        <Message>
+          피클1135님
+          <br />
+          가입을 환영합니다!
+        </Message>
       </Content>
-      <Button onClick={handleStart}>시작하기</Button>
+      <ButtonWrapper>
+        <Button
+          color="primary500"
+          size="medium"
+          width="412px"
+          onClick={handleStart}
+        >
+          시작하기
+        </Button>
+      </ButtonWrapper>
     </Container>
   );
 };

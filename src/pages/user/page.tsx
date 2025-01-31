@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { alert } from '@/utils';
 
 const Container = styled.div`
   display: flex;
@@ -15,6 +16,10 @@ const Header = styled.div`
   background-color: #fff;
   font-size: 20px;
   font-weight: bold;
+
+  margin-top: -20px;
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 600;
 `;
 
 const Logo = styled.span`
@@ -28,9 +33,9 @@ const ProfileSection = styled.div`
   background-color: #fff;
   padding: 20px;
   display: flex; /* Flexbox 활성화 */
-  flex-direction: row; /* 가로 방향 정렬 */
   align-items: center; /* 세로 중앙 정렬 */
-  justify-content: center; /* 가로 중앙 정렬 */
+  justify-content: space-between;
+  margin-top: -20px;
 `;
 
 const ProfileImage = styled.img`
@@ -44,33 +49,41 @@ const ProfileImage = styled.img`
 const Username = styled.h2`
   font-size: 16px;
   font-weight: bold;
-  margin: 15px;
+
+  margin: 10px;
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 700;
 `;
 
 const EditButton = styled.button`
   background-color: #f6f8fa;
   border: none;
-  padding: 8px 12px;
+  padding: 8px 20px;
   border-radius: 8px;
-  font-size: 12px;
+  font-size: 10px;
   cursor: pointer;
   margin-top: 8px;
-  margin-left: 90px;
+  margin-left: 80px;
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 600;
 `;
 
 const Section = styled.div`
   background-color: #fff;
-  margin-top: 10px;
   padding: 0px;
 `;
 
 const SectionTitle = styled.h3`
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 600;
   font-size: 16px;
   margin-bottom: 10px;
   font-color: rgba(116, 119, 125, 1);
 `;
 
 const MenuItem = styled.div`
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 500;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -117,6 +130,9 @@ const UserPage = () => {
   const handleResign = () => {
     navigate('/user/resign');
   };
+  const handleLogout = () => {
+    alert('로그아웃 하시겠어요?', 'warning', '취소', '로그아웃');
+  };
   return (
     <Container>
       {/* 상단 로고 + 내 정보 헤더 */}
@@ -156,7 +172,7 @@ const UserPage = () => {
         </MenuItem>
         <MenuItem>
           <MenuText>🚪 로그아웃</MenuText>
-          <MenuIcon>›</MenuIcon>
+          <MenuIcon onClick={handleLogout}>›</MenuIcon>
         </MenuItem>
         <MenuItem>
           <MenuText>🗑️ 회원 탈퇴</MenuText>

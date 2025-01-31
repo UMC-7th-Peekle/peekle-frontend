@@ -1,43 +1,57 @@
 import { useState } from 'react';
 import styled from 'styled-components';
+import { Backward } from '@/components';
+import { Button } from '@/components/common/input/button/index';
+import WomanSVG from '@/assets/images/auth/w.svg?react';
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 40px;
-  font-family: Arial, sans-serif;
-  background-color: #ffffff;
-  height: 60vh;
-  box-sizing: border-box;
+  align-items: center;
+  height: 100vh;
+  background: white;
+  padding: 20px;
 `;
 
 const Title = styled.h1`
-  font-size: 20px;
-  margin-left: 0px;
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 700;
+  font-size: 28px;
+  text-align: left;
+  width: 100%;
+  margin-top: 40px;
+  margin-left: 3px;
   color: black;
+  margin-bottom: 10px;
 `;
 
 const Subtitle = styled.p`
-  font-size: 12px;
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
   color: #666;
-  margin-bottom: 20px;
+  margin-top: -10px;
+  margin-left: 1px;
 `;
 
 const GenderOptions = styled.div`
   display: flex;
   gap: 16px;
+  margin-top: 40px;
   margin-top: 20px;
   align-items: center;
   justify-content: center;
 `;
 
 const Option = styled.div<{ selected: boolean }>`
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 700;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 200px;
-  height: 220px;
+  width: 150px;
+  height: 180px;
   border: 2px solid ${(props) => (props.selected ? 'rgb(74, 166, 98)' : '#ccc')};
   border-radius: 8px;
   background-color: ${(props) =>
@@ -58,25 +72,29 @@ const Option = styled.div<{ selected: boolean }>`
   span {
     font-size: 16px;
     color: #333;
-    margin-top: 60px;
+    margin-top: 10px;
   }
 `;
 
-const Footer = styled.div`
-  margin-top: 20px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
+const BackwardWrapper = styled.div`
+  position: absolute;
+  top: 10px;
+  left: 40px;
 `;
-
-const NextButton = styled.button`
-  background-color: ${(props) => (props.disabled ? '#ccc' : '#007BFF')};
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
+const ButtonWrapper = styled.div`
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  margin-top: 60px;
+`;
+const Icon = styled.div`
+  position: fixed;
+  bottom: 20;
+  top: 40;
+`;
+const WomanIcon = styled(WomanSVG)`
+  width: 16px;
+  height: 16px;
 `;
 
 const GenderSelectionPage = () => {
@@ -89,6 +107,9 @@ const GenderSelectionPage = () => {
   return (
     <>
       <Container>
+        <BackwardWrapper>
+          <Backward />
+        </BackwardWrapper>
         <Title>성별을 선택해주세요</Title>
         <Subtitle>더 나은 서비스 제공과 통계 분석에 활용될 수 있어요.</Subtitle>
         <GenderOptions>
@@ -103,13 +124,22 @@ const GenderSelectionPage = () => {
             selected={selectedGender === '여성'}
             onClick={() => handleSelectGender('여성')}
           >
-            <img src="female-icon.png" alt="여성" />
+            <Icon>
+              <WomanIcon />
+            </Icon>
             <span>여성</span>
           </Option>
         </GenderOptions>
-        <Footer>
-          <NextButton disabled={!selectedGender}>다음</NextButton>
-        </Footer>
+        <ButtonWrapper>
+          <Button
+            color="primary500"
+            size="medium"
+            width="412px"
+            disabled={!selectedGender}
+          >
+            다음
+          </Button>
+        </ButtonWrapper>
       </Container>
     </>
   );
