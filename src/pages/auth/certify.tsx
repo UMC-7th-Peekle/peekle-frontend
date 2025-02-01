@@ -6,6 +6,7 @@ import { BottomSheet, Button } from '@/components';
 import { useBottomSheetStore } from '@/stores';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
+import ResendSVG from '@/assets/images/auth/resend.svg?react';
 
 const CertifyPage = () => {
   const navigate = useNavigate();
@@ -102,6 +103,7 @@ const CertifyPage = () => {
           />
         ))}
         <ResendWrapper onClick={handleResend}>
+          <ResendSVG /> 재전송
           <ResendIcon>🔄</ResendIcon> 재전송
         </ResendWrapper>
       </InputWrapper>
@@ -111,7 +113,7 @@ const CertifyPage = () => {
       <ButtonWrapper>
         <Button
           color="primary500"
-          size="small"
+          size="medium"
           width="412px"
           onClick={handleVerify}
         >

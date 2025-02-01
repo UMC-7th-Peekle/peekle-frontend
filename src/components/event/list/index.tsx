@@ -24,10 +24,10 @@ const EventList = ({
     if (isSearchPage) {
       // 검색 페이지 리스트에서 항목 클릭시 검색어에 저장
       const recentSearch = JSON.parse(
-        localStorage.getItem('recent-search') ?? '[]',
+        localStorage.getItem('recent-event-search') ?? '[]',
       );
       localStorage.setItem(
-        'recent-search',
+        'recent-event-search',
         JSON.stringify([...new Set([searchQuery, ...recentSearch])]),
       );
     }

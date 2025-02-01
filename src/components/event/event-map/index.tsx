@@ -25,6 +25,7 @@ window.navermap_authFailure = function () {
 let mapInstance: naver.maps.Map | null = null;
 
 const EventMap = () => {
+  // localStorage.clear();
   const { selectedEvent, setSelectedEvent } = useMapStore();
   const { myLocation, setMyLocation } = useMyLocationStore();
   const { sortedEvents } = useEventFilter();

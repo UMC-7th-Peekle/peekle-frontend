@@ -90,7 +90,7 @@ const PhoneNumberPage = () => {
       <ButtonWrapper>
         <Button
           color="primary500"
-          size="small"
+          size="medium"
           width="412px"
           disabled={phone.length < 13 || loading}
           onClick={handleSubmit}

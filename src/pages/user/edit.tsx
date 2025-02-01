@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { Backward } from '@/components';
-
+import EditProfileSVG from '@/assets/images/user/editProfile.svg?react';
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -34,14 +34,6 @@ const ProfileSection = styled.div`
   flex-direction: row; /* 가로 방향 정렬 */
   align-items: center; /* 세로 중앙 정렬 */
   justify-content: center;
-`;
-
-const ProfileImage = styled.img`
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  background-color: #ddd;
-  margin-bottom: 0px;
 `;
 
 const Nickname = styled.div`
@@ -101,9 +93,8 @@ const EditPage = () => {
       </BackwardWrapper>
       <Header>프로필 수정</Header>
       <ProfileSection>
-        <ProfileImage src="/path/to/profile-image.png" alt="" />
+        <EditProfileSVG />
       </ProfileSection>
-
       <Nickname>
         <NicknameTitle>닉네임</NicknameTitle>
         <InputWrapper>

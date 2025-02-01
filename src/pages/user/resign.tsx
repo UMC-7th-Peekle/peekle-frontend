@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useState } from 'react';
-
+import { alert } from '@/utils';
 import { Backward } from '@/components';
 const Container = styled.div`
   display: flex;
@@ -137,7 +137,12 @@ const ResignPage = () => {
 
   const handleDelete = () => {
     if (isChecked) {
-      alert('회원 탈퇴가 진행됩니다.');
+      alert(
+        '정말 탈퇴하기겠어요?\n\n탈퇴일로부터 7일 이후에는 계정이 완전히 삭제되며, 복구할 수 없어요.',
+        'warning',
+        '취소',
+        '탈퇴',
+      );
       // 탈퇴 로직 추가
     }
   };
