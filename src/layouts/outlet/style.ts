@@ -5,4 +5,5 @@ export const MainContainer = styled.main`
   position: relative;
   padding: 0 16px;
   overflow-x: hidden; // y축 스크롤만 허용
+  padding-bottom: calc(72px); // Navibar에 안 가려지게
 `;

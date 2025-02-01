@@ -13,12 +13,18 @@ const DefaultTypeContainer = styled.button`
   align-items: center;
   justify-content: center;
   gap: 8px;
+  transition: filter 0.2s ease;
+
+  &:active {
+    filter: brightness(0.9);
+  }
 `;
 
 const RectTypeContainer = styled(DefaultTypeContainer)`
-  height: 51px;
-  width: 145px;
-  border-radius: 16px;
+  height: 48px;
+  width: 135px;
+  border-radius: 8px;
+  background-color: ${theme.color.gray[600]};
 `;
 
 const PenIcon = styled(Pen)`

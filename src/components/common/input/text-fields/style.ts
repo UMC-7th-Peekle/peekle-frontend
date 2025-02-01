@@ -3,14 +3,19 @@ import Search from '@/assets/images/icons/search.svg?react';
 import Delete from '@/assets/images/icons/delete.svg?react';
 import { theme } from '@/styles/theme';
 
-export const SearchWrapper = styled.div`
+export const SearchWrapper = styled.div<{
+  max_width?: number;
+  min_width?: number;
+}>`
   display: flex;
   align-items: center;
-  width: 100%;
-  min-width: 300px;
-  background-color: ${theme.color.gray['50']};
-  border-radius: ${theme.borderRadius.md};
-  padding: 3px 16px;
+  position: relative;
+  max-width: ${({ max_width }) => (max_width ? `${max_width}px` : '333px')};
+  min-width: ${({ min_width }) => (min_width ? `${min_width}px` : '300px')};
+  background-color: ${({ theme }) => theme.color.gray['50']};
+  border-radius: 10px;
+  padding: 0 20px;
+  box-sizing: border-box;
 `;
 
 export const SearchInput = styled.input`

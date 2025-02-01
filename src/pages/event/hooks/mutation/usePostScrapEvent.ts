@@ -17,28 +17,27 @@ const postScrapEvent = async (eventId: bigint): Promise<ScrapResponse> => {
   return parsedData;
 };
 
-export const usePostScrapEvent = () => {
+const usePostScrapEvent = () => {
   const { showBoundary } = useErrorBoundary();
 
-  const { mutateAsync: scrapEvent, isPending } = useMutation<
-    ScrapResponse,
-    Error,
-    bigint
-  >({
-    mutationFn: (eventId) => postScrapEvent(eventId),
-    onSuccess: (data) => {
-      console.log('이벤트 스크랩 성공:', data.success?.message);
-    },
-    onError: (error) => {
-      if (error instanceof ApiError) {
-        showBoundary(error);
-      } else {
-        showBoundary(
-          new ApiError('UNKNOWN_ERROR', '알 수 없는 에러가 발생했습니다.'),
-        );
-      }
-    },
-  });
+  const { mutateAsync: scrapEvent, isPending: isScrapEventPending } =
+    useMutation<ScrapResponse, Error, bigint>({
+      mutationFn: (eventId) => postScrapEvent(eventId),
+      onSuccess: (data) => {
+        console.log('이벤트 스크랩 성공:', data.success?.message);
+      },
+      onError: (error) => {
+        if (error instanceof ApiError) {
+          showBoundary(error);
+        } else {
+          showBoundary(
+            new ApiError('UNKNOWN_ERROR', '알 수 없는 에러가 발생했습니다.'),
+          );
+        }
+      },
+    });
 
-  return { scrapEvent, isPending };
+  return { scrapEvent, isScrapEventPending };
 };
+
+export default usePostScrapEvent;

@@ -157,7 +157,7 @@ export const Separator = styled.div`
 
 export const ContentContainer = styled.article`
   display: flex;
-  padding: 32px 0px 130px;
+  padding: 32px 0px 60px;
   flex-direction: column;
   align-items: flex-start;
   gap: 16px;

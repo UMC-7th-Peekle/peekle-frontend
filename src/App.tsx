@@ -7,7 +7,7 @@ import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools'; // 디
 import { NuqsAdapter } from 'nuqs/adapters/react-router/v7';
 import { ErrorBoundary } from 'react-error-boundary';
 import queryClient from './lib/tanstack-query/queryClient';
-import { DeferredLoader, ErrorFallback } from './components';
+import { DeferredLoader, ErrorFallback, MetaTag } from './components';
 import { ThemeProvider } from 'styled-components';
 import { theme } from '@/styles/theme';
 import GlobalStyles from '@/styles/GlobalStyles';
@@ -20,6 +20,7 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
+      <MetaTag />
       <GlobalStyles />
       <QueryClientProvider client={queryClient}>
         <QueryErrorResetBoundary>

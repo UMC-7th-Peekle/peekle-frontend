@@ -7,7 +7,7 @@ export interface PortalProps {
 }
 
 // modal
-export type AlertIconType = 'none' | 'warning' | 'camera';
+export type AlertIconType = 'none' | 'warning' | 'camera' | 'logout';
 export interface AlertStore {
   isOpen: boolean;
   message: string;
@@ -133,4 +133,13 @@ export interface StyledButtonProps {
 // Backward
 export interface BackSVGProps {
   $size?: string;
+}
+
+// MetaTag
+export interface MetaTagProps {
+  title: string;
+  description: string;
+  keywords: string;
+  imgsrc?: string;
+  url: string;
 }

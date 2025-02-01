@@ -7,11 +7,14 @@ interface SearchBarProps {
   page: 'event' | 'community';
   queryKey: string;
   placeholder?: string;
+  onQuerySubmit?: (query: string) => void;
+  localKey: string;
 }
 
 export const SearchBar = ({
   page,
   queryKey,
+  localKey,
   placeholder = '관심 있는 활동 검색',
 }: SearchBarProps) => {
   const navigate = useNavigate();
@@ -28,6 +31,7 @@ export const SearchBar = ({
         queryKey={queryKey}
         placeholder={placeholder}
         onClick={handleTextFieldsClick}
+        localKey={localKey}
       />
     </S.SearchBarWrapper>
   );

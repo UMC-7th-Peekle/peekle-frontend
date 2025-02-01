@@ -1,7 +1,9 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import WarningSVG from '@/assets/images/icons/warning.svg?react';
 import CameraSVG from '@/assets/images/icons/camera.svg?react';
+import LogoutSVG from '@/assets/images/icons/logout.svg?react';
 import { theme } from '@/styles/theme';
+import mediaQuery from '@/styles/mediaQuery';
 
 export const AlertContainer = styled.div`
   position: fixed;
@@ -28,30 +30,48 @@ export const InfoContainer = styled.div`
   align-self: stretch;
 `;
 
-export const WarningIcon = styled(WarningSVG)`
+const IconStyle = css`
   width: 32px;
   height: 32px;
 `;
+export const WarningIcon = styled(WarningSVG)`
+  ${IconStyle}
+`;
 
 export const CameraIcon = styled(CameraSVG)`
-  width: 32px;
-  height: 32px;
+  ${IconStyle}
+`;
+
+export const LogoutIcon = styled(LogoutSVG)`
+  ${IconStyle}
 `;
 
 export const AlertMessage = styled.p`
   ${({ theme }) => theme.typeFace.subTitle[20]};
   color: ${({ theme }) => theme.color.gray[600]};
   white-space: pre-wrap; // 입력받은 문자열 줄바꿈 유지
+
+  ${mediaQuery.sMobile`
+    ${theme.typeFace.body['18SB']};
+  `}
 `;
 
 export const OneBtn = styled.button`
   display: flex;
   flex: 1 0 0;
+  width: 232px;
   height: 56px;
-  padding: 11.5px 96.5px 12.5px 100.5px;
+  padding: 11.5px 0 12.5px;
   align-items: center;
+  justify-content: center;
   ${theme.typeFace.subTitle['20']};
   color: ${theme.color.primary[500]};
+
+  ${mediaQuery.sMobile`
+    ${theme.typeFace.body['18SB']};
+    width: 180px;
+    height: 40px;
+  `}
 `;
 
 export const ButtonContainer = styled.div`

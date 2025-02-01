@@ -4,8 +4,8 @@ import { theme } from '@/styles/theme';
 import { BackSVGProps } from '@/types/common';
 
 export const BackIcon = styled(BackSVG)<BackSVGProps>`
-  width: ${({ $size }) => ($size ? $size : '24px')};
-  height: ${({ $size }) => ($size ? $size : '24px')};
+  width: ${({ $size }) => $size};
+  height: ${({ $size }) => $size};
   cursor: pointer;
   flex-shrink: 0;
 

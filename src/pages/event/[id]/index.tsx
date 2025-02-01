@@ -1,12 +1,12 @@
 import * as S from './style';
-import { useParams } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   ToggleHeart,
   BottomSheet,
   ImageSlider,
   Backward,
   Button,
+  MetaTag,
 } from '@/components';
 import { BOTTOM_SHEET_ID_EVENT_SHARE } from '@/constants/event';
 import {
@@ -14,21 +14,44 @@ import {
   getStartDateTime,
   formatSchedules,
   toast,
+  priceFormatter,
 } from '@/utils';
 import { useBottomSheetStore } from '@/stores';
 import { events } from '@/sample-data/event';
-import { usePostScrapEvent } from '@/hooks/event/mutation/usePostScrapEvent';
+import { useId } from '@/hooks';
 import { EventSchedule } from '@/types/event';
-import { priceFormatter } from '@/utils';
+import usePostScrapEvent from '../hooks/mutation/usePostScrapEvent';
+import useDeleteScrapEvent from '../hooks/mutation/useDeleteScrapEvent';
 
 const EventDetailPage = () => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isScraped, setIsScraped] = useState(false);
   const { setActiveBottomSheet } = useBottomSheetStore();
-  const { scrapEvent, isPending } = usePostScrapEvent();
-  const { id } = useParams();
-  if (!id) return;
+  const { scrapEvent, isScrapEventPending } = usePostScrapEvent();
+  const { deleteScrap, isDeleteScrapPending } = useDeleteScrapEvent();
+  const id = useId(); //url에서 뽑은 id
   const event = events.find((event) => event.eventId === BigInt(id));
-  if (!event) return;
+
+  useEffect(() => {
+    if (!event) return;
+    const firstSentence =
+      event.content.match(/[^.!?]+[.!?]/)?.[0] ?? event.content;
+    document
+      .querySelector('meta[property="og:title"]')
+      ?.setAttribute('content', event.title);
+    document
+      .querySelector('meta[property="og:description"]')
+      ?.setAttribute('content', firstSentence);
+    document
+      .querySelector('meta[property="og:image"]')
+      ?.setAttribute('content', event.eventImages[0]?.imageUrl ?? '');
+    document
+      .querySelector('meta[property="og:url"]')
+      ?.setAttribute('content', window.location.href);
+    document.title = event.title;
+  }, [event]);
+
+  if (!event) return null;
 
   const {
     eventId,
@@ -61,8 +84,16 @@ const EventDetailPage = () => {
   };
 
   const handleToggleHeart = async (eventId: bigint) => {
-    if (!isPending) {
-      await scrapEvent(eventId);
+    if (!isScrapEventPending && !isDeleteScrapPending) {
+      if (isScraped) {
+        // 스크랩이 되어있다면 삭제
+        await deleteScrap(eventId);
+        setIsScraped(false);
+      } else {
+        // 스크랩이 되어있지 않다면 추가
+        await scrapEvent(eventId);
+        setIsScraped(true);
+      }
     }
   };
 
@@ -72,8 +103,15 @@ const EventDetailPage = () => {
 
   return (
     <>
+      <MetaTag
+        title={title}
+        description={content?.slice(0, 50)}
+        imgSrc={eventImages?.[0]?.imageUrl}
+        url={window.location.href}
+      />
+
       <S.Header>
-        <Backward size={'28px'} />
+        <Backward size={'28px'} page={'eventDetail'} />
         <S.ShareBtn
           onClick={() => setActiveBottomSheet(BOTTOM_SHEET_ID_EVENT_SHARE)}
         />
@@ -126,7 +164,7 @@ const EventDetailPage = () => {
 
       <S.BottomContainer>
         <ToggleHeart
-          isActive={false}
+          isActive={isScraped}
           onClick={() => handleToggleHeart(eventId)}
           size={24}
           borderColor={'theme.color.gray[500]'}

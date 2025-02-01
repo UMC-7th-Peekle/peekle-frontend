@@ -1,6 +1,7 @@
 import * as S from './style';
 import { Portal } from '@/components';
 import { useAlertStore } from '@/stores';
+import { AlertIconType } from '@/types/common';
 
 const Alert = () => {
   const {
@@ -26,15 +27,18 @@ const Alert = () => {
     close();
   };
 
+  const IconMap = {
+    none: null,
+    warning: <S.WarningIcon />,
+    camera: <S.CameraIcon />,
+    logout: <S.LogoutIcon />,
+  };
+
   return (
     <Portal onClose={close} type="modal">
       <S.AlertContainer>
         <S.InfoContainer>
-          {iconType === 'warning' ? (
-            <S.WarningIcon />
-          ) : (
-            iconType === 'camera' && <S.CameraIcon />
-          )}
+          {IconMap[iconType as AlertIconType]}
           <S.AlertMessage>{message}</S.AlertMessage>
         </S.InfoContainer>
         <S.ButtonContainer>

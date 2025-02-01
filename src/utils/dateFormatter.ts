@@ -1,3 +1,11 @@
+import {
+  format,
+  differenceInMinutes,
+  differenceInHours,
+  differenceInDays,
+  isSameYear,
+} from 'date-fns';
+
 // Date 객체를 YYYY-MM-DD 형식으로 변환
 export const formatDate = (date: Date | null) => {
   if (!date) return null;
@@ -34,6 +42,29 @@ export const formatDateWithDayOfWeek = (date: Date | null) => {
   return `${year}-${month}-${day} (${dayOfWeek})`;
 };
 
+// 커뮤니티 게시판 카드용 시간 변환 함수
+export const formatDateCardTime = (createdAt: string): string => {
+  const now = new Date();
+  const date = new Date(createdAt);
+
+  const minutesDiff = differenceInMinutes(now, date);
+  const hoursDiff = differenceInHours(now, date);
+  const daysDiff = differenceInDays(now, date);
+
+  if (minutesDiff < 60) {
+    return `${minutesDiff}분 전`;
+  } else if (hoursDiff < 24) {
+    return `${hoursDiff}시간 전`;
+  } else if (daysDiff === 1) {
+    return `어제 ${format(date, 'HH:mm')}`;
+  } else if (daysDiff <= 3) {
+    return `${daysDiff}일 전 ${format(date, 'HH:mm')}`;
+  } else if (isSameYear(now, date)) {
+    return `${format(date, 'MM/dd HH:mm')}`;
+  } else {
+    return `${format(date, 'yyyy/MM/dd HH:mm')}`;
+  }
+};
 // YYYY-MM-DD 형식 문자열을 MM.DD 형식으로 변환
 export const formatDateToShort = (dateString: string) => {
   const date = new Date(dateString);

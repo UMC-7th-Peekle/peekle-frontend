@@ -7,6 +7,8 @@ import {
   EventScrapPage,
   EventDetailPage,
   NotFoundPage,
+  CommunityEditPage,
+  CommunityDetailPage,
 } from '@/pages';
 import UserPage from '@/pages/user/page';
 import OnboardingPage from '@/pages/onboarding';
@@ -120,6 +122,10 @@ const router = createBrowserRouter([
         element: <CommunityLikePage />,
       },
       {
+        path: ROUTES.COMMUNITY_EDIT,
+        element: <CommunityEditPage />,
+      },
+      {
         path: '/user',
         element: <UserPage />,
       },
@@ -152,6 +158,10 @@ const router = createBrowserRouter([
         element: <NotFoundPage />, // 404는 라우트로 처리
       },
     ],
+  },
+  {
+    path: ROUTES.COMMUNITY_DETAIL,
+    element: <CommunityDetailPage />,
   },
 ]);
 
