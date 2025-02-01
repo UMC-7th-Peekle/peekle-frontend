@@ -9,5 +9,4 @@ export { useNavbarStore } from './layout/useNavbarStore';
 
 // event
 export { default as useMyLocationStore } from './event/useMyLocationStore';
-export { default as useFilteredEventStore } from './event/useFilteredEventStore';
 export { default as useMapStore } from './event/useMapStore';

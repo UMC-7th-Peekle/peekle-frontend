@@ -113,7 +113,7 @@ const EventDetailPage = () => {
       />
 
       <S.Header>
-        <Backward size={'28px'} page={'eventDetail'} />
+        <Backward size={'28px'} />
         <S.ShareBtn
           onClick={() => setActiveBottomSheet(BOTTOM_SHEET_ID_EVENT_SHARE)}
         />

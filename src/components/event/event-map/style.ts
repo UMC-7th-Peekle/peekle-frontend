@@ -32,6 +32,7 @@ export const ButtonContainer = styled.div`
 `;
 
 export const EventCardWrapper = styled.div`
+  width: 100%;
   display: flex;
   padding: 16px;
   border-radius: ${theme.borderRadius.sm};

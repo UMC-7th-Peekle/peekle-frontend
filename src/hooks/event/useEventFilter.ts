@@ -140,45 +140,38 @@ const useEventFilter = ({
 
   // 필터값 변경
   const handleSelect = (newValue: string) => {
+    const updatedParams = new URLSearchParams(searchParams); // 기존 쿼리 파라미터 복사
+
     if (type === 'single') {
-      setSearchParams({ ...filters, [key]: newValue });
-      return;
+      updatedParams.set(key, newValue);
+    } else {
+      // 중복 허용 값일 때
+      const currentValues = filters[key as EventFilterKeys]?.split(',') ?? [
+        '전체',
+      ];
+
+      if (newValue === '전체' || newValue === '0') {
+        updatedParams.set(key, '전체');
+      } else if (currentValues.includes(newValue)) {
+        // 이미 선택된 값이면 제거
+        const newValues = currentValues.filter((v) => v !== newValue);
+        updatedParams.set(
+          key,
+          newValues.length === 0 ? '전체' : newValues.join(','),
+        );
+      } else {
+        // 새로운 값 추가
+        updatedParams.set(key, [...currentValues, newValue].join(','));
+      }
     }
 
-    // 중복 허용 값일때
-    if (newValue === '전체' || newValue === '0') {
-      setSearchParams({ ...filters, [key]: '전체' });
-      return;
+    // 기존 event-search 값 유지
+    if (searchParams.has('event-search')) {
+      updatedParams.set('event-search', searchParams.get('event-search')!);
     }
 
-    const currentValues = filters[key as EventFilterKeys]?.split(',') ?? [
-      '전체',
-    ];
-
-    if (currentValues.includes('전체')) {
-      setSearchParams({
-        ...filters,
-        [key]: newValue,
-      });
-      return;
-    }
-
-    // 이미 선택된 값이면 제거
-    if (currentValues.includes(newValue)) {
-      const newValues = currentValues.filter((v) => v !== newValue);
-      setSearchParams({
-        ...filters,
-        [key]: newValues.length === 0 ? '전체' : newValues.join(','),
-      });
-      return;
-    }
-
-    // 새로운 값 추가 (기존 값들 유지하며)
-    const newValues = [...currentValues, newValue];
-    setSearchParams({
-      ...filters,
-      [key]: newValues.join(','),
-    });
+    // URL 업데이트 실행
+    setSearchParams(updatedParams);
   };
 
   // 선택 됐는지 여부

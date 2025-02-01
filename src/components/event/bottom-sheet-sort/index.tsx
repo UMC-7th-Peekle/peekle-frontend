@@ -10,7 +10,7 @@ export const BottomSheetSort = () => {
     key: '정렬',
     type: 'single',
   });
-  // console.log(filteredEvent);
+
   return (
     <S.Container>
       <S.Header>

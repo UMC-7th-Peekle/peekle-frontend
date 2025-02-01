@@ -5,9 +5,7 @@ import { useRecentSearch } from '@/hooks';
 
 const EventSearchPage = () => {
   const {
-    // query,
     isSearched,
-    // setQuery,
     recentSearch,
     handleClear,
     handleRemoveRecentSearch,

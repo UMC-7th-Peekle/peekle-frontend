@@ -11,6 +11,7 @@ const ButtonStyle = css`
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
+  z-index: 1;
 
   border-radius: ${theme.borderRadius.sm};
   background: ${theme.color.gray[0]};

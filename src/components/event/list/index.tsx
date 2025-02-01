@@ -35,9 +35,10 @@ const EventList = ({
 
   return (
     <S.Container>
+      {/*검색 결과 없어도 필터는 유지 - 필터 때문에 검색 결과 없는 걸수도 있음*/}
+      {isSearchPage && <Filter isSearchPage={true} />}
       {sortedEvents.length > 0 ? (
         <>
-          {isSearchPage && <Filter isSearchPage={true} />}
           <S.EventsContainer>
             {sortedEvents.map((event: EventData) => (
               <EventCard
