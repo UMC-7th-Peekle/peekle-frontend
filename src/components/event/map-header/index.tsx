@@ -17,7 +17,10 @@ const MapHeader = () => {
         />
         <SquareButton
           icon="filter"
-          onClick={() => setActiveBottomSheet(BOTTOM_SHEET_ID_EVENT_FILTER)}
+          onClick={() => {
+            console.log('맵 필터 버튼 클릭');
+            setActiveBottomSheet(BOTTOM_SHEET_ID_EVENT_FILTER);
+          }}
         />
       </S.SearchBarWrapper>
       <CategoryChips />

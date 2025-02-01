@@ -17,6 +17,7 @@ const ButtonStyle = css`
   background: ${theme.color.gray[0]};
   color: ${theme.color.gray[600]};
   box-shadow: 0px 0px 16px 0px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
 `;
 
 export const MyLocationSquareButton = styled(MyLocationSVG)`

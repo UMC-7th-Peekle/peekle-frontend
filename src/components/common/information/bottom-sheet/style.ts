@@ -28,7 +28,7 @@ export const Overlay = styled.div<{ $isOpen: boolean }>`
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.25);
-  z-index: 101; // 네이버 지도 위
+  z-index: 121; // 네이버 지도 위
   animation: ${({ $isOpen }) => ($isOpen ? fadeIn : fadeOut)} 0.2s ease-out
     forwards;
 `;
