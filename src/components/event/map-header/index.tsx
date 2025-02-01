@@ -1,5 +1,5 @@
 import * as S from './style';
-import { TextFields, CategoryChips } from '@/components';
+import { TextFields, CategoryChips, SquareButton } from '@/components';
 import { useBottomSheetStore } from '@/stores';
 import { BOTTOM_SHEET_ID_EVENT_FILTER } from '@/constants/event';
 
@@ -13,10 +13,10 @@ const MapHeader = () => {
           placeholder={'관심 있는 활동 검색'}
           localKey={'recent-event-search'}
           page={'eventMap'}
+          min_width={200}
         />
-        <S.FilterButton
-          role="button"
-          aria-label="이벤트 필터 열기 버튼"
+        <SquareButton
+          icon="filter"
           onClick={() => setActiveBottomSheet(BOTTOM_SHEET_ID_EVENT_FILTER)}
         />
       </S.SearchBarWrapper>

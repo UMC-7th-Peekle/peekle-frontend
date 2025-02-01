@@ -4,8 +4,8 @@ import { EventMap, MapHeader } from '@/components';
 const EventMapPage = () => {
   return (
     <S.Container>
-      <MapHeader />
       <EventMap />
+      <MapHeader />
     </S.Container>
   );
 };

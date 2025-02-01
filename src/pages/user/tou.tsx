@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Backward } from '@/components';
 
 const Container = styled.div`
   display: flex;
@@ -6,6 +7,11 @@ const Container = styled.div`
   height: 100vh;
   background-color: #ffffff;
   font-family: Arial, sans-serif;
+`;
+const BackwardWrapper = styled.div`
+  position: absolute;
+  top: 15px;
+  left: 30px;
 `;
 const Header = styled.div`
   display: flex;
@@ -15,6 +21,10 @@ const Header = styled.div`
   font-size: 20px;
   font-weight: bold;
   justify-content: center;
+  margin-top: -10px;
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 700;
+  color: black;
 `;
 
 const Section = styled.div`
@@ -26,8 +36,10 @@ const Section = styled.div`
 const SectionTitle = styled.h3`
   font-size: 16px;
   margin-bottom: 10px;
-  color: #9ea4a9;
+  color: #74777d;
   margin-left: 10px;
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 600;
 `;
 
 const MenuItem = styled.div`
@@ -39,11 +51,17 @@ const MenuItem = styled.div`
   &:last-child {
     border-bottom: none;
   }
+<<<<<<< HEAD
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 500;
 `;
 
 const MenuText = styled.span`
-  font-size: 14px;
+  font-size: 18px;
   margin-left: 10px;
+  color: black;
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 600;
 `;
 
 const MenuIcon = styled.span`
@@ -62,6 +80,9 @@ const Divider = styled.div`
 const TouPage = () => {
   return (
     <Container>
+      <BackwardWrapper>
+        <Backward />
+      </BackwardWrapper>
       {/* 상단 로고 + 내 정보 헤더 */}
       <Header>약관 및 정책</Header>
       {/* 필수약관 */}

@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Backward } from '@/components';
 
 const Container = styled.div`
   display: flex;
@@ -6,6 +7,11 @@ const Container = styled.div`
   height: 100vh;
   background-color: #ffffff;
   font-family: Arial, sans-serif;
+`;
+const BackwardWrapper = styled.div`
+  position: absolute;
+  top: 15px;
+  left: 30px;
 `;
 const Header = styled.div`
   display: flex;
@@ -15,6 +21,10 @@ const Header = styled.div`
   font-size: 20px;
   font-weight: bold;
   justify-content: center;
+  margin-top: -10px;
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 700;
+  color: black;
 `;
 
 const ProfileSection = styled.div`
@@ -27,8 +37,8 @@ const ProfileSection = styled.div`
 `;
 
 const ProfileImage = styled.img`
-  width: 100px;
-  height: 100px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
   background-color: #ddd;
   margin-bottom: 0px;
@@ -36,7 +46,7 @@ const ProfileImage = styled.img`
 
 const Nickname = styled.div`
   background-color: #fff;
-  margin-top: -20px;
+  margin-top: 10px;
   padding: 0px;
 `;
 
@@ -45,14 +55,10 @@ const NicknameTitle = styled.h3`
   margin-bottom: -20px;
   color: black;
   padding: 10px;
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 600;
 `;
 
-const NicknameSubtitle = styled.p`
-  font-size: 14px;
-  padding: 10px;
-  margin-top: 0px;
-  color: #9ea4a9;
-`;
 const InputWrapper = styled.div`
   width: 100%;
   max-width: 300px;
@@ -64,8 +70,8 @@ const InputWrapper = styled.div`
 `;
 const Input = styled.input`
   width: 325px; /* 가로 길이 */
-  height: 40px; /* 세로 길이 */
-  padding: 10px; /* 내부 여백 */
+  height: 50px; /* 세로 길이 */
+  padding: 12px 16px; /* 내부 여백 */
   border-radius: 8px; /* 둥근 테두리 */
   font-size: 16px; /* 글자 크기 */
   border: 1px solid #eaeced;
@@ -75,10 +81,24 @@ const Input = styled.input`
     outline: none;
     border: 1px solid #04a662;
   }
+  background-color: #ffffff;
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 400;
+`;
+const NicknameSubtitle = styled.p`
+  font-size: 14px;
+  padding: 10px;
+  margin-top: -15px;
+  color: #9ea4a9;
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 400;
 `;
 const EditPage = () => {
   return (
     <Container>
+      <BackwardWrapper>
+        <Backward />
+      </BackwardWrapper>
       <Header>프로필 수정</Header>
       <ProfileSection>
         <ProfileImage src="/path/to/profile-image.png" alt="" />

@@ -1,7 +1,7 @@
 import * as S from './style';
 import { useQueryState } from 'nuqs';
 import { useNavigate } from 'react-router-dom';
-import { EventCard, Filter } from '@/components';
+import { EventCard, Filter, RoundedButton } from '@/components';
 import { useEventFilter } from '@/hooks';
 import { EventData } from '@/types/event';
 import { ROUTES } from '@/constants/routes';
@@ -45,12 +45,16 @@ const EventList = ({
               />
             ))}
           </S.EventsContainer>
-          <S.GoToMapButton
-            role="button"
-            aria-label="지도보기 버튼"
-            $isSearchPage={isSearchPage}
-            onClick={() => navigate(ROUTES.EVENT_MAP)}
-          />
+          <S.GotoMapBtnWrapper $isSearchPage={isSearchPage}>
+            <RoundedButton
+              icon="map"
+              text="지도 보기"
+              onClick={() => {
+                console.log('지도 보기 클릭');
+                navigate(ROUTES.EVENT_MAP);
+              }}
+            />
+          </S.GotoMapBtnWrapper>
         </>
       ) : (
         <S.EmptyContainer>

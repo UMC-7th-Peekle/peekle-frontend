@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 import { useState } from 'react';
+
+import { Backward } from '@/components';
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -8,6 +10,11 @@ const Container = styled.div`
   font-family: Arial, sans-serif;
 `;
 
+const BackwardWrapper = styled.div`
+  position: absolute;
+  top: 15px;
+  left: 30px;
+`;
 const Header = styled.div`
   display: flex;
   align-items: center;
@@ -16,6 +23,10 @@ const Header = styled.div`
   font-size: 20px;
   font-weight: bold;
   justify-content: center;
+  margin-top: -10px;
+  color: black;
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 700;
 `;
 
 const Title = styled.h2`
@@ -23,12 +34,17 @@ const Title = styled.h2`
   font-weight: bold;
   margin-top: 0px;
   padding: 10px;
+  color: black;
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 700;
 `;
 
 const Subtitle = styled.p`
-  font-size: 14px;
+  font-size: 18px;
   padding: 10px;
   margin-top: -30px;
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 400;
 `;
 const Box = styled.div`
   background-color: #f6f8fa;
@@ -44,12 +60,17 @@ const BoxTitle = styled.h3`
   margin-bottom: 5px;
   display: flex;
   align-items: center;
+  color: black;
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 600;
 `;
 
 const BoxText = styled.p`
   font-size: 16px;
   color: #666;
   margin: 0;
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 400;
 `;
 
 const CheckboxWrapper = styled.div`
@@ -68,6 +89,8 @@ const Checkbox = styled.input`
 const CheckboxLabel = styled.label`
   font-size: 14px;
   color: #333;
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 600;
 `;
 
 const Footer = styled.div`
@@ -89,6 +112,8 @@ const CancelButton = styled.button`
   cursor: pointer;
   padding: 16px;
   font-weight: bold;
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 700;
 `;
 
 const DeleteButton = styled.button`
@@ -100,6 +125,8 @@ const DeleteButton = styled.button`
   cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
   padding: 16px;
   font-weight: bold;
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 700;
 `;
 
 const ResignPage = () => {
@@ -116,6 +143,9 @@ const ResignPage = () => {
   };
   return (
     <Container>
+      <BackwardWrapper>
+        <Backward />
+      </BackwardWrapper>
       <Header>회원탈퇴</Header>
       <Title>잠깐!</Title>
       <Subtitle>탈퇴 전에 유의사항을 확인해주세요.</Subtitle>

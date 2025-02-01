@@ -16,14 +16,14 @@ const Navbar = () => {
       {/* Event */}
       <S.NavItem>
         <Link to={ROUTES.EVENT}>
-          {location.pathname === ROUTES.EVENT ? <EventFocus /> : <Event />}
+          {location.pathname.includes('event') ? <EventFocus /> : <Event />}
         </Link>
       </S.NavItem>
 
       {/* Community */}
       <S.NavItem>
         <Link to={ROUTES.COMMUNITY}>
-          {location.pathname === ROUTES.COMMUNITY ? (
+          {location.pathname.includes('community') ? (
             <CommunityFocus />
           ) : (
             <Community />
@@ -34,7 +34,7 @@ const Navbar = () => {
       {/* User */}
       <S.NavItem>
         <Link to={ROUTES.USER}>
-          {location.pathname === ROUTES.USER ? <UserFocus /> : <User />}
+          {location.pathname.includes('user') ? <UserFocus /> : <User />}
         </Link>
       </S.NavItem>
     </S.NavbarContainer>

@@ -1,12 +1,11 @@
 import styled from 'styled-components';
-import MylocationButtonSVG from '@/assets/images/event/map/mylocationButton.svg?react';
-import ListButtonSVG from '@/assets/images/event/map/listButton.svg?react';
 
 export const MapContainer = styled.div`
-  position: relative;
-  width: 100%;
-  margin-top: 12px;
-  height: calc(100vh - 210px); // 헤더, nav 영역 빼기
+  width: 100vw;
+  height: calc(100vh - var(--nav-height)); // nav 영역 빼기
+  margin-left: -16px;
+  position: absolute;
+  top: 0;
 `;
 
 export const Map = styled.div`
@@ -15,15 +14,12 @@ export const Map = styled.div`
 `;
 
 export const BottomContainer = styled.div`
-  position: absolute;
+  position: fixed;
   bottom: 0;
   display: flex;
   width: 100%;
-  padding: 24px 20px;
+  padding: 0 20px;
   justify-content: space-between;
   align-items: center;
+  bottom: calc(20px + var(--nav-height));
 `;
-
-export const MyLocationIcon = styled(MylocationButtonSVG)``;
-
-export const GoToListButton = styled(ListButtonSVG)``;

@@ -124,10 +124,19 @@ export interface ButtonProps
   width?: string;
 }
 
-export interface StyledButtonProps {
-  $color: BtnColor;
-  $size: BtnSize;
-  $width?: string;
+// SquareButton
+export type SqureBtnIcon = 'myLocation' | 'filter';
+export interface SquareButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  icon: SqureBtnIcon;
+}
+
+// RoundedButton
+export type RoundedBtnIcon = 'map' | 'menu';
+export interface RoundedButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  icon: RoundedBtnIcon;
+  text: string;
 }
 
 // Backward
