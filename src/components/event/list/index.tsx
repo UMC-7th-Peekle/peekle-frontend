@@ -5,6 +5,7 @@ import { EventCard, Filter, RoundedButton } from '@/components';
 import { useEventFilter } from '@/hooks';
 import { EventData } from '@/types/event';
 import { ROUTES } from '@/constants/routes';
+import { useMapStore } from '@/stores';
 
 const EventList = ({
   page = 'index',
@@ -14,6 +15,7 @@ const EventList = ({
   const navigate = useNavigate();
   const { sortedEvents } = useEventFilter();
   const [searchQuery] = useQueryState('event-search', { defaultValue: '' });
+  const { setSelectedEvent } = useMapStore();
 
   const isSearchPage = page === 'search';
   const isScrapPage = page === 'scrap';
@@ -50,7 +52,7 @@ const EventList = ({
               icon="map"
               text="지도 보기"
               onClick={() => {
-                console.log('지도 보기 클릭');
+                setSelectedEvent(null); // 선택돼있는 이벤트 풀기
                 navigate(ROUTES.EVENT_MAP);
               }}
             />

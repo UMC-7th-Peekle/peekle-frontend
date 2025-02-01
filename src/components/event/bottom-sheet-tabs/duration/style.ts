@@ -65,7 +65,7 @@ export const StyledCalendar = styled(Calendar)<{
 
   ${mediaQuery.sMobile`
     height: 340px;
-    margin-bottom: 50px;
+    margin-bottom: 20px;
   `}
 
   ${mediaQuery.xsMobile`

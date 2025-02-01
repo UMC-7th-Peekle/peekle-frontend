@@ -76,7 +76,7 @@ export type MapInstance = naver.maps.Map;
 
 export interface MapStore {
   selectedEvent: EventData | null;
-  setSelectedEvent: (event: EventData) => void;
+  setSelectedEvent: (event: EventData | null) => void;
 }
 
 export interface LocationConfirmProps {

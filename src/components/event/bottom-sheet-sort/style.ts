@@ -22,6 +22,7 @@ export const Title = styled.h2`
 export const CloseButton = styled.button`
   display: flex;
   width: 100vw;
+  height: 42px;
   margin: 12px -20px 0 -20px;
   padding: 16px;
   justify-content: center;

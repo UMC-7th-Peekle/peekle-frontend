@@ -61,6 +61,10 @@ export const BtnContainer = styled.div`
   padding: 20px 16px;
   align-items: center;
   gap: 8px;
+  position: fixed;
+  bottom: 0;
+  background-color: ${theme.color.gray[0]};
+  z-index: 101; // 캘린더보다 위에
 
   ${mediaQuery.sMobile`
     padding: 10px 8px;

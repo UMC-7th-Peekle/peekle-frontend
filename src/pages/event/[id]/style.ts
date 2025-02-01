@@ -176,6 +176,7 @@ export const ContentTitle = styled.h2`
 
 export const Content = styled.p`
   ${theme.typeFace.body['18R']}
+  white-space: pre-wrap; // 입력받은 문자열 줄바꿈 유지
 `;
 
 // 하단 버튼 컨테이너
