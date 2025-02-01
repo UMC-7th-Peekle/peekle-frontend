@@ -31,6 +31,9 @@ export const LOCATION_OPTIONS_WITHOUT_ALL = [
   ['영등포 / 구로 / 신도림', '25'],
   ['광진 / 성동 / 중랑 / 동대문', '21'],
 ] as const;
+export const LOCATION_GROUP_IDS_WITHOUT_ALL = LOCATION_OPTIONS_WITHOUT_ALL.map(
+  (option) => option[1],
+);
 
 // 기본 필터값
 export const DEFAULT_FILTERS = {

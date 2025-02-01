@@ -6,7 +6,11 @@ import {
   EventFilterKeys,
   EventFilterType,
 } from '@/types/event';
-import { DEFAULT_FILTERS } from '@/constants/event';
+import {
+  DEFAULT_FILTERS,
+  CATEGORY_OPTIONS_WITHOUT_ALL,
+  LOCATION_GROUP_IDS_WITHOUT_ALL,
+} from '@/constants/event';
 import { calculateDistance } from '@/utils';
 import { events } from '@/sample-data/event';
 import { useQueryState } from 'nuqs';
@@ -146,22 +150,41 @@ const useEventFilter = ({
       updatedParams.set(key, newValue);
     } else {
       // 중복 허용 값일 때
-      const currentValues = filters[key as EventFilterKeys]?.split(',') ?? [
+      const allOptions =
+        key === '카테고리'
+          ? CATEGORY_OPTIONS_WITHOUT_ALL
+          : LOCATION_GROUP_IDS_WITHOUT_ALL;
+
+      let currentValues = filters[key as EventFilterKeys]?.split(',') ?? [
         '전체',
       ];
 
+      // '전체'가 포함되어 있으면 제거
+      currentValues = currentValues.filter((v) => v !== '전체');
+
       if (newValue === '전체' || newValue === '0') {
-        updatedParams.set(key, '전체');
+        updatedParams.set(key, '전체'); // 지역도 기본값으르 '전체'로
       } else if (currentValues.includes(newValue)) {
         // 이미 선택된 값이면 제거
         const newValues = currentValues.filter((v) => v !== newValue);
-        updatedParams.set(
-          key,
-          newValues.length === 0 ? '전체' : newValues.join(','),
-        );
+        // 제거 후 남은 값이 전체 옵션보다 1개 부족하면 '전체' 선택
+        if (newValues.length === allOptions.length - 1) {
+          updatedParams.set(key, '전체');
+        } else {
+          updatedParams.set(
+            key,
+            newValues.length === 0 ? '전체' : newValues.join(','),
+          );
+        }
       } else {
         // 새로운 값 추가
-        updatedParams.set(key, [...currentValues, newValue].join(','));
+        const newValues = [...currentValues, newValue];
+        // 추가 후 모든 옵션이 선택되면 '전체'로 변경
+        if (newValues.length === allOptions.length) {
+          updatedParams.set(key, '전체');
+        } else {
+          updatedParams.set(key, newValues.join(','));
+        }
       }
     }
 
