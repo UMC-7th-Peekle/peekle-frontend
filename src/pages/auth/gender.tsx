@@ -124,9 +124,7 @@ const GenderSelectionPage = () => {
             selected={selectedGender === '여성'}
             onClick={() => handleSelectGender('여성')}
           >
-            <Icon>
-              <WomanIcon />
-            </Icon>
+            <Icon>{/* <WomanIcon /> */}</Icon>
             <span>여성</span>
           </Option>
         </GenderOptions>

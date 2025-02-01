@@ -124,6 +124,12 @@ export interface ButtonProps
   width?: string;
 }
 
+export interface StyledButtonProps {
+  $color: BtnColor;
+  $size: BtnSize;
+  $width?: string;
+}
+
 // SquareButton
 export type SqureBtnIcon = 'myLocation' | 'filter';
 export interface SquareButtonProps
