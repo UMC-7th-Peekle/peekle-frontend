@@ -1,16 +1,25 @@
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { Button } from '@/components/common/input/button/index';
-import CompleteSVG from '@/assets/images/auth/complete.svg?react';
+
 const Container = styled.div`
-  display: fixed;
+  display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  height: 100vh;
+  padding: 20px;
+  font-family: Arial, sans-serif;
   background-color: #ffffff;
+  box-sizing: border-box;
 `;
 
 const Content = styled.div`
-  display: fixed;
+  display: flex;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
+  flex: 1;
 `;
 
 const Message = styled.h1`
@@ -20,7 +29,7 @@ const Message = styled.h1`
   font-weight: bold;
   color: #333;
   text-align: center;
-  margin-top: 350px;
+  margin-top: 0;
 `;
 const ButtonWrapper = styled.div`
   position: fixed;
@@ -30,12 +39,7 @@ const ButtonWrapper = styled.div`
   display: flex;
   justify-content: center;
 `;
-const CompleteIcon = styled(CompleteSVG)`
-  position: fixed;
-  top: 56px;
-  right: -10px;
-`;
-const CompletePage = () => {
+const SleeperPage = () => {
   const navigate = useNavigate();
   const handleStart = () => {
     navigate('/event');
@@ -43,7 +47,6 @@ const CompletePage = () => {
   return (
     <Container>
       <Content>
-        <CompleteIcon />
         <Message>
           피클1135님
           <br />
@@ -63,4 +66,4 @@ const CompletePage = () => {
     </Container>
   );
 };
-export default CompletePage;
+export default SleeperPage;

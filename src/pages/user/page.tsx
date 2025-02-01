@@ -1,9 +1,18 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { alert } from '@/utils';
+import NoticeSVG from '@/assets/images/user/notice.svg?react';
+import RequestSVG from '@/assets/images/user/request.svg?react';
+import TouSVG from '@/assets/images/user/notice.svg?react';
+import ManageSVG from '@/assets/images/user/manage.svg?react';
+import LogoutSVG from '@/assets/images/user/logout.svg?react';
+import ResignSVG from '@/assets/images/user/resign.svg?react';
+import ProfileSVG from '@/assets/images/user/profile.svg?react';
+import LogoSVG from '@/assets/images/user/logo.svg?react';
+import Logo2SVG from '@/assets/images/user/logo2.svg?react';
 
 const Container = styled.div`
-  display: flex;
+  display: fixed;
   flex-direction: column;
   height: 100vh;
   background-color: #ffffff;
@@ -16,17 +25,10 @@ const Header = styled.div`
   background-color: #fff;
   font-size: 20px;
   font-weight: bold;
-
-  margin-top: -20px;
+  margin-top: -5px;
   font-family: 'Pretendard', sans-serif;
   font-weight: 600;
-`;
-
-const Logo = styled.span`
-  font-family: 'Arial', sans-serif;
-  font-size: 24px;
-  font-weight: bold;
-  margin-right: 8px;
+  color: black;
 `;
 
 const ProfileSection = styled.div`
@@ -36,14 +38,6 @@ const ProfileSection = styled.div`
   align-items: center; /* 세로 중앙 정렬 */
   justify-content: space-between;
   margin-top: -20px;
-`;
-
-const ProfileImage = styled.img`
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background-color: #ddd;
-  margin-bottom: 10px;
 `;
 
 const Username = styled.h2`
@@ -92,10 +86,12 @@ const MenuItem = styled.div`
   &:last-child {
     border-bottom: none;
   }
+  gap: 20px;
 `;
 
 const MenuText = styled.span`
-  font-size: 14px;
+  font-size: 18px;
+  margin-right: 190px;
 `;
 
 const MenuIcon = styled.span`
@@ -137,11 +133,12 @@ const UserPage = () => {
     <Container>
       {/* 상단 로고 + 내 정보 헤더 */}
       <Header>
-        <Logo>peekle</Logo>내 정보
+        <LogoSVG />
+        <Logo2SVG />
       </Header>
       {/* 프로필 영역 */}
       <ProfileSection>
-        <ProfileImage src="/path/to/profile-image.png" alt="프로필 이미지" />
+        <ProfileSVG />
         <Username>피클1135</Username> {/*데이터 가져와야함*/}
         <EditButton onClick={handleEdit}>프로필 수정</EditButton>
       </ProfileSection>
@@ -150,15 +147,18 @@ const UserPage = () => {
       <Section>
         <SectionTitle>고객센터</SectionTitle>
         <MenuItem>
-          <MenuText>📢 공지사항</MenuText>
+          <NoticeSVG />
+          <MenuText>공지사항</MenuText>
           <MenuIcon onClick={handleNotice}>›</MenuIcon>
         </MenuItem>
         <MenuItem>
-          <MenuText>📞 문의하기</MenuText>
+          <RequestSVG />
+          <MenuText>문의하기</MenuText>
           <MenuIcon onClick={handleRequest}>›</MenuIcon>
         </MenuItem>
         <MenuItem>
-          <MenuText>📜 약관 및 정책</MenuText>
+          <TouSVG />
+          <MenuText>약관 및 정책</MenuText>
           <MenuIcon onClick={handleTou}>›</MenuIcon>
         </MenuItem>
       </Section>
@@ -167,15 +167,18 @@ const UserPage = () => {
       <Section>
         <SectionTitle>기타</SectionTitle>
         <MenuItem>
-          <MenuText>⚙️ 내 정보 관리</MenuText>
+          <ManageSVG />
+          <MenuText>내 정보 관리</MenuText>
           <MenuIcon onClick={handleManage}>›</MenuIcon>
         </MenuItem>
         <MenuItem>
-          <MenuText>🚪 로그아웃</MenuText>
+          <LogoutSVG />
+          <MenuText>로그아웃</MenuText>
           <MenuIcon onClick={handleLogout}>›</MenuIcon>
         </MenuItem>
         <MenuItem>
-          <MenuText>🗑️ 회원 탈퇴</MenuText>
+          <ResignSVG />
+          <MenuText>회원 탈퇴</MenuText>
           <MenuIcon onClick={handleResign}>›</MenuIcon>
         </MenuItem>
       </Section>

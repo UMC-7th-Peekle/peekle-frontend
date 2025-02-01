@@ -6,7 +6,7 @@ import { BottomSheet, Button } from '@/components';
 import { useBottomSheetStore } from '@/stores';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
-
+import ResendSVG from '@/assets/images/auth/resend.svg?react';
 const CertifyPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -102,7 +102,7 @@ const CertifyPage = () => {
           />
         ))}
         <ResendWrapper onClick={handleResend}>
-          <ResendIcon>🔄</ResendIcon> 재전송
+          <ResendSVG /> 재전송
         </ResendWrapper>
       </InputWrapper>
       <HelpButton onClick={() => setActiveBottomSheet('helpsheet')}>
@@ -111,7 +111,7 @@ const CertifyPage = () => {
       <ButtonWrapper>
         <Button
           color="primary500"
-          size="small"
+          size="medium"
           width="412px"
           onClick={handleVerify}
         >
@@ -229,9 +229,6 @@ const HelpButton = styled.button`
   font-family: 'Pretendard', sans-serif;
   font-weight: 600;
   color: #464b53;
-`;
-const ResendIcon = styled.span`
-  margin-right: 5px;
 `;
 const SheetContent = styled.div`
   padding: 20px;

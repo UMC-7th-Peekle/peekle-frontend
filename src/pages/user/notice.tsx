@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { Backward } from '@/components';
-
+import NotiSVG from '@/assets/images/user/noti.svg?react';
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -23,19 +23,10 @@ const Header = styled.div`
   color: black;
 `;
 
-const NoticeSection = styled.div`
-  background-color: #fff;
-  padding: 20px;
-  display: flex;
-  justify-content: center;
-`;
-
-const Notice = styled.h2`
-  font-size: 16px;
-  color: #9ea4a9;
-  margin: 40px;
-  font-family: 'Pretendard', sans-serif;
-  font-weight: 400;
+const NotiIcon = styled(NotiSVG)`
+  position: fixed;
+  top: 70px;
+  left: -10px;
 `;
 const BackwardWrapper = styled.div`
   position: absolute;
@@ -50,9 +41,7 @@ const NoticePage = () => {
         <Backward />
       </BackwardWrapper>
       <Header>공지사항</Header>
-      <NoticeSection>
-        <Notice>아직 공지사항 없어요</Notice>
-      </NoticeSection>
+      <NotiIcon />
     </Container>
   );
 };

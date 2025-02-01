@@ -20,15 +20,16 @@ import TosPage from '@/pages/auth/tos';
 import PrivacyPage from '@/pages/auth/privacy';
 import TermsLocationPage from '@/pages/auth/terms-location';
 import CompletePage from '@/pages/auth/complete';
+import SleeperPage from '@/pages/auth/sleeper';
 import EditPage from '@/pages/user/edit';
 import NoticePage from '@/pages/user/notice';
 import RequestPage from '@/pages/user/request';
 import TouPage from '@/pages/user/tou';
 import ManagePage from '@/pages/user/manage';
-import ResignPage from '@/pages/user/resign';
 import { ROUTES } from '@/constants/routes';
 import { CommunityLikePage, CommunityPage, CommunitySearchPage } from '@/pages';
 import { ErrorFallback } from '@/components';
+import ResignPage from '@/pages/user/resign';
 
 const ProtectedPage = ({ children }: { children: React.ReactNode }) => {
   // 로그인 여부 확인해 페이지 보호 필요
@@ -80,6 +81,10 @@ const router = createBrowserRouter([
       {
         path: '/auth/complete',
         element: <CompletePage />,
+      },
+      {
+        path: '/auth/sleeper',
+        element: <SleeperPage />,
       },
       {
         path: '/event',
@@ -134,7 +139,7 @@ const router = createBrowserRouter([
         element: <EditPage />,
       },
       {
-        path: '/auth/notice',
+        path: '/user/notice',
         element: <NoticePage />,
       },
       {
@@ -146,11 +151,11 @@ const router = createBrowserRouter([
         element: <TouPage />,
       },
       {
-        path: '/auth/manage',
+        path: '/user/manage',
         element: <ManagePage />,
       },
       {
-        path: '/auth/resign',
+        path: '/user/resign',
         element: <ResignPage />,
       },
       {

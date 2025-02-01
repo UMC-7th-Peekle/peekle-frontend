@@ -2,7 +2,8 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { Backward } from '@/components';
 import { Button } from '@/components/common/input/button/index';
-import WomanSVG from '@/assets/images/auth/w.svg?react';
+import ManDefaultSVG from '@/assets/images/auth/mandefault.svg?react';
+import WomanSVG from '@/assets/images/auth/woman.svg?react';
 
 const Container = styled.div`
   display: flex;
@@ -43,39 +44,6 @@ const GenderOptions = styled.div`
   justify-content: center;
 `;
 
-const Option = styled.div<{ selected: boolean }>`
-  font-family: 'Pretendard', sans-serif;
-  font-weight: 700;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 150px;
-  height: 180px;
-  border: 2px solid ${(props) => (props.selected ? 'rgb(74, 166, 98)' : '#ccc')};
-  border-radius: 8px;
-  background-color: ${(props) =>
-    props.selected ? 'rgb(209, 235, 216)' : '#f9f9f9'};
-  cursor: pointer;
-  transition: all 0.3s ease;
-
-  &:hover {
-    border-color: rgb(74, 166, 98);
-  }
-
-  img {
-    width: 48px;
-    height: 48px;
-    margin-top: 25px;
-  }
-
-  span {
-    font-size: 16px;
-    color: #333;
-    margin-top: 10px;
-  }
-`;
-
 const BackwardWrapper = styled.div`
   position: absolute;
   top: 10px;
@@ -85,18 +53,10 @@ const ButtonWrapper = styled.div`
   position: fixed;
   bottom: 0;
   left: 0;
-  margin-top: 60px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 `;
-const Icon = styled.div`
-  position: fixed;
-  bottom: 20;
-  top: 40;
-`;
-const WomanIcon = styled(WomanSVG)`
-  width: 16px;
-  height: 16px;
-`;
-
 const GenderSelectionPage = () => {
   const [selectedGender, setSelectedGender] = useState<string | null>(null);
 
@@ -113,22 +73,8 @@ const GenderSelectionPage = () => {
         <Title>성별을 선택해주세요</Title>
         <Subtitle>더 나은 서비스 제공과 통계 분석에 활용될 수 있어요.</Subtitle>
         <GenderOptions>
-          <Option
-            selected={selectedGender === '남성'}
-            onClick={() => handleSelectGender('남성')}
-          >
-            <img src="male-icon.png" alt="남성" />
-            <span>남성</span>
-          </Option>
-          <Option
-            selected={selectedGender === '여성'}
-            onClick={() => handleSelectGender('여성')}
-          >
-            <Icon>
-              <WomanIcon />
-            </Icon>
-            <span>여성</span>
-          </Option>
+          <ManDefaultSVG onClick={() => handleSelectGender('남성')} />
+          <WomanSVG onClick={() => handleSelectGender('여성')} />
         </GenderOptions>
         <ButtonWrapper>
           <Button
