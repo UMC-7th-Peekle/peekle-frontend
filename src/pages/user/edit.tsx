@@ -110,8 +110,10 @@ const EditPage = () => {
       'warning',
       '취소',
       '변경',
-      () => console.log('닉네임 변경 취소됨'),
-      handleConfirmed,
+      () => {},
+      () => {
+        handleConfirmed();
+      },
     );
   };
   const handleConfirmed = () => {
