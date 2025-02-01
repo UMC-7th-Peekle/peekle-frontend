@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Backward } from '@/components';
+import { useState } from 'react';
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -60,7 +61,14 @@ const MenuText = styled.span`
   font-family: 'Pretendard', sans-serif;
   font-weight: 500;
 `;
-
+const Input = styled.input`
+  font-size: 18px;
+  padding: 5px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #ccc;
+  width: 150px;
+  text-align: center;
+`;
 const EditButton = styled.button`
   background-color: #f6f8fa;
   border: none;
@@ -73,10 +81,25 @@ const EditButton = styled.button`
   font-family: 'Pretendard', sans-serif;
   font-weight: 600;
 `;
-
+const SaveButton = styled(EditButton)`
+  background-color: #f6f8fa;
+`;
 const ManagePage = () => {
   ///const location = useLocation();
   //const { phone, name, birthDate } = location.state || {};
+  const [phone, setPhone] = useState('01000000000');
+  const [isEditing, setIsEditing] = useState(false);
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/[^0-9]/g, ''); // 숫자만 입력 가능
+    setPhone(value);
+  };
+  const handleEditClick = () => {
+    setIsEditing(true);
+  };
+  const handleSaveClick = () => {
+    setIsEditing(false);
+    console.log('✅ 새로운 번호:', phone);
+  };
   return (
     <Container>
       <BackwardWrapper>
@@ -88,22 +111,38 @@ const ManagePage = () => {
       <Section>
         <SectionTitle>이름</SectionTitle>
         <MenuItem>
-          <MenuText>홍길동</MenuText>
+          <MenuText>구자연</MenuText>
         </MenuItem>
       </Section>
 
       <Section>
         <SectionTitle>생년월일</SectionTitle>
         <MenuItem>
-          <MenuText>1972.02.04</MenuText>
+          <MenuText>2002.08.05</MenuText>
         </MenuItem>
       </Section>
 
       <Section>
         <SectionTitle>휴대폰 번호</SectionTitle>
         <MenuItem>
-          <MenuText>010-0000-0000</MenuText>
-          <EditButton>변경</EditButton>
+          {isEditing ? (
+            <Input
+              type="text"
+              value={phone}
+              onChange={handlePhoneChange}
+              maxLength={11} // 📌 최대 11자리 제한
+              placeholder="전화번호 입력"
+            />
+          ) : (
+            <MenuText>
+              {phone.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3')}
+            </MenuText> // 📌 010-0000-0000 형식
+          )}
+          {isEditing ? (
+            <SaveButton onClick={handleSaveClick}>저장</SaveButton>
+          ) : (
+            <EditButton onClick={handleEditClick}>변경</EditButton>
+          )}
         </MenuItem>
       </Section>
     </Container>

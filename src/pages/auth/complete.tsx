@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { Button } from '@/components/common/input/button/index';
 import CompleteSVG from '@/assets/images/auth/complete.svg?react';
@@ -36,8 +36,13 @@ const CompleteIcon = styled(CompleteSVG)`
   top: 56px;
   right: -10px;
 `;
+const Highlight = styled.div`
+  color: #4aa662;
+`;
 const CompletePage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const nickname = location.state?.nickname || '피클1135';
   const handleStart = () => {
     navigate('/event');
   };
@@ -46,8 +51,7 @@ const CompletePage = () => {
       <Content>
         <CompleteIcon />
         <Message>
-          피클1135님
-          <br />
+          <Highlight>{nickname}</Highlight>
           가입을 환영합니다!
         </Message>
       </Content>

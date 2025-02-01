@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { Backward } from '@/components';
 import { Button } from '@/components/common/input/button/index';
 import { useNavigate } from 'react-router-dom';
-
 const PhoneNumberPage = () => {
   const navigate = useNavigate();
   const api = import.meta.env.VITE_API_URL;
@@ -13,7 +12,6 @@ const PhoneNumberPage = () => {
     string | null
   >(null);
   const [loading, setLoading] = useState(false);
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value.replace(/[^0-9]/g, ''); // 숫자만 입력
 
@@ -38,21 +36,16 @@ const PhoneNumberPage = () => {
         headers: {
           'Content-type': 'application/json',
         },
-        body: JSON.stringify({ PhoneNumber }),
+        body: JSON.stringify({ phone: PhoneNumber }),
       });
       const data = await response.json();
       if (response.ok) {
-        setPhoneVerificationSessionId(data.success.phoneVerificationSessionId);
+        setPhoneVerificationSessionId(data.phoneVerificationSessionId);
         console.log('phoneVerificationSessionId:', phoneVerificationSessionId);
         navigate('/auth/certify', {
           state: {
             phone: PhoneNumber,
             phoneVerificationSessionId: data.success.phoneVerificationSessionId,
-          },
-        });
-        navigate('/user/manage', {
-          state: {
-            phone: PhoneNumber,
           },
         });
       } else {

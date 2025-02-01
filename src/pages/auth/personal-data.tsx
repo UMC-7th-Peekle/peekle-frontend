@@ -205,13 +205,7 @@ const PersonalDataPage = () => {
   };
   const navigate = useNavigate();
   const handleComplete = () => {
-    navigate('/auth/complete');
-    navigate('/user/manage', {
-      state: {
-        name,
-        birth,
-      },
-    });
+    navigate('/auth/complete', { state: { nickname } });
   };
   const getCurrentTitle = () => {
     if (!nickname) return '사용하실 닉네임을\n입력해주세요';
