@@ -156,7 +156,10 @@ const Duration = () => {
                   date={endDateWithDayOfWeek}
                 />
               ) : (
-                <DateList.Plus isFocus={!isCalendarOpen} />
+                <DateList.Plus
+                  isFocus={!isCalendarOpen}
+                  onClick={() => setIsCalendarOpen(true)}
+                />
               )}
             </>
           ) : (

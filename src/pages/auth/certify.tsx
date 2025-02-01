@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import ResendSVG from '@/assets/images/auth/resend.svg?react';
 import { useEffect } from 'react';
+
 const CertifyPage = () => {
   const navigate = useNavigate();
   const location = useLocation();

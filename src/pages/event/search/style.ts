@@ -1,6 +1,9 @@
 import { theme } from '@/styles/theme';
 import styled from 'styled-components';
 import XSVG from '@/assets/images/icons/X.svg?react';
+import RecentSVG from '@/assets/images/icons/recent.svg?react';
+import NoRecentSearchSVG from '@/assets/images/null/noRecentSearch.svg?react';
+import mediaQuery from '@/styles/mediaQuery';
 
 export const Container = styled.section`
   width: 100%;
@@ -24,7 +27,7 @@ export const SearchContainer = styled.section`
 `;
 
 export const RecentSearchContainer = styled.section`
-  margin-top: 24px;
+  margin-top: 16px;
   display: flex;
   width: 100%;
   flex-direction: column;
@@ -63,16 +66,33 @@ export const RecentSearchText = styled.div`
   color: ${theme.color.gray[600]};
 `;
 
-export const XIcon = styled(XSVG)`
-  width: 18px;
-  height: 18px;
+export const Left = styled.span`
+  display: flex;
+  gap: 8px;
+  align-items: center;
   flex-shrink: 0;
-  color: ${theme.color.gray[600]};
 `;
 
-export const EmptyText = styled.p`
-  margin: 96px auto 0;
-  text-align: center;
-  ${theme.typeFace.body['18R']}
-  color: ${theme.color.gray[400]};
+export const RecentIcon = styled(RecentSVG)`
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: ${theme.color.gray[200]};
+`;
+
+export const XIcon = styled(XSVG)`
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: ${theme.color.gray[200]};
+`;
+
+export const NoRecentSearch = styled(NoRecentSearchSVG)`
+  margin-top: 56px;
+  align-self: center;
+  justify-self: center;
+
+  ${mediaQuery.sMobile`
+    margin-top: 0;
+  `};
 `;

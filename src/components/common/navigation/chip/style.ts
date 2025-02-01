@@ -10,5 +10,5 @@ export const Chip = styled.button<{ $isActive: boolean }>`
   ${({ $isActive }) =>
     $isActive ? theme.typeFace.body['16SB'] : theme.typeFace.body['16R']};
   background: ${({ $isActive }) =>
-    $isActive ? theme.color.gray[900] : theme.color.gray[50]};
+    $isActive ? theme.color.gray[900] : theme.color.gray[0]};
 `;

@@ -1,9 +1,10 @@
+import { ROUTES } from '@/constants/routes';
 export const routesWithNavbar = [
   // 이벤트
-  '/event',
-  '/event/map',
+  ROUTES.EVENT,
+  ROUTES.EVENT_MAP,
   // 커뮤니티
-  '/community',
+  ROUTES.COMMUNITY,
   // auth
-  '/user',
+  ROUTES.USER,
 ];

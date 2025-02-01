@@ -6,7 +6,7 @@ import Event from '@/assets/images/navbar/event.svg?react';
 import EventFocus from '@/assets/images/navbar/event.focus.svg?react';
 import User from '@/assets/images/navbar/user.svg?react';
 import UserFocus from '@/assets/images/navbar/user.focus.svg?react';
-import { ROUTES } from '@/layouts/navbar/const';
+import { ROUTES } from '@/constants/routes';
 
 const Navbar = () => {
   const location = useLocation();
@@ -15,15 +15,15 @@ const Navbar = () => {
     <S.NavbarContainer>
       {/* Event */}
       <S.NavItem>
-        <Link to={ROUTES.event}>
-          {location.pathname === ROUTES.event ? <EventFocus /> : <Event />}
+        <Link to={ROUTES.EVENT}>
+          {location.pathname.includes('event') ? <EventFocus /> : <Event />}
         </Link>
       </S.NavItem>
 
       {/* Community */}
       <S.NavItem>
-        <Link to={ROUTES.community}>
-          {location.pathname === ROUTES.community ? (
+        <Link to={ROUTES.COMMUNITY}>
+          {location.pathname.includes('community') ? (
             <CommunityFocus />
           ) : (
             <Community />
@@ -33,8 +33,8 @@ const Navbar = () => {
 
       {/* User */}
       <S.NavItem>
-        <Link to={ROUTES.user}>
-          {location.pathname === ROUTES.user ? <UserFocus /> : <User />}
+        <Link to={ROUTES.USER}>
+          {location.pathname.includes('user') ? <UserFocus /> : <User />}
         </Link>
       </S.NavItem>
     </S.NavbarContainer>

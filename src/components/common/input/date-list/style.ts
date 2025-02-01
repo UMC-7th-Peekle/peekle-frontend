@@ -19,7 +19,8 @@ export const DateListCard = styled.div.withConfig({
   ${theme.typeFace.body['18SB']};
 
   ${mediaQuery.sMobile`
-    ${theme.typeFace.caption['14B']};
+    ${theme.typeFace.caption['12B']};
+    padding: 10px 8px;
   `}
 `;
 
@@ -34,5 +35,12 @@ export const DateListTextPlus = styled.p`
 
 export const PlusIcon = styled(Plus)`
   width: 20px;
+  height: 20px;
+  flex-shrink: 0;
   color: ${theme.color.gray['400']};
+
+  ${mediaQuery.sMobile`
+    width: 10px;
+    height: 10px;
+  `}
 `;

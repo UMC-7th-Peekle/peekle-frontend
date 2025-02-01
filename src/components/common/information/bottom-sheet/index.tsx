@@ -2,6 +2,7 @@ import * as S from './style';
 import { useState, useEffect } from 'react';
 import { BottomSheetProps } from '@/types/common';
 import { useBottomSheetStore, useNavbarStore } from '@/stores';
+import { routesWithNavbar } from '@/layouts/outlet/const';
 
 const BottomSheet = ({
   id,
@@ -22,7 +23,10 @@ const BottomSheet = ({
     } else {
       const timer = setTimeout(() => {
         setIsRendered(false); // 애니메이션 종료 후 렌더링 중지
-        if (shouldShowNavbar) setShouldShowNavbar(true);
+        // 현재 경로가 routesWithNavbar에 포함되어 있으면
+        if (routesWithNavbar.includes(location.pathname)) {
+          setShouldShowNavbar(true); // 네비게이션바 표시
+        }
       }, 300); // 애니메이션 시간 (300ms)
       return () => clearTimeout(timer);
     }

@@ -6,6 +6,9 @@ export const EventCard = styled.div`
   display: flex;
   gap: 20px;
   align-self: stretch;
+  width: 100%;
+  justify-content: space-between;
+  background-color: ${theme.color.gray[0]};
 `;
 
 export const ImageContainer = styled.div`

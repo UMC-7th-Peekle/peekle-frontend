@@ -3,11 +3,10 @@ import axios, {
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from 'axios';
-
+import ApiError from './apiError';
 interface CustomInternalAxiosRequestConfig extends InternalAxiosRequestConfig {
   requireAuth?: boolean;
 }
-
 // accessToken이 필요 없을 때 쓰이는 axios 함수입니다.
 export const client = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -40,9 +39,11 @@ client.interceptors.response.use(
     return response;
   },
   (error) => {
-    console.log(error.response.data);
     if (error.response) {
-      console.error('Response error:', error.response.status);
+      const { data } = error.response;
+      const errorCode = data?.error?.errorCode ?? 'UNKNOWN_ERROR';
+      const reason = data?.error?.reason ?? '알 수 없는 오류입니다.';
+      const apiError = new ApiError(errorCode, reason, data);
 
       /* 액세스 토큰 만료 시 로직 처리 */
       if (error.response.data.code === 'TOKEN_003') {
@@ -50,6 +51,9 @@ client.interceptors.response.use(
         localStorage.clear();
         window.location.href = '/';
       }
+
+      // ApiError 객체 반환
+      return Promise.reject(apiError);
     } else if (error.request) {
       console.error('Request error:', error.request);
     } else {

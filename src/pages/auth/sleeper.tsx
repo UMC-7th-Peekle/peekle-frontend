@@ -65,6 +65,7 @@ const BoxText = styled.p`
 
 const Footer = styled.div`
   display: flex;
+
   position: fixed;
   bottom: 0;
   left: 0;

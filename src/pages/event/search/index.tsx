@@ -1,32 +1,19 @@
 import * as S from './style';
-import { useState } from 'react';
-import { useQueryState } from 'nuqs';
 import { EventList } from '@/components';
 import { SearchBar } from '@/layouts/search-bar';
+import { useRecentSearch } from '@/hooks';
 
 const EventSearchPage = () => {
-  // 쿼리 파람으로 검색 여부 확인
-  const [query, setQuery] = useQueryState('event-search');
-  const isSearched = !!query;
-  const [recentSearch, setRecentSearch] = useState<string[]>(() =>
-    JSON.parse(localStorage.getItem('recent-event-search') ?? '[]'),
-  );
-
-  const handleClear = () => {
-    localStorage.removeItem('recent-event-search');
-    setRecentSearch([]);
-  };
-
-  const handleRemoveRecentSearch = (search: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    const newSearches = recentSearch.filter((item) => item !== search);
-    localStorage.setItem('recent-event-search', JSON.stringify(newSearches));
-    setRecentSearch(newSearches);
-  };
-
-  const handleRecentSearchClick = (search: string) => {
-    setQuery(search);
-  };
+  const {
+    isSearched,
+    recentSearch,
+    handleClear,
+    handleRemoveRecentSearch,
+    handleRecentSearchClick,
+  } = useRecentSearch({
+    queryKey: 'event-search',
+    localKey: 'recent-event-search',
+  });
 
   return (
     <S.Container>
@@ -46,12 +33,15 @@ const EventSearchPage = () => {
               <S.ClearButton onClick={handleClear}>전체 삭제</S.ClearButton>
             </S.RecentSearchRow>
             <S.RecentSearchTextContainer>
-              {recentSearch.map((search: string) => (
+              {recentSearch.map((search: string, index: number) => (
                 <S.RecentSearchRow
-                  key={`${search}-${new Date().getTime()}`}
+                  key={`${search}-${index}`}
                   onClick={() => handleRecentSearchClick(search)}
                 >
-                  <S.RecentSearchText>{search}</S.RecentSearchText>
+                  <S.Left>
+                    <S.RecentIcon />
+                    <S.RecentSearchText>{search}</S.RecentSearchText>
+                  </S.Left>
                   <S.XIcon
                     onClick={(e) => handleRemoveRecentSearch(search, e)}
                   />
@@ -60,9 +50,9 @@ const EventSearchPage = () => {
             </S.RecentSearchTextContainer>
           </S.RecentSearchContainer>
         ) : (
-          <S.EmptyText>최근 검색 내역이 없습니다.</S.EmptyText>
+          <S.NoRecentSearch />
         ))}
-      {isSearched && <EventList isSearchPage={true} />}
+      {isSearched && <EventList page={'search'} />}
     </S.Container>
   );
 };

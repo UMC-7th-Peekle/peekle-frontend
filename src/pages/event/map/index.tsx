@@ -1,25 +1,20 @@
 import * as S from './style';
-import { MapBottomSheet, Filter, EventMap, EventCard } from '@/components';
-import { useMapStore, useBottomSheetStore } from '@/stores';
-import { BOTTOM_SHEET_ID_EVENT_INFO } from '@/constants/event';
+import {
+  BottomSheet,
+  BottomSheetTabs,
+  MapHeader,
+  EventMap,
+} from '@/components';
+import { BOTTOM_SHEET_ID_EVENT_FILTER } from '@/constants/event';
 
 const EventMapPage = () => {
-  const { selectedEvent } = useMapStore();
-  const { setActiveBottomSheet } = useBottomSheetStore();
-
   return (
     <S.Container>
-      <S.HeaderContainer>
-        // search
-        <Filter />
-      </S.HeaderContainer>
       <EventMap />
-      <MapBottomSheet id={BOTTOM_SHEET_ID_EVENT_INFO}>
-        <EventCard
-          onClick={() => setActiveBottomSheet(null)}
-          id={selectedEvent?.id as string}
-        />
-      </MapBottomSheet>
+      <MapHeader />
+      <BottomSheet id={BOTTOM_SHEET_ID_EVENT_FILTER}>
+        <BottomSheetTabs />
+      </BottomSheet>
     </S.Container>
   );
 };

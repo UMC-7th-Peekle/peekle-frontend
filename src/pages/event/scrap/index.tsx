@@ -1,12 +1,18 @@
 import * as S from './style';
-import { EventList } from '@/components';
+import { Backward, CategoryChips, EventList } from '@/components';
 
 const EventScrapPage = () => {
   return (
-    <S.Container>
-      <p>이벤트 스크랩 페이지</p>
-      <EventList />
-    </S.Container>
+    <S.EventScrapContainer>
+      <S.Header>
+        <Backward />
+        <S.Title>찜한 이벤트</S.Title>
+      </S.Header>
+      <S.CategoryFilterWrapper>
+        <CategoryChips />
+      </S.CategoryFilterWrapper>
+      <EventList page={'scrap'} />
+    </S.EventScrapContainer>
   );
 };
 

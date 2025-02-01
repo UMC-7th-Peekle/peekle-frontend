@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import defaultSVG from '@/assets/images/onboarding/default.svg?react';
 import KakaoSVG from '@/assets/images/onboarding/kakao.svg?react';
 import PhoneSVG from '@/assets/images/onboarding/phone.svg?react';
+
 import HeaderSVG from '@/assets/images/onboarding/header.svg?react';
 import Onboard2SVG from '@/assets/images/onboarding/onboard2.svg?react';
 import Onboard3SVG from '@/assets/images/onboarding/onboard3.svg?react';
@@ -112,6 +113,7 @@ const ButtonWrapper = styled.div`
   align-items: center;
   font-family: 'Pretendard', sans-serif;
   font-weight: 600;
+<<<<<<< HEAD
 `;
 
 const DefaultIcon = styled(defaultSVG)`

@@ -1,10 +1,10 @@
+import mediaQuery from '@/styles/mediaQuery';
 import styled from 'styled-components';
 
 export const TabsContainer = styled.section`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 20px;
+  ${mediaQuery.sMobile`
+    gap: 15px;
+  `}
 `;
 
 export const ListContainer = styled.header`
@@ -17,9 +17,15 @@ export const ListContainer = styled.header`
 
 export const PanelContainer = styled.section`
   width: 100%;
-  padding: 0 20px;
+  padding: 20px 20px 120px; // 버튼 높이 제외
   display: flex;
   flex-direction: column;
+  max-height: 80vh;
+  overflow-y: auto;
+
+  ${mediaQuery.sMobile`
+    padding-bottom: 100px;
+  `}
 `;
 
 export const TriggerBtn = styled.button<{ $isActive: boolean }>`

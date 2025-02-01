@@ -1,20 +1,29 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import ArrowLeft from '@/assets/images/icons/arrow-left.svg?react';
 import ArrowRight from '@/assets/images/icons/arrow-right.svg?react';
 import { theme } from '@/styles/theme';
+import mediaQuery from '@/styles/mediaQuery';
 
 export const Container = styled.section`
   display: flex;
   flex-direction: column;
   gap: 20px;
+
+  ${mediaQuery.sMobile`
+    gap: 10px;
+  `}
 `;
 
 export const TopContainer = styled.section`
   display: flex;
   flex-direction: column;
   gap: 20px;
+
+  ${mediaQuery.sMobile`
+    gap: 10px;
+  `}
 `;
 
 export const ChipContainer = styled.div`
@@ -54,6 +63,15 @@ export const StyledCalendar = styled(Calendar)<{
   font-family: 'Pretendard', sans-serif;
   border: none;
 
+  ${mediaQuery.sMobile`
+    height: 340px;
+    margin-bottom: 20px;
+  `}
+
+  ${mediaQuery.xsMobile`
+    height: 310px;
+  `}
+
   /* 네비게이션 */
   .react-calendar__navigation {
     display: flex;
@@ -65,10 +83,13 @@ export const StyledCalendar = styled(Calendar)<{
     .react-calendar__navigation__label {
       flex: 1;
       text-align: center;
-      font-size: 1.125rem; /* 18px */
-      font-weight: 600;
+      ${theme.typeFace.body['18SB']};
       background-color: ${theme.color.gray['0']};
       pointer-events: none;
+
+      ${mediaQuery.sMobile`
+        ${theme.typeFace.body['16SB']};
+      `}
     }
 
     /* 달 넘기는 버튼 스타일 */
@@ -237,14 +258,22 @@ export const StyledCalendar = styled(Calendar)<{
 `;
 
 /* 화살표 아이콘 스타일 */
-export const StyledArrowLeft = styled(ArrowLeft)`
+const ArrowStyle = css`
   width: 18px;
   height: 18px;
-  ${theme.color.gray['500']};
+  ${theme.color.gray[600]};
+  flex-shrink: 0;
+
+  ${mediaQuery.sMobile`
+    width: 10px;
+    height: 10px;
+  `}
+`;
+
+export const StyledArrowLeft = styled(ArrowLeft)`
+  ${ArrowStyle}
 `;
 
 export const StyledArrowRight = styled(ArrowRight)`
-  width: 18px;
-  height: 18px;
-  ${theme.color.gray['500']};
+  ${ArrowStyle}
 `;

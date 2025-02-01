@@ -7,7 +7,7 @@ export interface PortalProps {
 }
 
 // modal
-export type AlertIconType = 'none' | 'warning' | 'camera';
+export type AlertIconType = 'none' | 'warning' | 'camera' | 'logout';
 export interface AlertStore {
   isOpen: boolean;
   message: string;
@@ -130,7 +130,31 @@ export interface StyledButtonProps {
   $width?: string;
 }
 
+// SquareButton
+export type SqureBtnIcon = 'myLocation' | 'filter';
+export interface SquareButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  icon: SqureBtnIcon;
+}
+
+// RoundedButton
+export type RoundedBtnIcon = 'map' | 'menu';
+export interface RoundedButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  icon: RoundedBtnIcon;
+  text: string;
+}
+
 // Backward
 export interface BackSVGProps {
   $size?: string;
+}
+
+// MetaTag
+export interface MetaTagProps {
+  title: string;
+  description: string;
+  keywords: string;
+  imgsrc?: string;
+  url: string;
 }

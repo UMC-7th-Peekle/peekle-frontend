@@ -7,6 +7,8 @@ import LocationSVG from '@/assets/images/icons/location-filled.svg?react';
 import CoinSVG from '@/assets/images/icons/coin.svg?react';
 import KakaoSVG from '@/assets/images/icons/kakao.svg?react';
 import LinkSVG from '@/assets/images/icons/link-rounded.svg?react';
+import ArrowDownSVG from '@/assets/images/icons/arrow-down.svg?react';
+import XSVG from '@/assets/images/icons/X.svg?react';
 
 export const Header = styled.header`
   display: flex;
@@ -19,6 +21,11 @@ export const ShareBtn = styled(ShareSVG)`
   width: 28px;
   height: 28px;
   color: ${theme.color.gray[600]};
+`;
+
+export const SkeletonContainer = styled.div`
+  position: fixed;
+  top: 48px; // 헤더 부분
 `;
 
 export const MainSection = styled.section`
@@ -58,17 +65,71 @@ export const Info = styled.article`
   flex-direction: column;
   align-items: flex-start;
   gap: 16px;
+  width: 100%;
 `;
 
 export const InfoRow = styled.div`
   display: flex;
   align-items: center;
   gap: 20px;
+  position: relative; // 상세 주소 드롭다운용
+  width: 100%;
 `;
 
 export const InfoRowText = styled.span`
   color: ${theme.color.gray[600]};
   ${theme.typeFace.body['16R']}
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+export const ArrowDownIcon = styled(ArrowDownSVG)<{ $isExpanded: boolean }>`
+  width: 16px;
+  height: 16px;
+  color: ${theme.color.gray[600]};
+  transform: ${({ $isExpanded }) =>
+    $isExpanded ? 'rotate(-180deg)' : 'rotate(0deg)'};
+
+  transition: transform 0.2s;
+`;
+
+export const DetailAddressCard = styled.div<{ $isExpanded: boolean }>`
+  position: absolute;
+  top: 30px;
+  display: flex;
+  padding: 16px 24px;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 16px;
+  align-self: stretch;
+  border-radius: ${theme.borderRadius.sm};
+  background: ${theme.color.gray[0]};
+  box-shadow: 0px 0px 16px 0px rgba(0, 0, 0, 0.16);
+  display: ${({ $isExpanded }) => ($isExpanded ? 'block' : 'none')};
+  z-index: 1;
+`;
+
+export const DetailAddressTextWrapper = styled.div`
+  ${theme.typeFace.body['16R']};
+`;
+
+export const DetailAddressText = styled.span`
+  ${theme.typeFace.body['16R']};
+  color: ${theme.color.gray[600]};
+`;
+
+export const DetailAddressCopyText = styled.span`
+  color: ${theme.color.sementic.blue};
+  margin-left: 10px;
+  cursor: pointer;
+`;
+
+export const XIcon = styled(XSVG)`
+  width: 18px;
+  height: 18px;
+  flex: 1 0 0;
+  color: ${theme.color.gray[500]};
 `;
 
 const InfoIconStyle = css`
@@ -99,9 +160,9 @@ export const Separator = styled.div`
   height: 12px;
 `;
 
-export const DescriptionContainer = styled.article`
+export const ContentContainer = styled.article`
   display: flex;
-  padding: 32px 0px 48px 0px;
+  padding: 32px 0px 60px;
   flex-direction: column;
   align-items: flex-start;
   gap: 16px;
@@ -109,12 +170,13 @@ export const DescriptionContainer = styled.article`
   color: ${theme.color.gray[900]};
 `;
 
-export const DescriptionTitle = styled.h2`
+export const ContentTitle = styled.h2`
   ${theme.typeFace.subTitle[20]}
 `;
 
-export const Description = styled.p`
+export const Content = styled.p`
   ${theme.typeFace.body['18R']}
+  white-space: pre-wrap; // 입력받은 문자열 줄바꿈 유지
 `;
 
 // 하단 버튼 컨테이너

@@ -3,9 +3,10 @@ import { theme } from '@/styles/theme';
 import HamburgerSVG from '@/assets/images/icons/hamburger.svg?react';
 import SortSVG from '@/assets/images/icons/sort.svg?react';
 
-export const FilterContainer = styled.div`
+export const FilterContainer = styled.div<{ $isSearchPage: boolean }>`
   width: 100vw;
-  margin: 0 -16px; // 여백 없애기
+  margin: ${({ $isSearchPage }) =>
+    $isSearchPage ? '8px -16px 12px -16px' : '16px -16px 16px -16px'};
 `;
 
 export const FilterWrapper = styled.div`
@@ -29,9 +30,24 @@ export const SortWrapper = styled.span`
   gap: 2px;
 `;
 
+export const FillerTextWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 2px;
+`;
+
 export const FilterText = styled.h3`
   color: ${theme.color.gray[900]};
   ${theme.typeFace.body['16SB']};
+`;
+
+export const RedDot = styled.div`
+  width: 6px;
+  height: 6px;
+  flex: 1 0 0;
+  margin-top: -10px;
+  border-radius: ${theme.borderRadius.xxlg};
+  background-color: ${theme.color.sementic.red};
 `;
 
 const IconStyle = css`

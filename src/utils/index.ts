@@ -19,3 +19,9 @@ export { default as copyToClipboard } from './copyToClipBoard';
 
 export { default as getCurrentPosition } from './getCurrentPosition';
 export { default as getMarker } from './getMarker';
+
+export {
+  getDistrict,
+  getStartDateTime,
+  formatSchedules,
+} from './eventFormatter';

@@ -96,28 +96,20 @@ const router = createBrowserRouter([
         element: <EventPage />,
       },
       {
-        path: '/event/map',
+        path: ROUTES.EVENT_MAP,
         element: <EventMapPage />,
       },
       {
-        path: '/event/search',
+        path: ROUTES.EVENT_SEARCH,
         element: <EventSearchPage />,
       },
       {
-        path: '/event/scrap',
+        path: ROUTES.EVENT_SCRAP,
         element: <EventScrapPage />,
       },
       {
-        path: '/event/:id',
+        path: ROUTES.EVENT_DETAIL,
         element: <EventDetailPage />,
-      },
-      {
-        path: '/auth/signup',
-        // element: <SignUpPage />
-      },
-      {
-        path: '/auth/signin',
-        // element: <SignInPage />
       },
       {
         path: ROUTES.COMMUNITY,
@@ -136,7 +128,7 @@ const router = createBrowserRouter([
         element: <CommunityEditPage />,
       },
       {
-        path: '/user',
+        path: ROUTES.USER,
         element: <UserPage />,
       },
       {

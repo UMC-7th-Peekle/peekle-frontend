@@ -2,10 +2,7 @@ import styled from 'styled-components';
 import { theme } from '@/styles/theme';
 
 export const Container = styled.section`
-  display: flex;
-  flex-direction: column;
   padding: 0 20px;
-  gap: 12px;
 `;
 
 export const Header = styled.header`
@@ -14,6 +11,7 @@ export const Header = styled.header`
   justify-content: center;
   align-items: center;
   align-self: stretch;
+  margin-bottom: 12px;
 `;
 
 export const Title = styled.h2`
@@ -23,7 +21,9 @@ export const Title = styled.h2`
 
 export const CloseButton = styled.button`
   display: flex;
-  margin: 0 -20px;
+  width: 100vw;
+  height: 42px;
+  margin: 12px -20px 0 -20px;
   padding: 16px;
   justify-content: center;
   align-items: center;

@@ -2,6 +2,7 @@ import { createGlobalStyle } from 'styled-components';
 import reset from 'styled-reset';
 import mediaQuery from './mediaQuery';
 import designTokens from './designTokens';
+import { theme } from './theme';
 
 const GlobalStyles = createGlobalStyle`
   ${reset};
@@ -58,6 +59,10 @@ const GlobalStyles = createGlobalStyle`
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     -webkit-overflow-scrolling: touch;
+
+    ${mediaQuery.tablet`
+      ${theme.typeFace.subTitle['20']};
+    `}
   }
 
   p, h1, h2, h3, h4, div, span {
@@ -82,12 +87,6 @@ const GlobalStyles = createGlobalStyle`
   img {
     display: block;
   }
-
-  ${mediaQuery.tablet`
-    body {
-      ${({ theme }) => theme.typeFace.subTitle['20']};
-    }
-  `}
 `;
 
 export default GlobalStyles;

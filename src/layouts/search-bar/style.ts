@@ -1,21 +1,13 @@
 import styled from 'styled-components';
 import Map from '@/assets/images/icons/map.svg?react';
 
-export const SearchBarWrapper3 = styled.div`
+export const SearchBarWrapper = styled.div`
+  margin: 0 -16px;
+  width: 100vw;
   display: flex;
+  padding: 8px 16px;
   align-items: center;
-  justify-content: space-around;
-  width: 100%;
-  margin-top: 8px;
-`;
-
-export const SearchBarWrapper2 = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 24px;
-  width: 100%;
-  margin-top: 8px;
+  gap: 12px;
 `;
 
 export const MapIcon = styled(Map)`

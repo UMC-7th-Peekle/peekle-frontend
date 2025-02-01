@@ -8,10 +8,9 @@ import {
   BOTTOM_SHEET_ID_EVENT_FILTER,
   BOTTOM_SHEET_ID_EVENT_SORT,
 } from '@/constants/event';
-import CategoryChips from './category-chips';
 
-const Filter = () => {
-  const { storedValue } = useEventFilter({
+const Filter = ({ isSearchPage = false }: { isSearchPage?: boolean }) => {
+  const { storedValue, activeFilterCount } = useEventFilter({
     key: '정렬',
     type: 'single',
   });
@@ -20,14 +19,20 @@ const Filter = () => {
 
   return (
     <>
-      <CategoryChips />
-      <S.FilterContainer>
+      <S.FilterContainer $isSearchPage={isSearchPage}>
         <S.FilterWrapper>
           <S.FiltersWrapper
             onClick={() => setActiveBottomSheet(BOTTOM_SHEET_ID_EVENT_FILTER)}
           >
             <S.HamburgerIcon />
-            <S.FilterText>필터</S.FilterText>
+            {activeFilterCount > 0 ? (
+              <S.FillerTextWrapper>
+                <S.FilterText>필터 ({activeFilterCount}개)</S.FilterText>
+                <S.RedDot />
+              </S.FillerTextWrapper>
+            ) : (
+              <S.FilterText>필터</S.FilterText>
+            )}
           </S.FiltersWrapper>
           <S.SortWrapper
             onClick={() => setActiveBottomSheet(BOTTOM_SHEET_ID_EVENT_SORT)}

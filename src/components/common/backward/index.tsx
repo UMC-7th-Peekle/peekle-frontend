@@ -2,7 +2,7 @@ import * as S from './style';
 import { useNavigate } from 'react-router-dom';
 
 const Backward = ({
-  size,
+  size = '24px',
   isErrorFallback = false,
 }: {
   size?: string;

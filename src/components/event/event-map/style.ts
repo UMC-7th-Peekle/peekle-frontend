@@ -1,11 +1,12 @@
+import { theme } from '@/styles/theme';
 import styled from 'styled-components';
-import MyLocationSVG from '@/assets/images/icons/my-location-rounded.svg?react';
 
 export const MapContainer = styled.div`
-  position: relative;
-  width: 100%;
-  margin-top: 12px;
-  height: calc(100vh - 210px); // 헤더, nav 영역 빼기
+  width: 100vw;
+  height: calc(100vh - var(--nav-height)); // nav 영역 빼기
+  margin-left: -16px;
+  position: absolute;
+  top: 0;
 `;
 
 export const Map = styled.div`
@@ -13,11 +14,28 @@ export const Map = styled.div`
   height: 100%;
 `;
 
-export const MyLocationIcon = styled(MyLocationSVG)<{
-  $bottomSheetHeight: number | 'auto';
-}>`
-  position: absolute;
-  left: 24px;
-  bottom: ${({ $bottomSheetHeight }) =>
-    $bottomSheetHeight === 'auto' ? '24px' : `${$bottomSheetHeight}px`};
+export const BottomContainer = styled.div`
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 0 20px;
+  bottom: calc(20px + var(--nav-height));
+`;
+
+export const ButtonContainer = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+`;
+
+export const EventCardWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  padding: 16px;
+  border-radius: ${theme.borderRadius.sm};
+  background: ${theme.color.gray[0]};
+  box-shadow: 0px 0px 16px 0px rgba(0, 0, 0, 0.16);
 `;

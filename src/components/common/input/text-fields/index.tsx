@@ -9,6 +9,7 @@ interface TextFieldsProps {
   max_width?: number;
   min_width?: number;
   localKey: string;
+  page?: 'eventMap' | ''; // 스타일 다르게 적용
 }
 
 export const TextFields = ({
@@ -18,6 +19,7 @@ export const TextFields = ({
   max_width,
   min_width,
   localKey,
+  page = '',
   onQuerySubmit = () => {},
 }: TextFieldsProps) => {
   const { inputValue, handleChange, handleKeyDown, handleClear } =
@@ -28,8 +30,8 @@ export const TextFields = ({
     });
 
   return (
-    <S.SearchWrapper max_width={max_width} min_width={min_width}>
-      <S.SearchIcon />
+    <S.SearchWrapper max_width={max_width} min_width={min_width} $page={page}>
+      <S.SearchIcon $page={page} />
       <S.SearchInput
         id="search-input"
         type="search"
@@ -40,6 +42,7 @@ export const TextFields = ({
         placeholder={placeholder}
         aria-label="검색어 입력"
         autoComplete="off"
+        $page={page}
       />
       {inputValue && <S.DeleteIcon onClick={handleClear} />}
     </S.SearchWrapper>

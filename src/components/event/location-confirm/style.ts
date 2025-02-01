@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import LocationSVG from '@/assets/images/icons/location-filled.svg?react';
+import mediaQuery from '@/styles/mediaQuery';
 
 export const LocationConfirm = styled.section`
   display: flex;
@@ -7,6 +8,10 @@ export const LocationConfirm = styled.section`
   align-items: center;
   gap: 40px;
   width: 284px;
+
+  ${mediaQuery.sMobile`
+    width: 250px;
+  `}
 `;
 
 export const ConfirmInfo = styled.section`
@@ -47,4 +52,5 @@ export const BtnContainer = styled.section`
   display: flex;
   flex-direction: column;
   gap: 24px;
+  width: 100%;
 `;

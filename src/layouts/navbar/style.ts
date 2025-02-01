@@ -6,9 +6,9 @@ export const NavbarContainer = styled.nav`
   bottom: 0;
   left: 0;
   display: flex;
-  width: 412px;
-  height: 64px;
-  padding: 0px 64px 4px 64px;
+  width: 100%;
+  height: var(--nav-height);
+  padding: 4px 64px 0;
   justify-content: space-between;
   align-items: center;
   width: 100%;
@@ -18,8 +18,6 @@ export const NavbarContainer = styled.nav`
 
 export const NavItem = styled.div`
   display: flex;
-  width: 52px;
-  height: 60px;
   justify-content: center;
   align-items: center;
   flex-shrink: 0;

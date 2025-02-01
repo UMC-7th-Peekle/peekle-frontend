@@ -23,7 +23,7 @@ export default Confirm;
  * const { close } = useConfirmStore(); // 모달 닫는 함수
  *
  * const handleOpenConfirm = () => {
- *    confirm( // 모달 내용을 넣어 주세요
+ *    confirm( // 모달 내용을 넣어 주세요 - 크기는 이 컴텐츠로 커스텀해주세요!
  *      <>
  *        <p>허용하시겠습니까?</p>
  *        <BtnContainer>

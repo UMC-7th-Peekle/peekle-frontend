@@ -59,7 +59,7 @@ export default function CommunitySearchPage() {
               </SS.RecentSearchTextContainer>
             </SS.RecentSearchContainer>
           ) : (
-            <SS.EmptyText>최근 검색 내역이 없습니다.</SS.EmptyText>
+            <SS.NoRecentSearch />
           ))}
         {error && (
           <BodySection.None

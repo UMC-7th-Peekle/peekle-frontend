@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { ROUTES } from '@/constants/routes';
 import { Button } from '@/components/common/input/button/index';
 import CompleteSVG from '@/assets/images/auth/complete.svg?react';
 
@@ -44,7 +45,7 @@ const CompletePage = () => {
   const location = useLocation();
   const nickname = location.state?.nickname || '피클1135';
   const handleStart = () => {
-    navigate('/event');
+    navigate(ROUTES.EVENT);
   };
   return (
     <Container>

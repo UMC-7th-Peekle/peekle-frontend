@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { theme } from '@/styles/theme';
 import CheckSVG from '@/assets/images/icons/check.svg?react';
+import mediaQuery from '@/styles/mediaQuery';
 
 export const CheckItem = styled.div`
   display: flex;
@@ -8,6 +9,10 @@ export const CheckItem = styled.div`
   padding: 14px 0;
   justify-content: space-between;
   align-items: center;
+
+  ${mediaQuery.sMobile`
+    padding: 7px 0;
+  `}
 `;
 
 export const Text = styled.div<{ $isActive: boolean }>`

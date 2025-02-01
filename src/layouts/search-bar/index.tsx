@@ -1,7 +1,7 @@
-import { useNavigate } from 'react-router-dom';
 import * as S from './style';
-import TextFields from '@/components/common/input/text-fields';
-import Backward from '@/components/common/backward';
+import { useNavigate } from 'react-router-dom';
+import { TextFields, Backward } from '@/components';
+import { ROUTES } from '@/constants/routes';
 
 interface SearchBarProps {
   page: 'event' | 'community';
@@ -20,12 +20,12 @@ export const SearchBar = ({
   const navigate = useNavigate();
 
   const handleTextFieldsClick = () => {
-    if (page === 'event') navigate('/event/search');
-    else navigate('/community/search');
+    if (page === 'event') navigate(ROUTES.EVENT_SEARCH);
+    else navigate(ROUTES.COMMUNITY_SEARCH);
   };
 
   return (
-    <S.SearchBarWrapper3>
+    <S.SearchBarWrapper>
       <Backward />
       <TextFields
         queryKey={queryKey}
@@ -33,6 +33,6 @@ export const SearchBar = ({
         onClick={handleTextFieldsClick}
         localKey={localKey}
       />
-    </S.SearchBarWrapper3>
+    </S.SearchBarWrapper>
   );
 };

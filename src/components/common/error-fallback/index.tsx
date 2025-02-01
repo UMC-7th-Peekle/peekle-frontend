@@ -7,6 +7,8 @@ const ErrorFallback = ({ error: propsError }: { error?: Error }) => {
   const routeError = useRouteError();
   const error = propsError ?? routeError;
 
+  console.error('[에러 발생]:', error);
+
   const handleRefresh = () => {
     if (isNetworkError(error as Error)) {
       toast('네트워크 연결을 확인해주세요');

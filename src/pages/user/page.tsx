@@ -11,6 +11,7 @@ import ProfileSVG from '@/assets/images/user/profile.svg?react';
 import LogoSVG from '@/assets/images/user/logo.svg?react';
 import Logo2SVG from '@/assets/images/user/logo2.svg?react';
 import ArrowSVG from '@/assets/images/user/arrow.svg?react';
+
 const Container = styled.div`
   display: fixed;
   flex-direction: column;
@@ -34,6 +35,7 @@ const Header = styled.div`
 const Logo2Icon = styled(Logo2SVG)`
   margin-right: 185px;
 `;
+
 const ProfileSection = styled.div`
   background-color: #fff;
   padding: 20px;
@@ -149,7 +151,6 @@ const UserPage = () => {
         <Username>자연32</Username> {/*데이터 가져와야함*/}
         <EditButton onClick={handleEdit}>프로필 수정</EditButton>
       </ProfileSection>
-
       {/* 고객센터 */}
       <Section>
         <SectionTitle>고객센터</SectionTitle>
@@ -160,7 +161,7 @@ const UserPage = () => {
         </MenuItem>
         <MenuItem>
           <RequestSVG />
-          <MenuText>문의하기</MenuText>
+          <MenuText>문의하기</MenuText>D
           <ArrowSVG onClick={handleRequest} />
         </MenuItem>
         <MenuItem>
