@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { ROUTES } from '@/constants/routes';
 
 const Container = styled.div`
   display: flex;
@@ -48,7 +49,7 @@ const Button = styled.button`
 const CompletePage = () => {
   const navigate = useNavigate();
   const handleStart = () => {
-    navigate('/event');
+    navigate(ROUTES.EVENT);
   };
   return (
     <Container>

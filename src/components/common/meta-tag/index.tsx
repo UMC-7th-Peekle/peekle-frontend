@@ -24,7 +24,7 @@ const MetaTag = ({
       <meta property="og:image" content={imgSrc} />
       <meta property="og:url" content={url} />
 
-      {/* ✅ Twitter Card (트위터 공유용) */}
+      {/* Twitter Card (트위터 공유용) */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
@@ -35,3 +35,14 @@ const MetaTag = ({
 };
 
 export default MetaTag;
+
+/** 사용 예시 
+ * SEO를 위해 사용 - 테스트 후 모든 페이지에 적용 예정
+ *
+ * <MetaTag
+    title={title}
+    description={content?.slice(0, 50)}
+    imgSrc={eventImages?.[0]?.imageUrl}
+    url={window.location.href}
+  />
+*/

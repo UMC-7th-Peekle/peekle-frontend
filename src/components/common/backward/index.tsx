@@ -1,5 +1,6 @@
 import * as S from './style';
 import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '@/constants/routes';
 
 const Backward = ({
   size = '24px',
@@ -16,7 +17,7 @@ const Backward = ({
     isErrorFallback
       ? window.history.back()
       : page === 'eventDetail'
-        ? navigate('/event')
+        ? navigate(ROUTES.EVENT)
         : navigate(-1);
 
   return <S.BackIcon $size={size} onClick={handleBackClick} />;

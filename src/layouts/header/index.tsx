@@ -1,17 +1,18 @@
 import * as S from './style';
 import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '@/constants/routes';
 
 const Header = ({ page }: { page: 'event' | 'community' }) => {
   const navigate = useNavigate();
   const title = page === 'event' ? '이벤트' : '커뮤니티';
 
   const handleHeartIconClick = () => {
-    if (page === 'event') navigate('/event/scrap');
+    if (page === 'event') navigate(ROUTES.EVENT_SCRAP);
     else navigate('/community/scrap');
   };
 
   const handleSearchIconClick = () => {
-    if (page === 'event') navigate('/event/search');
+    if (page === 'event') navigate(ROUTES.EVENT_SEARCH);
     else navigate('/community/search');
   };
 
