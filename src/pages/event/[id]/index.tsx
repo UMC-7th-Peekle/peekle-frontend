@@ -72,7 +72,7 @@ const EventDetailPage = () => {
   const time = formatSchedules(eventSchedules[0] as EventSchedule);
 
   const handleShareKakao = () => {
-    console.log('카카오톡 로그인 클릭');
+    console.log('카카오톡 공윺 클릭');
   };
 
   const handleCopyLink = () => {

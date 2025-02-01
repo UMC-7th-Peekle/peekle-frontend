@@ -13,14 +13,16 @@ const alert = (
   if (store.isOpen) {
     store.close(); // 이전 alert 닫고
   }
-  store.show({
-    message,
-    iconType,
-    btnText1,
-    btnText2,
-    onClickBtn1,
-    onClickBtn2,
-  }); // 새 alert를 열기
+  setTimeout(() => {
+    store.show({
+      message,
+      iconType,
+      btnText1,
+      btnText2,
+      onClickBtn1,
+      onClickBtn2,
+    }); // 새 alert를 열기
+  }, 0);
 };
 
 export default alert;
