@@ -1,33 +1,37 @@
 import * as S from './style';
 import { useEffect, useCallback, useState } from 'react';
-import { LocationConfirm } from '@/components';
-import { useBottomSheetStore, useMyLocationStore, useMapStore } from '@/stores';
+import { useNavigate } from 'react-router-dom';
+import { useQueryState } from 'nuqs';
+import { motion } from 'framer-motion';
+import { EventCard, LocationConfirm } from '@/components';
+import { useMyLocationStore, useMapStore } from '@/stores';
 import { confirm, getMarker, getCurrentPosition } from '@/utils';
-import { BOTTOM_SHEET_ID_EVENT_INFO } from '@/constants/event';
+import { ROUTES } from '@/constants/routes';
 import { useEventFilter } from '@/hooks';
 import { EventData } from '@/types/event';
 import { theme } from '@/styles/theme';
 
 window.navermap_authFailure = function () {
   console.error('네이버 지도 인증 실패');
-  // throw new Error('네이버 지도 인증 실패'); // ErrorFallback 개발 후 에러 바운더리로 던지기
+  throw new Error('네이버 지도 인증 실패');
 };
 
 let mapInstance: naver.maps.Map | null = null;
 
 const EventMap = () => {
-  const { setActiveBottomSheet, bottomSheetHeight } = useBottomSheetStore();
   const { selectedEvent, setSelectedEvent } = useMapStore();
   const { myLocation, setMyLocation } = useMyLocationStore();
   const { sortedEvents } = useEventFilter();
   const [markers] = useState<Map<bigint, naver.maps.Marker>>(
     new Map<bigint, naver.maps.Marker>(),
   );
+  const [searchQuery] = useQueryState('event-search', { defaultValue: '' });
+  const navigate = useNavigate();
 
   // 마커 클릭 이벤트
   const handleMarkerClick = useCallback(
     (mapEvent: EventData) => {
-      // 이전에 선택된 마커가 있다면 원래 아이콘으로 되돌리기
+      // 이전에 선택된 마커가 있다면 흰 말풍선으로 되돌리기
       if (selectedEvent) {
         const prevMarker = markers.get(selectedEvent.eventId);
         // 원래 아이콘으로 되돌리기
@@ -258,13 +262,36 @@ const EventMap = () => {
     }
   }, [myLocation, showLocationConfirm]);
 
+  const handleGotoListBtnClick = () => {
+    if (searchQuery.length > 1) navigate(ROUTES.EVENT_SEARCH);
+    else navigate(ROUTES.EVENT);
+  };
+
   return (
     <S.MapContainer>
       <S.Map id="map" />
-      <S.MyLocationIcon
-        $bottomSheetHeight={bottomSheetHeight}
-        onClick={handleMyLocationClick}
-      />
+      <S.BottomContainer>
+        <S.MyLocationIcon
+          role="button"
+          aria-label="내 위치로 이동 버튼"
+          onClick={handleMyLocationClick}
+        />
+        <S.GoToListButton
+          role="button"
+          aria-label="목록보기 버튼"
+          onClick={handleGotoListBtnClick}
+        />
+        {selectedEvent && (
+          <motion.div
+            initial={{ opacity: 0, y: 20, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.9 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+          >
+            <EventCard id={selectedEvent.eventId as bigint} />
+          </motion.div>
+        )}
+      </S.BottomContainer>
     </S.MapContainer>
   );
 };

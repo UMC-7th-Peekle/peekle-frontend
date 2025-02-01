@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-import MyLocationSVG from '@/assets/images/icons/my-location-rounded.svg?react';
+import MylocationButtonSVG from '@/assets/images/event/map/mylocationButton.svg?react';
+import ListButtonSVG from '@/assets/images/event/map/listButton.svg?react';
 
 export const MapContainer = styled.div`
   position: relative;
@@ -13,11 +14,16 @@ export const Map = styled.div`
   height: 100%;
 `;
 
-export const MyLocationIcon = styled(MyLocationSVG)<{
-  $bottomSheetHeight: number | 'auto';
-}>`
+export const BottomContainer = styled.div`
   position: absolute;
-  left: 24px;
-  bottom: ${({ $bottomSheetHeight }) =>
-    $bottomSheetHeight === 'auto' ? '24px' : `${$bottomSheetHeight}px`};
+  bottom: 0;
+  display: flex;
+  width: 100%;
+  padding: 24px 20px;
+  justify-content: space-between;
+  align-items: center;
 `;
+
+export const MyLocationIcon = styled(MylocationButtonSVG)``;
+
+export const GoToListButton = styled(ListButtonSVG)``;

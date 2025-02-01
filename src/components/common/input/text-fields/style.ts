@@ -6,19 +6,22 @@ import { theme } from '@/styles/theme';
 export const SearchWrapper = styled.div<{
   max_width?: number;
   min_width?: number;
+  $page?: 'eventMap' | '';
 }>`
   display: flex;
   align-items: center;
   position: relative;
+  flex: 1;
   max-width: ${({ max_width }) => (max_width ? `${max_width}px` : '333px')};
   min-width: ${({ min_width }) => (min_width ? `${min_width}px` : '300px')};
-  background-color: ${({ theme }) => theme.color.gray['50']};
+  background-color: ${({ $page }) =>
+    $page === 'eventMap' ? theme.color.gray[0] : theme.color.gray[50]};
   border-radius: 10px;
   padding: 0 20px;
   box-sizing: border-box;
 `;
 
-export const SearchInput = styled.input`
+export const SearchInput = styled.input<{ $page?: 'eventMap' | '' }>`
   height: 48px;
   border: none;
   outline: none;
@@ -33,19 +36,21 @@ export const SearchInput = styled.input`
   }
 
   &::placeholder {
-    color: ${theme.color.gray['400']};
+    color: ${({ $page }) =>
+      $page === 'eventMap' ? theme.color.gray[500] : theme.color.gray[400]};
     font-size: 16px;
     font-weight: 400;
   }
 `;
 
-export const SearchIcon = styled(Search)`
+export const SearchIcon = styled(Search)<{ $page?: 'eventMap' | '' }>`
   width: 26px;
   height: 26px;
   margin-right: 8px;
 
   path {
-    stroke: ${theme.color.gray['400']};
+    stroke: ${({ $page }) =>
+      $page === 'eventMap' ? theme.color.gray[500] : theme.color.gray[400]};
   }
 `;
 

@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 // 최근 검색을 위한 커스텀 훅
 const useRecentSearch = ({ queryKey, localKey }: useRecentSearchProps) => {
-  const [query, setQuery] = useQueryState(queryKey);
+  const [query, setQuery] = useQueryState(queryKey, { defaultValue: '' });
   const isSearched = !!query;
   const [recentSearch, setRecentSearch] = useState<string[]>(() =>
     JSON.parse(localStorage.getItem(localKey) ?? '[]'),

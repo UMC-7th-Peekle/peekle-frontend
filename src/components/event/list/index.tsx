@@ -13,7 +13,7 @@ const EventList = ({
 }) => {
   const navigate = useNavigate();
   const { sortedEvents } = useEventFilter();
-  const [searchQuery] = useQueryState('event-search');
+  const [searchQuery] = useQueryState('event-search', { defaultValue: '' });
 
   const isSearchPage = page === 'search';
   const isScrapPage = page === 'scrap';
@@ -46,6 +46,8 @@ const EventList = ({
             ))}
           </S.EventsContainer>
           <S.GoToMapButton
+            role="button"
+            aria-label="지도보기 버튼"
             $isSearchPage={isSearchPage}
             onClick={() => navigate(ROUTES.EVENT_MAP)}
           />

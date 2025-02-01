@@ -37,6 +37,7 @@ export { default as FilterTabs } from './event/filter-tabs';
 export { default as CategoryChips } from './event/category-chips';
 export { default as Filter } from './event/filter';
 export { default as EventMap } from './event/event-map';
+export { default as MapHeader } from './event/map-header';
 
 // community
 export { default as EditButton } from './community/edit-button';

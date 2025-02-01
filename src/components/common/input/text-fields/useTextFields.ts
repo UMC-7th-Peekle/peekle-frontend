@@ -15,7 +15,7 @@ export const useTextFields = ({
   localKey,
   onQuerySubmit = () => {},
 }: UseTextFieldsProps) => {
-  const [query, setQuery] = useQueryState(queryKey);
+  const [query, setQuery] = useQueryState(queryKey, { defaultValue: '' });
   const [inputValue, setInputValue] = useState(query ?? '');
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { filteredEvent, setFilteredEvent } = useFilteredEventStore();

@@ -16,7 +16,7 @@ const useEventFilter = ({
   type = 'single',
 }: UseEventFilterProps = {}) => {
   const { myLocation } = useMyLocationStore();
-  const [searchQuery] = useQueryState('event-search');
+  const [searchQuery] = useQueryState('event-search', { defaultValue: '' });
   const [searchParams, setSearchParams] = useSearchParams();
 
   // 현재 필터 상태 가져오기
