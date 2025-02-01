@@ -3,7 +3,7 @@ export const ROUTES = {
   EVENT_MAP: '/event/map',
   EVENT_SEARCH: '/event/search',
   EVENT_SCRAP: '/event/scrap',
-  EVENT_DETAIL: '/event/:eventId',
+  EVENT_DETAIL: '/event/:id',
   COMMUNITY: '/community',
   COMMUNITY_SEARCH: '/community/search',
   COMMUNITY_LIKE: '/community/like',

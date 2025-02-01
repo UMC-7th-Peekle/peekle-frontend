@@ -48,10 +48,10 @@ export const EventCardSkeleton = () => {
         <S.SubInfoWrapper>
           <Skeleton
             width="53px"
-            height="30px"
+            height="20px"
             style={{ borderRadius: '4px' }}
           />
-          <Skeleton width="75px" height="30px" />
+          <Skeleton width="70px" height="20px" />
         </S.SubInfoWrapper>
       </S.Info>
       <S.ImageContainer>

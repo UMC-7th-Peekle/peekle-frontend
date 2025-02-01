@@ -33,7 +33,7 @@ const EventDetailPage = () => {
   const event = events.find((event) => event.eventId === BigInt(id));
 
   useEffect(() => {
-    if (!event) return;
+    if (!id || !event) return;
     const firstSentence =
       event.content.match(/[^.!?]+[.!?]/)?.[0] ?? event.content;
     document
@@ -49,9 +49,11 @@ const EventDetailPage = () => {
       .querySelector('meta[property="og:url"]')
       ?.setAttribute('content', window.location.href);
     document.title = event.title;
-  }, [event]);
+  }, [id, event]);
 
-  if (!event) return null;
+  if (!id || !event) {
+    return null;
+  }
 
   const {
     eventId,

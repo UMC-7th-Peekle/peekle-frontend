@@ -10,7 +10,7 @@ interface MetaTagProps {
 const MetaTag = ({
   title = '피클(peekle) - 액티브 시니어 플랫폼',
   description = '액티브 시니어 커뮤니티 플랫폼 피클(Peekle)입니다. 시니어 세대가 건강하고 주체적인 삶을 살 수 있는 사회를 만드는 것이 목표입니다.',
-  imgSrc = '', //디폴트 이미지
+  imgSrc = import.meta.env.VITE_BASE_IMAGE, //디폴트 이미지
   url = window.location.href,
 }: MetaTagProps) => {
   return (
@@ -28,8 +28,8 @@ const MetaTag = ({
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content="%VITE_OG_IMAGE%" />
-      <meta name="twitter:url" content="%VITE_BASE_URL%" />
+      <meta name="twitter:image" content={imgSrc} />
+      <meta name="twitter:url" content={url} />
     </Helmet>
   );
 };

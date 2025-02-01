@@ -23,6 +23,11 @@ export const ShareBtn = styled(ShareSVG)`
   color: ${theme.color.gray[600]};
 `;
 
+export const SkeletonContainer = styled.div`
+  position: fixed;
+  top: 48px; // 헤더 부분
+`;
+
 export const MainSection = styled.section`
   display: flex;
   flex-direction: column;

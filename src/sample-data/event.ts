@@ -30,6 +30,16 @@ export const events: EventData[] = [
           'https://www.choicenews.co.kr/news/photo/202409/135923_98910_4746.jpg',
         sequence: 2,
       },
+      {
+        imageUrl:
+          'https://www.kcie.or.kr/assets/pc/images/yeouitv/visit_main.png?v0.3',
+        sequence: 3,
+      },
+      {
+        imageUrl:
+          'https://www.choicenews.co.kr/news/photo/202409/135923_98910_4746.jpg',
+        sequence: 4,
+      },
     ],
     eventSchedules: [
       {
