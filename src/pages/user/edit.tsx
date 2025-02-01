@@ -95,7 +95,6 @@ const EditPage = () => {
       <ProfileSection>
         <EditProfileSVG />
       </ProfileSection>
-
       <Nickname>
         <NicknameTitle>닉네임</NicknameTitle>
         <InputWrapper>

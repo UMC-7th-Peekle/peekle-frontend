@@ -57,6 +57,7 @@ const ButtonWrapper = styled.div`
   display: flex;
   justify-content: center;
 `;
+
 const GenderSelectionPage = () => {
   const [selectedGender, setSelectedGender] = useState<string | null>(null);
 

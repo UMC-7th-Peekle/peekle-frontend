@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { Button } from '@/components/common/input/button/index';
 import CompleteSVG from '@/assets/images/auth/complete.svg?react';
+
 const Container = styled.div`
   display: fixed;
   flex-direction: column;

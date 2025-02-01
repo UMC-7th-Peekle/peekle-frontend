@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import defaultSVG from '@/assets/images/onboarding/default.svg?react';
 import KakaoSVG from '@/assets/images/onboarding/kakao.svg?react';
 import PhoneSVG from '@/assets/images/onboarding/phone.svg?react';
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -43,6 +44,7 @@ const BackwardWrapper = styled.div`
 const ButtonWrapper = styled.div`
   position: fixed;
   bottom: 20px;
+
   left: 0;
   width: 100%;
   display: flex;

@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { Backward } from '@/components';
 import NotiSVG from '@/assets/images/user/noti.svg?react';
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -28,6 +29,7 @@ const NotiIcon = styled(NotiSVG)`
   top: 70px;
   left: -10px;
 `;
+
 const BackwardWrapper = styled.div`
   position: absolute;
   top: 15px;
