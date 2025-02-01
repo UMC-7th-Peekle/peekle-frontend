@@ -19,12 +19,8 @@ export const DateListCard = styled.div.withConfig({
   ${theme.typeFace.body['18SB']};
 
   ${mediaQuery.sMobile`
-    ${theme.typeFace.caption['14B']};
+    ${theme.typeFace.caption['12B']};
     padding: 10px 8px;
-  `}
-
-  ${mediaQuery.xsMobile`
-     ${theme.typeFace.caption['12B']};
   `}
 `;
 

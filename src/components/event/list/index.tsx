@@ -1,14 +1,17 @@
 import * as S from './style';
 import { useQueryState } from 'nuqs';
+import { useNavigate } from 'react-router-dom';
 import { EventCard, Filter } from '@/components';
 import { useEventFilter } from '@/hooks';
 import { EventData } from '@/types/event';
+import { ROUTES } from '@/constants/routes';
 
 const EventList = ({
   page = 'index',
 }: {
   page?: 'search' | 'scrap' | 'index';
 }) => {
+  const navigate = useNavigate();
   const { sortedEvents } = useEventFilter();
   const [searchQuery] = useQueryState('event-search');
 
@@ -42,6 +45,10 @@ const EventList = ({
               />
             ))}
           </S.EventsContainer>
+          <S.GoToMapButton
+            $isSearchPage={isSearchPage}
+            onClick={() => navigate(ROUTES.EVENT_MAP)}
+          />
         </>
       ) : (
         <S.EmptyContainer>

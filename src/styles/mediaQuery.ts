@@ -4,7 +4,7 @@ import { theme } from './theme';
 
 const breakpoints: MediaQueryProps = {
   xsMobile: 360,
-  sMobile: 390,
+  sMobile: 400,
   mobile: 420,
   tablet: 800,
   laptop: 1600,
