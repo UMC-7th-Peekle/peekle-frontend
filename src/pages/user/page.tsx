@@ -10,6 +10,7 @@ import ResignSVG from '@/assets/images/user/resign.svg?react';
 import ProfileSVG from '@/assets/images/user/profile.svg?react';
 import LogoSVG from '@/assets/images/user/logo.svg?react';
 import Logo2SVG from '@/assets/images/user/logo2.svg?react';
+import ArrowSVG from '@/assets/images/user/arrow.svg?react';
 
 const Container = styled.div`
   display: fixed;
@@ -28,7 +29,11 @@ const Header = styled.div`
   margin-top: -5px;
   font-family: 'Pretendard', sans-serif;
   font-weight: 600;
+  justify-content: space-between;
   color: black;
+`;
+const Logo2Icon = styled(Logo2SVG)`
+  margin-right: 185px;
 `;
 
 const ProfileSection = styled.div`
@@ -41,9 +46,9 @@ const ProfileSection = styled.div`
 `;
 
 const Username = styled.h2`
-  font-size: 16px;
+  font-size: 20px;
   font-weight: bold;
-
+  color: black;
   margin: 10px;
   font-family: 'Pretendard', sans-serif;
   font-weight: 700;
@@ -54,7 +59,7 @@ const EditButton = styled.button`
   border: none;
   padding: 8px 20px;
   border-radius: 8px;
-  font-size: 10px;
+  font-size: 12px;
   cursor: pointer;
   margin-top: 8px;
   margin-left: 80px;
@@ -94,12 +99,6 @@ const MenuText = styled.span`
   margin-right: 190px;
 `;
 
-const MenuIcon = styled.span`
-  font-size: 18px;
-  color: #888;
-  margin-right: 10px;
-`;
-
 const Divider = styled.div`
   height: 1px;
   background-color: #ddd; /* 더 얇고 선명한 회색 */
@@ -127,39 +126,48 @@ const UserPage = () => {
     navigate('/user/resign');
   };
   const handleLogout = () => {
-    alert('로그아웃 하시겠어요?', 'logout', '취소', '로그아웃');
+    alert(
+      '로그아웃 하시겠어요?',
+      'warning',
+      '취소',
+      '로그아웃',
+      () => console.log('로그아웃 취소됨'),
+      () => {
+        console.log('로그아웃 완료');
+        navigate('/');
+      },
+    );
   };
   return (
     <Container>
       {/* 상단 로고 + 내 정보 헤더 */}
       <Header>
         <LogoSVG />
-        <Logo2SVG />
+        <Logo2Icon />
       </Header>
       {/* 프로필 영역 */}
       <ProfileSection>
         <ProfileSVG />
-        <Username>피클1135</Username> {/*데이터 가져와야함*/}
+        <Username>자연32</Username> {/*데이터 가져와야함*/}
         <EditButton onClick={handleEdit}>프로필 수정</EditButton>
       </ProfileSection>
-
       {/* 고객센터 */}
       <Section>
         <SectionTitle>고객센터</SectionTitle>
         <MenuItem>
           <NoticeSVG />
           <MenuText>공지사항</MenuText>
-          <MenuIcon onClick={handleNotice}>›</MenuIcon>
+          <ArrowSVG onClick={handleNotice} />
         </MenuItem>
         <MenuItem>
           <RequestSVG />
-          <MenuText>문의하기</MenuText>
-          <MenuIcon onClick={handleRequest}>›</MenuIcon>
+          <MenuText>문의하기</MenuText>D
+          <ArrowSVG onClick={handleRequest} />
         </MenuItem>
         <MenuItem>
           <TouSVG />
           <MenuText>약관 및 정책</MenuText>
-          <MenuIcon onClick={handleTou}>›</MenuIcon>
+          <ArrowSVG onClick={handleTou} />
         </MenuItem>
       </Section>
       <Divider />
@@ -169,17 +177,17 @@ const UserPage = () => {
         <MenuItem>
           <ManageSVG />
           <MenuText>내 정보 관리</MenuText>
-          <MenuIcon onClick={handleManage}>›</MenuIcon>
+          <ArrowSVG onClick={handleManage} />
         </MenuItem>
         <MenuItem>
           <LogoutSVG />
           <MenuText>로그아웃</MenuText>
-          <MenuIcon onClick={handleLogout}>›</MenuIcon>
+          <ArrowSVG onClick={handleLogout} />
         </MenuItem>
         <MenuItem>
           <ResignSVG />
           <MenuText>회원 탈퇴</MenuText>
-          <MenuIcon onClick={handleResign}>›</MenuIcon>
+          <ArrowSVG onClick={handleResign} />
         </MenuItem>
       </Section>
     </Container>

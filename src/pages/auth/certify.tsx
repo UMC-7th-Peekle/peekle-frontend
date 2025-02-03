@@ -7,16 +7,27 @@ import { useBottomSheetStore } from '@/stores';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import ResendSVG from '@/assets/images/auth/resend.svg?react';
+import { useEffect } from 'react';
 
 const CertifyPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-
-  // `PhoneNumberPage`에서 전달된 값 받기
   const { phone, phoneVerificationSessionId } = location.state || {};
-  const [code, setCode] = useState(['', '', '', '']);
+  const [code, setCode] = useState(['', '', '', '']); // 4자리 인증 코드
   const { setActiveBottomSheet } = useBottomSheetStore();
-  const api = import.meta.env.VITE_API_URL; // API URL 가져오기
+  const api = import.meta.env.VITE_API_URL;
+
+  const [timeLeft, setTimeLeft] = useState(300); // 300초 = 5분
+
+  useEffect(() => {
+    if (timeLeft <= 0) return;
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => prev - 1);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [timeLeft]);
+
+  const isCodeComplete = code.every((digit) => digit !== '');
 
   const handleChange = (index: number, value: string) => {
     if (/[^0-9]/.test(value)) return;
@@ -28,27 +39,38 @@ const CertifyPage = () => {
       if (nextInput) (nextInput as HTMLInputElement).focus();
     }
   };
+
   const handleKeyDown = (
     index: number,
     e: React.KeyboardEvent<HTMLInputElement>,
   ) => {
-    // Backspace 시 이전 칸으로 이동
     if (e.key === 'Backspace' && !code[index] && index > 0) {
       const prevInput = document.getElementById(`code-input-${index - 1}`);
       if (prevInput) (prevInput as HTMLInputElement).focus();
     }
   };
-  //alert
+
   const handleResend = () => {
     alert('인증번호를 다시 보냈어요!', 'none', '확인');
+    setTimeLeft(300); // 타이머 다시 5분으로 설정
   };
+
   const handlePhone = () => {
     navigate('/auth/phone-number');
   };
-  //api
+
   const handleVerify = async () => {
     if (!phone || !phoneVerificationSessionId) {
       alert('인증 정보를 찾을 수 없습니다.', 'warning', '확인');
+      return;
+    }
+
+    if (timeLeft <= 0) {
+      alert(
+        '인증 시간이 만료되었습니다. 인증번호를 다시 요청해주세요.',
+        'warning',
+        '확인',
+      );
       return;
     }
 
@@ -76,50 +98,60 @@ const CertifyPage = () => {
       console.error('Request failed:', error);
     }
   };
+
+  const formatTime = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+  };
+
   return (
     <Container>
-      {/* 뒤로가기 버튼 */}
       <BackwardWrapper onClick={handlePhone}>
         <Backward />
       </BackwardWrapper>
 
-      {/* 입력 안내 문구 */}
       <Title>
         인증번호 4자리를
         <br />
         입력해주세요
       </Title>
+
       <InputWrapper>
         {code.map((num, index) => (
           <Input
             key={index}
-            id={`code-input-${index}`} // 포커스 이동을 위한 ID 추가
+            id={`code-input-${index}`}
             type="text"
             value={num}
             onChange={(e) => handleChange(index, e.target.value)}
             onKeyDown={(e) => handleKeyDown(index, e)}
             maxLength={1}
-            filled={!!num} // 입력된 경우 검은색 border-bottom 유지
+            filled={!!num}
           />
         ))}
         <ResendWrapper onClick={handleResend}>
           <ResendSVG /> 재전송
-          <ResendIcon>🔄</ResendIcon> 재전송
         </ResendWrapper>
       </InputWrapper>
+
       <HelpButton onClick={() => setActiveBottomSheet('helpsheet')}>
         도움이 필요해요!
       </HelpButton>
+
+      {/* ✅ 인증 버튼 상태 변경 */}
       <ButtonWrapper>
-        <Button
+        <StyledButton
           color="primary500"
           size="medium"
-          width="412px"
+          isCodeComplete={isCodeComplete}
+          disabled={!isCodeComplete || timeLeft <= 0} // 🔥 입력이 다 안되었거나 시간이 0이면 비활성화
           onClick={handleVerify}
         >
-          인증하기
-        </Button>
+          {isCodeComplete ? '인증하기' : formatTime(timeLeft)}
+        </StyledButton>
       </ButtonWrapper>
+
       <BottomSheet id="helpsheet">
         <SheetContent>
           <SheetTitle>
@@ -152,6 +184,15 @@ const CertifyPage = () => {
 };
 
 export default CertifyPage;
+
+/* ✅ 버튼 상태 변경 스타일 */
+const StyledButton = styled(Button)<{ isCodeComplete: boolean }>`
+  background-color: ${({ isCodeComplete }) =>
+    isCodeComplete ? '#4CAF50' : '#E0E0E0'};
+  color: ${({ isCodeComplete }) => (isCodeComplete ? 'white' : '#BDBDBD')};
+  cursor: ${({ isCodeComplete }) =>
+    isCodeComplete ? 'pointer' : 'not-allowed'};
+`;
 
 const Container = styled.div`
   display: flex;
@@ -232,9 +273,7 @@ const HelpButton = styled.button`
   font-weight: 600;
   color: #464b53;
 `;
-const ResendIcon = styled.span`
-  margin-right: 5px;
-`;
+
 const SheetContent = styled.div`
   padding: 20px;
   text-align: left;

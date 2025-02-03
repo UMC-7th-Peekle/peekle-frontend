@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { Backward } from '@/components';
 import EditProfileSVG from '@/assets/images/user/editProfile.svg?react';
+import { alert } from '@/utils';
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -13,6 +14,10 @@ const BackwardWrapper = styled.div`
   top: 15px;
   left: 30px;
 `;
+const Footer = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
 const Header = styled.div`
   display: flex;
   align-items: center;
@@ -21,10 +26,23 @@ const Header = styled.div`
   font-size: 20px;
   font-weight: bold;
   justify-content: center;
+  margin-left: 120px;
   margin-top: -10px;
   font-family: 'Pretendard', sans-serif;
   font-weight: 700;
   color: black;
+`;
+const Header2 = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  background-color: #fff;
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: -10px;
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 700;
+  color: #4aa662;
 `;
 
 const ProfileSection = styled.div`
@@ -86,12 +104,37 @@ const NicknameSubtitle = styled.p`
   font-weight: 400;
 `;
 const EditPage = () => {
+  const handleFinish = () => {
+    alert(
+      '정말 닉네임을 변경할까요?\n닉네임은 30일마다 1번 수정할 수 있어요.',
+      'warning',
+      '취소',
+      '변경',
+      () => {},
+      () => {
+        handleConfirmed();
+      },
+    );
+  };
+  const handleConfirmed = () => {
+    alert(
+      '닉네임을 변경하시겠습니까?\n변경 후 30일간 수정할 수 없습니다.',
+      'warning',
+      '취소',
+      '변경',
+      () => console.log('닉네임 변경 취소됨'),
+      () => console.log('변경'),
+    );
+  };
   return (
     <Container>
       <BackwardWrapper>
         <Backward />
       </BackwardWrapper>
-      <Header>프로필 수정</Header>
+      <Footer>
+        <Header>프로필 수정</Header>
+        <Header2 onClick={handleFinish}>완료</Header2>
+      </Footer>
       <ProfileSection>
         <EditProfileSVG />
       </ProfileSection>

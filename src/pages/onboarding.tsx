@@ -1,10 +1,69 @@
 import styled from 'styled-components';
 import { Backward } from '@/components';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import defaultSVG from '@/assets/images/onboarding/default.svg?react';
 import KakaoSVG from '@/assets/images/onboarding/kakao.svg?react';
 import PhoneSVG from '@/assets/images/onboarding/phone.svg?react';
 
+import HeaderSVG from '@/assets/images/onboarding/header.svg?react';
+import Onboard2SVG from '@/assets/images/onboarding/onboard2.svg?react';
+import Onboard3SVG from '@/assets/images/onboarding/onboard3.svg?react';
+const OnboardingPage = () => {
+  const navigate = useNavigate();
+  const handlephone = () => {
+    navigate('/auth/phone-number');
+  };
+  const api = import.meta.env.VITE_API_URL;
+  const [currentSVG, setCurrentSVG] = useState(0);
+  const svgComponents = [<DefaultIcon />, <Two />, <Three />];
+
+  // ✅ 3초마다 SVG 변경
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSVG((prev) => (prev + 1) % svgComponents.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleKakao = async () => {
+    try {
+      const response = await fetch(`${api}/auth/login/kako`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      if (!response.ok) {
+        navigate('/auth/phone-number');
+      }
+      const data = await response.json();
+      console.log('KAKAO login response:', data);
+      navigate('/event');
+    } catch (error) {
+      console.error('Kakao login error:', error);
+      alert('카카오 로그인에 실패했습니다.');
+    }
+  };
+  return (
+    <Container>
+      <BackwardWrapper>
+        <Backward />
+      </BackwardWrapper>
+      <Header>
+        <HeaderSVG />
+      </Header>
+      <TitleWrapper>
+        {svgComponents[currentSVG]}
+        {/**DefaultSVG, Onboard2SVG,Onboard3SVG가 3초마다 SVG가 변경됨 */}
+      </TitleWrapper>
+      <ButtonWrapper>
+        <KakaoSVG onClick={handleKakao} />
+        <PhoneSVG onClick={handlephone} />
+      </ButtonWrapper>
+    </Container>
+  );
+};
+
+export default OnboardingPage;
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -14,6 +73,7 @@ const Container = styled.div`
 `;
 
 const Header = styled.div`
+  flex-direction: column;
   display: flex;
   align-items: center;
   padding: 16px;
@@ -21,7 +81,7 @@ const Header = styled.div`
   font-size: 20px;
   font-weight: bold;
   justify-content: center;
-  margin-top: -10px;
+  margin-top: 0px;
   font-family: 'Pretendard', sans-serif;
   font-weight: 700;
   color: black;
@@ -53,6 +113,7 @@ const ButtonWrapper = styled.div`
   align-items: center;
   font-family: 'Pretendard', sans-serif;
   font-weight: 600;
+<<<<<<< HEAD
 `;
 
 const DefaultIcon = styled(defaultSVG)`
@@ -60,26 +121,13 @@ const DefaultIcon = styled(defaultSVG)`
   margin-right: 50px;
   margin-top: -30px;
 `;
-const OnboardingPage = () => {
-  const navigate = useNavigate();
-  const handlephone = () => {
-    navigate('/auth/phone-number');
-  };
-  return (
-    <Container>
-      <BackwardWrapper>
-        <Backward />
-      </BackwardWrapper>
-      <Header>Peekle 로그인</Header>
-      <TitleWrapper>
-        <DefaultIcon />
-      </TitleWrapper>
-      <ButtonWrapper>
-        <KakaoSVG />
-        <PhoneSVG onClick={handlephone} />
-      </ButtonWrapper>
-    </Container>
-  );
-};
-
-export default OnboardingPage;
+const Two = styled(Onboard2SVG)`
+  width: 370px;
+  margin-right: 100px;
+  margin-top: -30px;
+`;
+const Three = styled(Onboard3SVG)`
+  width: 370px;
+  margin-right: 100px;
+  margin-top: -30px;
+`;

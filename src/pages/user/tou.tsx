@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Backward } from '@/components';
+import ArrowSVG from '@/assets/images/user/arrow.svg?react';
 
 const Container = styled.div`
   display: flex;
@@ -64,12 +65,6 @@ const MenuText = styled.span`
   font-weight: 600;
 `;
 
-const MenuIcon = styled.span`
-  font-size: 18px;
-  color: #888;
-  margin-right: 10px;
-`;
-
 const Divider = styled.div`
   height: 1px;
   background-color: #ddd; /* 더 얇고 선명한 회색 */
@@ -90,11 +85,11 @@ const TouPage = () => {
         <SectionTitle>필수약관</SectionTitle>
         <MenuItem>
           <MenuText>서비스 이용약관 (필수)</MenuText>
-          <MenuIcon>›</MenuIcon>
+          <ArrowSVG />
         </MenuItem>
         <MenuItem>
           <MenuText>개인정보 수집/이용 동의 (필수)</MenuText>
-          <MenuIcon>›</MenuIcon>
+          <ArrowSVG />
         </MenuItem>
       </Section>
       <Divider />
@@ -103,11 +98,11 @@ const TouPage = () => {
         <SectionTitle>선택약관</SectionTitle>
         <MenuItem>
           <MenuText>위치 기반 서비스 동의 (선택)</MenuText>
-          <MenuIcon>›</MenuIcon>
+          <ArrowSVG />
         </MenuItem>
         <MenuItem>
           <MenuText>개인 정보 수집/이용 제공 동의 (선택)</MenuText>
-          <MenuIcon>›</MenuIcon>
+          <ArrowSVG />
         </MenuItem>
       </Section>
       <Divider />
@@ -116,7 +111,7 @@ const TouPage = () => {
         <SectionTitle>개인정보</SectionTitle>
         <MenuItem>
           <MenuText>개인정보 처리방침</MenuText>
-          <MenuIcon>›</MenuIcon>
+          <ArrowSVG />
         </MenuItem>
       </Section>
     </Container>
