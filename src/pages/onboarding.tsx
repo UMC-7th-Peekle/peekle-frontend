@@ -2,29 +2,19 @@ import styled from 'styled-components';
 import { Backward } from '@/components';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import defaultSVG from '@/assets/images/onboarding/default.svg?react';
 import KakaoSVG from '@/assets/images/onboarding/kakao.svg?react';
 import PhoneSVG from '@/assets/images/onboarding/phone.svg?react';
-
 import HeaderSVG from '@/assets/images/onboarding/header.svg?react';
-import Onboard2SVG from '@/assets/images/onboarding/onboard2.svg?react';
-import Onboard3SVG from '@/assets/images/onboarding/onboard3.svg?react';
+import { motion } from 'framer-motion';
+import { theme } from '@/styles/theme';
+
 const OnboardingPage = () => {
   const navigate = useNavigate();
+  const api = import.meta.env.VITE_API_URL;
+
   const handlephone = () => {
     navigate('/auth/phone-number');
   };
-  const api = import.meta.env.VITE_API_URL;
-  const [currentSVG, setCurrentSVG] = useState(0);
-  const svgComponents = [<DefaultIcon />, <Two />, <Three />];
-
-  // ✅ 3초마다 SVG 변경
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSVG((prev) => (prev + 1) % svgComponents.length);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
 
   const handleKakao = async () => {
     try {
@@ -43,6 +33,35 @@ const OnboardingPage = () => {
       alert('카카오 로그인에 실패했습니다.');
     }
   };
+
+  const slides = [
+    {
+      src: '/onboarding/onboard_1.png',
+      alt: 'Onboarding 1',
+      text: '인생 2막의 시작\n시니어 정보 플랫폼 피클',
+    },
+    {
+      src: '/onboarding/onboard_2.png',
+      alt: 'Onboarding 2',
+      text: '강좌부터 취미활동까지\n쉽게 찾아보세요',
+    },
+    {
+      src: '/onboarding/onboard_3.png',
+      alt: 'Onboarding 3',
+      text: '일상과 고민을 나누며\n사람들과 함께해요',
+    },
+  ];
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  // ✅ 2초마다 자동 슬라이드
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % slides.length);
+    }, 2000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <Container>
       <BackwardWrapper>
@@ -51,10 +70,30 @@ const OnboardingPage = () => {
       <Header>
         <HeaderSVG />
       </Header>
-      <TitleWrapper>
-        {svgComponents[currentSVG]}
-        {/**DefaultSVG, Onboard2SVG,Onboard3SVG가 3초마다 SVG가 변경됨 */}
-      </TitleWrapper>
+      <CarouselContainer>
+        <MotionWrapper>
+          <SlideContainer
+            key={currentIndex}
+            initial={{ x: 100, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: -100, opacity: 0 }}
+            transition={{ duration: 0.8, ease: 'easeInOut' }}
+          >
+            {/* ✅ 이미지 */}
+            <SlideImage
+              src={slides[currentIndex].src}
+              alt={slides[currentIndex].alt}
+            />
+            {/* ✅ 문구 */}
+            <CarouselContents>{slides[currentIndex].text}</CarouselContents>
+          </SlideContainer>
+        </MotionWrapper>
+        <IndicatorWrapper>
+          {slides.map((_, index) => (
+            <Indicator key={index} isActive={index === currentIndex} />
+          ))}
+        </IndicatorWrapper>
+      </CarouselContainer>
       <ButtonWrapper>
         <KakaoSVG onClick={handleKakao} />
         <PhoneSVG onClick={handlephone} />
@@ -64,12 +103,16 @@ const OnboardingPage = () => {
 };
 
 export default OnboardingPage;
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   height: 100vh;
+  width: 100%;
   background-color: #ffffff;
   font-family: Arial, sans-serif;
+  align-items: center;
+  justify-content: start;
 `;
 
 const Header = styled.div`
@@ -87,47 +130,82 @@ const Header = styled.div`
   color: black;
 `;
 
-const TitleWrapper = styled.div`
-  background-color: #fff;
-  padding: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-`;
-
 const BackwardWrapper = styled.div`
   position: absolute;
   top: 15px;
   left: 30px;
 `;
-const ButtonWrapper = styled.div`
-  position: fixed;
-  bottom: 20px;
 
-  left: 0;
+const ButtonWrapper = styled.div`
   width: 100%;
   display: flex;
-  flex-direction: column; /* 버튼을 세로 방향으로 정렬 */
-  gap: 12px; /* 버튼 사이 간격 */
+  flex-direction: column;
+  gap: 12px;
   align-items: center;
   font-family: 'Pretendard', sans-serif;
   font-weight: 600;
-<<<<<<< HEAD
+  margin-bottom: 48px;
 `;
 
-const DefaultIcon = styled(defaultSVG)`
-  width: 370px;
-  margin-right: 50px;
-  margin-top: -30px;
+const CarouselContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
-const Two = styled(Onboard2SVG)`
-  width: 370px;
-  margin-right: 100px;
-  margin-top: -30px;
+
+// ✅ 캐러셀 Wrapper
+const MotionWrapper = styled.div`
+  width: 100%;
+  height: 70%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
 `;
-const Three = styled(Onboard3SVG)`
-  width: 370px;
-  margin-right: 100px;
-  margin-top: -30px;
+
+const SlideContainer = styled(motion.div)`
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column; /* ✅ 이미지 + 문구를 세로로 배치 */
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+`;
+
+// ✅ 이미지
+const SlideImage = styled.img`
+  width: 100%;
+  max-width: 100vw;
+  height: auto;
+  object-fit: cover;
+`;
+
+// ✅ 문구 스타일
+const CarouselContents = styled.div`
+  margin-top: 16px;
+  ${theme.typeFace.subTitle[24]};
+  color: ${theme.color.gray[900]};
+  text-align: center;
+  white-space: pre-wrap;
+`;
+
+// ✅ Indicator Wrapper
+const IndicatorWrapper = styled.div`
+  display: flex;
+  gap: 8px;
+`;
+
+// ✅ 현재 지점 표시 (isActive에 따라 크기 변경)
+const Indicator = styled.div<{ isActive: boolean }>`
+  width: ${(props) => (props.isActive ? '16px' : '7px')};
+  height: 7px;
+  border-radius: ${(props) => (props.isActive ? '10px' : '50%')};
+  background-color: ${(props) =>
+    props.isActive ? '#6b7280' : '#e5e7eb'}; // gray-500 / gray-200
+  transition: all 0.3s ease-in-out;
 `;
