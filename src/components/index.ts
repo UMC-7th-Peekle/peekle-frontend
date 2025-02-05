@@ -48,3 +48,4 @@ export { default as LikeCard } from './community/like-card';
 export { default as CommentCountCard } from './community/comment-count-card';
 export { default as CommentCard } from './community/comment-card';
 export { default as LikedCount } from './community/comment-card/liked-count';
+export { default as AnonymousCheck } from './community/anonymous-check';
