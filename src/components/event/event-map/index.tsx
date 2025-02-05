@@ -22,13 +22,12 @@ window.navermap_authFailure = function () {
   throw new Error('네이버 지도 인증 실패');
 };
 
-let mapInstance: naver.maps.Map;
-
 const EventMap = () => {
   // localStorage.clear();
   const { selectedEvent, setSelectedEvent } = useMapStore();
   const { myLocation, setMyLocation } = useMyLocationStore();
   const { sortedEvents } = useEventFilter();
+  const [mapInstance, setMapInstance] = useState<naver.maps.Map>();
   const [markers] = useState<Map<bigint, naver.maps.Marker>>(
     new Map<bigint, naver.maps.Marker>(),
   );
@@ -46,25 +45,24 @@ const EventMap = () => {
       setSelectedEvent(mapEvent);
       const marker = markers.get(mapEvent.eventId);
       const infoWindow = infoWindows.get(mapEvent.eventId);
-      if (!marker || !infoWindow) return;
+      if (!marker || !infoWindow || !mapInstance) return;
 
       if (infoWindow.getMap()) {
         // InfoWindow가 열려 있다면 닫기
         infoWindow.close();
+        setSelectedEvent(null);
       } else {
         // InfoWindow가 닫혀 있다면 열기
         infoWindow.open(mapInstance, marker);
+        // 지도 이동 및 확대
+        mapInstance?.morph(
+          new naver.maps.LatLng(mapEvent.latitude, mapEvent.longitude),
+          19,
+          { duration: 0, easing: 'easeOutCubic' }, // duration은 500ms 고정
+        );
       }
-
-      // 지도 이동 및 확대
-      mapInstance?.morph(
-        new naver.maps.LatLng(mapEvent.latitude, mapEvent.longitude),
-        20,
-        { duration: 0, easing: 'easeOutCubic' }, // 500ms 고정
-      );
-      mapInstance?.setZoom(19);
     },
-    [setSelectedEvent, markers, infoWindows],
+    [setSelectedEvent, markers, infoWindows, mapInstance],
   );
 
   const showMarker = (map: naver.maps.Map, marker: naver.maps.Marker) => {
@@ -99,24 +97,25 @@ const EventMap = () => {
         hideMarker(marker);
       }
     });
-  }, [markers]);
+  }, [markers, mapInstance]);
 
   const initMap = useCallback(
     (centerLat: number, centerLng: number) => {
       const mapDiv = document.getElementById('map');
       if (!mapDiv) return;
-      console.log(mapInstance);
       if (!mapInstance) {
-        mapInstance = new naver.maps.Map(mapDiv, {
+        const newMap = new naver.maps.Map(mapDiv, {
           center: new naver.maps.LatLng(centerLat, centerLng),
-          zoom: 15, //지도의 초기 줌 레벨
+          zoom: 15,
           minZoom: 10,
-          disableKineticPan: false, // 관성 드래깅
+          disableKineticPan: false,
         });
+
+        setMapInstance(newMap);
+      } else {
+        mapInstance.setCenter(new naver.maps.LatLng(centerLat, centerLng));
+        mapInstance.setZoom(15);
       }
-      // 기존 mapInstance가 있으면 재사용
-      mapInstance.setCenter(new naver.maps.LatLng(centerLat, centerLng));
-      mapInstance.setZoom(15);
 
       const myLocMarker = new naver.maps.Marker({
         position: new naver.maps.LatLng(centerLat, centerLng),
@@ -199,43 +198,45 @@ const EventMap = () => {
         naver.maps.Event.addListener(marker, 'click', () =>
           handleMarkerClick(event),
         );
+
+        // console.log('markers', markers);
       });
     },
-    [handleMarkerClick, markers, sortedEvents, infoWindows],
+    [mapInstance, handleMarkerClick, markers, sortedEvents, infoWindows],
   );
 
   // console.log('sortedEvents', sortedEvents);
-  useEffect(() => {
-    if (!mapInstance || !sortedEvents) return;
+  // useEffect(() => {
+  //   if (!mapInstance || !sortedEvents) return;
 
-    // 기존 마커 제거
-    markers.forEach((marker, key) => {
-      if (key !== 0n) {
-        marker.setMap(null); // 'my_location' 마커는 건드리지 않음
-      }
-    });
-    markers.clear();
+  //   // 기존 마커 제거
+  //   markers.forEach((marker, key) => {
+  //     if (key !== 0n) {
+  //       marker.setMap(null); // 'my_location' 마커는 건드리지 않음
+  //     }
+  //   });
+  //   markers.clear();
 
-    // 새로운 마커 생성
-    sortedEvents.forEach((event) => {
-      const marker = new naver.maps.Marker({
-        position: new naver.maps.LatLng(event.latitude, event.longitude),
-        map: mapInstance,
-        icon: {
-          content: getMarker(event.category.name),
-          size: new naver.maps.Size(36, 36),
-          origin: new naver.maps.Point(0, 0),
-          anchor: new naver.maps.Point(18, 18),
-        },
-      });
+  //   // 새로운 마커 생성
+  //   sortedEvents.forEach((event) => {
+  //     const marker = new naver.maps.Marker({
+  //       position: new naver.maps.LatLng(event.latitude, event.longitude),
+  //       map: mapInstance,
+  //       icon: {
+  //         content: getMarker(event.category.name),
+  //         size: new naver.maps.Size(36, 36),
+  //         origin: new naver.maps.Point(0, 0),
+  //         anchor: new naver.maps.Point(18, 18),
+  //       },
+  //     });
 
-      // 마커 이벤트 등록
-      naver.maps.Event.addListener(marker, 'click', () =>
-        handleMarkerClick(event),
-      );
-      markers.set(event.eventId, marker);
-    });
-  }, [sortedEvents, handleMarkerClick, markers, updateMarkers]);
+  //     // 마커 이벤트 등록
+  //     naver.maps.Event.addListener(marker, 'click', () =>
+  //       handleMarkerClick(event),
+  //     );
+  //     markers.set(event.eventId, marker);
+  //   });
+  // }, [sortedEvents, handleMarkerClick, markers, updateMarkers]);
 
   // 지도 움직임
   const idleHandler = useCallback(() => {
@@ -288,27 +289,25 @@ const EventMap = () => {
     if (locationAgreed === null) {
       showLocationConfirm();
     } else if (locationAgreed === 'true') {
-      console.log('locationAgreed');
       if (myLocation) {
-        console.log('myLocation 있음', myLocation.y, myLocation.x);
+        console.log('initMap 호출');
         initMap(myLocation.y, myLocation.x);
+        setIsLoading(false);
+        return;
       }
       getCurrentPosition().then(handleLocationSuccess);
-      setIsLoading(false); // 세션 스토리지 값 쓰기
     }
   }, [handleLocationSuccess, showLocationConfirm, initMap, myLocation]);
 
   // 내 위치로 이동
   const handleMyLocationClick = useCallback(() => {
     if (myLocation) {
-      mapInstance?.setCenter(
-        new naver.maps.LatLng(myLocation.lat(), myLocation.lng()),
-      );
+      mapInstance?.setCenter(new naver.maps.LatLng(myLocation.y, myLocation.x));
       mapInstance?.setZoom(15);
     } else {
       showLocationConfirm(); // 위치 동의 띄우기
     }
-  }, [myLocation, showLocationConfirm]);
+  }, [mapInstance, myLocation, showLocationConfirm]);
 
   const handleGotoListBtnClick = () => {
     const targetRoute =
@@ -346,7 +345,7 @@ const EventMap = () => {
             transition={{ type: 'spring', stiffness: 300, damping: 20 }}
           >
             <S.EventCardWrapper>
-              <EventCard id={selectedEvent.eventId as bigint} />
+              <EventCard id={selectedEvent.eventId} />
             </S.EventCardWrapper>
           </motion.div>
         )}
