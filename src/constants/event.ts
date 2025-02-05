@@ -44,14 +44,6 @@ export const DEFAULT_FILTERS = {
   지역: '전체',
 } as const;
 
-export const DEFAULT_FILTERS = {
-  sort: 'latest',
-  category: 'all',
-  price: 'all',
-  duration: 'all',
-  location: 'all',
-};
-
 // BottomSheet
 export const BOTTOM_SHEET_ID_EVENT_FILTER = 'event-filter';
 export const BOTTOM_SHEET_ID_EVENT_SORT = 'event-sort';
