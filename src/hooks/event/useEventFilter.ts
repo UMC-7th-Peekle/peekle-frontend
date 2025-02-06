@@ -41,7 +41,6 @@ const useEventFilter = ({
   const filteredEvents = useMemo(() => {
     return events.filter((event) => {
       // 카테고리 필터
-      console.log('filters.카테고리', filters.카테고리);
       if (filters.카테고리 !== '전체') {
         const categories = filters.카테고리.split(',');
         if (!categories.includes(String(event.categoryId))) return false;

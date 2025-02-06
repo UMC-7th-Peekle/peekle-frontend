@@ -4,7 +4,7 @@ import { theme } from '@/styles/theme';
 import { getMarker } from '@/utils';
 import { useMapStore } from '@/stores';
 
-const useMapEventMarkers = (
+const useMapMarkers = (
   mapInstance: naver.maps.Map | undefined,
   events: EventData[],
 ) => {
@@ -162,4 +162,4 @@ const useMapEventMarkers = (
   };
 };
 
-export default useMapEventMarkers;
+export default useMapMarkers;

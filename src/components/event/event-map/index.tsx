@@ -13,7 +13,7 @@ import {
 import { useMapStore, useMyLocationStore } from '@/stores';
 import { confirm, getCurrentPosition } from '@/utils';
 import { ROUTES } from '@/constants/routes';
-import { useEventFilter, useMapEventMarkers } from '@/hooks';
+import { useEventFilter, useMapMarkers } from '@/hooks';
 
 window.navermap_authFailure = function () {
   console.error('네이버 지도 인증 실패');
@@ -31,7 +31,7 @@ const EventMap = () => {
   const { selectedEvent } = useMapStore();
   const { myLocation, setMyLocation } = useMyLocationStore();
   const { sortedEvents } = useEventFilter();
-  const { createMarkers, updateMarkers } = useMapEventMarkers(
+  const { createMarkers, updateMarkers } = useMapMarkers(
     mapInstance,
     sortedEvents,
   );
