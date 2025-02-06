@@ -56,7 +56,7 @@ const useMapEventMarkers = (
         position: new naver.maps.LatLng(lat, lng),
         map: mapInstance,
         icon: {
-          content: getMarker('my_location'),
+          content: getMarker(0), // 내 위치
           size: new naver.maps.Size(36, 36),
           origin: new naver.maps.Point(0, 0),
           anchor: new naver.maps.Point(18, 18),
@@ -69,7 +69,7 @@ const useMapEventMarkers = (
           position: new naver.maps.LatLng(event.latitude, event.longitude),
           map: mapInstance,
           icon: {
-            content: getMarker(event.category.name),
+            content: getMarker(event.categoryId),
             size: new naver.maps.Size(36, 36),
             origin: new naver.maps.Point(0, 0),
             anchor: new naver.maps.Point(18, 18),

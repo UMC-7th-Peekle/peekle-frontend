@@ -110,7 +110,13 @@ export interface FilePaginationProps {
 // 데이터
 // 이벤트 필터링
 // zod 스키마 정의
-export enum LocationCodeEnum {
+export enum CategoryIdEnum {
+  교육 = 1,
+  문화 = 2,
+  활동 = 5,
+}
+
+export enum LocationGroupIdEnum {
   마포_서대문_은평 = 19,
   강서_금천_양천 = 20,
   광진_성동_중랑_동대문 = 21,
@@ -120,9 +126,13 @@ export enum LocationCodeEnum {
   영등포_구로_신도림 = 25,
 }
 
-export type CategoryOption = (typeof CATEGORY_OPTIONS)[number]; // '전체' | '교육' | '문화' | '활동'
+export type CategoryOption = (typeof CATEGORY_OPTIONS)[number][1] extends string
+  ? number
+  : never; // '' | 1 | 2 | 5
 export type CategoryOptionWithoutAll =
-  (typeof CATEGORY_OPTIONS_WITHOUT_ALL)[number];
+  (typeof CATEGORY_OPTIONS_WITHOUT_ALL)[number][1] extends string
+    ? number
+    : never;
 export type PriceOption = (typeof PRICE_OPTIONS)[number]; // '전체' | '무료' | '유료'
 export type PriceOptionWithoutAll = (typeof PRICE_OPTIONS_WITHOUT_ALL)[number];
 export type LocationOption = (typeof LOCATION_OPTIONS)[number][1] extends string
@@ -133,12 +143,8 @@ export type LocationOptionWithoutAll =
     ? number
     : never;
 
-const locationCodeSchema = z.nativeEnum(LocationCodeEnum);
-
-const EventCategorySchema = z.object({
-  name: z.enum(CATEGORY_OPTIONS_WITHOUT_ALL),
-  description: z.string(),
-});
+const CategoryIdSchema = z.nativeEnum(CategoryIdEnum);
+const locationGroupIdSchema = z.nativeEnum(LocationGroupIdEnum);
 
 const EventImagesSchema = z.object({
   imageUrl: z.string().url(),
@@ -169,13 +175,13 @@ export const EventSchema = z.object({
   content: z.string(),
   price: z.number(),
   location: z.string().transform(getDistrict),
-  locationGroupId: locationCodeSchema,
+  locationGroupId: locationGroupIdSchema,
   eventUrl: z.string().url(),
   applicationStart: z.string().datetime(),
   applicationEnd: z.string().datetime(),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
-  category: EventCategorySchema,
+  categoryId: CategoryIdSchema,
   latitude: z.number(),
   longitude: z.number(),
   center: z.string(),
