@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useRef, useCallback } from 'react';
 import { EventData } from '@/types/event';
 import { theme } from '@/styles/theme';
 import { getMarker } from '@/utils';
@@ -8,20 +8,16 @@ const useMapEventMarkers = (
   mapInstance: naver.maps.Map | undefined,
   events: EventData[],
 ) => {
-  const [markers] = useState<Map<bigint, naver.maps.Marker>>(
-    new Map<bigint, naver.maps.Marker>(),
-  );
-  const [infoWindows] = useState<Map<bigint, naver.maps.InfoWindow>>(
-    new Map<bigint, naver.maps.InfoWindow>(),
-  );
+  const markersRef = useRef<Map<bigint, naver.maps.Marker>>(new Map());
+  const infoWindowsRef = useRef<Map<bigint, naver.maps.InfoWindow>>(new Map());
   const { setSelectedEvent } = useMapStore();
 
   // 마커 클릭 이벤트
   const handleMarkerClick = useCallback(
     (mapEvent: EventData) => {
       setSelectedEvent(mapEvent);
-      const marker = markers.get(mapEvent.eventId);
-      const infoWindow = infoWindows.get(mapEvent.eventId);
+      const marker = markersRef.current.get(mapEvent.eventId);
+      const infoWindow = infoWindowsRef.current.get(mapEvent.eventId);
       if (!marker || !infoWindow || !mapInstance) return;
 
       if (infoWindow.getMap()) {
@@ -43,34 +39,53 @@ const useMapEventMarkers = (
         mapInstance?.setZoom(15);
       }
     },
-    [setSelectedEvent, markers, infoWindows, mapInstance],
+    [setSelectedEvent, markersRef, infoWindowsRef, mapInstance],
   );
 
-  const createMarkers = useCallback(() => {
-    if (!mapInstance) return;
+  const createMarkers = useCallback(
+    (lat: number, lng: number) => {
+      if (!mapInstance) return;
 
-    events.forEach((event) => {
-      const marker = new naver.maps.Marker({
-        position: new naver.maps.LatLng(event.latitude, event.longitude),
+      // 기존 마커 삭제
+      markersRef.current.forEach((marker) => marker.setMap(null));
+      markersRef.current.clear();
+      infoWindowsRef.current.clear();
+
+      // 마커 생성
+      const myLocMarker = new naver.maps.Marker({
+        position: new naver.maps.LatLng(lat, lng),
         map: mapInstance,
         icon: {
-          content: getMarker(event.category.name),
+          content: getMarker('my_location'),
           size: new naver.maps.Size(36, 36),
           origin: new naver.maps.Point(0, 0),
           anchor: new naver.maps.Point(18, 18),
         },
       });
+      markersRef.current.set(0n, myLocMarker);
 
-      markers.set(event.eventId, marker);
+      events.forEach((event) => {
+        const marker = new naver.maps.Marker({
+          position: new naver.maps.LatLng(event.latitude, event.longitude),
+          map: mapInstance,
+          icon: {
+            content: getMarker(event.category.name),
+            size: new naver.maps.Size(36, 36),
+            origin: new naver.maps.Point(0, 0),
+            anchor: new naver.maps.Point(18, 18),
+          },
+        });
 
-      // 마커 클릭 이벤트 추가
-      naver.maps.Event.addListener(marker, 'click', () =>
-        handleMarkerClick(event),
-      );
+        markersRef.current.set(event.eventId, marker);
 
-      // InfoWindow
-      const InfoWindowContent = document.createElement('div');
-      InfoWindowContent.innerHTML = `
+        // 마커 클릭 이벤트 추가
+        naver.maps.Event.addListener(marker, 'click', () =>
+          handleMarkerClick(event),
+        );
+
+        // InfoWindow
+        const InfoWindowContent = document.createElement('div');
+        InfoWindowContent.innerHTML = `
         <div class="select-speech-bubble" style="position: relative;">
           <div class="selected-content" style="
             position: absolute;
@@ -107,25 +122,27 @@ const useMapEventMarkers = (
           "/>
         </div>
       `;
-      const infowindow = new naver.maps.InfoWindow({
-        content: InfoWindowContent,
-        // 기본 설정 무시
-        borderWidth: 0,
-        disableAnchor: true,
-        backgroundColor: 'transparent',
-        // 위치
-        pixelOffset: new naver.maps.Point(0, -35),
+        const infowindow = new naver.maps.InfoWindow({
+          content: InfoWindowContent,
+          // 기본 설정 무시
+          borderWidth: 0,
+          disableAnchor: true,
+          backgroundColor: 'transparent',
+          // 위치
+          pixelOffset: new naver.maps.Point(0, -35),
+        });
+        infoWindowsRef.current.set(event.eventId, infowindow);
       });
-      infoWindows.set(event.eventId, infowindow);
-    });
-  }, [markers, infoWindows, mapInstance, events, handleMarkerClick]);
+    },
+    [markersRef, infoWindowsRef, mapInstance, events, handleMarkerClick],
+  );
 
   const updateMarkers = useCallback(() => {
     if (!mapInstance) return;
     // 현재 지도의 화면 영역을 mapBounds 변수에 저장
     const mapBounds = mapInstance.getBounds();
     // 마커 객체 배열을 순회하며 각 마커의 위치를 position 변수에 저장
-    markers.forEach((marker) => {
+    markersRef.current.forEach((marker) => {
       const position = marker.getPosition();
       if (mapBounds.hasPoint(position)) {
         // 마커가 화면에 보이면 표시
@@ -135,9 +152,14 @@ const useMapEventMarkers = (
         marker.setMap(null);
       }
     });
-  }, [mapInstance, markers]);
+  }, [mapInstance]);
 
-  return { markers, infoWindows, createMarkers, updateMarkers };
+  return {
+    markers: markersRef.current,
+    infoWindows: infoWindowsRef.current,
+    createMarkers,
+    updateMarkers,
+  };
 };
 
 export default useMapEventMarkers;

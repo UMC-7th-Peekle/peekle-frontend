@@ -1,5 +1,5 @@
 import * as S from './style';
-import { useEffect, useCallback, useState } from 'react';
+import { useEffect, useCallback, useState, useRef } from 'react';
 import { useQueryState } from 'nuqs';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -11,7 +11,7 @@ import {
   DeferredLoader,
 } from '@/components';
 import { useMapStore, useMyLocationStore } from '@/stores';
-import { confirm, getMarker, getCurrentPosition } from '@/utils';
+import { confirm, getCurrentPosition } from '@/utils';
 import { ROUTES } from '@/constants/routes';
 import { useEventFilter, useMapEventMarkers } from '@/hooks';
 
@@ -22,14 +22,16 @@ window.navermap_authFailure = function () {
 
 const EventMap = () => {
   // localStorage.clear();
+  // sessionStorage.clear();
   const [mapInstance, setMapInstance] = useState<naver.maps.Map>();
   const [searchQuery] = useQueryState('event-search', { defaultValue: '' });
   const [isLoading, setIsLoading] = useState(false);
+  const mapInitialized = useRef(false);
 
   const { selectedEvent } = useMapStore();
   const { myLocation, setMyLocation } = useMyLocationStore();
   const { sortedEvents } = useEventFilter();
-  const { markers, createMarkers, updateMarkers } = useMapEventMarkers(
+  const { createMarkers, updateMarkers } = useMapEventMarkers(
     mapInstance,
     sortedEvents,
   );
@@ -40,6 +42,8 @@ const EventMap = () => {
   const initMap = useCallback(
     (centerLat: number, centerLng: number) => {
       const mapDiv = document.getElementById('map');
+      console.log(mapDiv);
+      console.log(centerLat, centerLng);
       if (!mapDiv) return;
       if (!mapInstance) {
         const newMap = new naver.maps.Map(mapDiv, {
@@ -51,60 +55,17 @@ const EventMap = () => {
 
         setMapInstance(newMap);
       } else {
-        mapInstance.setCenter(new naver.maps.LatLng(centerLat, centerLng));
-        mapInstance.setZoom(15);
+        if (!mapInitialized.current) {
+          mapInstance.setCenter(new naver.maps.LatLng(centerLat, centerLng));
+          mapInstance.setZoom(15);
+          mapInitialized.current = true;
+        }
       }
-
-      const myLocMarker = new naver.maps.Marker({
-        position: new naver.maps.LatLng(centerLat, centerLng),
-        map: mapInstance,
-        icon: {
-          content: getMarker('my_location'),
-          size: new naver.maps.Size(36, 36),
-          origin: new naver.maps.Point(0, 0),
-          anchor: new naver.maps.Point(18, 18),
-        },
-      });
-      markers.set(0n, myLocMarker);
-
-      // 이벤트 마커 생성
-      createMarkers();
+      console.log(mapInstance);
+      createMarkers(centerLat, centerLng);
     },
-    [mapInstance, createMarkers, markers],
+    [mapInstance, createMarkers],
   );
-
-  // console.log('sortedEvents', sortedEvents);
-  // useEffect(() => {
-  //   if (!mapInstance || !sortedEvents) return;
-
-  //   // 기존 마커 제거
-  //   markers.forEach((marker, key) => {
-  //     if (key !== 0n) {
-  //       marker.setMap(null); // 'my_location' 마커는 건드리지 않음
-  //     }
-  //   });
-  //   markers.clear();
-
-  //   // 새로운 마커 생성
-  //   sortedEvents.forEach((event) => {
-  //     const marker = new naver.maps.Marker({
-  //       position: new naver.maps.LatLng(event.latitude, event.longitude),
-  //       map: mapInstance,
-  //       icon: {
-  //         content: getMarker(event.category.name),
-  //         size: new naver.maps.Size(36, 36),
-  //         origin: new naver.maps.Point(0, 0),
-  //         anchor: new naver.maps.Point(18, 18),
-  //       },
-  //     });
-
-  //     // 마커 이벤트 등록
-  //     naver.maps.Event.addListener(marker, 'click', () =>
-  //       handleMarkerClick(event),
-  //     );
-  //     markers.set(event.eventId, marker);
-  //   });
-  // }, [sortedEvents, handleMarkerClick, markers, updateMarkers]);
 
   // 지도 움직임
   const idleHandler = useCallback(() => {
@@ -133,6 +94,8 @@ const EventMap = () => {
       setMyLocation(
         new naver.maps.LatLng(newLocation.latitude, newLocation.longitude),
       );
+      const mapDiv = document.getElementById('map');
+      console.log('mapDiv in handleLocationSuccess', mapDiv);
       initMap(newLocation.latitude, newLocation.longitude);
     },
     [initMap, setMyLocation],
@@ -142,10 +105,9 @@ const EventMap = () => {
     confirm(
       <LocationConfirm
         onLocationAllow={async () => {
-          setIsLoading(true); // 위치 요청 시작 시 로딩 시작
-          await getCurrentPosition().then(handleLocationSuccess);
-          localStorage.setItem('curr-location-agree', 'true');
-          setIsLoading(false);
+          await getCurrentPosition()
+            .then(handleLocationSuccess)
+            .finally(() => setIsLoading(false));
         }}
       />,
     );
@@ -158,13 +120,33 @@ const EventMap = () => {
       showLocationConfirm();
     } else if (locationAgreed === 'true') {
       if (myLocation) {
-        console.log('initMap 호출');
-        initMap(myLocation.y, myLocation.x);
-        setIsLoading(false);
-        return;
+        const mapDiv = document.getElementById('map');
+        if (mapDiv) {
+          initMap(myLocation.y, myLocation.x);
+          setIsLoading(false);
+        } else {
+          // MutationObserver 설정
+          const observer = new MutationObserver(() => {
+            const newMapDiv = document.getElementById('map');
+            if (newMapDiv) {
+              observer.disconnect(); // 요소를 찾으면 감지 중단
+              initMap(myLocation.y, myLocation.x);
+              setIsLoading(false);
+            }
+          });
+
+          observer.observe(document.body, { childList: true, subtree: true });
+
+          return () => {
+            observer.disconnect();
+          }; // 컴포넌트 언마운트 시 정리
+        }
       }
-      getCurrentPosition().then(handleLocationSuccess);
+      getCurrentPosition()
+        .then(handleLocationSuccess)
+        .finally(() => setIsLoading(false));
     }
+    return undefined;
   }, [handleLocationSuccess, showLocationConfirm, initMap, myLocation]);
 
   // 내 위치로 이동
@@ -193,7 +175,7 @@ const EventMap = () => {
     return <DeferredLoader text={'위치 정보를 가져오는 중이에요...'} />;
 
   return (
-    <S.MapContainer>
+    <S.MapContainer id="mapContainer">
       <S.Map id="map" />
       <S.BottomContainer>
         <S.ButtonContainer>

@@ -22,7 +22,7 @@ const LocationConfirm = ({ onLocationAllow }: LocationConfirmProps) => {
           width="284px"
           size="small"
           onClick={() => {
-            sessionStorage.setItem('curr-location-agree', 'true');
+            localStorage.setItem('curr-location-agree', 'true');
             onLocationAllow();
             close();
           }}
