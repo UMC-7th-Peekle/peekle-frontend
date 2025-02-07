@@ -1,12 +1,14 @@
 import { clientAuth } from '@/apis/client';
 import { formatDateCardTime } from '@/utils/dateFormatter';
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 
+// 커뮤니티 게시글 목록 API
+
 const AuthorInfoSchema = z.object({
-  nickname: z.string(),
-  profileImage: z.string(),
-  authorId: z.number().int(),
+  nickname: z.string().nullable(),
+  profileImage: z.string().nullable(),
+  authorId: z.number().int().nullable(),
 });
 
 // Zod 스키마 정의
@@ -25,7 +27,7 @@ const ArticleSchema = z.object({
 });
 
 const SuccessResponseSchema = z.object({
-  message: z.string(),
+  message: z.string().nullable(),
   articles: z.array(ArticleSchema),
   nextCursor: z.number().nullable(),
   hasNextPage: z.boolean(),
@@ -41,19 +43,26 @@ const CommunityResponseSchema = z.object({
 export type CommunityResponse = z.infer<typeof CommunityResponseSchema>;
 export type Article = z.infer<typeof ArticleSchema>;
 
-// API 호출 함수
+// ✅ 무한 스크롤을 위한 API 호출 함수
 const getCommunity = async ({
-  limit,
-  cursor,
-  communityId,
-}: UseGetCommunityIdProps): Promise<CommunityResponse> => {
+  pageParam,
+  limit = 5,
+  communityId = 1,
+  query,
+}: {
+  pageParam?: number;
+  limit: number;
+  communityId: number;
+  query: string | null;
+}): Promise<CommunityResponse> => {
   const response = await clientAuth<CommunityResponse>({
     method: 'GET',
     url: `/community`,
     params: {
       limit,
-      cursor,
+      cursor: pageParam, // 커서 기반 페이지네이션
       communityId,
+      query,
     },
   });
 
@@ -62,22 +71,26 @@ const getCommunity = async ({
   return parsedData;
 };
 
-// useQuery 훅 생성
+// ✅ useInfiniteQuery 훅 생성
 export const useGetCommunity = ({
-  limit = 10,
-  cursor = null,
-  query = '',
-  communityId,
-}: UseGetCommunityIdProps) => {
-  return useQuery({
-    queryKey: ['community', communityId, limit, cursor, query],
-    queryFn: () => getCommunity({ limit, cursor, query, communityId }),
+  limit = 5,
+  communityId = 1,
+  query = null,
+}: {
+  limit?: number;
+  communityId?: number;
+  query?: string | null;
+}) => {
+  return useInfiniteQuery<CommunityResponse, Error>({
+    queryKey: ['community', communityId],
+    queryFn: ({ pageParam }) =>
+      getCommunity({
+        pageParam: pageParam as number | undefined,
+        limit,
+        communityId,
+        query,
+      }),
+    initialPageParam: undefined,
+    getNextPageParam: (lastPage) => lastPage.success.nextCursor ?? undefined,
   });
 };
-
-interface UseGetCommunityIdProps {
-  limit?: number;
-  cursor?: number | null;
-  query?: string | null;
-  communityId?: number | null;
-}

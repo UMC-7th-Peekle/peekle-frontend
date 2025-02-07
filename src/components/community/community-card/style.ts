@@ -1,9 +1,8 @@
 import { theme } from '@/styles/theme';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 
 // 제일 바깥쪽 컨테이너너
-const Container = styled(Link)`
+const Container = styled.div`
   padding-top: 16px;
   width: 100%;
   display: flex;
