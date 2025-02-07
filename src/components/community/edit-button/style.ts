@@ -3,17 +3,18 @@ import styled from 'styled-components';
 import Pen from '@/assets/images/icons/pen.svg?react';
 
 const DefaultTypeContainer = styled.button`
-  height: 48px;
-  width: 101px;
+  height: 40px;
+  width: 99px;
   border-radius: 50px;
-  background-color: ${theme.color.primary[500]};
-  color: ${theme.color.gray[0]};
+  background-color: ${theme.color.gray[0]};
+  color: ${theme.color.gray[600]};
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
   gap: 8px;
   transition: filter 0.2s ease;
+  box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.16);
 
   &:active {
     filter: brightness(0.9);
@@ -30,6 +31,13 @@ const RectTypeContainer = styled(DefaultTypeContainer)`
 const PenIcon = styled(Pen)`
   width: 20px;
   path {
+    fill: ${theme.color.gray[600]};
+  }
+`;
+
+const PenIconRect = styled(Pen)`
+  width: 20px;
+  path {
     fill: ${theme.color.gray[0]};
   }
 `;
@@ -38,4 +46,10 @@ const ButtonText = styled.p`
   ${theme.typeFace.body['16SB']};
 `;
 
-export { DefaultTypeContainer, RectTypeContainer, PenIcon, ButtonText };
+export {
+  PenIconRect,
+  DefaultTypeContainer,
+  RectTypeContainer,
+  PenIcon,
+  ButtonText,
+};
