@@ -7,33 +7,18 @@ import PhoneSVG from '@/assets/images/onboarding/phone.svg?react';
 import HeaderSVG from '@/assets/images/onboarding/header.svg?react';
 import { motion } from 'framer-motion';
 import { theme } from '@/styles/theme';
-
+//import { alert } from '@/utils';
 const OnboardingPage = () => {
   const navigate = useNavigate();
   const api = import.meta.env.VITE_API_URL;
-
+  const kakao_client = import.meta.env.VITE_KAKAO_CLIENT_ID;
   const handlephone = () => {
     navigate('/auth/phone-number');
   };
-
-  const handleKakao = async () => {
-    try {
-      const response = await fetch(`${api}/auth/login/kako`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      });
-      if (!response.ok) {
-        navigate('/auth/phone-number');
-      }
-      const data = await response.json();
-      console.log('KAKAO login response:', data);
-      navigate('/event');
-    } catch (error) {
-      console.error('Kakao login error:', error);
-      alert('카카오 로그인에 실패했습니다.');
-    }
+  const handleKakao = () => {
+    const kakaoAuthURL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${kakao_client}&redirect_uri=${api}/auth/login/kakao/callback`;
+    window.location.href = kakaoAuthURL;
   };
-
   const slides = [
     {
       src: '/onboarding/onboard_1.png',
@@ -144,7 +129,7 @@ const ButtonWrapper = styled.div`
   align-items: center;
   font-family: 'Pretendard', sans-serif;
   font-weight: 600;
-  margin-bottom: 48px;
+  margin-bottom: 30px;
 `;
 
 const CarouselContainer = styled.div`
@@ -159,7 +144,7 @@ const CarouselContainer = styled.div`
 // ✅ 캐러셀 Wrapper
 const MotionWrapper = styled.div`
   width: 100%;
-  height: 70%;
+  height: 90%;
   overflow: hidden;
   display: flex;
   justify-content: center;
