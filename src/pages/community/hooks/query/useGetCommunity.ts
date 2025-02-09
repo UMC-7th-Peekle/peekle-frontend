@@ -1,12 +1,14 @@
 import { clientAuth } from '@/apis/client';
 import { formatDateCardTime } from '@/utils/dateFormatter';
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 
+// 커뮤니티 게시글 목록 API
+
 const AuthorInfoSchema = z.object({
-  nickname: z.string(),
-  profileImage: z.string(),
-  authorId: z.number().int(),
+  nickname: z.string().nullable(),
+  profileImage: z.string().nullable(),
+  authorId: z.number().int().nullable(),
 });
 
 // Zod 스키마 정의
@@ -20,19 +22,20 @@ const ArticleSchema = z.object({
   updatedAt: z.string(),
   articleComments: z.number().int(),
   articleLikes: z.number().int(),
+  isLikedByUser: z.boolean(),
   thumbnail: z.string().nullable(),
   authorInfo: AuthorInfoSchema,
 });
 
 const SuccessResponseSchema = z.object({
-  message: z.string(),
+  message: z.string().nullable(),
   articles: z.array(ArticleSchema),
   nextCursor: z.number().nullable(),
   hasNextPage: z.boolean(),
 });
 
 const CommunityResponseSchema = z.object({
-  resultType: z.literal('SUCCESS'),
+  resultType: z.literal('SUCCESS').nullable(),
   error: z.null(),
   success: SuccessResponseSchema,
 });
@@ -41,43 +44,64 @@ const CommunityResponseSchema = z.object({
 export type CommunityResponse = z.infer<typeof CommunityResponseSchema>;
 export type Article = z.infer<typeof ArticleSchema>;
 
-// API 호출 함수
 const getCommunity = async ({
-  limit,
-  cursor,
-  communityId,
-}: UseGetCommunityIdProps): Promise<CommunityResponse> => {
-  const response = await clientAuth<CommunityResponse>({
-    method: 'GET',
-    url: `/community`,
-    params: {
-      limit,
-      cursor,
-      communityId,
+  pageParam,
+  limit = 5,
+  communityId = 1,
+  query,
+}: {
+  pageParam?: number;
+  limit: number;
+  communityId: number;
+  query: string | null;
+}): Promise<CommunityResponse | null> => {
+  try {
+    const response = await clientAuth<CommunityResponse>({
+      method: 'GET',
+      url: `/community`,
+      params: {
+        limit,
+        cursor: pageParam,
+        communityId,
+        query,
+      },
+    });
+
+    // ✅ 204 No Content 처리
+    if (response.status === 204) {
+      console.log('📌 [API 응답] 204 No Content - 더 이상 게시글이 없습니다.');
+      return null;
+    }
+
+    return CommunityResponseSchema.parse(response.data);
+  } catch (error) {
+    console.error('❌ Zod 파싱 에러 또는 API 에러:', error);
+    throw error;
+  }
+};
+
+export const useGetCommunity = ({
+  limit = 5,
+  communityId = 1,
+  query = null,
+}: {
+  limit?: number;
+  communityId?: number;
+  query?: string | null;
+}) => {
+  return useInfiniteQuery<CommunityResponse | null, Error>({
+    queryKey: ['get-community', communityId],
+    queryFn: async ({ pageParam }) =>
+      getCommunity({
+        pageParam: pageParam as number | undefined,
+        limit,
+        communityId,
+        query,
+      }),
+    initialPageParam: undefined,
+    getNextPageParam: (lastPage) => {
+      if (!lastPage) return undefined;
+      return lastPage.success.nextCursor ?? undefined;
     },
   });
-
-  // 응답 데이터 검증
-  const parsedData = CommunityResponseSchema.parse(response.data);
-  return parsedData;
 };
-
-// useQuery 훅 생성
-export const useGetCommunity = ({
-  limit = 10,
-  cursor = null,
-  query = '',
-  communityId,
-}: UseGetCommunityIdProps) => {
-  return useQuery({
-    queryKey: ['community', communityId, limit, cursor, query],
-    queryFn: () => getCommunity({ limit, cursor, query, communityId }),
-  });
-};
-
-interface UseGetCommunityIdProps {
-  limit?: number;
-  cursor?: number | null;
-  query?: string | null;
-  communityId?: number | null;
-}

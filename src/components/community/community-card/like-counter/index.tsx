@@ -5,7 +5,7 @@ export default function LikeCounter({
   isLiked = false,
 }: LikeCounterProps) {
   return (
-    <S.Container>
+    <S.Container isLiked={isLiked}>
       <S.Heart isLiked={isLiked} />
       <p>{count}</p>
     </S.Container>

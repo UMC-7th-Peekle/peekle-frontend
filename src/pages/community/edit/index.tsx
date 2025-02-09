@@ -1,32 +1,50 @@
-import { AnonymousCheck, Backward } from '@/components';
+import { Backward } from '@/components';
 import * as S from './style';
-import { useState } from 'react';
+import BodySection from './container/BodySection';
+import BottomSection from './container/BottomSection';
+import usePostCommunity from './hook/usePostCommunity';
 
 export default function CommunityEditPage() {
-  const [isChecked, setIsChecked] = useState(false);
+  const {
+    title,
+    content,
+    isAnonymous,
+    selectedImages,
+    thumbnail,
+    isFormFilled,
+    handleToggleAnonymous,
+    handleTitleChange,
+    handleContentChange,
+    handleImageUpload,
+    handleRemoveImage,
+    handleSelectThumbnail,
+    onSubmit,
+  } = usePostCommunity();
 
-  const handleToggle = () => {
-    setIsChecked((prev) => !prev);
-  };
   return (
     <S.MainContainer>
       <S.Appbar>
         <Backward />
         <S.Title>글쓰기</S.Title>
-        <S.SubmitButton>완료</S.SubmitButton>
+        <S.SubmitButton as="button" $isActive={isFormFilled} onClick={onSubmit}>
+          완료
+        </S.SubmitButton>
       </S.Appbar>
-      <S.TitleField
-        type="text"
-        autoFocus={true}
-        placeholder="제목을 입력해주세요."
+      <BodySection
+        title={title}
+        content={content}
+        onTitleChange={handleTitleChange}
+        onContentChange={handleContentChange}
+        selectedImages={selectedImages}
+        thumbnail={thumbnail}
+        onRemoveImage={handleRemoveImage}
+        onSelectThumbnail={handleSelectThumbnail}
       />
-      <S.ContentContainer>
-        <S.ContentField placeholder="자유롭게 내용을 입력해주세요." />
-      </S.ContentContainer>
-      <S.BottomBar>
-        <S.CameraButton />
-        <AnonymousCheck isChecked={isChecked} onToggle={handleToggle} />
-      </S.BottomBar>
+      <BottomSection
+        isAnonymous={isAnonymous}
+        onToggleAnonymous={handleToggleAnonymous}
+        onImageUpload={handleImageUpload}
+      />
     </S.MainContainer>
   );
 }
