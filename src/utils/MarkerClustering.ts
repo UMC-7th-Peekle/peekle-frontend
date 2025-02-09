@@ -18,17 +18,17 @@
 //  * 마커 클러스터링을 정의합니다.
 //  * @param {Object} options 마커 클러스터링 옵션
 //  */
-// const MarkerClustering = function (options) {
+// const MarkerClustering = (options) => {
 //   if (!naver) return;
-//   // 기본 값입니다.
-//   this.DEFAULT_OPTIONS = {
-//     // 클러스터 마커를 올릴 지도입니다.
+
+//   const DEFAULT_OPTIONS = {
+//     // 클러스터 마커를 올릴 지도
 //     map: null,
-//     // 클러스터 마커를 구성할 마커입니다.
+//     // 클러스터 마커를 구성할 마커
 //     markers: [],
-//     // 클러스터 마커 클릭 시 줌 동작 여부입니다.
+//     // 클러스터 마커 클릭 시 줌 동작 여부
 //     disableClickZoom: true,
-//     // 클러스터를 구성할 최소 마커 수입니다.
+//     // 클러스터를 구성할 최소 마커 수
 //     minClusterSize: 2,
 //     // 클러스터 마커로 표현할 최대 줌 레벨입니다. 해당 줌 레벨보다 높으면, 클러스터를 구성하고 있는 마커를 노출합니다.
 //     maxZoom: 13,
@@ -44,10 +44,10 @@
 //     stylingFunction: function () {},
 //   };
 
-//   this._clusters = [];
+//   const _clusters = [];
 
-//   this._mapRelations = null;
-//   this._markerRelations = [];
+//   const _mapRelations = null;
+//   const _markerRelations = [];
 
 //   this.setOptions(
 //     naver.maps.Util.extend({}, this.DEFAULT_OPTIONS, options),

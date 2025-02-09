@@ -114,14 +114,14 @@ const useEventFilter = ({
 
       if (filters.정렬 === '가까운 거리순' && myLocation) {
         const distanceA = calculateDistance(
-          myLocation.lat(),
-          myLocation.lng(),
+          myLocation.y,
+          myLocation.x,
           a.latitude,
           a.longitude,
         );
         const distanceB = calculateDistance(
-          myLocation.lat(),
-          myLocation.lng(),
+          myLocation.y,
+          myLocation.x,
           b.latitude,
           b.longitude,
         );

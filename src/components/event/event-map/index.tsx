@@ -13,7 +13,6 @@ import { useMapStore, useMyLocationStore } from '@/stores';
 import { confirm, getCurrentPosition } from '@/utils';
 import { ROUTES } from '@/constants/routes';
 import { useEventFilter, useMapMarkers } from '@/hooks';
-import { theme } from '@/styles/theme';
 
 window.navermap_authFailure = function () {
   console.error('네이버 지도 인증 실패');
@@ -28,6 +27,7 @@ const EventMap = ({ onMapLoad }: { onMapLoad: () => void }) => {
 
   const {
     selectedEvent,
+    setSelectedEvent,
     setIsLoading,
     setLoadingMessage,
     // setLatestPos,
@@ -35,10 +35,14 @@ const EventMap = ({ onMapLoad }: { onMapLoad: () => void }) => {
   } = useMapStore();
   const { myLocation, setMyLocation } = useMyLocationStore();
   const { sortedEvents } = useEventFilter();
-  const { createMarkers, updateMarkers, overlays } = useMapMarkers(
-    mapInstance,
-    sortedEvents,
-  );
+  const {
+    markers,
+    blackSBMarker,
+    createBlackMarker,
+    createMarkers,
+    updateMarkers,
+    removeBlackSBMarker,
+  } = useMapMarkers(mapInstance, sortedEvents);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -62,6 +66,23 @@ const EventMap = ({ onMapLoad }: { onMapLoad: () => void }) => {
 
         setMapInstance(newMap);
 
+        // selectedEvent가 있을 땐 해당 검정 말풍선 열기
+        if (selectedEvent) {
+          const marker = markers.get(selectedEvent.eventId);
+          if (marker) {
+            console.log('blackSBMarker:', blackSBMarker);
+            if (!blackSBMarker) {
+              createBlackMarker(
+                new naver.maps.LatLng(
+                  selectedEvent.latitude,
+                  selectedEvent.longitude,
+                ),
+                selectedEvent,
+              );
+            }
+          }
+        }
+
         // 맵이 완전히 로드되었을 때
         naver.maps.Event.addListener(newMap, 'init', () => {
           onMapLoad();
@@ -73,7 +94,16 @@ const EventMap = ({ onMapLoad }: { onMapLoad: () => void }) => {
       }
       createMarkers(centerLat, centerLng);
     },
-    [mapInstance, createMarkers, onMapLoad, latestPos],
+    [
+      mapInstance,
+      createMarkers,
+      onMapLoad,
+      latestPos,
+      selectedEvent,
+      markers,
+      blackSBMarker,
+      createBlackMarker,
+    ],
   );
 
   // 지도 움직임
@@ -84,22 +114,11 @@ const EventMap = ({ onMapLoad }: { onMapLoad: () => void }) => {
   const mapClickHandler = useCallback(() => {
     // 선택된 infowindow 기본 색으로 변경
     if (selectedEvent) {
-      const overlay = overlays.get(selectedEvent.eventId);
-      console.log('selectedEvent infoWindow', overlay);
-      if (overlay) {
-        const el = overlay.getElement() as HTMLElement;
-        const selectedContent = el.querySelector(
-          '.selected-content',
-        ) as HTMLElement;
-        const speechBubbleTail = el.querySelector(
-          '.speech-bubble-tail',
-        ) as HTMLElement;
-        selectedContent.style.background = theme.color.gray[0];
-        selectedContent.style.color = theme.color.gray[900];
-        speechBubbleTail.style.background = theme.color.gray[0];
-      }
+      console.log('selectedEvent:', selectedEvent);
+      setSelectedEvent(null);
+      removeBlackSBMarker();
     }
-  }, [overlays, selectedEvent]);
+  }, [selectedEvent, setSelectedEvent, removeBlackSBMarker]);
 
   // 이벤트 리스너 등록
   useEffect(() => {

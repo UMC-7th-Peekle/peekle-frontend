@@ -120,7 +120,7 @@ export interface FilePaginationProps {
 export enum CategoryIdEnum {
   교육 = 1,
   문화 = 2,
-  활동 = 5,
+  활동 = 3,
 }
 
 export enum LocationGroupIdEnum {
@@ -135,7 +135,7 @@ export enum LocationGroupIdEnum {
 
 export type CategoryOption = (typeof CATEGORY_OPTIONS)[number][1] extends string
   ? number
-  : never; // '' | 1 | 2 | 5
+  : never; // 0 | 1 | 2 | 3
 export type CategoryOptionWithoutAll =
   (typeof CATEGORY_OPTIONS_WITHOUT_ALL)[number][1] extends string
     ? number

@@ -2,6 +2,14 @@ import { EventSchedule } from '@/types/event';
 import { formatTime } from './timeFormatter';
 import { formatDateToMonthDay } from './dateFormatter';
 
+export const getCategoryName = (categoryId: number) => {
+  return {
+    1: '교육',
+    2: '문화',
+    3: '활동',
+  }[categoryId];
+};
+
 // 행정구,자치구 추출
 export const getDistrict = (address: string) => {
   return address.match(/(\S+)구/)?.[1] ?? '';
