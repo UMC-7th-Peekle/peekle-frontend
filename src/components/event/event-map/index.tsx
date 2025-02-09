@@ -49,7 +49,6 @@ const EventMap = ({ onMapLoad }: { onMapLoad: () => void }) => {
       if (!mapDiv) return;
 
       // latestPos가 있으면 그 위치를 사용
-      // console.log('latestPos', latestPos);
       const latLng = latestPos ?? new naver.maps.LatLng(centerLat, centerLng);
 
       if (!mapInstance) {
@@ -139,6 +138,8 @@ const EventMap = ({ onMapLoad }: { onMapLoad: () => void }) => {
       <LocationConfirm
         onLocationAllow={() => {
           localStorage.setItem('curr-location-agree', 'true');
+          setIsLoading(true);
+          setLoadingMessage('위치 정보를 가져오는 중이에요...');
           getCurrentPosition()
             .then(handleLocationSuccess)
             .finally(() => {
