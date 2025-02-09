@@ -1,5 +1,5 @@
 import * as S from './style';
-import { useEffect, useCallback, useState, useRef } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import { useQueryState } from 'nuqs';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -8,30 +8,34 @@ import {
   LocationConfirm,
   SquareButton,
   RoundedButton,
-  DeferredLoader,
 } from '@/components';
 import { useMapStore, useMyLocationStore } from '@/stores';
 import { confirm, getCurrentPosition } from '@/utils';
 import { ROUTES } from '@/constants/routes';
 import { useEventFilter, useMapMarkers } from '@/hooks';
+import { theme } from '@/styles/theme';
 
 window.navermap_authFailure = function () {
   console.error('네이버 지도 인증 실패');
   throw new Error('네이버 지도 인증 실패');
 };
 
-const EventMap = () => {
+const EventMap = ({ onMapLoad }: { onMapLoad: () => void }) => {
   // localStorage.clear();
   // sessionStorage.clear();
   const [mapInstance, setMapInstance] = useState<naver.maps.Map>();
   const [searchQuery] = useQueryState('event-search', { defaultValue: '' });
-  const [isLoading, setIsLoading] = useState(false);
-  const mapInitialized = useRef(false);
 
-  const { selectedEvent } = useMapStore();
+  const {
+    selectedEvent,
+    setIsLoading,
+    setLoadingMessage,
+    // setLatestPos,
+    latestPos,
+  } = useMapStore();
   const { myLocation, setMyLocation } = useMyLocationStore();
   const { sortedEvents } = useEventFilter();
-  const { createMarkers, updateMarkers } = useMapMarkers(
+  const { createMarkers, updateMarkers, overlays } = useMapMarkers(
     mapInstance,
     sortedEvents,
   );
@@ -42,29 +46,35 @@ const EventMap = () => {
   const initMap = useCallback(
     (centerLat: number, centerLng: number) => {
       const mapDiv = document.getElementById('map');
-      console.log(mapDiv);
-      console.log(centerLat, centerLng);
       if (!mapDiv) return;
+
+      // latestPos가 있으면 그 위치를 사용
+      // console.log('latestPos', latestPos);
+      const latLng = latestPos ?? new naver.maps.LatLng(centerLat, centerLng);
+
       if (!mapInstance) {
         const newMap = new naver.maps.Map(mapDiv, {
-          center: new naver.maps.LatLng(centerLat, centerLng),
+          // center: new naver.maps.LatLng(centerLat, centerLng),
+          center: latLng,
           zoom: 15,
           minZoom: 10,
           disableKineticPan: false,
         });
 
         setMapInstance(newMap);
+
+        // 맵이 완전히 로드되었을 때
+        naver.maps.Event.addListener(newMap, 'init', () => {
+          onMapLoad();
+        });
       } else {
-        if (!mapInitialized.current) {
-          mapInstance.setCenter(new naver.maps.LatLng(centerLat, centerLng));
-          mapInstance.setZoom(15);
-          mapInitialized.current = true;
-        }
+        // mapInstance.setCenter(new naver.maps.LatLng(centerLat, centerLng));
+        mapInstance.setCenter(latLng);
+        mapInstance.setZoom(15);
       }
-      console.log(mapInstance);
       createMarkers(centerLat, centerLng);
     },
-    [mapInstance, createMarkers],
+    [mapInstance, createMarkers, onMapLoad, latestPos],
   );
 
   // 지도 움직임
@@ -72,82 +82,143 @@ const EventMap = () => {
     updateMarkers();
   }, [updateMarkers]);
 
+  const mapClickHandler = useCallback(() => {
+    // 선택된 infowindow 기본 색으로 변경
+    if (selectedEvent) {
+      const overlay = overlays.get(selectedEvent.eventId);
+      console.log('selectedEvent infoWindow', overlay);
+      if (overlay) {
+        const el = overlay.getElement() as HTMLElement;
+        const selectedContent = el.querySelector(
+          '.selected-content',
+        ) as HTMLElement;
+        const speechBubbleTail = el.querySelector(
+          '.speech-bubble-tail',
+        ) as HTMLElement;
+        selectedContent.style.background = theme.color.gray[0];
+        selectedContent.style.color = theme.color.gray[900];
+        speechBubbleTail.style.background = theme.color.gray[0];
+      }
+    }
+  }, [overlays, selectedEvent]);
+
+  // 이벤트 리스너 등록
   useEffect(() => {
     if (!mapInstance) return;
 
+    const MapClickListner = naver.maps.Event.addListener(
+      mapInstance,
+      'click',
+      mapClickHandler,
+    );
+
     const MoveEventListner = naver.maps.Event.addListener(
       mapInstance,
-      'idle',
+      'idle', // 지도 움직임 끝났을때
       idleHandler,
     );
     return () => {
+      naver.maps.Event.removeListener(MapClickListner);
       naver.maps.Event.removeListener(MoveEventListner);
     };
-  }, [idleHandler, mapInstance]);
+  }, [idleHandler, mapClickHandler, mapInstance]);
 
+  // 위치 동의 성공
   const handleLocationSuccess = useCallback(
     async (position: GeolocationPosition) => {
-      const newLocation = {
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude,
-      };
-      setMyLocation(
-        new naver.maps.LatLng(newLocation.latitude, newLocation.longitude),
-      );
-      const mapDiv = document.getElementById('map');
-      console.log('mapDiv in handleLocationSuccess', mapDiv);
-      initMap(newLocation.latitude, newLocation.longitude);
+      const { latitude, longitude } = position.coords;
+      setMyLocation(new naver.maps.LatLng(latitude, longitude));
+      initMap(latitude, longitude);
     },
     [initMap, setMyLocation],
   );
 
+  // 위치 동의 확인
   const showLocationConfirm = useCallback(() => {
     confirm(
       <LocationConfirm
-        onLocationAllow={async () => {
-          await getCurrentPosition()
+        onLocationAllow={() => {
+          localStorage.setItem('curr-location-agree', 'true');
+          getCurrentPosition()
             .then(handleLocationSuccess)
-            .finally(() => setIsLoading(false));
+            .finally(() => {
+              setIsLoading(false);
+              setLoadingMessage('');
+            });
+        }}
+        onLocationDeny={() => {
+          localStorage.setItem('curr-location-agree', 'false');
+          initMap(
+            import.meta.env.VITE_MAP_CENTER_LAT,
+            import.meta.env.VITE_MAP_CENTER_LNG,
+          );
+          setIsLoading(false);
+          setLoadingMessage('');
         }}
       />,
     );
-  }, [handleLocationSuccess]);
+  }, [handleLocationSuccess, setIsLoading, setLoadingMessage, initMap]);
 
   useEffect(() => {
     const locationAgreed = localStorage.getItem('curr-location-agree');
-    setIsLoading(true);
     if (locationAgreed === null) {
       showLocationConfirm();
-    } else if (locationAgreed === 'true') {
-      if (myLocation) {
-        const mapDiv = document.getElementById('map');
-        if (mapDiv) {
-          initMap(myLocation.y, myLocation.x);
-          setIsLoading(false);
-        } else {
-          // MutationObserver 설정
-          const observer = new MutationObserver(() => {
-            const newMapDiv = document.getElementById('map');
-            if (newMapDiv) {
-              observer.disconnect(); // 요소를 찾으면 감지 중단
-              initMap(myLocation.y, myLocation.x);
-              setIsLoading(false);
-            }
-          });
-
-          observer.observe(document.body, { childList: true, subtree: true });
-
-          return () => {
-            observer.disconnect();
-          }; // 컴포넌트 언마운트 시 정리
+    } else {
+      setIsLoading(true);
+      setLoadingMessage('위치 정보를 가져오는 중이에요...');
+      const mapDiv = document.getElementById('map');
+      if (mapDiv) {
+        if (myLocation) initMap(myLocation.y, myLocation.x);
+        else {
+          console.log(
+            import.meta.env.VITE_MAP_CENTER_LAT,
+            import.meta.env.VITE_MAP_CENTER_LNG,
+          );
+          initMap(
+            import.meta.env.VITE_MAP_CENTER_LAT,
+            import.meta.env.VITE_MAP_CENTER_LNG,
+          );
         }
+        setIsLoading(false);
+        setLoadingMessage('');
+      } else {
+        // MutationObserver 설정
+        const observer = new MutationObserver(() => {
+          const newMapDiv = document.getElementById('map');
+          if (newMapDiv) {
+            observer.disconnect(); // 요소를 찾으면 감지 중단
+            if (myLocation) initMap(myLocation.y, myLocation.x);
+            else {
+              console.log(
+                import.meta.env.VITE_MAP_CENTER_LAT,
+                import.meta.env.VITE_MAP_CENTER_LNG,
+              );
+              initMap(
+                import.meta.env.VITE_MAP_CENTER_LAT,
+                import.meta.env.VITE_MAP_CENTER_LNG,
+              );
+            }
+          }
+        });
+
+        observer.observe(document.body, { childList: true, subtree: true });
+        setIsLoading(false);
+        setLoadingMessage('');
+        return () => {
+          observer.disconnect();
+        }; // 컴포넌트 언마운트 시 정리
       }
-      getCurrentPosition()
-        .then(handleLocationSuccess)
-        .finally(() => setIsLoading(false));
     }
     return undefined;
-  }, [handleLocationSuccess, showLocationConfirm, initMap, myLocation]);
+  }, [
+    handleLocationSuccess,
+    showLocationConfirm,
+    initMap,
+    myLocation,
+    setIsLoading,
+    setLoadingMessage,
+    mapInstance,
+  ]);
 
   // 내 위치로 이동
   const handleMyLocationClick = useCallback(() => {
@@ -168,11 +239,6 @@ const EventMap = () => {
       search: location.search, // 현재 쿼리 파람 유지
     });
   };
-
-  // console.log(isLoading);
-
-  if (isLoading)
-    return <DeferredLoader text={'위치 정보를 가져오는 중이에요...'} />;
 
   return (
     <S.MapContainer id="mapContainer">

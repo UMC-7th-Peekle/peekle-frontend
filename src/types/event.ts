@@ -77,10 +77,17 @@ export type MapInstance = naver.maps.Map;
 export interface MapStore {
   selectedEvent: EventData | null;
   setSelectedEvent: (event: EventData | null) => void;
+  isLoading: boolean;
+  setIsLoading: (isLoading: boolean) => void;
+  loadingMessage: string;
+  setLoadingMessage: (message: string) => void;
+  latestPos: naver.maps.LatLng | null;
+  setLatestPos: (pos: naver.maps.LatLng) => void;
 }
 
 export interface LocationConfirmProps {
   onLocationAllow: () => void;
+  onLocationDeny: () => void;
 }
 
 export interface MyLocationStore {

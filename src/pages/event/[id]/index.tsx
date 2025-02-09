@@ -63,7 +63,7 @@ const EventDetailPage = () => {
     datailAddress,
     eventUrl,
     center,
-    category,
+    categoryId,
     price,
     content,
   } = event;
@@ -122,7 +122,7 @@ const EventDetailPage = () => {
       <S.MainSection>
         <ImageSlider images={eventImages} title={title} />
         <S.InfoContainer>
-          <S.Category>{category.name}</S.Category>
+          <S.Category>{categoryId}</S.Category>
           <S.Title>{title}</S.Title>
           <S.Line />
           <S.Info>
