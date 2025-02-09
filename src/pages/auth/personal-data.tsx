@@ -11,9 +11,11 @@ const PersonalDataPage = () => {
   const [nickname, setNickname] = useState('');
   const [name, setName] = useState('');
   const [birth, setBirth] = useState('');
-  const [error, setError] = useState('');
+  const [error] = useState('');
   const [nameError, setNameError] = useState('');
   const [birthError, setBirthError] = useState('');
+  const [nicknameStatus, setNicknameStatus] = useState(''); // 'success' | 'error' | ''
+  const [nicknameMessage, setNicknameMessage] = useState('');
   const { setActiveBottomSheet } = useBottomSheetStore();
   const [agreements, setAgreements] = useState({
     toss: false,
@@ -30,30 +32,41 @@ const PersonalDataPage = () => {
     const re = /^\d{4}-\d{2}-\d{2}$/;
     return re.test(value);
   };
+
   const handleNicknameChange = async (
     e: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const value = e.target.value;
-    if (!validNickname(value) && value !== '') {
-      setError('한글, 영문, 숫자만 사용할 수 있습니다.');
-    } else {
-      setError('');
-    }
     setNickname(value);
+
+    if (!validNickname(value) && value !== '') {
+      setNicknameStatus('error');
+      setNicknameMessage('한글, 영문, 숫자만 사용할 수 있습니다.');
+      return;
+    } else {
+      setNicknameStatus('');
+      setNicknameMessage('');
+    }
+
     if (!value) return;
+
     try {
-      const client = await fetch(
+      const response = await fetch(
         `${api}/auth/register/nickname/check?nickname=${value}`,
       );
-      const data = await client.json();
+      const data = await response.json();
+
       if (data.resultType === 'SUCCESS') {
-        setError('사용 가능한 닉네임입니다.');
+        setNicknameStatus('success');
+        setNicknameMessage('사용 가능한 닉네임입니다.');
       } else {
-        setError('이미 사용 중인 닉네임입니다.');
+        setNicknameStatus('error');
+        setNicknameMessage('이미 사용 중인 닉네임입니다.');
       }
     } catch (error) {
       console.error('닉네임 중복 확인 오류:', error);
-      setError('닉네임 중복 확인 중 오류가 발생했습니다.');
+      setNicknameStatus('error');
+      setNicknameMessage('닉네임 중복 확인 중 오류가 발생했습니다.');
     }
   };
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -114,10 +127,21 @@ const PersonalDataPage = () => {
           placeholder="닉네임 입력"
           value={nickname}
           onChange={handleNicknameChange}
+          style={{
+            borderBottom:
+              nicknameStatus === 'error'
+                ? '2px solid red'
+                : nicknameStatus === 'success'
+                  ? '2px solid green'
+                  : '1px solid #ccc',
+          }}
         />
       </InputWrapper>
-      {error && <Subtitle color="red">{error}</Subtitle>}
-      {!error && <Subtitle>가입 후에도 수정할 수 있어요.</Subtitle>}
+      {nicknameMessage && (
+        <Subtitle color={nicknameStatus === 'error' ? 'red' : 'green'}>
+          {nicknameMessage}
+        </Subtitle>
+      )}
       {nickname && !error && (
         <InputWrapper>
           <Label htmlFor="name">이름</Label>
