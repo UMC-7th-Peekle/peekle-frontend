@@ -66,23 +66,6 @@ const EventMap = ({ onMapLoad }: { onMapLoad: () => void }) => {
 
         setMapInstance(newMap);
 
-        // selectedEvent가 있을 땐 해당 검정 말풍선 열기
-        if (selectedEvent) {
-          const marker = markers.get(selectedEvent.eventId);
-          if (marker) {
-            console.log('blackSBMarker:', blackSBMarker);
-            if (!blackSBMarker) {
-              createBlackMarker(
-                new naver.maps.LatLng(
-                  selectedEvent.latitude,
-                  selectedEvent.longitude,
-                ),
-                selectedEvent,
-              );
-            }
-          }
-        }
-
         // 맵이 완전히 로드되었을 때
         naver.maps.Event.addListener(newMap, 'init', () => {
           onMapLoad();
@@ -93,6 +76,22 @@ const EventMap = ({ onMapLoad }: { onMapLoad: () => void }) => {
         mapInstance.setZoom(15);
       }
       createMarkers(centerLat, centerLng);
+      // selectedEvent가 있을 땐 해당 검정 말풍선 열기
+      if (selectedEvent) {
+        const marker = markers.get(selectedEvent.eventId);
+        if (marker) {
+          console.log('blackSBMarker:', blackSBMarker);
+          if (!blackSBMarker) {
+            createBlackMarker(
+              new naver.maps.LatLng(
+                selectedEvent.latitude,
+                selectedEvent.longitude,
+              ),
+              selectedEvent,
+            );
+          }
+        }
+      }
     },
     [
       mapInstance,
