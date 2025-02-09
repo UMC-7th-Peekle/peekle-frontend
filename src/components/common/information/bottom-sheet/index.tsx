@@ -36,11 +36,7 @@ const BottomSheet = ({
 
   return (
     <S.Overlay $isOpen={isOpen} onClick={() => setActiveBottomSheet(null)}>
-      <S.BottomSheet
-        onClick={(e) => e.stopPropagation()}
-        onDrag={(e) => e.stopPropagation()}
-        $isOpen={isOpen}
-      >
+      <S.BottomSheet onClick={(e) => e.stopPropagation()} $isOpen={isOpen}>
         {shouldShowLine && (
           <S.BottomSheetHeader>
             <S.lineIcon />

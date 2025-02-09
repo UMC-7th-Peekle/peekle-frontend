@@ -11,7 +11,7 @@ const deleteScrapEvent = async (
   const response = await clientAuth<DeleteScrapResponse>({
     method: 'DELETE',
     url: `/events/scrap`,
-    data: { eventId: Number(eventId) }, //BigInt는 기본적으로 JSON 직렬화가 되지 않음
+    data: { eventId: eventId.toString() }, //BigInt는 기본적으로 JSON 직렬화가 되지 않음
   });
 
   // 응답 데이터 검증

@@ -8,7 +8,7 @@ import {
 } from '@/types/event';
 import {
   DEFAULT_FILTERS,
-  CATEGORY_OPTIONS_WITHOUT_ALL,
+  CATEGORY_IDS_WITHOUT_ALL,
   LOCATION_GROUP_IDS_WITHOUT_ALL,
 } from '@/constants/event';
 import { calculateDistance } from '@/utils';
@@ -43,7 +43,7 @@ const useEventFilter = ({
       // 카테고리 필터
       if (filters.카테고리 !== '전체') {
         const categories = filters.카테고리.split(',');
-        if (!categories.includes(event.category.name)) return false;
+        if (!categories.includes(String(event.categoryId))) return false;
       }
 
       // 기간 필터
@@ -68,8 +68,8 @@ const useEventFilter = ({
 
       // 지역 필터
       if (filters.지역 !== '전체') {
-        const locations = filters.지역;
-        if (Number(locations) !== event.locationGroupId) return false;
+        const locations = filters.지역.split(',');
+        if (!locations.includes(String(event.locationGroupId))) return false;
       }
 
       // 검색 필터
@@ -114,14 +114,14 @@ const useEventFilter = ({
 
       if (filters.정렬 === '가까운 거리순' && myLocation) {
         const distanceA = calculateDistance(
-          myLocation.lat(),
-          myLocation.lng(),
+          myLocation.y,
+          myLocation.x,
           a.latitude,
           a.longitude,
         );
         const distanceB = calculateDistance(
-          myLocation.lat(),
-          myLocation.lng(),
+          myLocation.y,
+          myLocation.x,
           b.latitude,
           b.longitude,
         );
@@ -149,21 +149,21 @@ const useEventFilter = ({
     if (type === 'single') {
       updatedParams.set(key, newValue);
     } else {
-      // 중복 허용 값일 때
+      // 중복 허용 값일 때 - 카테고리, 지역
       const allOptions =
         key === '카테고리'
-          ? CATEGORY_OPTIONS_WITHOUT_ALL
+          ? CATEGORY_IDS_WITHOUT_ALL
           : LOCATION_GROUP_IDS_WITHOUT_ALL;
 
       let currentValues = filters[key as EventFilterKeys]?.split(',') ?? [
         '전체',
       ];
 
-      // '전체'가 포함되어 있으면 제거
+      // '전체' 포함되어 있으면 제거
       currentValues = currentValues.filter((v) => v !== '전체');
 
-      if (newValue === '전체' || newValue === '0') {
-        updatedParams.set(key, '전체'); // 지역도 기본값으르 '전체'로
+      if (newValue === '전체') {
+        updatedParams.set(key, '전체');
       } else if (currentValues.includes(newValue)) {
         // 이미 선택된 값이면 제거
         const newValues = currentValues.filter((v) => v !== newValue);

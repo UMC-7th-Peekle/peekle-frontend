@@ -1,9 +1,12 @@
 import * as S from './style';
-import Button from '@/components/common/input/button';
+import { Button } from '@/components';
 import { useConfirmStore } from '@/stores';
 import { LocationConfirmProps } from '@/types/event';
 
-const LocationConfirm = ({ onLocationAllow }: LocationConfirmProps) => {
+const LocationConfirm = ({
+  onLocationAllow,
+  onLocationDeny,
+}: LocationConfirmProps) => {
   const { close } = useConfirmStore();
 
   return (
@@ -22,7 +25,6 @@ const LocationConfirm = ({ onLocationAllow }: LocationConfirmProps) => {
           width="284px"
           size="small"
           onClick={() => {
-            sessionStorage.setItem('curr-location-agree', 'true');
             onLocationAllow();
             close();
           }}
@@ -34,7 +36,7 @@ const LocationConfirm = ({ onLocationAllow }: LocationConfirmProps) => {
           width="284px"
           size="small"
           onClick={() => {
-            sessionStorage.setItem('curr-location-agree', 'false');
+            onLocationDeny();
             close();
           }}
         >

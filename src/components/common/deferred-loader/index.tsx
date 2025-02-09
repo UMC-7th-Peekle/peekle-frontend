@@ -20,6 +20,8 @@ const Loader = ({ text = '' }: { text?: string }) => {
 const DeferredLoader = ({ text = '' }: { text?: string }) => {
   const [isDeferred, setIsDeferred] = useState(false);
 
+  // console.log('isDeferred', isDeferred);
+
   const handleDeferred = () => {
     setTimeout(() => {
       setIsDeferred(true);

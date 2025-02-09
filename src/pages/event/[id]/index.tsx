@@ -22,6 +22,7 @@ import { useId } from '@/hooks';
 import { EventSchedule } from '@/types/event';
 import usePostScrapEvent from '../hooks/mutation/usePostScrapEvent';
 import useDeleteScrapEvent from '../hooks/mutation/useDeleteScrapEvent';
+import { getCategoryName } from '@/utils/eventFormatter';
 
 const EventDetailPage = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -63,7 +64,7 @@ const EventDetailPage = () => {
     datailAddress,
     eventUrl,
     center,
-    category,
+    categoryId,
     price,
     content,
   } = event;
@@ -122,7 +123,7 @@ const EventDetailPage = () => {
       <S.MainSection>
         <ImageSlider images={eventImages} title={title} />
         <S.InfoContainer>
-          <S.Category>{category.name}</S.Category>
+          <S.Category>{getCategoryName(categoryId)}</S.Category>
           <S.Title>{title}</S.Title>
           <S.Line />
           <S.Info>
