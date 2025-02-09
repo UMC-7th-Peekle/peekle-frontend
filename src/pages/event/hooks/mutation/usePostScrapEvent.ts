@@ -9,7 +9,7 @@ const postScrapEvent = async (eventId: bigint): Promise<ScrapResponse> => {
   const response = await clientAuth<ScrapResponse>({
     method: 'POST',
     url: `/events/scrap`,
-    data: { eventId: Number(eventId) }, //BigInt는 기본적으로 JSON 직렬화가 되지 않음
+    data: { eventId: eventId.toString() }, //BigInt는 기본적으로 JSON 직렬화가 되지 않음
   });
 
   // 응답 데이터 검증

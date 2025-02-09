@@ -1,5 +1,5 @@
 import * as S from './style';
-import { useCallback, useEffect, useRef } from 'react';
+import { useEffect, useRef, RefObject } from 'react';
 import { createPortal } from 'react-dom';
 import { PortalProps } from '@/types/common';
 
@@ -11,19 +11,26 @@ const Portal = ({
 }: PortalProps) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
-  const handleClickOutside = useCallback(
-    (e: MouseEvent) => {
-      if (modalRef.current === e.target) {
-        onClose?.();
-      }
-    },
-    [onClose],
-  );
+  const useClickOutside = (
+    ref: RefObject<HTMLDivElement | null>,
+    onClose: (() => void) | undefined,
+  ) => {
+    useEffect(() => {
+      const handleClickOutside = (e: MouseEvent) => {
+        if (ref.current && ref.current === e.target) {
+          onClose?.();
+        }
+      };
 
-  useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [onClose, handleClickOutside]);
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }, [ref, onClose]);
+  };
+
+  // 외부 클릭 부분은 모달이 아닐때만 가능하게
+  useClickOutside(modalRef, type === 'other-portal' ? onClose : undefined);
 
   const modalRoot = document.getElementById(type) as HTMLElement;
 
