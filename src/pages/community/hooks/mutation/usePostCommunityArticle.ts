@@ -49,12 +49,6 @@ const postCommunity = async (
   // JSON 데이터를 문자열로 변환하여 추가
   formData.append('data', JSON.stringify(data));
 
-  // ✅ FormData의 내용을 명확하게 출력하기
-  console.log('📌 [FormData 요청 내용]');
-  formData.forEach((value, key) => {
-    console.log(`${key}:`, value);
-  });
-
   const resp = await clientAuth<PostCommunityResp>({
     method: 'POST',
     url: `/community/${communityId}/articles`,

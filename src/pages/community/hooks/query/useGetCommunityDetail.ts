@@ -28,8 +28,20 @@ const ArticleImageSchema = z.object({
 // 이미지 배열 스키마
 const ArticleImagesSchema = z.array(ArticleImageSchema);
 
+// 유저 정보 스키마
+
+const AuthorInfoSchema = z.object({
+  nickname: z.string().nullable(),
+  profileImage: z.string().nullable(),
+  userId: z.number().int().nullable(),
+});
+
 // articlesData 스키마
 const ArticleSchema = z.object({
+  authorInfo: AuthorInfoSchema,
+  isLikedByUser: z.boolean(),
+  articleLikesCount: z.number().int(),
+  commentsCount: z.number().int(),
   articleId: z.number(),
   title: z.string(),
   content: z.string(),
