@@ -52,7 +52,7 @@ const PersonalDataPage = () => {
 
     try {
       const response = await fetch(
-        `${api}/auth/register/nickname/check?nickname=${value}`,
+        `${api}auth/register/nickname/check?nickname=${value}`,
       );
       const data = await response.json();
 

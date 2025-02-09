@@ -77,7 +77,7 @@ const CertifyPage = () => {
     const phoneVerificationCode = code.join('');
 
     try {
-      const response = await fetch(`${api}/auth/phone/verify`, {
+      const response = await fetch(`${api}auth/phone/verify`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
