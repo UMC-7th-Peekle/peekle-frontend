@@ -4,7 +4,46 @@ import { Backward } from '@/components';
 import { Button } from '@/components/common/input/button/index';
 import ManDefaultSVG from '@/assets/images/auth/mandefault.svg?react';
 import WomanSVG from '@/assets/images/auth/woman.svg?react';
+import { useNavigate } from 'react-router-dom';
+const GenderSelectionPage = () => {
+  const navigate = useNavigate();
+  const [selectedGender, setSelectedGender] = useState<string | null>(null);
 
+  const handleSelectGender = (gender: string) => {
+    setSelectedGender(gender);
+  };
+  const handleNext = () => {
+    navigate('/auth/personal-data');
+  };
+
+  return (
+    <>
+      <Container>
+        <BackwardWrapper>
+          <Backward />
+        </BackwardWrapper>
+        <Title>성별을 선택해주세요</Title>
+        <Subtitle>더 나은 서비스 제공과 통계 분석에 활용될 수 있어요.</Subtitle>
+        <GenderOptions>
+          <ManDefaultSVG onClick={() => handleSelectGender('남성')} />
+          <WomanSVG onClick={() => handleSelectGender('여성')} />
+        </GenderOptions>
+        <ButtonWrapper onClick={handleNext}>
+          <Button
+            color="primary500"
+            size="medium"
+            width="412px"
+            disabled={!selectedGender}
+          >
+            다음
+          </Button>
+        </ButtonWrapper>
+      </Container>
+    </>
+  );
+};
+
+export default GenderSelectionPage;
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -57,39 +96,3 @@ const ButtonWrapper = styled.div`
   display: flex;
   justify-content: center;
 `;
-
-const GenderSelectionPage = () => {
-  const [selectedGender, setSelectedGender] = useState<string | null>(null);
-
-  const handleSelectGender = (gender: string) => {
-    setSelectedGender(gender);
-  };
-
-  return (
-    <>
-      <Container>
-        <BackwardWrapper>
-          <Backward />
-        </BackwardWrapper>
-        <Title>성별을 선택해주세요</Title>
-        <Subtitle>더 나은 서비스 제공과 통계 분석에 활용될 수 있어요.</Subtitle>
-        <GenderOptions>
-          <ManDefaultSVG onClick={() => handleSelectGender('남성')} />
-          <WomanSVG onClick={() => handleSelectGender('여성')} />
-        </GenderOptions>
-        <ButtonWrapper>
-          <Button
-            color="primary500"
-            size="medium"
-            width="412px"
-            disabled={!selectedGender}
-          >
-            다음
-          </Button>
-        </ButtonWrapper>
-      </Container>
-    </>
-  );
-};
-
-export default GenderSelectionPage;
