@@ -6,136 +6,8 @@ import { Backward } from '@/components';
 import { BottomSheet, Button } from '@/components';
 import { useBottomSheetStore } from '@/stores';
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  font-family: Arial, sans-serif;
-  background-color: #ffffff;
-  height: 100vh;
-  box-sizing: border-box;
-`;
-
-const BackwardWrapper = styled.div`
-  position: absolute;
-  top: 10px;
-  left: 25px;
-`;
-const ButtonWrapper = styled.div`
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-`;
-
-const Title = styled.h1`
-  font-size: 20px;
-  margin-top: 30px;
-  margin-bottom: 16px;
-  margin-left: -10px;
-  color: black;
-  font-family: 'Pretendard', sans-serif;
-  font-weight: 700;
-`;
-
-const Subtitle = styled.p`
-  font-size: 14px;
-  color: ${(props) => props.color || '#666'};
-  margin-top: -10px;
-  margin-bottom: 16px;
-  font-family: 'Pretendard', sans-serif;
-  font-weight: 400;
-  margin-left: -10px;
-`;
-
-const InputWrapper = styled.div`
-  width: 100%;
-  max-width: 300px;
-  margin-bottom: 20px;
-  margin-left: -10px;
-`;
-
-const Label = styled.label`
-  font-size: 14px;
-  color: #333;
-  margin-bottom: 8px;
-  display: block;
-  font-family: 'Pretendard', sans-serif;
-  font-weight: 400;
-`;
-
-const Input = styled.input`
-  width: 110%;
-  padding: 10px;
-  font-size: 16px;
-  border: none;
-  border-bottom: 1px solid #ccc;
-  outline: none;
-  background-color: #ffffff;
-  &:focus {
-    border-bottom: 2px solid #4aa662;
-  }
-  font-family: 'Pretendard', sans-serif;
-  font-weight: 700;
-`;
-
-const ModalContent = styled.div`
-  padding: 20px;
-  width: 100%;
-  max-width: 400px;
-  text-align: left;
-`;
-
-const ModalTitle = styled.h2`
-  font-size: 24px;
-  margin-bottom: 10px;
-  color: black;
-  font-family: 'Pretendard', sans-serif;
-  font-weight: 700;
-`;
-
-const ModalSubtitle = styled.p`
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 0px;
-  font-family: 'Pretendard', sans-serif;
-  font-weight: 400;
-`;
-
-const AgreementWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  justify-content: space-between;
-`;
-
-const AgreementItem = styled.div`
-  display: flex;
-  align-items: center;
-  font-family: 'Pretendard', sans-serif;
-  font-weight: 400;
-  font-size: 20px;
-`;
-
-const Checkbox = styled.input`
-  margin-right: 8px;
-`;
-
-const CompleteButton = styled.button`
-  background-color: ${(props) => (props.disabled ? '#ccc' : '#4aa662')};
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
-  width: 100%;
-  margin-top: 20px;
-`;
-
 const PersonalDataPage = () => {
+  const api = import.meta.env.VITE_API_URL;
   const [nickname, setNickname] = useState('');
   const [name, setName] = useState('');
   const [birth, setBirth] = useState('');
@@ -158,9 +30,9 @@ const PersonalDataPage = () => {
     const re = /^\d{4}-\d{2}-\d{2}$/;
     return re.test(value);
   };
-  const handleNicknameChange = (
+  const handleNicknameChange = async (
     e: React.ChangeEvent<HTMLInputElement>,
-  ): void => {
+  ) => {
     const value = e.target.value;
     if (!validNickname(value) && value !== '') {
       setError('한글, 영문, 숫자만 사용할 수 있습니다.');
@@ -168,6 +40,21 @@ const PersonalDataPage = () => {
       setError('');
     }
     setNickname(value);
+    if (!value) return;
+    try {
+      const client = await fetch(
+        `${api}/auth/register/nickname/check?nickname=${value}`,
+      );
+      const data = await client.json();
+      if (data.resultType === 'SUCCESS') {
+        setError('사용 가능한 닉네임입니다.');
+      } else {
+        setError('이미 사용 중인 닉네임입니다.');
+      }
+    } catch (error) {
+      console.error('닉네임 중복 확인 오류:', error);
+      setError('닉네임 중복 확인 중 오류가 발생했습니다.');
+    }
   };
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const value = e.target.value;
@@ -324,3 +211,132 @@ const PersonalDataPage = () => {
 };
 
 export default PersonalDataPage;
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background-color: #ffffff;
+  height: 100vh;
+  box-sizing: border-box;
+`;
+
+const BackwardWrapper = styled.div`
+  position: absolute;
+  top: 10px;
+  left: 25px;
+`;
+const ButtonWrapper = styled.div`
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+`;
+
+const Title = styled.h1`
+  font-size: 20px;
+  margin-top: 30px;
+  margin-bottom: 16px;
+  margin-left: -10px;
+  color: black;
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 700;
+`;
+
+const Subtitle = styled.p`
+  font-size: 14px;
+  color: ${(props) => props.color || '#666'};
+  margin-top: -10px;
+  margin-bottom: 16px;
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 400;
+  margin-left: -10px;
+`;
+
+const InputWrapper = styled.div`
+  width: 100%;
+  max-width: 300px;
+  margin-bottom: 20px;
+  margin-left: -10px;
+`;
+
+const Label = styled.label`
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 8px;
+  display: block;
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 400;
+`;
+
+const Input = styled.input`
+  width: 110%;
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  outline: none;
+  background-color: #ffffff;
+  &:focus {
+    border-bottom: 2px solid #4aa662;
+  }
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 700;
+`;
+
+const ModalContent = styled.div`
+  padding: 20px;
+  width: 100%;
+  max-width: 400px;
+  text-align: left;
+`;
+
+const ModalTitle = styled.h2`
+  font-size: 24px;
+  margin-bottom: 10px;
+  color: black;
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 700;
+`;
+
+const ModalSubtitle = styled.p`
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 0px;
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 400;
+`;
+
+const AgreementWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: space-between;
+`;
+
+const AgreementItem = styled.div`
+  display: flex;
+  align-items: center;
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 400;
+  font-size: 20px;
+`;
+
+const Checkbox = styled.input`
+  margin-right: 8px;
+`;
+
+const CompleteButton = styled.button`
+  background-color: ${(props) => (props.disabled ? '#ccc' : '#4aa662')};
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
+  width: 100%;
+  margin-top: 20px;
+`;
