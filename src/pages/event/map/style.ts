@@ -1,14 +1,11 @@
 import styled from 'styled-components';
 
-export const Container = styled.section`
+export const LoadingContainer = styled.div`
   width: 100%;
   height: 100%;
-`;
-
-export const HeaderContainer = styled.section`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 16px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(255, 255, 255, 0.7);
+  z-index: 2;
 `;

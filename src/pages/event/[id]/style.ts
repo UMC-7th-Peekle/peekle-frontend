@@ -123,6 +123,7 @@ export const DetailAddressCopyText = styled.span`
   color: ${theme.color.sementic.blue};
   margin-left: 10px;
   cursor: pointer;
+  user-select: none;
 `;
 
 export const XIcon = styled(XSVG)`

@@ -12,13 +12,47 @@ const OnboardingPage = () => {
   const navigate = useNavigate();
   const api = import.meta.env.VITE_API_URL;
   const kakao_client = import.meta.env.VITE_KAKAO_CLIENT_ID;
+  const allowedOrigins = ['http://localhost:5173', api];
   const handlephone = () => {
     navigate('/auth/phone-number');
   };
   const handleKakao = () => {
     const kakaoAuthURL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${kakao_client}&redirect_uri=${api}/auth/login/kakao/callback`;
     window.location.href = kakaoAuthURL;
+
+    const popup = window.open(
+      kakaoAuthURL,
+      'kakaoLogin',
+      'width=600,height=600',
+    );
+
+    if (!popup) {
+      alert('팝업이 차단되었습니다. 팝업을 허용해주세요.');
+    }
   };
+
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (!allowedOrigins.includes(event.origin)) {
+        console.error('허용되지 않은 origin:', event.origin);
+        return;
+      }
+      // 백엔드 도메인과 일치하는지 확인
+
+      console.log('카카오 로그인 데이터 수신:', event.data);
+
+      if (event.data && event.data.access_token) {
+        localStorage.setItem('accessToken', event.data.access_token);
+        navigate('/'); // 로그인 성공 후 홈으로 이동
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+    return () => {
+      window.removeEventListener('message', handleMessage);
+    };
+  }, [navigate]);
+  /**예외처리 추가 */
   const slides = [
     {
       src: '/onboarding/onboard_1.png',

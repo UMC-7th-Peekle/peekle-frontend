@@ -8,15 +8,14 @@ export const CategoryChips = () => {
     key: '카테고리',
     type: 'multiple',
   });
-
   const decodedValue = storedValue.replace('%2C', ',');
 
   return (
     <S.CategoryChipsContainer>
-      {CATEGORY_OPTIONS.map((value) => (
+      {CATEGORY_OPTIONS.map(([label, value]) => (
         <Chip
-          key={value}
-          label={value}
+          key={label}
+          label={label}
           value={value}
           isActive={decodedValue.split(',').includes(value)}
           onSelect={() => handleSelect(value)}
