@@ -25,31 +25,47 @@ const PhoneNumberPage = () => {
   const handleOnboarding = () => {
     navigate('/onboarding');
   };
-  //API
   const handleSubmit = async () => {
     if (loading) return;
     setLoading(true);
     const PhoneNumber = phone.replace(/-/g, '');
     try {
-      const response = await fetch(`${api}/auth/phone/send`, {
-        method: 'POST',
-        headers: {
-          'Content-type': 'application/json',
-        },
-        body: JSON.stringify({ phone: PhoneNumber }),
-      });
-      const data = await response.json();
-      if (response.ok) {
-        setPhoneVerificationSessionId(data.phoneVerificationSessionId);
-        console.log('phoneVerificationSessionId:', phoneVerificationSessionId);
-        navigate('/auth/certify', {
-          state: {
-            phone: PhoneNumber,
-            phoneVerificationSessionId: data.success.phoneVerificationSessionId,
+      const statusResponse = await fetch(
+        `${api}/auth/phone/account/status?phone=${PhoneNumber}`,
+      );
+      const statusData = await statusResponse.json();
+      console.log('상태:', statusData);
+      if (statusData.resultType === 'FAIL') {
+        if (statusData.error?.reason === '탈퇴한 사용자입니다.') {
+          navigate('/auth/certify');
+        } else if (statusData.error?.reason === '휴면 상태인 사용자입니다.') {
+          navigate('/auth/sleeper');
+        }
+      } else if (statusData.resultType === 'SUCCESS') {
+        const client = await fetch(`${api}/auth/phone/send`, {
+          method: 'POST',
+          headers: {
+            'Content-type': 'application/json',
           },
+          body: JSON.stringify({ phone: PhoneNumber }),
         });
-      } else {
-        console.error('Error,data');
+        const data = await client.json();
+        if (client.ok) {
+          setPhoneVerificationSessionId(data.phoneVerificationSessionId);
+          console.log(
+            'phoneVerificationSessionId:',
+            phoneVerificationSessionId,
+          );
+          navigate('/auth/certify', {
+            state: {
+              phone: PhoneNumber,
+              phoneVerificationSessionId:
+                data.success.phoneVerificationSessionId,
+            },
+          });
+        } else {
+          console.error('Error,data');
+        }
       }
     } catch (error) {
       console.error('Request failed:', error);

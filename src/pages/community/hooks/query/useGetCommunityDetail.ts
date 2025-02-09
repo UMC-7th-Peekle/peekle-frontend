@@ -3,8 +3,12 @@ import { formatDateCardTime } from '@/utils/dateFormatter';
 import { useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 
+// 커뮤니티 게시판 상세 페이지 정보를 불러오는 API, 훅 그리고 이와 관련된 스키마입니다.
+
 // 댓글 요소 스키마
 const ArticleCommentSchema = z.object({
+  isLikedByUser: z.boolean(),
+  commentLikesCount: z.number().int(),
   commentId: z.number(),
   articleId: z.number(),
   parentCommentId: z.number().nullable(),
@@ -31,9 +35,9 @@ const ArticleImagesSchema = z.array(ArticleImageSchema);
 // 유저 정보 스키마
 
 const AuthorInfoSchema = z.object({
-  nickname: z.string().nullable(),
-  profileImage: z.string().nullable(),
-  userId: z.number().int().nullable(),
+  nickname: z.string().nullable().optional(),
+  profileImage: z.string().nullable().optional(),
+  userId: z.number().int().nullable().optional(),
 });
 
 // articlesData 스키마
@@ -63,7 +67,7 @@ const SuccessRespSchema = z.object({
 // 전체 응답 스키마
 const CommunityDetailRespSchema = z.object({
   resultType: z.literal('SUCCESS'),
-  error: z.null(),
+  error: z.union([z.null(), z.string().optional()]),
   success: SuccessRespSchema,
 });
 

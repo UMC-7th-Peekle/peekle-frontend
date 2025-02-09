@@ -31,6 +31,7 @@ import { ErrorFallback } from '@/components';
 import ResignPage from '@/pages/user/resign';
 import TossPage from '@/pages/auth/toss';
 import RequestPage from '@/pages/user/request';
+import LoginSuccess from '@/pages/kakao-callback';
 
 const ProtectedPage = ({ children }: { children: React.ReactNode }) => {
   // 로그인 여부 확인해 페이지 보호 필요
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <OnboardingPage />,
+      },
+      {
+        path: '/kakao-callback',
+        element: <LoginSuccess />,
       },
       {
         path: '/auth/phone-number',

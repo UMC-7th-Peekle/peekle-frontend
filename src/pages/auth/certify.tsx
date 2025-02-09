@@ -90,7 +90,7 @@ const CertifyPage = () => {
       const data = await response.json();
 
       if (response.ok && data.resultType === 'SUCCESS') {
-        navigate('/auth/personal-data');
+        navigate('/auth/gender');
       } else {
         alert('인증번호가 맞지 않아요!', 'warning', '확인');
       }
@@ -104,7 +104,6 @@ const CertifyPage = () => {
     const remainingSeconds = seconds % 60;
     return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
   };
-
   return (
     <Container>
       <BackwardWrapper onClick={handlePhone}>

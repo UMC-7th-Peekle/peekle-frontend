@@ -86,10 +86,10 @@ const ImageWrapper = styled.div`
 
 const ImageItem = styled.img`
   width: 140px;
-  height: auto; /* ✅ 비율 유지 */
-  max-height: 140px;
-  object-fit: contain; /* ✅ 원본 비율 유지 */
+  height: 140px;
+  object-fit: cover;
   border-radius: 8px;
+  aspect-ratio: 1 / 1;
   cursor: pointer;
   transition: transform 0.2s ease-in-out;
   scroll-snap-align: start;

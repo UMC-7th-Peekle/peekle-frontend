@@ -24,7 +24,9 @@ export default function MainSection({ article }: MainSectionProps) {
       <S.Profile>
         <S.ProfileImage
           image={
-            `${article.authorInfo.profileImage}` || '/image/peekle-profile.webp'
+            article.authorInfo.profileImage
+              ? `${article.authorInfo.profileImage}`
+              : '/image/peekle-profile.webp'
           }
         />
         <S.ProfileTextContainer>
