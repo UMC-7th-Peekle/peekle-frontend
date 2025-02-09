@@ -8,6 +8,8 @@ const PatchCommunityDataSchema = z.object({
   title: z.string(),
   content: z.string(),
   isAnonymous: z.boolean(),
+  existingImageSequence: z.array(z.number()),
+  newImageSequence: z.array(z.number()),
 });
 
 const PatchCommunityParamsSchema = z.object({
@@ -35,7 +37,15 @@ export type PatchCommunityParams = z.infer<typeof PatchCommunityParamsSchema>;
 const patchCommunity = async (
   params: PatchCommunityParams,
 ): Promise<PatchCommunityResp> => {
-  PatchCommunityParamsSchema.parse(params);
+  console.log('📤 PATCH 요청 시작:', params);
+
+  // 요청 데이터 검증
+  try {
+    PatchCommunityParamsSchema.parse(params);
+  } catch (err) {
+    console.error('❌ PATCH 데이터 검증 실패:', err);
+    throw err;
+  }
 
   const { communityId, articleId, articleImages, data } = params;
   const formData = new FormData();
@@ -45,7 +55,15 @@ const patchCommunity = async (
     formData.append('article_images', image);
   });
 
+  // JSON 데이터를 문자열로 변환하여 추가
   formData.append('data', JSON.stringify(data));
+
+  console.log('📤 PATCH 요청 데이터:', {
+    communityId,
+    articleId,
+    articleImages: articleImages.map((img) => img.name),
+    data,
+  });
 
   try {
     const resp = await clientAuth<PatchCommunityResp>({
@@ -54,9 +72,10 @@ const patchCommunity = async (
       data: formData,
     });
 
+    console.log('✅ PATCH 요청 성공:', resp.data);
     return RespSchema.parse(resp.data);
   } catch (error) {
-    console.error('❌ PATCH 실패:', error);
+    console.error('❌ PATCH 요청 실패:', error);
     throw error;
   }
 };
@@ -70,7 +89,10 @@ export const usePatchCommunityArticle = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['get-community'] });
       queryClient.invalidateQueries({ queryKey: ['get-community-like'] });
-      queryClient.invalidateQueries({ queryKey: ['get-community-defailt'] });
+      queryClient.invalidateQueries({ queryKey: ['get-community-detail'] });
+    },
+    onError: (error) => {
+      console.error('❌ PATCH 실패 (useMutation):', error);
     },
   });
 };
