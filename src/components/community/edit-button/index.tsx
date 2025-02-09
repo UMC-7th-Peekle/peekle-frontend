@@ -18,7 +18,7 @@ EditButton.RectType = function RectType({
 }: EditButtonProps) {
   return (
     <S.RectTypeContainer onClick={onClick}>
-      <S.PenIcon />
+      <S.PenIconRect />
       <S.ButtonText>{text}</S.ButtonText>
     </S.RectTypeContainer>
   );

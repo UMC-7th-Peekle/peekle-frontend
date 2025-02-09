@@ -10,7 +10,9 @@ const Container = styled.div`
   justify-content: center;
 `;
 
-const CheckContainer = styled.div<{ isChecked: boolean }>`
+const CheckContainer = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== 'isChecked',
+})<{ isChecked: boolean }>`
   width: 16px;
   height: 16px;
   border-radius: 4px;
@@ -23,7 +25,9 @@ const CheckContainer = styled.div<{ isChecked: boolean }>`
   justify-content: center;
 `;
 
-const Check = styled(CheckSvg)<{ isChecked: boolean }>`
+const Check = styled(CheckSvg).withConfig({
+  shouldForwardProp: (prop) => prop !== 'isChecked',
+})<{ isChecked: boolean }>`
   width: 11px;
   display: ${({ isChecked }) => (isChecked ? 'block' : 'hidden')};
   path {
@@ -31,7 +35,9 @@ const Check = styled(CheckSvg)<{ isChecked: boolean }>`
   }
 `;
 
-const Text = styled.p<{ isChecked: boolean }>`
+const Text = styled.p.withConfig({
+  shouldForwardProp: (prop) => prop !== 'isChecked',
+})<{ isChecked: boolean }>`
   font-weight: 700;
   font-size: 16px;
   line-height: 150%;

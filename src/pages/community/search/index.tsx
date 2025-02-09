@@ -4,6 +4,7 @@ import * as SS from '../../event/search/style';
 import BodySection from '../container/body-section';
 import { useRecentSearch } from '@/hooks';
 import { useGetCommunity } from '../hooks/query/useGetCommunity';
+import { useInfiniteScroll } from '../hooks/util/useInfiniteScroll';
 
 export default function CommunitySearchPage() {
   const {
@@ -18,10 +19,25 @@ export default function CommunitySearchPage() {
     localKey: 'recent-community-search',
   });
 
-  const { data, error, isLoading } = useGetCommunity({
+  const {
+    data,
+    error,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useGetCommunity({
     limit: 5,
     query: query ?? '',
     communityId: 1,
+  });
+
+  const articles = data?.pages.flatMap((page) => page.success.articles) ?? [];
+
+  const { lastElementRef } = useInfiniteScroll({
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
   });
 
   return (
@@ -37,6 +53,8 @@ export default function CommunitySearchPage() {
             max_width={333}
           />
         </S.Appbar>
+
+        {/* 최근 검색어 목록 */}
         {!isSearched &&
           (recentSearch.length > 0 ? (
             <SS.RecentSearchContainer>
@@ -45,9 +63,9 @@ export default function CommunitySearchPage() {
                 <SS.ClearButton onClick={handleClear}>전체 삭제</SS.ClearButton>
               </SS.RecentSearchRow>
               <SS.RecentSearchTextContainer>
-                {recentSearch.map((search: string) => (
+                {recentSearch.map((search) => (
                   <SS.RecentSearchRow
-                    key={`${search}-${new Date().getTime()}`}
+                    key={search}
                     onClick={() => handleRecentSearchClick(search)}
                   >
                     <SS.RecentSearchText>{search}</SS.RecentSearchText>
@@ -61,17 +79,23 @@ export default function CommunitySearchPage() {
           ) : (
             <SS.NoRecentSearch />
           ))}
+
+        {/* 에러 발생 시 */}
         {error && (
           <BodySection.None
             subTitle={`"${query}"에 관한\n첫 게시글을 작성해보세요!`}
           ></BodySection.None>
         )}
+
+        {/* 로딩 UI */}
         {isLoading && <BodySection.Skeleton />}
-        {isSearched && data?.success?.articles.length && (
+
+        {/* 검색된 게시글 리스트 */}
+        {isSearched && articles.length > 0 && (
           <BodySection>
-            {data.success.articles.map((article) => (
+            {articles.map((article, index, arr) => (
               <CommunityCard
-                key={`${article.communityId} + ${article.articleId}`}
+                key={`${article.communityId}, ${article.articleId}, ${index}`}
                 communityId={article.communityId}
                 articleId={article.articleId}
                 title={article.title}
@@ -80,10 +104,14 @@ export default function CommunitySearchPage() {
                 articleComments={article.articleComments}
                 articleLikes={article.articleLikes}
                 thumbnail={article.thumbnail}
+                ref={index === arr.length - 1 ? lastElementRef : null}
               />
             ))}
           </BodySection>
         )}
+
+        {/* 추가 로딩 중이면 표시 */}
+        {isFetchingNextPage && <BodySection.Skeleton />}
       </S.MainContainer>
     </>
   );
