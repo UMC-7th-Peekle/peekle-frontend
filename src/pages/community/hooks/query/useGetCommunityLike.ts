@@ -57,7 +57,7 @@ export const useGetCommunityLike = ({
   limit = 5,
 }: UseGetCommunityLikeProps) => {
   return useInfiniteQuery<CommunityResponse, Error>({
-    queryKey: ['community', 'like', limit],
+    queryKey: ['get-community-like', limit],
     queryFn: ({ pageParam }) =>
       getCommunityLike({ limit, pageParam: pageParam as number | undefined }),
     initialPageParam: undefined,

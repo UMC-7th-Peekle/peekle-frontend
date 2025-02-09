@@ -20,18 +20,14 @@ export default function CommunityPage() {
     isFetchingNextPage,
   } = useGetCommunity({ limit: 5 });
 
-  const articles = data?.pages.flatMap((page) => page.success.articles) ?? [];
-
   const { lastElementRef } = useInfiniteScroll({
     isFetchingNextPage,
     hasNextPage,
     fetchNextPage,
   });
 
-  console.log(articles);
-
-  // 로딩 상태 처리
-  if (isLoading)
+  // ✅ 로딩 중인 경우
+  if (isLoading) {
     return (
       <S.MainContainer>
         <S.Appbar>
@@ -47,46 +43,52 @@ export default function CommunityPage() {
         <BodySection.Skeleton />
       </S.MainContainer>
     );
+  }
 
-  // 에러 상태 처리
+  // ✅ 에러 발생 시
   if (error) return <ErrorFallback />;
 
+  // ✅ 데이터 가공
+  const articles =
+    data?.pages.flatMap((page) => page?.success.articles ?? []) ?? [];
+
   return (
-    <>
-      <S.MainContainer>
-        <S.Appbar>
-          <S.LogoContainer>
-            <S.PeekleLogo />
-            <S.Title>게시판</S.Title>
-          </S.LogoContainer>
-          <S.AppbarIcon>
-            <ToggleHeart onClick={() => navigate(ROUTES.COMMUNITY_LIKE)} />
-            <ToggleSearch onClick={() => navigate(ROUTES.COMMUNITY_SEARCH)} />
-          </S.AppbarIcon>
-        </S.Appbar>
-        {articles.length > 0 ? (
-          // 게시글이 하나 이상일 때
-          <BodySection>
-            {articles.map((article, index, arr) => (
-              <CommunityCard
-                key={`${article.communityId} + ${article.articleId} + ${index}`}
-                communityId={article.communityId}
-                articleId={article.articleId}
-                title={article.title}
-                content={article.content}
-                date={article.createdAt}
-                articleComments={article.articleComments}
-                articleLikes={article.articleLikes}
-                thumbnail={article.thumbnail}
-                ref={index === arr.length - 1 ? lastElementRef : null}
-              />
-            ))}
-          </BodySection>
-        ) : (
-          // 아무 게시글도 없을 때
-          <BodySection.None subTitle={'첫 번째 게시글을\n작성해보세요!'} />
-        )}
-      </S.MainContainer>
+    <S.MainContainer>
+      {/* 상단 앱바 */}
+      <S.Appbar>
+        <S.LogoContainer>
+          <S.PeekleLogo />
+          <S.Title>게시판</S.Title>
+        </S.LogoContainer>
+        <S.AppbarIcon>
+          <ToggleHeart onClick={() => navigate(ROUTES.COMMUNITY_LIKE)} />
+          <ToggleSearch onClick={() => navigate(ROUTES.COMMUNITY_SEARCH)} />
+        </S.AppbarIcon>
+      </S.Appbar>
+
+      {/* 게시글 목록 */}
+      {articles.length > 0 ? (
+        <BodySection>
+          {articles.map((article, index, arr) => (
+            <CommunityCard
+              key={`${article.communityId}-${article.articleId}-${index}`}
+              communityId={article.communityId}
+              articleId={article.articleId}
+              title={article.title}
+              content={article.content}
+              date={article.createdAt}
+              articleComments={article.articleComments}
+              articleLikes={article.articleLikes}
+              isLiked={article.isLikedByUser}
+              thumbnail={article.thumbnail}
+              ref={index === arr.length - 1 ? lastElementRef : null}
+            />
+          ))}
+        </BodySection>
+      ) : (
+        // 게시글이 없는 경우 메시지 출력
+        <BodySection.None subTitle={'첫 번째 게시글을\n작성해보세요!'} />
+      )}
 
       {/* 글 작성 버튼 */}
       {articles.length > 0 && (
@@ -94,6 +96,6 @@ export default function CommunityPage() {
           <EditButton onClick={() => navigate('/community/edit')} />
         </S.EditButtonWrapper>
       )}
-    </>
+    </S.MainContainer>
   );
 }

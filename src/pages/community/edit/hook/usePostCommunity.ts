@@ -1,13 +1,18 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { usePostCommunityArticle } from '../../hooks/mutation/usePostCommunityArticle';
 
 export default function usePostCommunity() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [isAnonymous, setIsAnonymous] = useState(false);
-  const [selectedImages, setSelectedImages] = useState<string[]>([]);
-  const [thumbnail, setThumbnail] = useState<string | null>(null);
+  const [selectedImages, setSelectedImages] = useState<File[]>([]);
+  const [thumbnail, setThumbnail] = useState<File | null>(null);
 
   const isFormFilled = title.trim() !== '' && content.trim() !== '';
+
+  const navigate = useNavigate();
+  const postCommunityMutation = usePostCommunityArticle();
 
   const handleToggleAnonymous = () => {
     setIsAnonymous((prev) => !prev);
@@ -26,9 +31,8 @@ export default function usePostCommunity() {
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       const files = Array.from(event.target.files);
-      const imageUrls = files.map((file) => URL.createObjectURL(file));
       setSelectedImages((prev) => {
-        const newImages = [...prev, ...imageUrls];
+        const newImages = [...prev, ...files];
         if (!thumbnail) setThumbnail(newImages[0]);
         return newImages;
       });
@@ -45,18 +49,32 @@ export default function usePostCommunity() {
     });
   };
 
-  const handleSelectThumbnail = (image: string) => {
+  const handleSelectThumbnail = (image: File) => {
     setThumbnail(image);
   };
 
   const onSubmit = () => {
-    console.log('게시글 제출:', {
-      title,
-      content,
-      isAnonymous,
-      selectedImages,
-      thumbnail,
-    });
+    // 폼 조건 검사(제목, 내용)
+    if (!isFormFilled) return;
+
+    // 썸네일을 첫번째로 정렬
+    const articleImages = thumbnail
+      ? [thumbnail, ...selectedImages.filter((image) => image !== thumbnail)]
+      : selectedImages;
+
+    // API 요청 실행
+    postCommunityMutation.mutate(
+      {
+        communityId: 1,
+        articleImages,
+        data: { title, content, isAnonymous },
+      },
+      {
+        onSuccess: () => {
+          navigate('/community');
+        },
+      },
+    );
   };
 
   return {

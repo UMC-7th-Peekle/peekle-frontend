@@ -22,6 +22,7 @@ const ArticleSchema = z.object({
   updatedAt: z.string(),
   articleComments: z.number().int(),
   articleLikes: z.number().int(),
+  isLikedByUser: z.boolean(),
   thumbnail: z.string().nullable(),
   authorInfo: AuthorInfoSchema,
 });
@@ -34,7 +35,7 @@ const SuccessResponseSchema = z.object({
 });
 
 const CommunityResponseSchema = z.object({
-  resultType: z.literal('SUCCESS'),
+  resultType: z.literal('SUCCESS').nullable(),
   error: z.null(),
   success: SuccessResponseSchema,
 });
@@ -43,7 +44,6 @@ const CommunityResponseSchema = z.object({
 export type CommunityResponse = z.infer<typeof CommunityResponseSchema>;
 export type Article = z.infer<typeof ArticleSchema>;
 
-// ✅ 무한 스크롤을 위한 API 호출 함수
 const getCommunity = async ({
   pageParam,
   limit = 5,
@@ -54,24 +54,32 @@ const getCommunity = async ({
   limit: number;
   communityId: number;
   query: string | null;
-}): Promise<CommunityResponse> => {
-  const response = await clientAuth<CommunityResponse>({
-    method: 'GET',
-    url: `/community`,
-    params: {
-      limit,
-      cursor: pageParam, // 커서 기반 페이지네이션
-      communityId,
-      query,
-    },
-  });
+}): Promise<CommunityResponse | null> => {
+  try {
+    const response = await clientAuth<CommunityResponse>({
+      method: 'GET',
+      url: `/community`,
+      params: {
+        limit,
+        cursor: pageParam,
+        communityId,
+        query,
+      },
+    });
 
-  // 응답 데이터 검증
-  const parsedData = CommunityResponseSchema.parse(response.data);
-  return parsedData;
+    // ✅ 204 No Content 처리
+    if (response.status === 204) {
+      console.log('📌 [API 응답] 204 No Content - 더 이상 게시글이 없습니다.');
+      return null;
+    }
+
+    return CommunityResponseSchema.parse(response.data);
+  } catch (error) {
+    console.error('❌ Zod 파싱 에러 또는 API 에러:', error);
+    throw error;
+  }
 };
 
-// ✅ useInfiniteQuery 훅 생성
 export const useGetCommunity = ({
   limit = 5,
   communityId = 1,
@@ -81,9 +89,9 @@ export const useGetCommunity = ({
   communityId?: number;
   query?: string | null;
 }) => {
-  return useInfiniteQuery<CommunityResponse, Error>({
-    queryKey: ['community', communityId],
-    queryFn: ({ pageParam }) =>
+  return useInfiniteQuery<CommunityResponse | null, Error>({
+    queryKey: ['get-community', communityId],
+    queryFn: async ({ pageParam }) =>
       getCommunity({
         pageParam: pageParam as number | undefined,
         limit,
@@ -91,6 +99,9 @@ export const useGetCommunity = ({
         query,
       }),
     initialPageParam: undefined,
-    getNextPageParam: (lastPage) => lastPage.success.nextCursor ?? undefined,
+    getNextPageParam: (lastPage) => {
+      if (!lastPage) return undefined;
+      return lastPage.success.nextCursor ?? undefined;
+    },
   });
 };
