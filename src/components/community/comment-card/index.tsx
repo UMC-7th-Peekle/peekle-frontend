@@ -1,4 +1,4 @@
-import { CommunityDetailComment } from '@/pages/community/hooks/query/useGetCommunityDetail';
+import { CommunityDetailComment } from '@/pages/community/hooks/article/useGetCommunityDetail';
 import * as S from './style';
 import LikedCount from './liked-count';
 

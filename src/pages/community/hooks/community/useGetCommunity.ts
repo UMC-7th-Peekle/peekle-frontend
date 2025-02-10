@@ -69,7 +69,7 @@ const getCommunity = async ({
 
     // ✅ 204 No Content 처리
     if (response.status === 204) {
-      console.log('📌 [API 응답] 204 No Content - 더 이상 게시글이 없습니다.');
+      console.log('📌 No Content - 더 이상 게시글이 없습니다.');
       return null;
     }
 

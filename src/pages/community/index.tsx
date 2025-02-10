@@ -3,7 +3,7 @@ import * as S from './style';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
 import ToggleHeart from '@/components/common/toggle-heart';
-import { useGetCommunity } from './hooks/query/useGetCommunity';
+import { useGetCommunity } from './hooks/community/useGetCommunity';
 import BodySection from '@/pages/community/container/body-section';
 import CommunityCard from '@/components/community/community-card';
 import { EditButton, ErrorFallback } from '@/components';

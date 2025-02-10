@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import * as S from './style';
-import { useDelCommunityArticle } from '@/pages/community/hooks/mutation/useDelCommunityArticle';
+import { useDelCommunityArticle } from '@/pages/community/hooks/article/useDelCommunityArticle';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
 

@@ -1,7 +1,9 @@
-import { CommunityDetailArticle } from '@/pages/community/hooks/query/useGetCommunityDetail';
+import { CommunityDetailArticle } from '@/pages/community/hooks/article/useGetCommunityDetail';
 import * as S from './style';
 import { CommentCountCard, LikeCard } from '@/components';
 import useImageScroll from '@/pages/community/hooks/util/useImageScroll';
+import { usePostArticleLike } from '@/pages/community/hooks/like/usePostArticleLike';
+import { useDelArticleLike } from '@/pages/community/hooks/like/useDelArticleLike';
 
 interface MainSectionProps {
   article: CommunityDetailArticle;
@@ -17,6 +19,9 @@ export default function MainSection({ article }: MainSectionProps) {
     currentIndex,
     touchEndX,
   } = useImageScroll({ article });
+
+  const postArticleLikeMutation = usePostArticleLike();
+  const delArticleLikeMutation = useDelArticleLike();
 
   return (
     <S.MainContainer>
@@ -63,6 +68,21 @@ export default function MainSection({ article }: MainSectionProps) {
         <LikeCard
           isLiked={article.isLikedByUser}
           count={article.articleLikesCount}
+          onClick={() => {
+            if (article.isLikedByUser) {
+              // 좋아요가 이미 눌린 상태라면 좋아요 삭제 요청
+              delArticleLikeMutation.mutate({
+                communityId: article.communityId,
+                articleId: article.articleId,
+              });
+            } else {
+              // 좋아요가 눌리지 않은 상태라면 좋아요 요청
+              postArticleLikeMutation.mutate({
+                communityId: article.communityId,
+                articleId: article.articleId,
+              });
+            }
+          }}
         />
         <CommentCountCard count={article.commentsCount} />
       </S.CountWrapper>

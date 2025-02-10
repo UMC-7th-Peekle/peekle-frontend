@@ -3,8 +3,8 @@ import { UseMutationResult } from '@tanstack/react-query';
 import {
   PatchCommunityResp,
   PatchCommunityParams,
-} from '@/pages/community/hooks/mutation/usePatchCommunityArticle';
-import { CommunityDetailResp } from '@/pages/community/hooks/query/useGetCommunityDetail';
+} from '@/pages/community/hooks/article/usePatchCommunityArticle';
+import { CommunityDetailResp } from '@/pages/community/hooks/article/useGetCommunityDetail';
 
 export const submitPatch = async (
   communityId: string,
@@ -28,17 +28,11 @@ export const submitPatch = async (
     return;
   }
 
-  console.log('📌 PATCH 요청 시작...');
-  console.log('🔹 기존 데이터:', existingData);
-
   // ✅ 기존 이미지와 새 이미지 분리
   const existingImageUrls = selectedImages.filter((img) =>
     img.startsWith('http'),
   );
   const newImages = selectedImages.filter((img) => !img.startsWith('http'));
-
-  console.log('🔹 기존 이미지 URL:', existingImageUrls);
-  console.log('🔹 새 이미지 URL:', newImages);
 
   // ✅ 기존 이미지 시퀀스 설정 (삭제된 이미지는 -1)
   const originalImages = existingData.success.article.articleImages.map(
@@ -48,8 +42,6 @@ export const submitPatch = async (
   const existingImageSequence = originalImages.map((url, index) =>
     existingImageUrls.includes(url) ? index + 1 : -1,
   );
-
-  console.log('🔹 기존 이미지 시퀀스 (삭제 포함):', existingImageSequence);
 
   // ✅ 새 이미지 변환 (Blob → File)
   const newFiles = (
@@ -69,11 +61,8 @@ export const submitPatch = async (
     )
   ).filter((file): file is File => file !== null);
 
-  console.log('🔹 새 이미지 파일들:', newFiles);
-
   // ✅ 새 이미지 시퀀스 설정
   const newImageSequence = newFiles.map((_, index) => index + 1);
-  console.log('🔹 새 이미지 시퀀스:', newImageSequence);
 
   // ✅ 썸네일 변환 (기존 URL이면 유지)
   let thumbnailFile: File | null = null;
@@ -88,8 +77,6 @@ export const submitPatch = async (
       console.error('❌ 썸네일 변환 실패:', err);
     }
   }
-
-  console.log('🔹 썸네일 파일:', thumbnailFile);
 
   // ✅ 최종 이미지 배열 구성
   const articleImages: File[] = [

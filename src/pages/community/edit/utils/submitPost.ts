@@ -1,7 +1,7 @@
 import {
   PostCommunityParams,
   PostCommunityResp,
-} from '@/pages/community/hooks/mutation/usePostCommunityArticle';
+} from '@/pages/community/hooks/article/usePostCommunityArticle';
 import { UseMutationResult } from '@tanstack/react-query';
 import { NavigateFunction } from 'react-router-dom';
 

@@ -1,5 +1,5 @@
 import { Backward, CommunityCard, ErrorFallback } from '@/components';
-import { useGetCommunityLike } from '../hooks/query/useGetCommunityLike';
+import { useGetCommunityLike } from '../hooks/community/useGetCommunityLike';
 import * as S from './style';
 import BodySection from './container/body-section';
 import { useInfiniteScroll } from '../hooks/util/useInfiniteScroll';

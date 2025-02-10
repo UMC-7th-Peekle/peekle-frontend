@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useGetCommunityDetail } from '@/pages/community/hooks/query/useGetCommunityDetail';
-import { usePostCommunityArticle } from '@/pages/community/hooks/mutation/usePostCommunityArticle';
-import { usePatchCommunityArticle } from '@/pages/community/hooks/mutation/usePatchCommunityArticle';
+import { useGetCommunityDetail } from '@/pages/community/hooks/article/useGetCommunityDetail';
+import { usePostCommunityArticle } from '@/pages/community/hooks/article/usePostCommunityArticle';
+import { usePatchCommunityArticle } from '@/pages/community/hooks/article/usePatchCommunityArticle';
 import { submitPatch } from '@/pages/community/edit/utils/submitPatch';
 import { submitPost } from '@/pages/community/edit/utils/submitPost';
 

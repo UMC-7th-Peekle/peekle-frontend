@@ -3,7 +3,7 @@ import { Backward, CommunityCard, TextFields } from '@/components';
 import * as SS from '../../event/search/style';
 import BodySection from '../container/body-section';
 import { useRecentSearch } from '@/hooks';
-import { useGetCommunity } from '../hooks/query/useGetCommunity';
+import { useGetCommunity } from '../hooks/community/useGetCommunity';
 import { useInfiniteScroll } from '../hooks/util/useInfiniteScroll';
 
 export default function CommunitySearchPage() {

@@ -98,7 +98,7 @@ export const useGetCommunityDetail = ({
   articleId,
 }: useGetCommunityDetailProps) => {
   return useQuery({
-    queryKey: ['get-community-detail', articleId],
+    queryKey: ['get-community-detail', communityId, articleId],
     queryFn: () => getCommunityDetail(communityId, articleId),
     enabled: Boolean(communityId && articleId),
   });

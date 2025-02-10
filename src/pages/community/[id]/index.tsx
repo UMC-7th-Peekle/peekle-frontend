@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Backward, ErrorFallback } from '@/components';
-import { useGetCommunityDetail } from '../hooks/query/useGetCommunityDetail';
+import { useGetCommunityDetail } from '../hooks/article/useGetCommunityDetail';
 import useCommunityId from '@/hooks/community/useCommunityId';
 import * as S from './style';
 import ThreeDot from '@/components/common/list';
@@ -39,7 +39,10 @@ export default function CommunityDetailPage() {
         )}
         <S.Boundary />
         {data?.success.article.articleComments && (
-          <CommentSection comments={data?.success.article.articleComments} />
+          <CommentSection
+            article={data?.success.article}
+            comments={data?.success.article.articleComments}
+          />
         )}
       </S.MainContainer>
 
