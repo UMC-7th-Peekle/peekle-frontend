@@ -30,7 +30,6 @@ const EventMap = ({ onMapLoad }: { onMapLoad: () => void }) => {
     setSelectedEvent,
     setIsLoading,
     setLoadingMessage,
-    // setLatestPos,
     latestPos,
   } = useMapStore();
   const { myLocation, setMyLocation } = useMyLocationStore();
@@ -57,7 +56,6 @@ const EventMap = ({ onMapLoad }: { onMapLoad: () => void }) => {
 
       if (!mapInstance) {
         const newMap = new naver.maps.Map(mapDiv, {
-          // center: new naver.maps.LatLng(centerLat, centerLng),
           center: latLng,
           zoom: 15,
           minZoom: 10,
@@ -71,16 +69,15 @@ const EventMap = ({ onMapLoad }: { onMapLoad: () => void }) => {
           onMapLoad();
         });
       } else {
-        // mapInstance.setCenter(new naver.maps.LatLng(centerLat, centerLng));
         mapInstance.setCenter(latLng);
         mapInstance.setZoom(15);
       }
       createMarkers(centerLat, centerLng);
+
       // selectedEvent가 있을 땐 해당 검정 말풍선 열기
       if (selectedEvent) {
         const marker = markers.get(selectedEvent.eventId);
         if (marker) {
-          console.log('blackSBMarker:', blackSBMarker);
           if (!blackSBMarker) {
             createBlackMarker(
               new naver.maps.LatLng(
@@ -111,9 +108,8 @@ const EventMap = ({ onMapLoad }: { onMapLoad: () => void }) => {
   }, [updateMarkers]);
 
   const mapClickHandler = useCallback(() => {
-    // 선택된 infowindow 기본 색으로 변경
+    // 지도 부분 클릭시 선택된 infowindow 기본 색으로 변경
     if (selectedEvent) {
-      console.log('selectedEvent:', selectedEvent);
       setSelectedEvent(null);
       removeBlackSBMarker();
     }
@@ -189,10 +185,6 @@ const EventMap = ({ onMapLoad }: { onMapLoad: () => void }) => {
       if (mapDiv) {
         if (myLocation) initMap(myLocation.y, myLocation.x);
         else {
-          console.log(
-            import.meta.env.VITE_MAP_CENTER_LAT,
-            import.meta.env.VITE_MAP_CENTER_LNG,
-          );
           initMap(
             import.meta.env.VITE_MAP_CENTER_LAT,
             import.meta.env.VITE_MAP_CENTER_LNG,
@@ -208,10 +200,6 @@ const EventMap = ({ onMapLoad }: { onMapLoad: () => void }) => {
             observer.disconnect(); // 요소를 찾으면 감지 중단
             if (myLocation) initMap(myLocation.y, myLocation.x);
             else {
-              console.log(
-                import.meta.env.VITE_MAP_CENTER_LAT,
-                import.meta.env.VITE_MAP_CENTER_LNG,
-              );
               initMap(
                 import.meta.env.VITE_MAP_CENTER_LAT,
                 import.meta.env.VITE_MAP_CENTER_LNG,

@@ -124,8 +124,8 @@ export enum CategoryIdEnum {
 }
 
 export enum LocationGroupIdEnum {
-  마포_서대문_은평 = 19,
-  강서_금천_양천 = 20,
+  마포_서대문_은평 = 1,
+  강서_금천_양천 = 2,
   광진_성동_중랑_동대문 = 21,
   강남_서초_양재 = 22,
   동작_관악_사당 = 23,
