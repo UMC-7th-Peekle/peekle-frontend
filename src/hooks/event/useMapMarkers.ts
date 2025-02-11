@@ -231,8 +231,32 @@ const useMapMarkers = (
           whiteSBMarkersRef.current.set(event.eventId, whiteSBMarker);
         }
       });
+
+      // selectedEvent가 있을 땐 해당 검정 말풍선 열기
+      if (selectedEvent) {
+        const marker = markersRef.current.get(selectedEvent.eventId);
+        if (marker) {
+          if (!blackSBMarkerRef.current.get(selectedEvent.eventId)) {
+            createBlackMarker(
+              new naver.maps.LatLng(
+                selectedEvent.latitude,
+                selectedEvent.longitude,
+              ),
+              selectedEvent,
+            );
+          }
+        }
+      }
     },
-    [markersRef, myLocation, mapInstance, events, handleMarkerClick],
+    [
+      markersRef,
+      selectedEvent,
+      myLocation,
+      mapInstance,
+      events,
+      createBlackMarker,
+      handleMarkerClick,
+    ],
   );
 
   const updateMarkers = useCallback(() => {
@@ -244,11 +268,11 @@ const useMapMarkers = (
     const projection = mapInstance.getProjection();
     const center = mapInstance.getCenter();
 
-    markersRef.current.forEach((marker, key) => {
+    markersRef.current.forEach((marker, eventId) => {
       const position = marker.getPosition();
       const distance = projection.getDistance(center, position);
-      const whiteSBMarker = whiteSBMarkersRef.current.get(key);
-      const blackSBMarker = blackSBMarkerRef.current.get(key);
+      const whiteSBMarker = whiteSBMarkersRef.current.get(eventId);
+      const blackSBMarker = blackSBMarkerRef.current.get(eventId);
       if (mapBounds.hasPoint(position)) {
         // 마커가 화면에 보이면 표시
         marker.setMap(mapInstance);
@@ -269,6 +293,31 @@ const useMapMarkers = (
     });
   }, [mapInstance]);
 
+  const updateLatestPos = useCallback(() => {
+    if (!mapInstance) return;
+    const mapBounds = mapInstance.getBounds();
+    const position = mapInstance.getCenter();
+
+    let hasMarkerInMapBounds = false;
+    markersRef.current.forEach((marker, eventId) => {
+      if (mapBounds.hasPoint(position)) {
+        // 마커가 화면에 보이지 않으면 latestPos 변경
+        marker.setMap(mapInstance);
+        if (eventId !== 0n && hasMarkerInMapBounds === false)
+          hasMarkerInMapBounds = true;
+      }
+    });
+    // 모든 마커가 화면 밖에 있으면 lastestPos 변경
+    if (!hasMarkerInMapBounds) {
+      const fitEvent = events[0];
+      const fitEventPos = new naver.maps.LatLng(
+        fitEvent?.latitude,
+        fitEvent?.longitude,
+      );
+      setLatestPos(fitEventPos);
+    }
+  }, [mapInstance, setLatestPos, events]);
+
   const removeBlackSBMarker = useCallback(() => {
     if (blackSBMarkerRef.current) {
       blackSBMarkerRef.current.forEach((marker) => marker.setMap(null));
@@ -280,6 +329,7 @@ const useMapMarkers = (
     markers: markersRef.current,
     whiteSBMarkers: whiteSBMarkersRef.current,
     blackSBMarker: blackSBMarkerRef.current,
+    updateLatestPos,
     createMarkers,
     updateMarkers,
     createBlackMarker,

@@ -34,14 +34,8 @@ const EventMap = ({ onMapLoad }: { onMapLoad: () => void }) => {
   } = useMapStore();
   const { myLocation, setMyLocation } = useMyLocationStore();
   const { sortedEvents } = useEventFilter();
-  const {
-    markers,
-    blackSBMarker,
-    createBlackMarker,
-    createMarkers,
-    updateMarkers,
-    removeBlackSBMarker,
-  } = useMapMarkers(mapInstance, sortedEvents);
+  const { updateLatestPos, createMarkers, updateMarkers, removeBlackSBMarker } =
+    useMapMarkers(mapInstance, sortedEvents);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -52,6 +46,7 @@ const EventMap = ({ onMapLoad }: { onMapLoad: () => void }) => {
       if (!mapDiv) return;
 
       // latestPos가 있으면 그 위치를 사용
+      updateLatestPos();
       const latLng = latestPos ?? new naver.maps.LatLng(centerLat, centerLng);
 
       if (!mapInstance) {
@@ -73,33 +68,8 @@ const EventMap = ({ onMapLoad }: { onMapLoad: () => void }) => {
         mapInstance.setZoom(15);
       }
       createMarkers(centerLat, centerLng);
-
-      // selectedEvent가 있을 땐 해당 검정 말풍선 열기
-      if (selectedEvent) {
-        const marker = markers.get(selectedEvent.eventId);
-        if (marker) {
-          if (!blackSBMarker) {
-            createBlackMarker(
-              new naver.maps.LatLng(
-                selectedEvent.latitude,
-                selectedEvent.longitude,
-              ),
-              selectedEvent,
-            );
-          }
-        }
-      }
     },
-    [
-      mapInstance,
-      createMarkers,
-      onMapLoad,
-      latestPos,
-      selectedEvent,
-      markers,
-      blackSBMarker,
-      createBlackMarker,
-    ],
+    [mapInstance, createMarkers, onMapLoad, latestPos],
   );
 
   // 지도 움직임
