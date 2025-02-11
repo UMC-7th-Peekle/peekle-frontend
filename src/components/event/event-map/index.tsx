@@ -10,7 +10,7 @@ import {
   RoundedButton,
 } from '@/components';
 import { useMapStore, useMyLocationStore } from '@/stores';
-import { confirm, getCurrentPosition } from '@/utils';
+import { confirm, getCurrentPosition, debounce } from '@/utils';
 import { ROUTES } from '@/constants/routes';
 import { useEventFilter, useMapMarkers } from '@/hooks';
 
@@ -31,6 +31,7 @@ const EventMap = ({ onMapLoad }: { onMapLoad: () => void }) => {
     setIsLoading,
     setLoadingMessage,
     latestPos,
+    setLatestPos,
   } = useMapStore();
   const { myLocation, setMyLocation } = useMyLocationStore();
   const { sortedEvents } = useEventFilter();
@@ -64,8 +65,8 @@ const EventMap = ({ onMapLoad }: { onMapLoad: () => void }) => {
           onMapLoad();
         });
       } else {
+        // mapInstance 있으면
         mapInstance.setCenter(latLng);
-        mapInstance.setZoom(15);
       }
       createMarkers(centerLat, centerLng);
     },
@@ -75,7 +76,14 @@ const EventMap = ({ onMapLoad }: { onMapLoad: () => void }) => {
   // 지도 움직임
   const idleHandler = useCallback(() => {
     updateMarkers();
-  }, [updateMarkers]);
+
+    // 움직임 멈추고 latestPos 업데이트 해두기
+    const center = mapInstance?.getCenter();
+    if (center) {
+      const centerLatLng = new naver.maps.LatLng(center.y, center.x);
+      debounce(() => setLatestPos(centerLatLng), 1000);
+    }
+  }, [updateMarkers, mapInstance, setLatestPos]);
 
   const mapClickHandler = useCallback(() => {
     // 지도 부분 클릭시 선택된 infowindow 기본 색으로 변경

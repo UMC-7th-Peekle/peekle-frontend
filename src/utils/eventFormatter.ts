@@ -44,5 +44,14 @@ export const formatSchedules = (schedule: EventSchedule) => {
 
 // 지도 발풍선용 이벤트 제목 자르기
 export const formatEventTitleForSB = (title: string, length: number) => {
-  return title.length > length ? title.slice(0, length) + '...' : title;
+  let count = 0;
+  let result = '';
+
+  for (const char of title) {
+    result += char;
+    if (char.trim() !== '') count++; // 공백 제외하고 글자만 카운트
+    if (count >= length) return result + '...';
+  }
+
+  return result;
 };

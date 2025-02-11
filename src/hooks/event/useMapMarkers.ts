@@ -73,6 +73,7 @@ const useMapMarkers = (
   // 마커 클릭 이벤트
   const handleMarkerClick = useCallback(
     (mapEvent: EventData) => {
+      if (!mapInstance) return;
       if (mapEvent.eventId === selectedEvent?.eventId) return;
 
       setSelectedEvent(mapEvent);
@@ -90,13 +91,16 @@ const useMapMarkers = (
       createBlackMarker(position, mapEvent);
 
       // 지도 이동 및 확대
-      // mapInstance?.morph(
+      // mapInstance.morph(
       //   new naver.maps.LatLng(mapEvent.latitude, mapEvent.longitude),
       //   19,
       //   { duration: 0, easing: 'easeOutCubic' }, // duration은 500ms 고정
       // );
-      mapInstance?.setCenter(position);
-      mapInstance?.setZoom(15);
+      mapInstance.setCenter(position);
+      const currentZoom = mapInstance.getZoom();
+
+      // 줌 조정: 15보다 작을 때만 변경
+      if (currentZoom < 15) mapInstance.setZoom(15);
     },
     [
       selectedEvent,
