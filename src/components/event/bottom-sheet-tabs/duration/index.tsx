@@ -88,7 +88,7 @@ const Duration = () => {
       handleSelect('전체');
     } else if (value === '직접 입력') {
       setDateRange([today, null]);
-      handleSelect(`${formatDate(today)}, YYYY-MM-DD`);
+      handleSelect(`${formatDate(today)},`);
       setIsCalendarOpen(true);
     } else {
       const range = PREDEFINED_RANGES[value as keyof typeof PREDEFINED_RANGES];

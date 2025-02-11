@@ -4,7 +4,6 @@ import {
   QueryErrorResetBoundary,
 } from '@tanstack/react-query';
 import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools'; // 디버깅용
-import { NuqsAdapter } from 'nuqs/adapters/react-router/v7';
 import { ErrorBoundary } from 'react-error-boundary';
 import queryClient from './lib/tanstack-query/queryClient';
 import { DeferredLoader, ErrorFallback, MetaTag } from './components';
@@ -26,14 +25,12 @@ function App() {
         <QueryErrorResetBoundary>
           {({ reset }) => (
             <ErrorBoundary onReset={reset} FallbackComponent={ErrorFallback}>
-              <NuqsAdapter>
-                <Suspense fallback={<DeferredLoader />}>
-                  <Alert />
-                  <Confirm />
-                  <Toast />
-                  <Router />
-                </Suspense>
-              </NuqsAdapter>
+              <Suspense fallback={<DeferredLoader />}>
+                <Alert />
+                <Confirm />
+                <Toast />
+                <Router />
+              </Suspense>
             </ErrorBoundary>
           )}
         </QueryErrorResetBoundary>

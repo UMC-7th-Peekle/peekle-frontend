@@ -13,14 +13,12 @@ import {
 } from '@/constants/event';
 import { calculateDistance } from '@/utils';
 import { events } from '@/sample-data/event';
-import { useQueryState } from 'nuqs';
 
 const useEventFilter = ({
   key = '정렬',
   type = 'single',
 }: UseEventFilterProps = {}) => {
   const { myLocation } = useMyLocationStore();
-  const [searchQuery] = useQueryState('event-search', { defaultValue: '' });
   const [searchParams, setSearchParams] = useSearchParams();
 
   // 현재 필터 상태 가져오기
@@ -73,7 +71,8 @@ const useEventFilter = ({
       }
 
       // 검색 필터
-      if (searchQuery) {
+      if (searchParams.has('event-search')) {
+        const searchQuery = searchParams.get('event-search')!;
         if (searchQuery.length < 2) {
           return false;
         } else {
@@ -83,7 +82,7 @@ const useEventFilter = ({
 
       return true;
     });
-  }, [filters, searchQuery]);
+  }, [filters, searchParams]);
 
   const sortedEvents = useMemo(() => {
     return [...filteredEvents].sort((a, b) => {
@@ -145,7 +144,6 @@ const useEventFilter = ({
   // 필터값 변경
   const handleSelect = (newValue: string) => {
     const updatedParams = new URLSearchParams(searchParams); // 기존 쿼리 파라미터 복사
-
     if (type === 'single') {
       updatedParams.set(key, newValue);
     } else {
@@ -212,7 +210,12 @@ const useEventFilter = ({
   };
 
   const clearFilter = () => {
-    setSearchParams(DEFAULT_FILTERS);
+    const updatedParams = new URLSearchParams(DEFAULT_FILTERS);
+    // 기존 event-search 값 유지
+    if (searchParams.has('event-search')) {
+      updatedParams.set('event-search', searchParams.get('event-search')!);
+    }
+    setSearchParams(updatedParams);
   };
 
   const activeFilterCount = useMemo(() => {

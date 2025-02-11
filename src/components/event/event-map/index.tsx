@@ -1,7 +1,6 @@
 import * as S from './style';
 import { useEffect, useCallback, useState } from 'react';
-import { useQueryState } from 'nuqs';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   EventCard,
@@ -13,7 +12,6 @@ import { useMapStore, useMyLocationStore } from '@/stores';
 import { confirm, getCurrentPosition, debounce } from '@/utils';
 import { ROUTES } from '@/constants/routes';
 import { useEventFilter, useMapMarkers } from '@/hooks';
-
 window.navermap_authFailure = function () {
   console.error('네이버 지도 인증 실패');
   throw new Error('네이버 지도 인증 실패');
@@ -23,7 +21,8 @@ const EventMap = ({ onMapLoad }: { onMapLoad: () => void }) => {
   // localStorage.clear();
   // sessionStorage.clear();
   const [mapInstance, setMapInstance] = useState<naver.maps.Map>();
-  const [searchQuery] = useQueryState('event-search', { defaultValue: '' });
+  const [searchParams] = useSearchParams();
+  const searchQuery = searchParams.get('event-search') ?? '';
 
   const {
     selectedEvent,
@@ -60,8 +59,8 @@ const EventMap = ({ onMapLoad }: { onMapLoad: () => void }) => {
 
         setMapInstance(newMap);
 
-        // 맵이 완전히 로드되었을 때
-        naver.maps.Event.addListener(newMap, 'init', () => {
+        // 맵이 완전히 로드되었을 때 한 번
+        naver.maps.Event.once(newMap, 'init', () => {
           onMapLoad();
         });
       } else {

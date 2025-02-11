@@ -1,6 +1,5 @@
 import * as S from './style';
-import { useQueryState } from 'nuqs';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   EventCard,
   EventCardSkeleton,
@@ -19,7 +18,8 @@ export const EventList = ({
 }) => {
   const navigate = useNavigate();
   const { sortedEvents } = useEventFilter();
-  const [searchQuery] = useQueryState('event-search', { defaultValue: '' });
+  const [searchParams] = useSearchParams();
+  const searchQuery = searchParams.get('event-search') ?? '';
   const { setSelectedEvent } = useMapStore();
 
   const isSearchPage = page === 'search';

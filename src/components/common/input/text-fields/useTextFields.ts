@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { useQueryState } from 'nuqs';
+import { useSearchParams } from 'react-router-dom';
 import { alert } from '@/utils';
 
 interface UseTextFieldsProps {
@@ -13,7 +13,8 @@ export const useTextFields = ({
   localKey,
   onQuerySubmit = () => {},
 }: UseTextFieldsProps) => {
-  const [query, setQuery] = useQueryState(queryKey);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const query = searchParams.get(queryKey) ?? '';
   const [inputValue, setInputValue] = useState(query ?? '');
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -40,7 +41,7 @@ export const useTextFields = ({
     }
 
     timeoutRef.current = setTimeout(() => {
-      setQuery(value);
+      setSearchParams({ [queryKey]: value });
     }, 300);
   };
 
@@ -52,7 +53,7 @@ export const useTextFields = ({
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
-    setQuery(inputValue); // 현재 input 값으로 즉시 쿼리 업데이트
+    setSearchParams({ [queryKey]: inputValue }); // 현재 input 값으로 즉시 쿼리 업데이트
     const recentSearch = JSON.parse(localStorage.getItem(localKey) || '[]');
     localStorage.setItem(
       localKey,
@@ -71,7 +72,7 @@ export const useTextFields = ({
   // 검색어 삭제 핸들러
   const handleClear = () => {
     setInputValue('');
-    setQuery('');
+    setSearchParams({ [queryKey]: '' });
   };
 
   return { inputValue, handleChange, handleKeyDown, handleSubmit, handleClear };

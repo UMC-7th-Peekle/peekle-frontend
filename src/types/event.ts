@@ -273,3 +273,22 @@ export const DeleteScrapResponseSchema = ApiResponseSchema(
 );
 
 export type DeleteScrapResponse = z.infer<typeof DeleteScrapResponseSchema>;
+
+// 네이버 지도
+// 클러스터링
+type Icon = {
+  content: string;
+  anchor: naver.maps.Point;
+};
+export interface MarkerClusteringOptions {
+  map: naver.maps.Map | null;
+  markers: naver.maps.Marker[];
+  disableClickZoom: boolean;
+  minClusterSize: number;
+  maxZoom: number;
+  gridSize: number;
+  icons: Icon[];
+  indexGenerator: number[];
+  averageCenter: boolean;
+  stylingFunction: (clusterMarker: naver.maps.Marker, count: number) => void;
+}

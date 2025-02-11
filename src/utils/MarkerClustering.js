@@ -18,52 +18,54 @@
 //  * 마커 클러스터링을 정의합니다.
 //  * @param {Object} options 마커 클러스터링 옵션
 //  */
-// const MarkerClustering = (options) => {
-//   if (!naver) return;
 
-//   const DEFAULT_OPTIONS = {
-//     // 클러스터 마커를 올릴 지도
-//     map: null,
-//     // 클러스터 마커를 구성할 마커
-//     markers: [],
-//     // 클러스터 마커 클릭 시 줌 동작 여부
-//     disableClickZoom: true,
-//     // 클러스터를 구성할 최소 마커 수
-//     minClusterSize: 2,
-//     // 클러스터 마커로 표현할 최대 줌 레벨입니다. 해당 줌 레벨보다 높으면, 클러스터를 구성하고 있는 마커를 노출합니다.
-//     maxZoom: 13,
-//     // 클러스터를 구성할 그리드 크기입니다. 단위는 픽셀입니다.
-//     gridSize: 100,
-//     // 클러스터 마커의 아이콘입니다. NAVER Maps JavaScript API v3에서 제공하는 아이콘, 심볼, HTML 마커 유형을 모두 사용할 수 있습니다.
-//     icons: [],
-//     // 클러스터 마커의 아이콘 배열에서 어떤 아이콘을 선택할 것인지 인덱스를 결정합니다.
-//     indexGenerator: [10, 100, 200, 500, 1000],
-//     // 클러스터 마커의 위치를 클러스터를 구성하고 있는 마커의 평균 좌표로 할 것인지 여부입니다.
-//     averageCenter: false,
-//     // 클러스터 마커를 갱신할 때 호출하는 콜백함수입니다. 이 함수를 통해 클러스터 마커에 개수를 표현하는 등의 엘리먼트를 조작할 수 있습니다.
-//     stylingFunction: function () {},
-//   };
+// class MarkerClustering {
+//   constructor(options) {
+//     this.DEFAULT_OPTIONS = {
+//       // 클러스터 마커를 올릴 지도입니다.
+//       map: null,
+//       // 클러스터 마커를 구성할 마커입니다.
+//       markers: [],
+//       // 클러스터 마커 클릭 시 줌 동작 여부입니다.
+//       disableClickZoom: true,
+//       // 클러스터를 구성할 최소 마커 수입니다.
+//       minClusterSize: 2,
+//       // 클러스터 마커로 표현할 최대 줌 레벨입니다. 해당 줌 레벨보다 높으면, 클러스터를 구성하고 있는 마커를 노출합니다.
+//       maxZoom: 13,
+//       // 클러스터를 구성할 그리드 크기입니다. 단위는 픽셀입니다.
+//       gridSize: 100,
+//       // 클러스터 마커의 아이콘입니다. NAVER Maps JavaScript API v3에서 제공하는 아이콘, 심볼, HTML 마커 유형을 모두 사용할 수 있습니다.
+//       icons: [],
+//       // 클러스터 마커의 아이콘 배열에서 어떤 아이콘을 선택할 것인지 인덱스를 결정합니다.
+//       indexGenerator: [10, 100, 200, 500, 1000],
+//       // 클러스터 마커의 위치를 클러스터를 구성하고 있는 마커의 평균 좌표로 할 것인지 여부입니다.
+//       averageCenter: false,
+//       // 클러스터 마커를 갱신할 때 호출하는 콜백함수입니다. 이 함수를 통해 클러스터 마커에 개수를 표현하는 등의 엘리먼트를 조작할 수 있습니다.
+//       stylingFunction: function () {},
+//     };
+//     this._clusters = [];
 
-//   const _clusters = [];
+//     this._mapRelations = null;
+//     this._markerRelations = [];
+//     console.log(options.map);
+//     this._naverMap = options.map;
 
-//   const _mapRelations = null;
-//   const _markerRelations = [];
+//     this.setOptions(
+//       this._naverMap.Util.extend({}, this.DEFAULT_OPTIONS, options),
+//       true,
+//     );
+//     this.setMap(options.map || null);
+//   }
+// }
 
-//   this.setOptions(
-//     naver.maps.Util.extend({}, this.DEFAULT_OPTIONS, options),
-//     true,
-//   );
-//   this.setMap(options.map || null);
-// };
-
-// naver.maps.Util.ClassExtend(MarkerClustering, naver.maps.OverlayView, {
+// this._naverMap.Util.ClassExtend(MarkerClustering, this._naverMap.OverlayView, {
 //   onAdd: function () {
-//     var map = this.getMap();
+//     let map = this.getMap();
 
-//     this._mapRelations = naver.maps.Event.addListener(
+//     this._mapRelations = this._naverMap.Event.addListener(
 //       map,
 //       'idle',
-//       naver.maps.Util.bind(this._onIdle, this),
+//       this._naverMap.Util.bind(this._onIdle, this),
 //     );
 
 //     if (this.getMarkers().length > 0) {
@@ -72,10 +74,10 @@
 //     }
 //   },
 
-//   draw: naver.maps.Util.noop,
+//   draw: this._naverMap.Util.noop,
 
 //   onRemove: function () {
-//     naver.maps.Event.removeListener(this._mapRelation);
+//     this._naverMap.Event.removeListener(this._mapRelation);
 
 //     this._clearClusters();
 
@@ -88,24 +90,22 @@
 //    * @param {Object | string} newOptions 옵션
 //    */
 //   setOptions: function (newOptions) {
-//     var _this = this;
-
 //     if (typeof newOptions === 'string') {
-//       var key = newOptions,
+//       const key = newOptions,
 //         value = arguments[1];
 
-//       _this.set(key, value);
+//       this.set(key, value);
 //     } else {
-//       var isFirst = arguments[1];
+//       const isFirst = arguments[1];
 
-//       naver.maps.Util.forEach(newOptions, function (value, key) {
+//       this._naverMap.Util.forEach(newOptions, function (value, key) {
 //         if (key !== 'map') {
-//           _this.set(key, value);
+//           this.set(key, value);
 //         }
 //       });
 
 //       if (newOptions.map && !isFirst) {
-//         _this.setMap(newOptions.map);
+//         this.setMap(newOptions.map);
 //       }
 //     }
 //   },
@@ -116,14 +116,13 @@
 //    * @return {Any} 옵션
 //    */
 //   getOptions: function (key) {
-//     var _this = this,
-//       options = {};
+//     const options = {};
 
 //     if (key !== undefined) {
-//       return _this.get(key);
+//       return this.get(key);
 //     } else {
-//       naver.maps.Util.forEach(_this.DEFAULT_OPTIONS, function (value, key) {
-//         options[key] = _this.get(key);
+//       this._naverMap.Util.forEach(this.DEFAULT_OPTIONS, function (value, key) {
+//         options[key] = this.get(key);
 //       });
 
 //       return options;
@@ -340,10 +339,10 @@
 //       closestCluster.addMarker(marker);
 
 //       this._markerRelations.push(
-//         naver.maps.Event.addListener(
+//         this._naverMap.Event.addListener(
 //           marker,
 //           'dragend',
-//           naver.maps.Util.bind(this._onDragEnd, this),
+//           this._naverMap.Util.bind(this._onDragEnd, this),
 //         ),
 //       );
 //     }
@@ -372,7 +371,7 @@
 //       clusters[i].destroy();
 //     }
 
-//     naver.maps.Event.removeListener(this._markerRelations);
+//     this._naverMap.Event.removeListener(this._markerRelations);
 
 //     this._markerRelations = [];
 //     this._clusters = [];
@@ -475,7 +474,7 @@
 //    * 클러스터를 제거합니다.
 //    */
 //   destroy: function () {
-//     naver.maps.Event.removeListener(this._relation);
+//     this._naverMap.Event.removeListener(this._relation);
 
 //     var members = this._clusterMember;
 
@@ -542,10 +541,10 @@
 
 //     var map = this._markerClusterer.getMap();
 
-//     this._relation = naver.maps.Event.addListener(
+//     this._relation = this._naverMap.Event.addListener(
 //       this._clusterMarker,
 //       'click',
-//       naver.maps.Util.bind(function (e) {
+//       this._naverMap.Util.bind(function (e) {
 //         map.morph(e.coord, map.getZoom() + 1);
 //       }, this),
 //     );
@@ -557,7 +556,7 @@
 //   disableClickZoom: function () {
 //     if (!this._relation) return;
 
-//     naver.maps.Event.removeListener(this._relation);
+//     this._naverMap.Event.removeListener(this._relation);
 //     this._relation = null;
 //   },
 
@@ -577,7 +576,7 @@
 //         position = this._clusterCenter;
 //       }
 
-//       this._clusterMarker = new naver.maps.Marker({
+//       this._clusterMarker = new this._naverMap.Marker({
 //         position: position,
 //         map: this._markerClusterer.getMap(),
 //       });
@@ -617,9 +616,9 @@
 //    * 클러스터를 구성하는 마커 수를 갱신합니다.
 //    */
 //   updateCount: function () {
-//     var stylingFunction = this._markerClusterer.getStylingFunction();
+//     const stylingFunction = this._markerClusterer.getStylingFunction();
 
-//     stylingFunction && stylingFunction(this._clusterMarker, this.getCount());
+//     if (stylingFunction) stylingFunction(this._clusterMarker, this.getCount());
 //   },
 
 //   /**
@@ -679,8 +678,11 @@
 //    * @private
 //    */
 //   _calcBounds: function (position) {
-//     var map = this._markerClusterer.getMap(),
-//       bounds = new naver.maps.LatLngBounds(position.clone(), position.clone()),
+//     const map = this._markerClusterer.getMap(),
+//       bounds = new this._naverMap.LatLngBounds(
+//         position.clone(),
+//         position.clone(),
+//       ),
 //       mapBounds = map.getBounds(),
 //       proj = map.getProjection(),
 //       map_max_px = proj.fromCoordToOffset(mapBounds.getNE()),
@@ -696,10 +698,14 @@
 //       max_px_y = Math.max(map_max_px.y, max_px.y),
 //       min_px_x = Math.max(map_min_px.x, min_px.x),
 //       min_px_y = Math.min(map_min_px.y, min_px.y),
-//       newMax = proj.fromOffsetToCoord(new naver.maps.Point(max_px_x, max_px_y)),
-//       newMin = proj.fromOffsetToCoord(new naver.maps.Point(min_px_x, min_px_y));
+//       newMax = proj.fromOffsetToCoord(
+//         new this._naverMap.Point(max_px_x, max_px_y),
+//       ),
+//       newMin = proj.fromOffsetToCoord(
+//         new this._naverMap.Point(min_px_x, min_px_y),
+//       );
 
-//     return new naver.maps.LatLngBounds(newMin, newMax);
+//     return new this._naverMap.LatLngBounds(newMin, newMax);
 //   },
 
 //   /**
@@ -711,9 +717,9 @@
 //   _getIndex: function (count) {
 //     var indexGenerator = this._markerClusterer.getIndexGenerator();
 
-//     if (naver.maps.Util.isFunction(indexGenerator)) {
+//     if (this._naverMap.Util.isFunction(indexGenerator)) {
 //       return indexGenerator(count);
-//     } else if (naver.maps.Util.isArray(indexGenerator)) {
+//     } else if (this._naverMap.Util.isArray(indexGenerator)) {
 //       var index = 0;
 
 //       for (var i = index, ii = indexGenerator.length; i < ii; i++) {
@@ -756,7 +762,7 @@
 //     averageCenter[0] /= numberOfMarkers;
 //     averageCenter[1] /= numberOfMarkers;
 
-//     return new naver.maps.Point(averageCenter[0], averageCenter[1]);
+//     return new this._naverMap.Point(averageCenter[0], averageCenter[1]);
 //   },
 // };
 

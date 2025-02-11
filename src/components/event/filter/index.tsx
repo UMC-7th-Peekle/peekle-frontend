@@ -28,6 +28,7 @@ const Filter = ({ isSearchPage = false }: { isSearchPage?: boolean }) => {
             {activeFilterCount > 0 ? (
               <S.FillerTextWrapper>
                 <S.FilterText>필터 ({activeFilterCount}개)</S.FilterText>
+                {/* <S.FilterText>필터 (25개)</S.FilterText> */}
                 <S.RedDot />
               </S.FillerTextWrapper>
             ) : (
