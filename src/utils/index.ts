@@ -24,4 +24,5 @@ export {
   getDistrict,
   getStartDateTime,
   formatSchedules,
+  formatEventTitleForSB,
 } from './eventFormatter';

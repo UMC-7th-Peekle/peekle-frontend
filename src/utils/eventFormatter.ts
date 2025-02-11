@@ -41,3 +41,8 @@ export const formatSchedules = (schedule: EventSchedule) => {
 
   return `${repeatText} ${formatTime(startTime)} ~ ${formatTime(endTime)}`;
 };
+
+// 지도 발풍선용 이벤트 제목 자르기
+export const formatEventTitleForSB = (title: string, length: number) => {
+  return title.length > length ? title.slice(0, length) + '...' : title;
+};

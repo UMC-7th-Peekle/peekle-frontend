@@ -69,7 +69,7 @@ const EventMap = ({ onMapLoad }: { onMapLoad: () => void }) => {
       }
       createMarkers(centerLat, centerLng);
     },
-    [mapInstance, createMarkers, onMapLoad, latestPos],
+    [mapInstance, createMarkers, onMapLoad, latestPos, updateLatestPos],
   );
 
   // 지도 움직임
