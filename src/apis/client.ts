@@ -3,8 +3,6 @@ import axios, {
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from 'axios';
-import ApiError from './apiError';
-import { getRefreshTokenFromCookie } from '@/apis/getRefreshToken';
 
 interface CustomInternalAxiosRequestConfig extends InternalAxiosRequestConfig {
   requireAuth?: boolean;
@@ -23,9 +21,10 @@ client.interceptors.request.use(
   (config: CustomInternalAxiosRequestConfig) => {
     if (config.requireAuth) {
       const accessToken = localStorage.getItem('accessToken');
+      console.log(accessToken);
       if (accessToken) {
         config.headers = config.headers || {};
-        config.headers.Authorization = `Bearer ${accessToken}`;
+        config.headers.Authorization = `${accessToken}`;
       }
     }
     return config;
@@ -41,28 +40,18 @@ client.interceptors.response.use(
 
     const { data, config } = error.response;
     const errorCode = data?.error?.errorCode ?? 'UNKNOWN_ERROR';
-    const reason = data?.error?.reason ?? '알 수 없는 오류입니다.';
 
-    // ✅ AccessToken 만료 (TOKEN_003) → RefreshToken으로 재발급 요청
     if (error.response.status === 401 && errorCode === 'TOKEN_003') {
       console.warn(
         '🔄 AccessToken이 만료되었습니다. RefreshToken으로 재발급 요청...',
       );
 
-      const refreshToken = getRefreshTokenFromCookie();
-      if (!refreshToken) {
-        console.error('🚨 RefreshToken이 없습니다. 로그아웃 처리.');
-        localStorage.clear();
-        window.location.href = '/';
-        return Promise.reject(error);
-      }
-
       try {
-        // ✅ RefreshToken으로 새 AccessToken 요청
+        // ✅ 쿠키에 저장된 RefreshToken 사용
         const { data: newTokenData } = await axios.get<{ accessToken: string }>(
           `${import.meta.env.VITE_API_URL}/auth/token/reissue`,
           {
-            headers: { Authorization: `Bearer ${refreshToken}` },
+            withCredentials: true, // ✅ 서버가 RefreshToken을 포함하도록 요청
           },
         );
 
@@ -71,7 +60,7 @@ client.interceptors.response.use(
         console.log('✅ AccessToken 재발급 완료:', newTokenData.accessToken);
 
         // ✅ 원래 요청 재시도 (새 AccessToken 사용)
-        config.headers.Authorization = `Bearer ${newTokenData.accessToken}`;
+        config.headers.Authorization = `${newTokenData.accessToken}`;
         return client(config);
       } catch (refreshError) {
         console.error(
@@ -84,9 +73,7 @@ client.interceptors.response.use(
       }
     }
 
-    // ✅ 일반적인 API 오류 처리
-    const apiError = new ApiError(errorCode, reason, data);
-    return Promise.reject(apiError);
+    return Promise.reject(error);
   },
 );
 

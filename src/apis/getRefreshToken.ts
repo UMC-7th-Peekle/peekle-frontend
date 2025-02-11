@@ -4,5 +4,7 @@ export const getRefreshTokenFromCookie = (): string | null => {
   const refreshTokenCookie = cookies.find((cookie) =>
     cookie.startsWith('PEEKLE_RT='),
   );
-  return refreshTokenCookie ? refreshTokenCookie.split('=')[1] : null;
+  return refreshTokenCookie
+    ? decodeURIComponent(refreshTokenCookie.split('=')[1])
+    : null;
 };
