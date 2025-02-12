@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import ResendSVG from '@/assets/images/auth/resend.svg?react';
 import { useEffect } from 'react';
+import { ROUTES } from '@/constants/routes';
 
 const CertifyPage = () => {
   const navigate = useNavigate();
@@ -90,7 +91,11 @@ const CertifyPage = () => {
       const data = await response.json();
 
       if (response.ok && data.resultType === 'SUCCESS') {
-        navigate('/auth/gender');
+        localStorage.setItem(
+          'phoneVerificationSessionId',
+          phoneVerificationSessionId,
+        );
+        navigate(ROUTES.AUTH_GENDER);
       } else {
         alert('인증번호가 맞지 않아요!', 'warning', '확인');
       }
@@ -126,7 +131,7 @@ const CertifyPage = () => {
             onChange={(e) => handleChange(index, e.target.value)}
             onKeyDown={(e) => handleKeyDown(index, e)}
             maxLength={1}
-            filled={!!num}
+            $filled={!!num}
           />
         ))}
         <ResendWrapper onClick={handleResend}>
@@ -213,8 +218,8 @@ const Title = styled.h1`
 `;
 const BackwardWrapper = styled.div`
   position: absolute;
-  top: 15px;
-  left: 30px;
+  top: 22px;
+  left: 20px;
 `;
 const ButtonWrapper = styled.div`
   position: fixed;
@@ -232,7 +237,7 @@ const InputWrapper = styled.div`
   margin-left: 15px;
 `;
 
-const Input = styled.input<{ filled: boolean }>`
+const Input = styled.input<{ $filled: boolean }>`
   width: 40px;
   height: 50px;
   font-size: 24px;
@@ -241,7 +246,7 @@ const Input = styled.input<{ filled: boolean }>`
   outline: none;
   font-weight: bold;
 
-  border-bottom: 2px solid ${({ filled }) => (filled ? '#000' : '#cacdd3')};
+  border-bottom: 2px solid ${({ $filled }) => ($filled ? '#000' : '#cacdd3')};
   &:focus {
     border-bottom: 2px solid #0f0f0f;
   }

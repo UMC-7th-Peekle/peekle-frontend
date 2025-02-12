@@ -11,6 +11,8 @@ import ProfileSVG from '@/assets/images/user/profile.svg?react';
 import LogoSVG from '@/assets/images/user/logo.svg?react';
 import Logo2SVG from '@/assets/images/user/logo2.svg?react';
 import ArrowSVG from '@/assets/images/user/arrow.svg?react';
+import { ROUTES } from '@/constants/routes';
+import { client } from '@/apis/client';
 
 const Container = styled.div`
   display: fixed;
@@ -77,7 +79,7 @@ const SectionTitle = styled.h3`
   font-weight: 600;
   font-size: 16px;
   margin-bottom: 10px;
-  font-color: rgba(116, 119, 125, 1);
+  color: rgba(116, 119, 125, 1);
 `;
 
 const MenuItem = styled.div`
@@ -132,9 +134,18 @@ const UserPage = () => {
       '취소',
       '로그아웃',
       () => console.log('로그아웃 취소됨'),
-      () => {
-        console.log('로그아웃 완료');
-        navigate('/');
+      async () => {
+        try {
+          await client({
+            method: 'DELETE',
+            url: '/auth/logout',
+            withCredentials: true,
+          });
+          localStorage.removeItem('accessToken');
+          navigate(ROUTES.ONBOARDING);
+        } catch (error) {
+          console.error('🚨 로그아웃 실패:', error);
+        }
       },
     );
   };
