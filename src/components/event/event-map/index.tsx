@@ -21,6 +21,7 @@ const EventMap = ({ onMapLoad }: { onMapLoad: () => void }) => {
   // localStorage.clear();
   // sessionStorage.clear();
   const [mapInstance, setMapInstance] = useState<naver.maps.Map>();
+  const [isMapInitialed, setIsMapInitialed] = useState<boolean>(false);
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get('event-search') ?? '';
 
@@ -32,7 +33,12 @@ const EventMap = ({ onMapLoad }: { onMapLoad: () => void }) => {
     latestPos,
     setLatestPos,
   } = useMapStore();
-  const { myLocation, setMyLocation } = useMyLocationStore();
+  const {
+    myLocation,
+    setMyLocation,
+    hasMyLocationChanged,
+    resetMyLocationChanged,
+  } = useMyLocationStore();
   const { sortedEvents } = useEventFilter();
   const { updateLatestPos, createMarkers, updateMarkers, removeBlackSBMarker } =
     useMapMarkers(mapInstance, sortedEvents);
@@ -47,7 +53,17 @@ const EventMap = ({ onMapLoad }: { onMapLoad: () => void }) => {
 
       // latestPos가 있으면 그 위치를 사용
       updateLatestPos();
-      const latLng = latestPos ?? new naver.maps.LatLng(centerLat, centerLng);
+      let latLng = null;
+      // 내 위치 바뀌면 센터로 이동
+      if (hasMyLocationChanged) {
+        latLng = new naver.maps.LatLng(centerLat, centerLng);
+        resetMyLocationChanged();
+      }
+      // 맵 초기화돼있으면 latestPos 사용
+      if (isMapInitialed && latestPos) latLng = latestPos;
+      else latLng = new naver.maps.LatLng(centerLat, centerLng);
+
+      setIsMapInitialed(true);
 
       if (!mapInstance) {
         const newMap = new naver.maps.Map(mapDiv, {
@@ -69,7 +85,15 @@ const EventMap = ({ onMapLoad }: { onMapLoad: () => void }) => {
       }
       createMarkers(centerLat, centerLng);
     },
-    [mapInstance, createMarkers, onMapLoad, latestPos, updateLatestPos],
+    [
+      mapInstance,
+      createMarkers,
+      onMapLoad,
+      latestPos,
+      updateLatestPos,
+      hasMyLocationChanged,
+      isMapInitialed,
+    ],
   );
 
   // 지도 움직임

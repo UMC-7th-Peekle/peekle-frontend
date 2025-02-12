@@ -12,7 +12,7 @@ const useMapMarkers = (
   const whiteSBMarkersRef = useRef<Map<bigint, naver.maps.Marker>>(new Map());
   const blackSBMarkerRef = useRef<Map<bigint, naver.maps.Marker>>(new Map());
   const { selectedEvent, setSelectedEvent, setLatestPos } = useMapStore();
-  const { myLocation } = useMyLocationStore();
+  const { myLocation, hasMyLocationChanged } = useMyLocationStore();
 
   // 검정 마커 생성 함수
   const createBlackMarker = useCallback(
@@ -117,10 +117,8 @@ const useMapMarkers = (
       if (!mapInstance) return;
 
       // 내 위치 마커 생성
-      const IsMyLocationChanged =
-        lat !== myLocation?.y || lng !== myLocation?.x;
       let myLocMarker = markersRef.current.get(0n);
-      if (!myLocMarker || IsMyLocationChanged) {
+      if (!myLocMarker || hasMyLocationChanged) {
         myLocMarker = new naver.maps.Marker({
           position: new naver.maps.LatLng(lat, lng),
           map: mapInstance,
@@ -270,28 +268,32 @@ const useMapMarkers = (
 
   const updateLatestPos = useCallback(() => {
     if (!mapInstance) return;
-    const mapBounds = mapInstance.getBounds();
-    const position = mapInstance.getCenter();
 
+    const mapBounds = mapInstance.getBounds();
+
+    // 마커가 화면에 보이지 않으면 latestPos 변경
     let hasMarkerInMapBounds = false;
     markersRef.current.forEach((marker, eventId) => {
-      if (mapBounds.hasPoint(position)) {
-        // 마커가 화면에 보이지 않으면 latestPos 변경
-        marker.setMap(mapInstance);
+      if (mapBounds.hasPoint(marker.getPosition())) {
         if (eventId !== 0n && hasMarkerInMapBounds === false)
           hasMarkerInMapBounds = true;
       }
     });
-    // 모든 마커가 화면 밖에 있으면 lastestPos 변경
+    console.log(hasMarkerInMapBounds);
+    // 모든 마커가 화면 밖에 있으면 가장 첫번째 요소로 lastestPos 변경
     if (!hasMarkerInMapBounds) {
       const fitEvent = events[0];
-      const fitEventPos = new naver.maps.LatLng(
-        fitEvent?.latitude,
-        fitEvent?.longitude,
-      );
-      setLatestPos(fitEventPos);
+      if (fitEvent) {
+        const fitEventPos = new naver.maps.LatLng(
+          fitEvent.latitude,
+          fitEvent.longitude,
+        );
+        console.log('fitEvent', fitEvent.categoryId);
+        mapInstance.setCenter(fitEventPos);
+        setLatestPos(fitEventPos);
+      }
     }
-  }, [mapInstance, setLatestPos, events]);
+  }, [mapInstance, setLatestPos, events, hasMyLocationChanged]);
 
   const removeBlackSBMarker = useCallback(() => {
     if (blackSBMarkerRef.current) {

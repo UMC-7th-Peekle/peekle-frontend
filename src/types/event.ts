@@ -92,7 +92,9 @@ export interface LocationConfirmProps {
 
 export interface MyLocationStore {
   myLocation: naver.maps.LatLng | null;
+  hasMyLocationChanged: boolean;
   setMyLocation: (location: naver.maps.LatLng) => void;
+  resetMyLocationChanged: () => void;
 }
 
 // MapBottomSheet
