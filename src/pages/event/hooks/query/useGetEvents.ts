@@ -11,8 +11,8 @@ import {
 const getEvents = async ({
   limit,
   cursor,
-  category,
-  location,
+  categories,
+  locations,
   price,
   startDate,
   endDate,
@@ -24,8 +24,8 @@ const getEvents = async ({
     params: {
       limit,
       cursor,
-      category,
-      location,
+      category: categories,
+      location: locations,
       price,
       startDate,
       endDate,
@@ -36,17 +36,18 @@ const getEvents = async ({
   // 응답 데이터 검증
   const parsedData = EventsResponseSchema.parse(response.data);
   return parsedData;
+  return response.data;
 };
 
 const useGetEvents = ({
-  limit,
-  cursor,
-  category,
-  location,
-  price,
+  limit = 10,
+  cursor = 0,
+  categories,
+  locations,
+  price = '전체',
   startDate,
   endDate,
-  query = '',
+  query,
 }: getEventsParams) => {
   const { data, error, fetchNextPage, hasNextPage, isFetching } =
     useSuspenseInfiniteQuery<
@@ -59,26 +60,29 @@ const useGetEvents = ({
         'events',
         limit,
         cursor,
-        category,
-        location,
+        categories,
+        locations,
         price,
         startDate,
         endDate,
         query,
       ],
-      queryFn: () =>
+      queryFn: ({ pageParam }) =>
         getEvents({
           limit,
-          cursor,
-          category,
-          location,
+          cursor: pageParam ? (pageParam as number) : undefined,
+          categories,
+          locations,
           price,
           startDate,
           endDate,
           query,
         }),
-      initialPageParam: 1,
-      getNextPageParam: (lastPage) => lastPage.success?.nextCursor,
+      initialPageParam: 0,
+      getNextPageParam: (lastPage) => {
+        if (!lastPage) return undefined;
+        return lastPage.success?.nextCursor ?? undefined;
+      },
     });
 
   return { data, error, fetchNextPage, hasNextPage, isFetching };

@@ -1,5 +1,6 @@
 import * as S from './style';
-import { EventList } from '@/components';
+import { Suspense } from 'react';
+import { EventList, EventListSkeleton } from '@/components';
 import { SearchBar } from '@/layouts/search-bar';
 import { useRecentSearch } from '@/hooks';
 
@@ -52,7 +53,9 @@ const EventSearchPage = () => {
         ) : (
           <S.NoRecentSearch />
         ))}
-      {isSearched && <EventList page={'search'} />}
+      <Suspense fallback={<EventListSkeleton />}>
+        {isSearched && <EventList page={'search'} />}
+      </Suspense>
     </S.Container>
   );
 };

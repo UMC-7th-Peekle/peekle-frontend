@@ -128,11 +128,11 @@ export enum CategoryIdEnum {
 export enum LocationGroupIdEnum {
   마포_서대문_은평 = 1,
   강서_금천_양천 = 2,
-  광진_성동_중랑_동대문 = 21,
-  강남_서초_양재 = 22,
-  동작_관악_사당 = 23,
-  종로_중구_용산 = 24,
-  영등포_구로_신도림 = 25,
+  광진_성동_중랑_동대문 = 3,
+  강남_서초_양재 = 4,
+  동작_관악_사당 = 5,
+  종로_중구_용산 = 6,
+  영등포_구로_신도림 = 7,
 }
 
 export type CategoryOption = (typeof CATEGORY_OPTIONS)[number][1] extends string
@@ -152,8 +152,13 @@ export type LocationOptionWithoutAll =
     ? number
     : never;
 
-const CategoryIdSchema = z.nativeEnum(CategoryIdEnum);
-const locationGroupIdSchema = z.nativeEnum(LocationGroupIdEnum);
+// const CategoryIdSchema = z.nativeEnum(CategoryIdEnum);
+const categorySchema = z.object({
+  // 응답용
+  name: z.string(),
+  description: z.string(),
+});
+const locationGroupIdSchema = z.nativeEnum(LocationGroupIdEnum).nullable();
 
 const EventImagesSchema = z.object({
   imageUrl: z.string().url(),
@@ -172,8 +177,8 @@ const EventSchedulesSchema = z.object({
   repeatEndDate: z.string().nullable(),
   isAllDay: z.boolean(),
   customText: z.string(),
-  startDate: z.string().date(),
-  endDate: z.string().date(),
+  startDate: z.string(),
+  endDate: z.string(),
   startTime: z.string(),
   endTime: z.string(),
 });
@@ -183,17 +188,15 @@ export const EventSchema = z.object({
   title: z.string(),
   content: z.string(),
   price: z.number(),
-  location: z.string().transform(getDistrict),
+  location: z.string(),
   locationGroupId: locationGroupIdSchema,
   eventUrl: z.string().url(),
   applicationStart: z.string().datetime(),
   applicationEnd: z.string().datetime(),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
-  categoryId: CategoryIdSchema,
-  latitude: z.number(),
-  longitude: z.number(),
-  center: z.string(),
+  category: categorySchema,
+  placeName: z.string(),
   datailAddress: z.string(),
   eventImages: z.array(EventImagesSchema),
   eventSchedules: z.array(EventSchedulesSchema),
@@ -202,22 +205,22 @@ export const EventSchema = z.object({
 // 쿼리 키 타입
 export type EventsQkType = [
   'events',
-  number,
-  number | undefined,
-  CategoryOption,
-  LocationOption,
+  number, // limit
+  number | undefined, // cursor
+  CategoryOption[] | undefined,
+  LocationOption[] | undefined,
   PriceOption,
-  string | undefined,
-  string | undefined,
-  string | undefined,
+  string | undefined, // startDate
+  string | undefined, // endDate
+  string | undefined, // query
 ];
 
 // 훅 파람
 export interface getEventsParams {
   limit: number;
   cursor?: number;
-  category: CategoryOption;
-  location: LocationOption;
+  categories?: CategoryOptionWithoutAll[];
+  locations?: LocationOptionWithoutAll[];
   price: PriceOption;
   startDate?: string;
   endDate?: string;
@@ -255,6 +258,28 @@ export const EventsResponseSchema = ApiResponseSchema(
 );
 
 export type EventsResponse = z.infer<typeof EventsResponseSchema>;
+
+// 이벤트 디테일
+export const EventDetailSchema = z.object({
+  eventId: z.bigint(),
+  title: z.string(),
+  content: z.string(),
+  price: z.number(),
+  location: z.string().transform(getDistrict),
+  locationGroupId: locationGroupIdSchema,
+  eventUrl: z.string().url(),
+  applicationStart: z.string().datetime(),
+  applicationEnd: z.string().datetime(),
+  createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime(),
+  category: categorySchema,
+  placeName: z.string(),
+  datailAddress: z.string(),
+  eventImages: z.array(EventImagesSchema),
+  // latitude: z.number(),
+  // longitude: z.number(),
+  eventSchedules: z.array(EventSchedulesSchema),
+});
 
 // 이벤트 스크랩
 export const ScrapResponseSchema = ApiResponseSchema(
