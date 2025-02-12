@@ -73,6 +73,8 @@ const getCommunity = async ({
       return null;
     }
 
+    console.log(response.data);
+
     return CommunityResponseSchema.parse(response.data);
   } catch (error) {
     console.error('❌ Zod 파싱 에러 또는 API 에러:', error);

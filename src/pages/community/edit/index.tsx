@@ -53,6 +53,7 @@ export default function CommunityEditPage() {
         isAnonymous={isAnonymous}
         onToggleAnonymous={handleToggleAnonymous}
         onImageUpload={handleImageUpload}
+        selectedImageCount={selectedImages.length}
       />
     </S.MainContainer>
   );

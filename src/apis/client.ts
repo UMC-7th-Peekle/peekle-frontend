@@ -25,6 +25,7 @@ client.interceptors.request.use(
       const accessToken = localStorage.getItem('accessToken');
 
       if (accessToken) {
+        console.log(accessToken);
         config.headers = config.headers || {};
         config.headers.Authorization = `${accessToken}`;
       }

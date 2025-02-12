@@ -7,6 +7,7 @@ import ThreeDot from '@/components/common/list';
 import MainSection from './container/main-section';
 import CommentSection from './container/comment-section';
 import ModalSection from './container/modal-section'; // ✅ 모달 추가
+import { ROUTES } from '@/constants/routes';
 
 export default function CommunityDetailPage() {
   const { communityId, articleId } = useCommunityId();
@@ -30,7 +31,7 @@ export default function CommunityDetailPage() {
     <>
       <S.MainContainer>
         <S.Appbar>
-          <Backward />
+          <Backward navigateUrl={ROUTES.COMMUNITY} />
           <S.Title>게시글 상세</S.Title>
           <ThreeDot size="20px" onClick={() => setModalType('bottomSheet')} />
         </S.Appbar>

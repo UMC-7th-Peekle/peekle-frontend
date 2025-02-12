@@ -48,7 +48,6 @@ export default function CommunityPage() {
   // ✅ 에러 발생 시
   if (error) return <ErrorFallback />;
 
-  // ✅ 데이터 가공
   const articles =
     data?.pages.flatMap((page) => page?.success.articles ?? []) ?? [];
 
