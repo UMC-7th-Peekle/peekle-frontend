@@ -12,7 +12,7 @@ import LogoSVG from '@/assets/images/user/logo.svg?react';
 import Logo2SVG from '@/assets/images/user/logo2.svg?react';
 import ArrowSVG from '@/assets/images/user/arrow.svg?react';
 import { ROUTES } from '@/constants/routes';
-import { clientAuth } from '@/apis/client';
+import { client } from '@/apis/client';
 
 const Container = styled.div`
   display: fixed;
@@ -136,9 +136,10 @@ const UserPage = () => {
       () => console.log('로그아웃 취소됨'),
       async () => {
         try {
-          await clientAuth({
+          await client({
             method: 'DELETE',
             url: '/auth/logout',
+            withCredentials: true,
           });
           localStorage.removeItem('accessToken');
           navigate(ROUTES.ONBOARDING);

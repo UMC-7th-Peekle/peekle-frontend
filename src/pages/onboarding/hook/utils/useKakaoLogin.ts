@@ -34,11 +34,21 @@ export const useKakaoLogin = () => {
   const handleKakaoLogin = useCallback(() => {
     return new Promise<KakaoLoginResponse>((resolve, reject) => {
       setIsLoading(true);
+
+      // ✅ 전체 화면 크기로 팝업 열기
+      const screenWidth = window.screen.width;
+      const screenHeight = window.screen.height;
       const kakaoLoginWindow = window.open(
         KAKAO_LOGIN,
         'kakaoLoginPopup',
-        'resizable=no,location=no,scrollbars=yes,width=500,height=600',
+        `width=${screenWidth},height=${screenHeight},left=0,top=0,fullscreen=yes`,
       );
+
+      if (!kakaoLoginWindow) {
+        alert('팝업 차단을 해제해주세요!');
+        setIsLoading(false);
+        return;
+      }
 
       const messageHandler = (event: MessageEvent) => {
         const allowedOrigins = [
@@ -53,6 +63,8 @@ export const useKakaoLogin = () => {
         try {
           // ✅ Zod 검증
           const validatedData = KakaoLoginResponseSchema.parse(event.data);
+
+          console.log(validatedData);
 
           // ✅ 로그인 성공 시 처리
           if (validatedData.isRegistered && validatedData.accessToken) {

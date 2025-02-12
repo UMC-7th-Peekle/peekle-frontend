@@ -31,7 +31,10 @@ import { ErrorFallback } from '@/components';
 import ResignPage from '@/pages/user/resign';
 import TossPage from '@/pages/auth/toss';
 import RequestPage from '@/pages/user/request';
-import ProtectedPage from '@/routes/ProtectedPage';
+
+const ProtectedPage = ({ children }: { children: React.ReactNode }) => {
+  return children;
+};
 
 const router = createBrowserRouter([
   {
