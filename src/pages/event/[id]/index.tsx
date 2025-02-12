@@ -1,5 +1,5 @@
 import * as S from './style';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   ToggleHeart,
   BottomSheet,
@@ -17,12 +17,13 @@ import {
   priceFormatter,
 } from '@/utils';
 import { useBottomSheetStore } from '@/stores';
-import { events } from '@/sample-data/event';
 import { useId } from '@/hooks';
 import { EventSchedule } from '@/types/event';
 import usePostScrapEvent from '../hooks/mutation/usePostScrapEvent';
 import useDeleteScrapEvent from '../hooks/mutation/useDeleteScrapEvent';
+// import useGetEventDetail from '../hooks/query/useGetEventDetail';
 import { getCategoryName } from '@/utils/eventFormatter';
+import { events } from '@/sample-data/event';
 
 const EventDetailPage = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -31,26 +32,29 @@ const EventDetailPage = () => {
   const { scrapEvent, isScrapEventPending } = usePostScrapEvent();
   const { deleteScrap, isDeleteScrapPending } = useDeleteScrapEvent();
   const id = useId(); //url에서 뽑은 id
-  const event = events.find((event) => event.eventId === BigInt(id));
+  const event = events.find((event) => String(event.eventId) === id);
 
-  useEffect(() => {
-    if (!id || !event) return;
-    const firstSentence =
-      event.content.match(/[^.!?]+[.!?]/)?.[0] ?? event.content;
-    document
-      .querySelector('meta[property="og:title"]')
-      ?.setAttribute('content', event.title);
-    document
-      .querySelector('meta[property="og:description"]')
-      ?.setAttribute('content', firstSentence);
-    document
-      .querySelector('meta[property="og:image"]')
-      ?.setAttribute('content', event.eventImages[0]?.imageUrl ?? '');
-    document
-      .querySelector('meta[property="og:url"]')
-      ?.setAttribute('content', window.location.href);
-    document.title = event.title;
-  }, [id, event]);
+  // 디테일 가져오기
+  // const { data } = useGetEventDetail(BigInt(id));
+
+  // useEffect(() => {
+  //   if (!id || !event) return;
+  //   const firstSentence =
+  //     event.content.match(/[^.!?]+[.!?]/)?.[0] ?? event.content;
+  //   document
+  //     .querySelector('meta[property="og:title"]')
+  //     ?.setAttribute('content', event.title);
+  //   document
+  //     .querySelector('meta[property="og:description"]')
+  //     ?.setAttribute('content', firstSentence);
+  //   document
+  //     .querySelector('meta[property="og:image"]')
+  //     ?.setAttribute('content', event.eventImages[0]?.imageUrl ?? '');
+  //   document
+  //     .querySelector('meta[property="og:url"]')
+  //     ?.setAttribute('content', window.location.href);
+  //   document.title = event.title;
+  // }, [id, event]);
 
   if (!id || !event) {
     return null;
@@ -61,13 +65,14 @@ const EventDetailPage = () => {
     eventImages,
     title,
     eventSchedules,
-    datailAddress,
-    eventUrl,
-    center,
+    eventLocation: { detail: detailAddress, buildingName },
     categoryId,
     price,
-    content,
   } = event;
+
+  const eventUrl =
+    'https://github.com/UMC-7th-Peekle/peekle-frontend/issues/85';
+  const content = `참여자 특전\n\n① 2025년 동작50플러스센터 프리스티지 커뮤니티(오픈단톡방) 초대\n② 관련 프로그램(교육훈련, 일자리) 우선 안내 및 우선 신청 기회부여\n③ 일자리 참여시 가산점 부여(서류 면제 등)\n④ 각종 이벤트 쿠폰 지급(카페, 강의 할인)\n\n※ 강좌수료 시 수료자에게 오픈 단톡방 안내링크 발송\n※ 우선신청기회는 오픈단톡방 통해 별도 안내\n※ 일자리참여 가산점 부여는 일관련 교육 및 공공일자리 등 공통.`;
 
   const startDateTime = getStartDateTime(eventSchedules[0] as EventSchedule);
   const time = formatSchedules(eventSchedules[0] as EventSchedule);
@@ -82,8 +87,10 @@ const EventDetailPage = () => {
   };
 
   const handleCopyAddress = () => {
-    copyToClipboard(datailAddress);
-    toast('주소가 복사되었습니다.');
+    if (detailAddress) {
+      copyToClipboard(detailAddress);
+      toast('주소가 복사되었습니다.');
+    } else console.log('주소가 null임');
   };
 
   const handleToggleHeart = async (eventId: bigint) => {
@@ -108,7 +115,7 @@ const EventDetailPage = () => {
     <>
       <MetaTag
         title={title}
-        description={content?.slice(0, 50)}
+        description={''?.slice(0, 50)}
         imgSrc={eventImages?.[0]?.imageUrl}
         url={window.location.href}
       />
@@ -137,14 +144,14 @@ const EventDetailPage = () => {
             </S.InfoRow>
             <S.InfoRow>
               <S.LocationIcon />
-              <S.InfoRowText>{center}</S.InfoRowText>
+              <S.InfoRowText>{buildingName}</S.InfoRowText>
               <S.ArrowDownIcon
                 $isExpanded={isExpanded}
                 onClick={() => setIsExpanded(!isExpanded)}
               />
               <S.DetailAddressCard $isExpanded={isExpanded}>
                 <S.DetailAddressTextWrapper>
-                  <S.DetailAddressText>{datailAddress}</S.DetailAddressText>
+                  <S.DetailAddressText>{detailAddress}</S.DetailAddressText>
                   <S.DetailAddressCopyText onClick={handleCopyAddress}>
                     주소 복사
                   </S.DetailAddressCopyText>

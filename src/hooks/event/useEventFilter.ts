@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
+
 import { useMyLocationStore } from '@/stores';
 import {
   UseEventFilterProps,
@@ -21,7 +22,7 @@ const useEventFilter = ({
 }: UseEventFilterProps = {}) => {
   const { myLocation } = useMyLocationStore();
   const [searchParams, setSearchParams] = useSearchParams();
-  const searchQuery = searchParams.get('event-search') ?? '';
+  const searchQuery = searchParams.get('event-search');
 
   // 현재 필터 상태 가져오기
   const filters = useMemo(() => {
@@ -45,14 +46,20 @@ const useEventFilter = ({
   const [startDate, endDate] =
     filters.기간 === '전체'
       ? [undefined, undefined]
-      : filters.기간.split(',').map((date) => date.trim());
-
+      : filters.기간.split(',').map((date) => {
+          const trimmedDate = date.trim();
+          return trimmedDate !== '' ? trimmedDate : undefined;
+        });
   const price = filters.가격 as PriceOption;
   const locations =
     filters.지역 === '전체'
       ? undefined
       : filters.지역.split(',').map((loc) => Number(loc));
-  const query = searchQuery.length < 2 ? undefined : searchQuery;
+  const query = searchQuery
+    ? searchQuery.length < 2
+      ? undefined
+      : searchQuery
+    : undefined;
 
   const { data, fetchNextPage, hasNextPage, isFetching } = useGetEvents({
     limit: 10,
@@ -91,7 +98,7 @@ const useEventFilter = ({
   }, [isFetching, fetchNextPage]);
 
   const sortedEvents = useMemo(() => {
-    const filteredEvents = data.pages[0].success.events ?? [];
+    const filteredEvents = data.pages[0].success?.events ?? [];
     console.log('filteredEvents', filteredEvents);
     return [...filteredEvents].sort((a, b) => {
       const eventScheduleA = a.eventSchedules[0];
@@ -123,14 +130,14 @@ const useEventFilter = ({
         const distanceA = calculateDistance(
           myLocation.y,
           myLocation.x,
-          a.latitude,
-          a.longitude,
+          a.eventLocation.coordinates[0],
+          a.eventLocation.coordinates[1],
         );
         const distanceB = calculateDistance(
           myLocation.y,
           myLocation.x,
-          b.latitude,
-          b.longitude,
+          b.eventLocation.coordinates[0],
+          b.eventLocation.coordinates[1],
         );
         const distanceDiff = distanceA - distanceB;
         if (distanceDiff !== 0) return distanceDiff;

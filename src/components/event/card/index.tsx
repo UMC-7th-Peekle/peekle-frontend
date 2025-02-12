@@ -13,7 +13,12 @@ export const EventCard = ({ id, onClick }: EventCardProps) => {
   const eventInfo = events.find((event: EventData) => event.eventId === id);
   if (!eventInfo) return;
 
-  const { eventImages, title, location, price } = eventInfo;
+  const {
+    eventImages,
+    title,
+    eventLocation: { sigungu },
+    price,
+  } = eventInfo;
 
   const handleCardClick = () => {
     navigate(`/event/${id}`);
@@ -25,7 +30,7 @@ export const EventCard = ({ id, onClick }: EventCardProps) => {
       <S.Info>
         <S.Title>{title}</S.Title>
         <S.SubInfoWrapper>
-          <S.SubInfo>{location}</S.SubInfo>
+          <S.SubInfo>{sigungu}</S.SubInfo>
           <S.SubInfo>{priceFormatter(price)}</S.SubInfo>
         </S.SubInfoWrapper>
       </S.Info>

@@ -6,6 +6,10 @@ import {
   PRICE_OPTIONS_WITHOUT_ALL,
   LOCATION_OPTIONS,
   LOCATION_OPTIONS_WITHOUT_ALL,
+  // 쿼리키들
+  GET_EVENTS_QK,
+  GET_EVENT_DETAIL_QK,
+  GET_EVENTS_SCRAPPED_QK,
 } from '@/constants/event';
 import { getDistrict } from '@/utils/eventFormatter';
 
@@ -116,28 +120,46 @@ export interface FilePaginationProps {
   onNextPage: () => void;
 }
 
-// 데이터
 // 이벤트 필터링
 // zod 스키마 정의
+
+// 전체 응답 스키마
+export const ApiResponseSchema = <T>(SuccessType: ZodSchema<T>) =>
+  z.object({
+    resultType: z.enum(['SUCCESS', 'FAIL']),
+    error: z
+      .object({
+        errorCode: z.string(),
+        reason: z.string(),
+        data: z.unknown().nullable(),
+      })
+      .nullable(),
+    success: z.union([SuccessType, z.null()]),
+  });
+export type ApiResponse<T> = z.infer<ReturnType<typeof ApiResponseSchema<T>>>;
+
+// ✅ 이벤트 조회
 export enum CategoryIdEnum {
   교육 = 1,
   문화 = 2,
   활동 = 3,
+  기타 = 4,
 }
 
 export enum LocationGroupIdEnum {
-  마포_서대문_은평 = 1,
-  강서_금천_양천 = 2,
-  광진_성동_중랑_동대문 = 3,
-  강남_서초_양재 = 4,
-  동작_관악_사당 = 5,
-  종로_중구_용산 = 6,
-  영등포_구로_신도림 = 7,
+  잠실_송파_강동 = 1,
+  마포_서대문_은평 = 2,
+  강서_금천_양천 = 3,
+  광진_성동_중랑_동대문 = 4,
+  강남_서초_양재 = 5,
+  동작_관악_사당 = 6,
+  종로_중구_용산 = 7,
+  영등포_구로_신도림 = 8,
 }
 
 export type CategoryOption = (typeof CATEGORY_OPTIONS)[number][1] extends string
   ? number
-  : never; // 0 | 1 | 2 | 3
+  : never; // 0 ~ 4
 export type CategoryOptionWithoutAll =
   (typeof CATEGORY_OPTIONS_WITHOUT_ALL)[number][1] extends string
     ? number
@@ -146,15 +168,14 @@ export type PriceOption = (typeof PRICE_OPTIONS)[number]; // '전체' | '무료'
 export type PriceOptionWithoutAll = (typeof PRICE_OPTIONS_WITHOUT_ALL)[number];
 export type LocationOption = (typeof LOCATION_OPTIONS)[number][1] extends string
   ? number
-  : never; // 0~25
+  : never; // 0 ~ 8
 export type LocationOptionWithoutAll =
   (typeof LOCATION_OPTIONS_WITHOUT_ALL)[number][1] extends string
     ? number
     : never;
 
-// const CategoryIdSchema = z.nativeEnum(CategoryIdEnum);
-const categorySchema = z.object({
-  // 응답용
+const CategoryIdSchema = z.nativeEnum(CategoryIdEnum);
+const CategorySchema = z.object({
   name: z.string(),
   description: z.string(),
 });
@@ -183,32 +204,40 @@ const EventSchedulesSchema = z.object({
   endTime: z.string(),
 });
 
+const EventLocationSchema = z.object({
+  coordinates: z.array(z.number()),
+  locationGroupId: locationGroupIdSchema,
+  roadAddress: z.string().nullable(),
+  jibunAddress: z.string().nullable(),
+  buildingCode: z.string().nullable(),
+  buildingName: z.string().nullable(),
+  sido: z.string().nullable(),
+  sigungu: z.string().nullable(),
+  sigunguCode: z.string().nullable(),
+  roadnameCode: z.string().nullable(),
+  zoneCode: z.string().nullable(),
+  detail: z.string().nullable(),
+});
+
 export const EventSchema = z.object({
   eventId: z.bigint(),
   title: z.string(),
-  content: z.string(),
   price: z.number(),
-  location: z.string(),
-  locationGroupId: locationGroupIdSchema,
-  eventUrl: z.string().url(),
-  applicationStart: z.string().datetime(),
-  applicationEnd: z.string().datetime(),
-  createdAt: z.string().datetime(),
-  updatedAt: z.string().datetime(),
-  category: categorySchema,
-  placeName: z.string(),
-  datailAddress: z.string(),
+  categoryId: CategoryIdSchema,
+  category: CategorySchema,
+  createdUserId: z.bigint().nullable(),
   eventImages: z.array(EventImagesSchema),
   eventSchedules: z.array(EventSchedulesSchema),
+  eventLocation: EventLocationSchema,
 });
 
 // 쿼리 키 타입
 export type EventsQkType = [
-  'events',
+  typeof GET_EVENTS_QK,
   number, // limit
   number | undefined, // cursor
-  CategoryOption[] | undefined,
-  LocationOption[] | undefined,
+  CategoryOptionWithoutAll[] | undefined,
+  LocationOptionWithoutAll[] | undefined,
   PriceOption,
   string | undefined, // startDate
   string | undefined, // endDate
@@ -234,24 +263,9 @@ export type EventData = z.infer<typeof EventSchema>;
 
 const SuccessEventsReponeseSchema = z.object({
   events: z.array(EventSchema),
-  nextCursor: z.number().nullable(),
+  nextCursor: z.number().optional().nullable(),
   hasNextPage: z.boolean(),
 });
-
-// 전체 응답 스키마
-export const ApiResponseSchema = <T>(SuccessType: ZodSchema<T>) =>
-  z.object({
-    resultType: z.enum(['SUCCESS', 'FAIL']),
-    error: z
-      .object({
-        errorCode: z.string(),
-        reason: z.string(),
-        data: z.unknown().nullable(),
-      })
-      .nullable(),
-    success: z.union([z.null(), SuccessType]), // T가 실제로 여기에서 사용됩니다.
-  });
-export type ApiResponse<T> = z.infer<ReturnType<typeof ApiResponseSchema<T>>>;
 
 export const EventsResponseSchema = ApiResponseSchema(
   SuccessEventsReponeseSchema,
@@ -259,7 +273,7 @@ export const EventsResponseSchema = ApiResponseSchema(
 
 export type EventsResponse = z.infer<typeof EventsResponseSchema>;
 
-// 이벤트 디테일
+// ✅ 이벤트 디테일
 export const EventDetailSchema = z.object({
   eventId: z.bigint(),
   title: z.string(),
@@ -272,27 +286,77 @@ export const EventDetailSchema = z.object({
   applicationEnd: z.string().datetime(),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
-  category: categorySchema,
   placeName: z.string(),
   datailAddress: z.string(),
   eventImages: z.array(EventImagesSchema),
-  // latitude: z.number(),
-  // longitude: z.number(),
   eventSchedules: z.array(EventSchedulesSchema),
 });
 
-// 이벤트 스크랩
+// 데이터 타입 추출
+export type EventDetailData = z.infer<typeof EventDetailSchema>;
+
+const SuccessEventDetailReponeseSchema = z.object({
+  events: z.array(EventSchema),
+  nextCursor: z.number().optional().nullable(),
+  hasNextPage: z.boolean(),
+});
+
+export const EventDetailResponseSchema = ApiResponseSchema(
+  SuccessEventDetailReponeseSchema,
+);
+
+// 쿼리 키 타입
+export type EventDetailQkType = [
+  typeof GET_EVENT_DETAIL_QK,
+  bigint, // eventId
+];
+
+export type EventDetailResponse = z.infer<typeof EventDetailResponseSchema>;
+
+// ✅ 이벤트 스크랩 조회
+export const GetEventsScrappedResponseSchema = ApiResponseSchema(
+  z.object({
+    events: z.array(EventSchema),
+  }),
+);
+
+const SuccessEventsScrappedReponeseSchema = z.object({
+  events: z.array(EventSchema),
+  nextCursor: z.number().optional().nullable(),
+  hasNextPage: z.boolean(),
+});
+
+export const EventsScrappedResponseSchema = ApiResponseSchema(
+  SuccessEventsScrappedReponeseSchema,
+);
+
+export interface getEventsScrappedParams {
+  limit: number;
+  cursor?: number;
+  categories?: CategoryOptionWithoutAll[];
+}
+
+export type EventsScrappedQKType = [
+  typeof GET_EVENTS_SCRAPPED_QK,
+  number, // limit
+  number | undefined, // cursor
+  CategoryOptionWithoutAll[] | undefined, // categories
+];
+
+export type EventsScrappedResponse = z.infer<
+  typeof EventsScrappedResponseSchema
+>;
+
+// ✅ 이벤트 스크랩
 export const ScrapResponseSchema = ApiResponseSchema(
   z.object({
     message: z.string(),
   }),
 );
 
-export type ScrapResponse = z.infer<typeof ScrapResponseSchema>;
+export type ScrapResponse = z.infer<typeof DeleteScrapResponseSchema>;
 
-// 이벤트 스크랩 조회
-
-// 이벤트 스크랩 취소
+// ✅ 이벤트 스크랩 취소
 export const DeleteScrapResponseSchema = ApiResponseSchema(
   z.object({
     message: z.string(),

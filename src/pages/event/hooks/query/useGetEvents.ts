@@ -2,7 +2,7 @@ import { InfiniteData, useSuspenseInfiniteQuery } from '@tanstack/react-query';
 import { client } from '@/apis/client';
 import {
   getEventsParams,
-  EventsResponseSchema,
+  // EventsResponseSchema,
   EventsResponse,
   EventsQkType,
 } from '@/types/event';
@@ -34,14 +34,16 @@ const getEvents = async ({
   });
 
   // 응답 데이터 검증
-  const parsedData = EventsResponseSchema.parse(response.data);
-  return parsedData;
+  // const parsedData = EventsResponseSchema.parse(response.data);
+  // return parsedData;
+  // console.log(typeof response.data.success.events[0].eventId);
+  console.log(response.data);
   return response.data;
 };
 
 const useGetEvents = ({
   limit = 10,
-  cursor = 0,
+  cursor,
   categories,
   locations,
   price = '전체',
@@ -78,7 +80,7 @@ const useGetEvents = ({
           endDate,
           query,
         }),
-      initialPageParam: 0,
+      initialPageParam: undefined,
       getNextPageParam: (lastPage) => {
         if (!lastPage) return undefined;
         return lastPage.success?.nextCursor ?? undefined;
