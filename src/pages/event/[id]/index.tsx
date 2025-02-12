@@ -9,6 +9,8 @@ import {
   MetaTag,
 } from '@/components';
 import { BOTTOM_SHEET_ID_EVENT_SHARE } from '@/constants/event';
+import { SHARE_TITLE, SHARE_DESCRIPTION } from '@/constants/common';
+
 import {
   copyToClipboard,
   getStartDateTime,
@@ -18,11 +20,12 @@ import {
 } from '@/utils';
 import { useBottomSheetStore } from '@/stores';
 import { events } from '@/sample-data/event';
-import { useId } from '@/hooks';
 import { EventSchedule } from '@/types/event';
+import { useId } from '@/hooks';
 import usePostScrapEvent from '../hooks/mutation/usePostScrapEvent';
 import useDeleteScrapEvent from '../hooks/mutation/useDeleteScrapEvent';
 import { getCategoryName } from '@/utils/eventFormatter';
+import getFirstSentence from '@/utils/getFirstSentence';
 
 const EventDetailPage = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -71,9 +74,53 @@ const EventDetailPage = () => {
 
   const startDateTime = getStartDateTime(eventSchedules[0] as EventSchedule);
   const time = formatSchedules(eventSchedules[0] as EventSchedule);
+  const thumbnailImg = eventImages?.[0]?.imageUrl;
 
   const handleShareKakao = () => {
-    console.log('카카오톡 공윺 클릭');
+    let kakao;
+    if (window.Kakao) kakao = window.Kakao;
+    // Kakao 초기화 체크
+    if (kakao && !kakao.isInitialized())
+      kakao.init(import.meta.env.VITE_KAKAO_CLIENT_ID);
+    if (kakao) {
+      console.log('카카오톡 공유', kakao);
+      // 현재 링크 가져오기
+      const currentURL = window.location.href;
+      // 이벤트 정보 가져오기
+      const eventTitleEl = document.querySelector('event-title') as HTMLElement;
+      const eventTitle = eventTitleEl ? eventTitleEl.innerText : SHARE_TITLE;
+      const eventContentEl = document.querySelector(
+        'event-content',
+      ) as HTMLElement;
+      const eventContent = getFirstSentence(
+        eventContentEl ? eventContentEl.innerText : SHARE_DESCRIPTION,
+      );
+      const eventThumbnailImg =
+        thumbnailImg ?? import.meta.env.VITE_KAKAO_SHARE_BASE_IMAGE;
+      kakao.Share.sendDefault({
+        objectType: 'feed',
+        content: {
+          title: eventTitle,
+          description: eventContent,
+          imageUrl: eventThumbnailImg,
+          link: {
+            mobileWebUrl: currentURL,
+            webUrl: currentURL,
+          },
+        },
+        buttons: [
+          {
+            title: '웹으로 보기',
+            link: {
+              mobileWebUrl: currentURL,
+              webUrl: currentURL,
+            },
+          },
+        ],
+        // 카카오톡 미설치 시 카카오톡 설치 경로이동
+        installTalk: true,
+      });
+    }
   };
 
   const handleCopyLink = () => {
@@ -109,7 +156,7 @@ const EventDetailPage = () => {
       <MetaTag
         title={title}
         description={content?.slice(0, 50)}
-        imgSrc={eventImages?.[0]?.imageUrl}
+        imgSrc={thumbnailImg}
         url={window.location.href}
       />
 
@@ -124,7 +171,7 @@ const EventDetailPage = () => {
         <ImageSlider images={eventImages} title={title} />
         <S.InfoContainer>
           <S.Category>{getCategoryName(categoryId)}</S.Category>
-          <S.Title>{title}</S.Title>
+          <S.Title className="event-title">{title}</S.Title>
           <S.Line />
           <S.Info>
             <S.InfoRow>
@@ -162,7 +209,7 @@ const EventDetailPage = () => {
 
       <S.ContentContainer>
         <S.ContentTitle>상세 정보</S.ContentTitle>
-        <S.Content>{content}</S.Content>
+        <S.Content className="event-content">{content}</S.Content>
       </S.ContentContainer>
 
       <S.BottomContainer>
