@@ -13,13 +13,12 @@ export const SearchWrapper = styled.div<{
   align-items: center;
   position: relative;
   flex: 1;
-  max-width: ${({ max_width }) => (max_width ? `${max_width}px` : '333px')};
-  min-width: ${({ min_width }) => (min_width ? `${min_width}px` : '300px')};
+  max-width: ${({ max_width }) => (max_width ? `${max_width}px` : '400px')};
+  min-width: ${({ min_width }) => (min_width ? `${min_width}px` : '200px')};
   background-color: ${({ $page }) =>
     $page === 'eventMap' ? theme.color.gray[0] : theme.color.gray[50]};
   border-radius: 10px;
   padding: 0 20px;
-  box-sizing: border-box;
   box-shadow: ${({ $page }) =>
     $page === 'eventMap' && '0px 0px 8px 0px rgba(0, 0, 0, 0.2)'};
 `;

@@ -31,7 +31,7 @@ const useMapMarkers = (
             content: `
               <div class="black-speech-bubble" style="position: relative; z-index: 5;">
                 <div class="black-speech-bubble-svg" style={{ position: absolute; width: 100%; height: 100%;}}>
-                  <svg width="256" height="74" viewBox="0 0 256 74" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <svg width="224" height="42" viewBox="16 16 224 42" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g filter="url(#filter0_d_3325_11328)">
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M24 16C19.5817 16 16 19.5817 16 24V44.2405C16 48.6588 19.5817 52.2405 24 52.2405H121.937C122.572 52.2405 123.169 52.5423 123.546 53.0535L126.39 56.9105C127.19 57.9946 128.81 57.9946 129.61 56.9105L132.454 53.0535C132.831 52.5423 133.428 52.2405 134.063 52.2405H232C236.418 52.2405 240 48.6588 240 44.2405V24C240 19.5817 236.418 16 232 16H24Z" fill="black"/>
                     </g>
@@ -51,9 +51,9 @@ const useMapMarkers = (
                 </div>
                 <div class="title" style="
                   position: absolute;
-                  top: 38%;
+                  top: 30%;
                   left: 50%;
-                  transform: translate(-50%, -38%);
+                  transform: translate(-50%, -30%);
                   ${theme.typeFace.caption['14B']};
                   color: ${theme.color.gray[0]};
                   white-space: nowrap;
@@ -61,7 +61,7 @@ const useMapMarkers = (
                 </div>
               </div>
             `,
-            anchor: new naver.maps.Point(130, 80),
+            anchor: new naver.maps.Point(115, 65),
           },
         });
         blackSBMarkerRef.current.set(event.eventId, blackSBMarker);
@@ -183,13 +183,13 @@ const useMapMarkers = (
               content: `
               <div class="white-speech-bubble" style="position: relative; z-index: 2;">
                 <div class="white-speech-bubble-svg"style={{ position: absolute; width: 100%; height: 100%;}}>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="186" height="74" fill="none" viewBox="0 0 186 74"><g filter="url(#a)"><path fill="#fff" fill-rule="evenodd" d="M24 16a8 8 0 0 0-8 8v20a8 8 0 0 0 8 8h62.798a2 2 0 0 1 1.606.808l2.99 4.029a2 2 0 0 0 3.212 0l2.99-4.03A2 2 0 0 1 99.202 52H162a8 8 0 0 0 8-8V24a8 8 0 0 0-8-8H24Z" clip-rule="evenodd"/></g><defs><filter id="a" width="186" height="73.644" x="0" y="0" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feColorMatrix in="SourceAlpha" result="hardAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/><feOffset/><feGaussianBlur stdDeviation="8"/><feComposite in2="hardAlpha" operator="out"/><feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.16 0"/><feBlend in2="BackgroundImageFix" result="effect1_dropShadow_3325_11006"/><feBlend in="SourceGraphic" in2="effect1_dropShadow_3325_11006" result="shape"/></filter></defs></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="154" height="42" fill="none" viewBox="16 16 154 42"><g filter="url(#a)"><path fill="#fff" fill-rule="evenodd" d="M24 16a8 8 0 0 0-8 8v20a8 8 0 0 0 8 8h62.798a2 2 0 0 1 1.606.808l2.99 4.029a2 2 0 0 0 3.212 0l2.99-4.03A2 2 0 0 1 99.202 52H162a8 8 0 0 0 8-8V24a8 8 0 0 0-8-8H24Z" clip-rule="evenodd"/></g><defs><filter id="a" width="186" height="73.644" x="0" y="0" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feColorMatrix in="SourceAlpha" result="hardAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/><feOffset/><feGaussianBlur stdDeviation="8"/><feComposite in2="hardAlpha" operator="out"/><feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.16 0"/><feBlend in2="BackgroundImageFix" result="effect1_dropShadow_3325_11006"/><feBlend in="SourceGraphic" in2="effect1_dropShadow_3325_11006" result="shape"/></filter></defs></svg>
                 </div>
                 <div class="title" style="
                   position: absolute;
-                  top: 38%;
+                  top: 30%;
                   left: 50%;
-                  transform: translate(-50%, -38%);
+                  transform: translate(-50%, -30%);
                   ${theme.typeFace.caption['14B']};
                   color: ${theme.color.gray[900]};
                   white-space: nowrap;
@@ -197,7 +197,7 @@ const useMapMarkers = (
                 </div>
               </div>
             `,
-              anchor: new naver.maps.Point(95, 80),
+              anchor: new naver.maps.Point(80, 65),
             },
           });
           // 마커 클릭 이벤트 추가
@@ -253,13 +253,11 @@ const useMapMarkers = (
       if (mapBounds.hasPoint(position)) {
         // 마커가 화면에 보이면 표시
         marker.setMap(mapInstance);
-        // 500m 이내에서만 표시
+        // 흰색 말풍선은 500m 이내에서만 표시
         if (distance <= 500) {
           whiteSBMarker?.setMap(mapInstance);
-          blackSBMarker?.setMap(mapInstance);
         } else {
           whiteSBMarker?.setMap(null);
-          blackSBMarker?.setMap(null);
         }
       } else {
         // 화면 밖이면 숨김

@@ -4,10 +4,10 @@ import HamburgerSVG from '@/assets/images/icons/hamburger.svg?react';
 import SortSVG from '@/assets/images/icons/sort.svg?react';
 
 export const FilterContainer = styled.div<{ $isSearchPage: boolean }>`
-  /* width: 100vw;
-  margin: ${({ $isSearchPage }) =>
-    $isSearchPage ? '8px -12px 12px -12px' : '16px -16px 16px -16px'}; */
   width: 100vw;
+  margin: ${({ $isSearchPage }) =>
+    $isSearchPage ? '8px -12px 12px -12px' : '16px -16px 16px -16px'};
+  justify-self: center;
 `;
 
 export const FilterWrapper = styled.div`
