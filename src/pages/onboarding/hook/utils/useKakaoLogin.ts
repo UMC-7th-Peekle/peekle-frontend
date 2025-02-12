@@ -64,8 +64,6 @@ export const useKakaoLogin = () => {
           // ✅ Zod 검증
           const validatedData = KakaoLoginResponseSchema.parse(event.data);
 
-          console.log(validatedData);
-
           // ✅ 로그인 성공 시 처리
           if (validatedData.isRegistered && validatedData.accessToken) {
             localStorage.setItem('accessToken', validatedData.accessToken);

@@ -25,7 +25,7 @@ const PhoneNumberPage = () => {
     const PhoneNumber = phone.replace(/-/g, '');
     try {
       const statusResponse = await fetch(
-        `${api}/auth/phone/account/status?phone=${PhoneNumber}`,
+        `${api}auth/phone/account/status?phone=${PhoneNumber}`,
       );
       const statusData = await statusResponse.json();
       if (statusData.resultType === 'FAIL') {
@@ -35,7 +35,7 @@ const PhoneNumberPage = () => {
           navigate('/auth/sleeper');
         }
       } else if (statusData.resultType === 'SUCCESS') {
-        const client = await fetch(`${api}/auth/phone/send`, {
+        const client = await fetch(`${api}auth/phone/send`, {
           method: 'POST',
           headers: {
             'Content-type': 'application/json',
