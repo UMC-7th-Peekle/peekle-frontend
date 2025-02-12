@@ -33,7 +33,12 @@ const SubmitButton = styled.button<{ $isActive: boolean }>`
     $isActive ? theme.color.primary[500] : theme.color.gray[100]};
   cursor: ${({ $isActive }) => ($isActive ? 'pointer' : 'default')};
   transition: color 0.2s ease-in-out;
-  pointer-events: ${({ $isActive }) => ($isActive ? 'auto' : 'none')};
+  ${({ $isActive }) =>
+    !$isActive &&
+    `
+    pointer-events: none;
+    opacity: 0.5;
+  `};
 `;
 
 export { MainContainer, Appbar, Title, SubmitButton };

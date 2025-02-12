@@ -6,10 +6,10 @@ interface BodySectionProps {
   content: string;
   onTitleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onContentChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  selectedImages: File[];
-  thumbnail: File | null;
+  selectedImages: string[];
+  thumbnail: string | null;
   onRemoveImage: (index: number) => void;
-  onSelectThumbnail: (image: File) => void;
+  onSelectThumbnail: (imageUrl: string) => void;
 }
 
 export default function BodySection({
@@ -37,14 +37,14 @@ export default function BodySection({
       />
       {selectedImages.length > 0 && (
         <S.ImagePreviewContainer>
-          {selectedImages.map((image, index) => (
+          {selectedImages.map((imageUrl, index) => (
             <S.ImageWrapper key={index}>
               <S.PreviewImage
-                src={URL.createObjectURL(image)}
+                src={imageUrl}
                 alt={`Uploaded ${index}`}
-                onClick={() => onSelectThumbnail(image)}
+                onClick={() => onSelectThumbnail(imageUrl)}
               />
-              {thumbnail === image && (
+              {thumbnail === imageUrl && (
                 <S.MainImageLabel>대표 사진</S.MainImageLabel>
               )}
               <S.DeleteButton onClick={() => onRemoveImage(index)}>
