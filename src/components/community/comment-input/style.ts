@@ -11,7 +11,7 @@ const Container = styled.div`
   border: 1px solid ${theme.color.gray[50]};
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: end;
   justify-content: center;
   gap: 8px;
   transition: bottom 0.3s ease;
@@ -36,8 +36,7 @@ const InputWrapper = styled.div<{ $hasText: boolean }>`
 const AnonymousCheckWrapper = styled.div`
   position: absolute;
   left: 16px;
-  top: 50%;
-  transform: translateY(-50%);
+  bottom: 14px;
 `;
 
 // ✅ StyledTextarea (줄바꿈 지원)
@@ -52,12 +51,12 @@ const StyledTextarea = styled.textarea`
   outline: none;
   caret-color: ${theme.color.gray[900]};
   padding-left: 76px;
-  padding-top: 14px; // ✅ 위아래 패딩 추가
+  padding-top: 14px;
   padding-bottom: 14px;
-  resize: none; // ✅ 크기 조절 불가능
+  resize: none;
   min-height: 48px;
-  max-height: 120px; // ✅ textarea 최대 높이
-  overflow-y: auto; // ✅ 최대 높이를 넘으면 스크롤 가능
+  max-height: 120px;
+  overflow-y: auto;
   line-height: 1.5;
 
   &::-webkit-input-placeholder {
@@ -77,6 +76,10 @@ const SendButton = styled.button`
   justify-content: center;
   transition: opacity 0.2s ease-in-out;
   margin-right: 16px;
+  margin-bottom: 20px;
+  svg {
+    width: 20px;
+  }
 `;
 
 export {

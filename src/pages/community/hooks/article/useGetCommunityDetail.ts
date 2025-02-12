@@ -5,24 +5,6 @@ import { z } from 'zod';
 
 // 커뮤니티 게시판 상세 페이지 정보를 불러오는 API, 훅 그리고 이와 관련된 스키마입니다.
 
-// 댓글 요소 스키마
-const ArticleCommentSchema = z.object({
-  isLikedByUser: z.boolean(),
-  commentLikesCount: z.number().int(),
-  commentId: z.number(),
-  articleId: z.number(),
-  parentCommentId: z.number().nullable(),
-  status: z.enum(['active', 'inactive', 'deleted']),
-  authorId: z.number(),
-  isAnonymous: z.boolean(),
-  content: z.string(),
-  createdAt: z.string().transform(formatDateCardTime),
-  updatedAt: z.string().transform(formatDateCardTime),
-});
-
-// 댓글 목록 스키마
-const ArticleCommentsSchema = z.array(ArticleCommentSchema);
-
 // 이미지 요소 스키마
 const ArticleImageSchema = z.object({
   imageUrl: z.string().url(),
@@ -54,7 +36,6 @@ const ArticleSchema = z.object({
   communityId: z.number(),
   createdAt: z.string().transform(formatDateCardTime),
   updatedAt: z.string(),
-  articleComments: ArticleCommentsSchema,
   articleImages: ArticleImagesSchema,
 });
 
@@ -74,8 +55,6 @@ const CommunityDetailRespSchema = z.object({
 // 데이터 타입 추출
 export type CommunityDetailResp = z.infer<typeof CommunityDetailRespSchema>;
 export type CommunityDetailArticle = z.infer<typeof ArticleSchema>;
-export type CommunityDetailComments = z.infer<typeof ArticleCommentsSchema>;
-export type CommunityDetailComment = z.infer<typeof ArticleCommentSchema>;
 
 // API 호출 함수
 const getCommunityDetail = async (

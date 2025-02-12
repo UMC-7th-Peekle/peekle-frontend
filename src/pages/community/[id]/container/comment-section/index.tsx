@@ -1,32 +1,44 @@
 import { CommentCard, CommentInput } from '@/components';
-import {
-  CommunityDetailArticle,
-  CommunityDetailComments,
-} from '@/pages/community/hooks/article/useGetCommunityDetail';
 import * as S from './style';
 import useComment from './hook/useComment';
+import { CommunityDetailArticle } from '@/pages/community/hooks/article/useGetCommunityDetail';
+import { useGetArticleComments } from '@/pages/community/hooks/comment/useGetArticleComments';
 
 interface CommentSectionProps {
   article: CommunityDetailArticle;
-  comments: CommunityDetailComments;
 }
 
-export default function CommentSection({
-  article,
-  comments,
-}: CommentSectionProps) {
+export default function CommentSection({ article }: CommentSectionProps) {
   const { isAnonymous, comment, setComment, onToggleAnonymous, onSubmit } =
     useComment({
       communityId: article.communityId,
       articleId: article.articleId,
     });
 
+  const { data, error, isLoading } = useGetArticleComments({
+    communityId: article.communityId,
+    articleId: article.articleId,
+  });
+
+  if (isLoading) {
+    return <></>;
+  }
+
+  if (error) {
+    return <></>;
+  }
+
+  const comments = data?.success.comments || [];
+
   return (
     <>
       {/* 댓글 O */}
-      {comments.map((comment, index) => (
-        <CommentCard key={`${index} + ${comment}`} comment={comment} />
-      ))}
+      <S.CommentContainer>
+        {comments.map((comment, index) => (
+          <CommentCard key={`${index} + ${comment}`} comment={comment} />
+        ))}
+      </S.CommentContainer>
+
       {/* 댓글 X */}
       {comments.length === 0 && (
         <S.NoCommentContainer>

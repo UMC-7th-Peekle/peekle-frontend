@@ -3,6 +3,10 @@ import styled from 'styled-components';
 import CommentSvg from '@/assets/images/community/comment.svg?react';
 import { theme } from '@/styles/theme';
 
+const CommentContainer = styled.div`
+  margin-bottom: 36px;
+`;
+
 const NoCommentContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -24,4 +28,4 @@ const NoCommentText = styled.p`
   ${theme.typeFace.body['16R']};
 `;
 
-export { NoCommentContainer, NoCommentText, CommentIcon };
+export { NoCommentContainer, NoCommentText, CommentIcon, CommentContainer };

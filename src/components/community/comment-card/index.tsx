@@ -1,8 +1,12 @@
-import { CommunityDetailComment } from '@/pages/community/hooks/article/useGetCommunityDetail';
 import * as S from './style';
 import LikedCount from './liked-count';
+import { ArticleComment } from '@/pages/community/hooks/comment/useGetArticleComments';
 
 export default function CommentCard({ comment }: CommentCardProps) {
+  const authorName =
+    comment.isAnonymous === 0
+      ? comment.authorInfo.nickname
+      : `익명${comment.isAnonymous}`;
   return (
     <S.MainContainer>
       <S.ProfileWrapper>
@@ -10,7 +14,7 @@ export default function CommentCard({ comment }: CommentCardProps) {
       </S.ProfileWrapper>
       <S.Container>
         <S.TopTextContainer>
-          <S.Nickname>{'익명1'}</S.Nickname>
+          <S.Nickname>{authorName}</S.Nickname>
           <S.Date>{comment.createdAt}</S.Date>
         </S.TopTextContainer>
         <S.Content>{comment.content}</S.Content>
@@ -27,5 +31,5 @@ export default function CommentCard({ comment }: CommentCardProps) {
 }
 
 interface CommentCardProps {
-  comment: CommunityDetailComment;
+  comment: ArticleComment;
 }
