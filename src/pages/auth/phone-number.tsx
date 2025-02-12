@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { FixedBackward } from '@/components';
-import { Button } from '@/components/common/input/button/index';
 import { useNavigate } from 'react-router-dom';
+import { theme } from '@/styles/theme';
 const PhoneNumberPage = () => {
   const navigate = useNavigate();
   const api = import.meta.env.VITE_API_URL;
 
   const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
+  const isActive = phone.length === 13 && !loading;
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value.replace(/[^0-9]/g, ''); // 숫자만 입력
 
@@ -25,7 +26,7 @@ const PhoneNumberPage = () => {
     const PhoneNumber = phone.replace(/-/g, '');
     try {
       const statusResponse = await fetch(
-        `${api}auth/phone/account/status?phone=${PhoneNumber}`,
+        `${api}/auth/phone/account/status?phone=${PhoneNumber}`,
       );
       const statusData = await statusResponse.json();
       if (statusData.resultType === 'FAIL') {
@@ -35,7 +36,7 @@ const PhoneNumberPage = () => {
           navigate('/auth/sleeper');
         }
       } else if (statusData.resultType === 'SUCCESS') {
-        const client = await fetch(`${api}auth/phone/send`, {
+        const client = await fetch(`${api}/auth/phone/send`, {
           method: 'POST',
           headers: {
             'Content-type': 'application/json',
@@ -83,17 +84,14 @@ const PhoneNumberPage = () => {
         maxLength={13}
         placeholder="휴대폰 번호 입력"
       />
-      <ButtonWrapper>
-        <Button
-          color="primary500"
-          size="medium"
-          width="412px"
-          disabled={phone.length < 13 || loading}
-          onClick={handleSubmit}
-        >
-          {loading ? '전송 중...' : '인증 번호 받기'}
-        </Button>
-      </ButtonWrapper>
+
+      <CertifyButton
+        isActive={isActive}
+        disabled={phone.length < 13 || loading}
+        onClick={handleSubmit}
+      >
+        {loading ? '전송 중...' : '인증 번호 받기'}
+      </CertifyButton>
     </Container>
   );
 };
@@ -135,11 +133,24 @@ const Input = styled.input`
   }
   margin-bottom: 100px;
 `;
-const ButtonWrapper = styled.div`
+
+const CertifyButton = styled.button<{ isActive: boolean }>`
   position: fixed;
   bottom: 0;
   left: 0;
-  width: 100%;
   display: flex;
   justify-content: center;
+  align-items: center;
+  width: 100%;
+  border: none;
+  cursor: ${({ isActive }) => (isActive ? 'pointer' : 'not-allowed')};
+  height: 72px;
+  width: 100%;
+  transition: background-color 0.3s ease-in-out;
+  background-color: ${({ isActive }) =>
+    isActive ? theme.color.primary[500] : theme.color.gray[100]};
+  color: ${({ isActive }) =>
+    isActive ? theme.color.gray[0] : theme.color.gray[200]};
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 700;
 `;

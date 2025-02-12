@@ -172,7 +172,7 @@ const UserPage = () => {
         </MenuItem>
         <MenuItem>
           <RequestSVG />
-          <MenuText>문의하기</MenuText>D
+          <MenuText>문의하기</MenuText>
           <ArrowSVG onClick={handleRequest} />
         </MenuItem>
         <MenuItem>

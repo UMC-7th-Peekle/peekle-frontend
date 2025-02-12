@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { Backward } from '@/components';
 import { useState } from 'react';
 import { alert } from '@/utils';
-import { BottomSheet, Button } from '@/components';
+import { BottomSheet } from '@/components';
 import { useBottomSheetStore } from '@/stores';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
@@ -78,7 +78,7 @@ const CertifyPage = () => {
     const phoneVerificationCode = code.join('');
 
     try {
-      const response = await fetch(`${api}auth/phone/verify`, {
+      const response = await fetch(`${api}/auth/phone/verify`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -144,17 +144,13 @@ const CertifyPage = () => {
       </HelpButton>
 
       {/* ✅ 인증 버튼 상태 변경 */}
-      <ButtonWrapper>
-        <StyledButton
-          color="primary500"
-          size="medium"
-          isCodeComplete={isCodeComplete}
-          disabled={!isCodeComplete || timeLeft <= 0} // 🔥 입력이 다 안되었거나 시간이 0이면 비활성화
-          onClick={handleVerify}
-        >
-          {isCodeComplete ? '인증하기' : formatTime(timeLeft)}
-        </StyledButton>
-      </ButtonWrapper>
+      <StyledButton
+        isCodeComplete={isCodeComplete}
+        disabled={!isCodeComplete || timeLeft <= 0} // 🔥 입력이 다 안되었거나 시간이 0이면 비활성화
+        onClick={handleVerify}
+      >
+        {isCodeComplete ? '인증하기' : formatTime(timeLeft)}
+      </StyledButton>
 
       <BottomSheet id="helpsheet">
         <SheetContent>
@@ -190,12 +186,27 @@ const CertifyPage = () => {
 export default CertifyPage;
 
 /* ✅ 버튼 상태 변경 스타일 */
-const StyledButton = styled(Button)<{ isCodeComplete: boolean }>`
+const StyledButton = styled.button<{ isCodeComplete: boolean }>`
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  border: none;
+  cursor: ${({ isCodeComplete }) =>
+    isCodeComplete ? 'pointer' : 'not-allowed'};
+  height: 72px;
+  width: 100%;
+  transition: background-color 0.3s ease-in-out;
   background-color: ${({ isCodeComplete }) =>
     isCodeComplete ? '#4CAF50' : '#E0E0E0'};
   color: ${({ isCodeComplete }) => (isCodeComplete ? 'white' : '#BDBDBD')};
   cursor: ${({ isCodeComplete }) =>
     isCodeComplete ? 'pointer' : 'not-allowed'};
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 700;
 `;
 
 const Container = styled.div`
@@ -221,14 +232,7 @@ const BackwardWrapper = styled.div`
   top: 22px;
   left: 20px;
 `;
-const ButtonWrapper = styled.div`
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-`;
+
 const InputWrapper = styled.div`
   display: flex;
   justify-content: space-between;

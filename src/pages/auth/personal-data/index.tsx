@@ -13,6 +13,7 @@ import {
 } from '@/pages/auth/hook/mutation/usePostRegister';
 
 export default function PersonalDataPage() {
+  const api = import.meta.env.VITE_API_URL;
   const { setActiveBottomSheet } = useBottomSheetStore();
   const registerLocal = usePostAuthRegister(false); // 로컬 회원가입
   const registerOAuth = usePostAuthRegister(true); // OAuth 회원가입
@@ -28,21 +29,45 @@ export default function PersonalDataPage() {
     terms_location: false,
   });
   const [allChecked, setAllChecked] = useState(false);
-
-  const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const validNickname = (value: string) => {
+    const re = /^[\u3131-\uD79D\uAC00-\uD7A3a-zA-Z0-9]+$/;
+    return re.test(value);
+  };
+  const handleNicknameChange = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const value = e.target.value;
     setNickname(value);
 
-    if (
-      !/^[\u3131-\uD79D\uAC00-\uD7A3a-zA-Z0-9]+$/.test(value) &&
-      value !== ''
-    ) {
+    if (!validNickname(value) && value !== '') {
       setNicknameStatus('error');
       setNicknameMessage('한글, 영문, 숫자만 사용할 수 있습니다.');
       return;
     } else {
       setNicknameStatus('');
       setNicknameMessage('');
+    }
+
+    if (!value) return;
+
+    try {
+      const response = await fetch(
+        `${api}/auth/register/nickname/check?nickname=${value}`,
+      );
+      console.log(`응답 상태 코드: ${response.status}`);
+      const data = await response.json();
+
+      if (data.resultType === 'SUCCESS') {
+        setNicknameStatus('success');
+        setNicknameMessage('사용 가능한 닉네임입니다.');
+      } else {
+        setNicknameStatus('error');
+        setNicknameMessage('이미 사용 중인 닉네임입니다.');
+      }
+    } catch (error) {
+      console.error('닉네임 중복 확인 오류:', error);
+      setNicknameStatus('error');
+      setNicknameMessage('닉네임 중복 확인 중 오류가 발생했습니다.');
     }
   };
 
@@ -66,7 +91,6 @@ export default function PersonalDataPage() {
         console.error('잘못된 성별 값:', gender);
         return;
       }
-
       // ✅ 기본 회원가입 데이터 (로컬 회원가입 공통)
       let rawData: PostAuthRegisterParams | PostAuthRegisterKakaoParams = {
         name,
