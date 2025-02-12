@@ -17,7 +17,7 @@ const OnboardingPage = () => {
     navigate('/auth/phone-number');
   };
   const handleKakao = () => {
-    const kakaoAuthURL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${kakao_client}&redirect_uri=${api}/auth/login/kakao/callback`;
+    const kakaoAuthURL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${kakao_client}&redirect_uri=${api}auth/login/kakao/callback`;
     window.location.href = kakaoAuthURL;
 
     const popup = window.open(
