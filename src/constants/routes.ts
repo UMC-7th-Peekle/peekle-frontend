@@ -1,4 +1,8 @@
 export const ROUTES = {
+  ONBOARDING: '/onboarding',
+  AUTH_PHONE_NUMBER: '/auth/phone-number',
+  AUTH_GENDER: '/auth/gender',
+  AUTH_PERSONAL_DATA: '/auth/personal-data',
   EVENT: '/event',
   EVENT_MAP: '/event/map',
   EVENT_SEARCH: '/event/search',

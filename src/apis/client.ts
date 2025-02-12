@@ -1,69 +1,69 @@
+import { ROUTES } from '@/constants/routes';
 import axios, {
   AxiosRequestConfig,
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from 'axios';
-import ApiError from './apiError';
+
 interface CustomInternalAxiosRequestConfig extends InternalAxiosRequestConfig {
   requireAuth?: boolean;
 }
-// accessToken이 필요 없을 때 쓰이는 axios 함수입니다.
+
+// ✅ 기본 Axios 인스턴스 생성
 export const client = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true, // ✅ 쿠키 기반 인증 허용 (RefreshToken 필요)
 });
 
+// ✅ 요청 인터셉터 추가 (AccessToken 포함)
 client.interceptors.request.use(
   (config: CustomInternalAxiosRequestConfig) => {
-    //&& localStorage.getItem('accessToken') - 로그인 로직 구현 후 해당 주석을 하단 if문 안에 추가해주시면 됩니다.
     if (config.requireAuth) {
-      // 로그인 로직 구현 전에는 accessToken 변수에 임시 토큰 넣어서 테스트하시면 됩니다.
-      // const accessToken = localStorage.getItem('accessToken');
-      const accessToken = import.meta.env.VITE_ACCESS_TOKEN;
-      config.headers = config.headers || {};
-      config.headers.Authorization = `Bearer ${accessToken}`;
-    } else {
-      return config;
+      const accessToken = localStorage.getItem('accessToken');
+
+      if (accessToken) {
+        config.headers = config.headers || {};
+        config.headers.Authorization = `${accessToken}`;
+      }
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  },
+  (error) => Promise.reject(error),
 );
 
+// ✅ 응답 인터셉터 추가 (AccessToken 만료 시 재발급)
 client.interceptors.response.use(
-  (response: AxiosResponse) => {
-    return response;
-  },
-  (error) => {
-    if (error.response) {
-      const { data } = error.response;
-      const errorCode = data?.error?.errorCode ?? 'UNKNOWN_ERROR';
-      const reason = data?.error?.reason ?? '알 수 없는 오류입니다.';
-      const apiError = new ApiError(errorCode, reason, data);
+  (response) => response,
+  async (error) => {
+    if (error.response?.status === 401) {
+      try {
+        // ✅ RefreshToken으로 AccessToken 재발급 요청
+        const { data } = await axios.get<{ accessToken: string }>(
+          `${import.meta.env.VITE_API_URL}/auth/token/reissue`,
+          { withCredentials: true },
+        );
 
-      /* 액세스 토큰 만료 시 로직 처리 */
-      if (error.response.data.code === 'TOKEN_003') {
-        // 로컬스토리지를 비우고 홈으로 이동
+        // ✅ 새 AccessToken 저장
+        localStorage.setItem('accessToken', data.accessToken);
+
+        // ✅ 원래 요청에 새 AccessToken 추가 후 재시도
+        error.config.headers.Authorization = `${data.accessToken}`;
+        return client(error.config);
+      } catch (refreshError) {
+        // ✅ RefreshToken도 만료된 경우, 로그아웃 처리
         localStorage.clear();
-        window.location.href = '/';
+        window.location.href = ROUTES.ONBOARDING;
+        return Promise.reject(refreshError);
       }
-
-      // ApiError 객체 반환
-      return Promise.reject(apiError);
-    } else if (error.request) {
-      console.error('Request error:', error.request);
-    } else {
-      console.error('Error:', error.message);
     }
     return Promise.reject(error);
   },
 );
 
-// accessToken이 필요할 때 쓰이는 axios 함수입니다.
+// ✅ AccessToken이 필요한 요청을 위한 axios 함수
 export const clientAuth = <T>(
   config: AxiosRequestConfig,
 ): Promise<AxiosResponse<T>> => {

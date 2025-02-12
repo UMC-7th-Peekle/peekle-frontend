@@ -9,12 +9,12 @@ import {
   NotFoundPage,
   CommunityEditPage,
   CommunityDetailPage,
+  OnboardingPage,
+  GenderSelectionPage,
 } from '@/pages';
 import UserPage from '@/pages/user/page';
-import OnboardingPage from '@/pages/onboarding';
 import PhoneNumberPage from '@/pages/auth/phone-number';
 import CertifyPage from '@/pages/auth/certify';
-import GenderSelectionPage from '@/pages/auth/gender';
 import PersonalDataPage from '@/pages/auth/personal-data';
 import TosPage from '@/pages/auth/tos';
 import PrivacyPage from '@/pages/auth/privacy';
@@ -31,10 +31,8 @@ import { ErrorFallback } from '@/components';
 import ResignPage from '@/pages/user/resign';
 import TossPage from '@/pages/auth/toss';
 import RequestPage from '@/pages/user/request';
-import LoginSuccess from '@/pages/kakao-callback';
 
 const ProtectedPage = ({ children }: { children: React.ReactNode }) => {
-  // 로그인 여부 확인해 페이지 보호 필요
   return children;
 };
 
@@ -49,15 +47,11 @@ const router = createBrowserRouter([
     errorElement: <ErrorFallback />,
     children: [
       {
-        index: true,
+        path: ROUTES.ONBOARDING,
         element: <OnboardingPage />,
       },
       {
-        path: '/kakao-callback',
-        element: <LoginSuccess />,
-      },
-      {
-        path: '/auth/phone-number',
+        path: ROUTES.AUTH_PHONE_NUMBER,
         element: <PhoneNumberPage />,
       },
       {
@@ -65,11 +59,11 @@ const router = createBrowserRouter([
         element: <CertifyPage />,
       },
       {
-        path: '/auth/gender',
+        path: ROUTES.AUTH_GENDER,
         element: <GenderSelectionPage />,
       },
       {
-        path: '/auth/personal-data',
+        path: ROUTES.AUTH_PERSONAL_DATA,
         element: <PersonalDataPage />,
       },
       {

@@ -1,3 +1,8 @@
+// onboarding, auth
+export { default as OnboardingPage } from './onboarding/index';
+export { default as GenderSelectionPage } from './auth/gender/index';
+export { default as PersonalDataPage } from './auth/personal-data/index';
+
 // community
 export { default as CommunityPage } from './community/index';
 export { default as CommunitySearchPage } from './community/search/index';
@@ -12,4 +17,5 @@ export { default as EventSearchPage } from './event/search';
 export { default as EventDetailPage } from './event/[id]';
 export { default as EventScrapPage } from './event/scrap';
 
+// default
 export { default as NotFoundPage } from './not-found';

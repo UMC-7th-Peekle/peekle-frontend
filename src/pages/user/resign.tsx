@@ -2,6 +2,9 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import { alert } from '@/utils';
 import { Backward } from '@/components';
+import { clientAuth } from '@/apis/client';
+import { ROUTES } from '@/constants/routes';
+import { useNavigate } from 'react-router-dom';
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -131,21 +134,37 @@ const DeleteButton = styled.button`
 
 const ResignPage = () => {
   const [isChecked, setIsChecked] = useState(false);
+  const navigate = useNavigate();
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
   };
 
   const handleDelete = () => {
-    if (isChecked) {
-      alert(
-        '정말 탈퇴하기겠어요?\n\n탈퇴일로부터 7일 이후에는 계정이 완전히 삭제되며, 복구할 수 없어요.',
-        'warning',
-        '취소',
-        '탈퇴',
-      );
-      // 탈퇴 로직 추가
-    }
+    if (!isChecked) return;
+
+    alert(
+      '정말 탈퇴하시겠어요?\n\n탈퇴일로부터 7일 이후에는 계정이 완전히 삭제되며, 복구할 수 없어요.',
+      'warning',
+      '취소',
+      '탈퇴',
+      () => console.log('🚫 회원 탈퇴 취소됨'), // 취소 버튼 클릭
+      async () => {
+        try {
+          await clientAuth({
+            method: 'DELETE',
+            url: '/users',
+          });
+
+          localStorage.clear();
+          navigate(ROUTES.ONBOARDING);
+          console.log('🚀 회원 탈퇴 완료');
+        } catch (error) {
+          console.error('🚨 회원 탈퇴 실패:', error);
+        }
+      },
+    );
   };
+
   return (
     <Container>
       <BackwardWrapper>
