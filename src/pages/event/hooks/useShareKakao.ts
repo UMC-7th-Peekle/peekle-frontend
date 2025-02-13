@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { getSubstring } from '@/utils';
+import { getSubstring, getBaseUrl } from '@/utils';
 import { SHARE_TITLE, SHARE_DESCRIPTION } from '@/constants/common';
 
 const useShareKakao = () => {
@@ -24,13 +24,16 @@ const useShareKakao = () => {
         ? getSubstring(eventContentEl.innerText)
         : SHARE_DESCRIPTION;
       const eventThumbnailImg =
-        thumbnailImg ?? import.meta.env.VITE_KAKAO_SHARE_BASE_IMAGE;
+        thumbnailImg ??
+        `${getBaseUrl()}${import.meta.env.VITE_KAKAO_SHARE_BASE_IMAGE}`;
+
+      console.log('eventContent', eventContent);
+
       kakao.Share.sendDefault({
         objectType: 'feed',
         content: {
           title: eventTitle,
           description: eventContent,
-          // description: '아메리카노, 빵, 케익, 아메리카노, 빵, 케익, 아메리카노, 빵, 케익',
           imageUrl: eventThumbnailImg,
           link: {
             mobileWebUrl: currentURL,
@@ -39,7 +42,7 @@ const useShareKakao = () => {
         },
         buttons: [
           {
-            title: '웹으로 보기',
+            title: '자세히 보기',
             link: {
               mobileWebUrl: currentURL,
               webUrl: currentURL,
