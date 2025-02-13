@@ -9,7 +9,7 @@ import {
   MetaTag,
 } from '@/components';
 import { BOTTOM_SHEET_ID_EVENT_SHARE } from '@/constants/event';
-import { SHARE_TITLE, SHARE_DESCRIPTION } from '@/constants/common';
+import useShareKakao from '../hooks/useShareKakao';
 
 import {
   copyToClipboard,
@@ -25,7 +25,7 @@ import { useId } from '@/hooks';
 import usePostScrapEvent from '../hooks/mutation/usePostScrapEvent';
 import useDeleteScrapEvent from '../hooks/mutation/useDeleteScrapEvent';
 import { getCategoryName } from '@/utils/eventFormatter';
-import getFirstSentence from '@/utils/getFirstSentence';
+import getSubstring from '@/utils/getSubstring';
 
 const EventDetailPage = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -35,11 +35,13 @@ const EventDetailPage = () => {
   const { deleteScrap, isDeleteScrapPending } = useDeleteScrapEvent();
   const id = useId(); //url에서 뽑은 id
   const event = events.find((event) => event.eventId === BigInt(id));
+  const { handleShareKakao } = useShareKakao();
+
+  const thumbnailImg = event?.eventImages?.[0]?.imageUrl;
 
   useEffect(() => {
     if (!id || !event) return;
-    const firstSentence =
-      event.content.match(/[^.!?]+[.!?]/)?.[0] ?? event.content;
+    const firstSentence = getSubstring(event.content);
     document
       .querySelector('meta[property="og:title"]')
       ?.setAttribute('content', event.title);
@@ -48,12 +50,12 @@ const EventDetailPage = () => {
       ?.setAttribute('content', firstSentence);
     document
       .querySelector('meta[property="og:image"]')
-      ?.setAttribute('content', event.eventImages[0]?.imageUrl ?? '');
+      ?.setAttribute('content', thumbnailImg ?? '');
     document
       .querySelector('meta[property="og:url"]')
       ?.setAttribute('content', window.location.href);
     document.title = event.title;
-  }, [id, event]);
+  }, [id, event, thumbnailImg]);
 
   if (!id || !event) {
     return null;
@@ -74,54 +76,6 @@ const EventDetailPage = () => {
 
   const startDateTime = getStartDateTime(eventSchedules[0] as EventSchedule);
   const time = formatSchedules(eventSchedules[0] as EventSchedule);
-  const thumbnailImg = eventImages?.[0]?.imageUrl;
-
-  const handleShareKakao = () => {
-    let kakao;
-    if (window.Kakao) kakao = window.Kakao;
-    // Kakao 초기화 체크
-    if (kakao && !kakao.isInitialized())
-      kakao.init(import.meta.env.VITE_KAKAO_CLIENT_ID);
-    if (kakao) {
-      console.log('카카오톡 공유', kakao);
-      // 현재 링크 가져오기
-      const currentURL = window.location.href;
-      // 이벤트 정보 가져오기
-      const eventTitleEl = document.querySelector('event-title') as HTMLElement;
-      const eventTitle = eventTitleEl ? eventTitleEl.innerText : SHARE_TITLE;
-      const eventContentEl = document.querySelector(
-        'event-content',
-      ) as HTMLElement;
-      const eventContent = getFirstSentence(
-        eventContentEl ? eventContentEl.innerText : SHARE_DESCRIPTION,
-      );
-      const eventThumbnailImg =
-        thumbnailImg ?? import.meta.env.VITE_KAKAO_SHARE_BASE_IMAGE;
-      kakao.Share.sendDefault({
-        objectType: 'feed',
-        content: {
-          title: eventTitle,
-          description: eventContent,
-          imageUrl: eventThumbnailImg,
-          link: {
-            mobileWebUrl: currentURL,
-            webUrl: currentURL,
-          },
-        },
-        buttons: [
-          {
-            title: '웹으로 보기',
-            link: {
-              mobileWebUrl: currentURL,
-              webUrl: currentURL,
-            },
-          },
-        ],
-        // 카카오톡 미설치 시 카카오톡 설치 경로이동
-        installTalk: true,
-      });
-    }
-  };
 
   const handleCopyLink = () => {
     copyToClipboard(window.location.href);
@@ -230,7 +184,7 @@ const EventDetailPage = () => {
         <S.ShareContainer>
           <S.ShareTitle>공유하기</S.ShareTitle>
           <S.ShareOptions>
-            <S.ShareOption onClick={handleShareKakao}>
+            <S.ShareOption onClick={() => handleShareKakao(thumbnailImg)}>
               <S.KakaoIcon />
               <S.ShareOptionText>카카오톡</S.ShareOptionText>
               {/* api 연동 필요 */}

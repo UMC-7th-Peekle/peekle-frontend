@@ -1,5 +1,5 @@
 import { Helmet } from 'react-helmet-async';
-import { getBaseUrl, getFirstSentence } from '@/utils';
+import { getBaseUrl, getSubstring } from '@/utils';
 import { MetaTagProps } from '@/types/common';
 import { SHARE_TITLE, SHARE_DESCRIPTION } from '@/constants/common';
 
@@ -8,8 +8,8 @@ const MetaTag = ({
   description = SHARE_DESCRIPTION,
   imgSrc = import.meta.env.VITE_BASE_IMAGE, //디폴트 이미지
   url = window.location.href,
-}: MetaTagProps) => {
-  const firstSentence = getFirstSentence(description);
+}: MetaTagProps = {}) => {
+  const firstSentence = getSubstring(description);
   return (
     <Helmet>
       <title>{title}</title>
