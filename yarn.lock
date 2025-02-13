@@ -4859,7 +4859,6 @@ __metadata:
     swiper: "npm:^11.2.2"
     typescript: "npm:^5.7.2"
     typescript-eslint: "npm:^8.19.0"
-    use-session-storage-state: "npm:^19.0.1"
     vite: "npm:^6.0.5"
     vite-plugin-svgr: "npm:^4.3.0"
     zod: "npm:^3.24.1"
@@ -6106,16 +6105,6 @@ __metadata:
   dependencies:
     punycode: "npm:^2.1.0"
   checksum: 10c0/4ef57b45aa820d7ac6496e9208559986c665e49447cb072744c13b66925a362d96dd5a46c4530a6b8e203e5db5fe849369444440cb22ecfc26c679359e5dfa3c
-  languageName: node
-  linkType: hard
-
-"use-session-storage-state@npm:^19.0.1":
-  version: 19.0.1
-  resolution: "use-session-storage-state@npm:19.0.1"
-  peerDependencies:
-    react: ">=18"
-    react-dom: ">=18"
-  checksum: 10c0/072f49cd9a831c51f69d76fd5843933e87520fe507256481a9dc1346d432d406f897cdcb3f7814156f3a98377454a41089702fffb85efce7e96c7795345245c2
   languageName: node
   linkType: hard
 

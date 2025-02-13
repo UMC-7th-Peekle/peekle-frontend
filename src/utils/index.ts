@@ -13,6 +13,8 @@ export { default as toast } from './toast';
 
 export { isNetworkError, isServerError } from './error';
 
+export { default as getBaseUrl } from './getBaseUrl';
+export { default as getSubstring } from './getSubstring';
 export { default as calculateDistance } from './calculateDistance';
 export { default as priceFormatter } from './priceFormatter';
 export { default as copyToClipboard } from './copyToClipBoard';
