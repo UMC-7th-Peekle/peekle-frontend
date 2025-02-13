@@ -8,7 +8,7 @@ const useShareKakao = () => {
     if (window.Kakao) kakao = window.Kakao;
     // Kakao 초기화 체크
     if (kakao && !kakao.isInitialized())
-      kakao.init(import.meta.env.VITE_KAKAO_CLIENT_ID);
+      kakao.init(import.meta.env.VITE_KAKAO_JS_KEY);
     if (kakao) {
       // 현재 링크 가져오기
       const currentURL = window.location.href;
@@ -26,8 +26,6 @@ const useShareKakao = () => {
       const eventThumbnailImg =
         thumbnailImg ??
         `${getBaseUrl()}${import.meta.env.VITE_KAKAO_SHARE_BASE_IMAGE}`;
-
-      console.log('eventContent', eventContent);
 
       kakao.Share.sendDefault({
         objectType: 'feed',
