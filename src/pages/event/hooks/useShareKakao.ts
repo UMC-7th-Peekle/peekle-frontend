@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { getSubstring } from '@/utils';
+import { getSubstring, getBaseUrl } from '@/utils';
 import { SHARE_TITLE, SHARE_DESCRIPTION } from '@/constants/common';
 
 const useShareKakao = () => {
@@ -8,7 +8,7 @@ const useShareKakao = () => {
     if (window.Kakao) kakao = window.Kakao;
     // Kakao 초기화 체크
     if (kakao && !kakao.isInitialized())
-      kakao.init(import.meta.env.VITE_KAKAO_CLIENT_ID);
+      kakao.init(import.meta.env.VITE_KAKAO_JS_KEY);
     if (kakao) {
       // 현재 링크 가져오기
       const currentURL = window.location.href;
@@ -24,13 +24,14 @@ const useShareKakao = () => {
         ? getSubstring(eventContentEl.innerText)
         : SHARE_DESCRIPTION;
       const eventThumbnailImg =
-        thumbnailImg ?? import.meta.env.VITE_KAKAO_SHARE_BASE_IMAGE;
+        thumbnailImg ??
+        `${getBaseUrl()}${import.meta.env.VITE_KAKAO_SHARE_BASE_IMAGE}`;
+
       kakao.Share.sendDefault({
         objectType: 'feed',
         content: {
           title: eventTitle,
           description: eventContent,
-          // description: '아메리카노, 빵, 케익, 아메리카노, 빵, 케익, 아메리카노, 빵, 케익',
           imageUrl: eventThumbnailImg,
           link: {
             mobileWebUrl: currentURL,
@@ -39,7 +40,7 @@ const useShareKakao = () => {
         },
         buttons: [
           {
-            title: '웹으로 보기',
+            title: '자세히 보기',
             link: {
               mobileWebUrl: currentURL,
               webUrl: currentURL,
