@@ -52,3 +52,4 @@ export { default as CommentCard } from './community/comment-card';
 export { default as LikedCount } from './community/comment-card/liked-count';
 export { default as AnonymousCheck } from './community/anonymous-check';
 export { default as CommentInput } from './community/comment-input';
+export { default as CommentReplyCard } from './community/comment-card/commentReplyCard';

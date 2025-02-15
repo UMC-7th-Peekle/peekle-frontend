@@ -1,15 +1,20 @@
 import * as S from './style';
 
-export default function LikedCount({ isLiked, count }: LikedCountProps) {
+export default function LikedCount({
+  isLiked,
+  count,
+  onClick = () => {},
+}: LikedCountProps) {
   return (
-    <S.Column>
+    <S.Column onClick={onClick}>
       <S.Heart isLiked={isLiked} />
-      <S.Count>{count}</S.Count>
+      <S.Count $isLiked={isLiked}>{count}</S.Count>
     </S.Column>
   );
 }
 
 interface LikedCountProps {
   isLiked: boolean;
-  count: string;
+  count: number;
+  onClick?: () => void;
 }

@@ -10,6 +10,7 @@ import BodySection from '../container/body-section';
 import { useRecentSearch } from '@/hooks';
 import { useGetCommunity } from '../hooks/community/useGetCommunity';
 import { useInfiniteScroll } from '../hooks/util/useInfiniteScroll';
+import { ROUTES } from '@/constants/routes';
 
 export default function CommunitySearchPage() {
   const {
@@ -74,7 +75,7 @@ export default function CommunitySearchPage() {
     <>
       <S.MainContainer>
         <S.Appbar>
-          <Backward size={'28px'} />
+          <Backward size={'28px'} navigateUrl={ROUTES.COMMUNITY} />
           <TextFields
             queryKey="community-search"
             localKey="recent-community-search"

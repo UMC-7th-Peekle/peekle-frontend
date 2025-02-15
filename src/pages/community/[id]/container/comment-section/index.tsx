@@ -1,8 +1,12 @@
-import { CommentCard, CommentInput } from '@/components';
+import { CommentCard, CommentInput, CommentReplyCard } from '@/components';
 import * as S from './style';
 import useComment from './hook/useComment';
 import { CommunityDetailArticle } from '@/pages/community/hooks/article/useGetCommunityDetail';
-import { useGetArticleComments } from '@/pages/community/hooks/comment/useGetArticleComments';
+import {
+  ArticleComment,
+  ArticleComments,
+  useGetArticleComments,
+} from '@/pages/community/hooks/comment/useGetArticleComments';
 
 interface CommentSectionProps {
   article: CommunityDetailArticle;
@@ -20,26 +24,49 @@ export default function CommentSection({ article }: CommentSectionProps) {
     articleId: article.articleId,
   });
 
-  if (isLoading) {
+  if (isLoading || error) {
     return <></>;
   }
 
-  if (error) {
-    return <></>;
-  }
+  const comments: ArticleComments = data?.success.comments || [];
 
-  const comments = data?.success.comments || [];
+  const commentMap = new Map<
+    number,
+    ArticleComment & { replies: ArticleComment[] }
+  >();
+
+  comments.forEach((comment) => {
+    if (comment.parentCommentId === null) {
+      commentMap.set(comment.commentId, { ...comment, replies: [] });
+    }
+  });
+
+  comments.forEach((comment) => {
+    if (comment.parentCommentId !== null) {
+      const parent = commentMap.get(comment.parentCommentId);
+      if (parent) {
+        parent.replies.push(comment);
+      }
+    }
+  });
 
   return (
     <>
-      {/* 댓글 O */}
       <S.CommentContainer>
-        {comments.map((comment, index) => (
-          <CommentCard key={`${index} + ${comment}`} comment={comment} />
+        {Array.from(commentMap.values()).map((comment) => (
+          <div key={comment.commentId}>
+            <CommentCard comment={comment} />
+            {comment.replies.length > 0 && (
+              <S.ReplyContainer>
+                {comment.replies.map((reply) => (
+                  <CommentReplyCard key={reply.commentId} comment={reply} />
+                ))}
+              </S.ReplyContainer>
+            )}
+          </div>
         ))}
       </S.CommentContainer>
 
-      {/* 댓글 X */}
       {comments.length === 0 && (
         <S.NoCommentContainer>
           <S.CommentIcon />

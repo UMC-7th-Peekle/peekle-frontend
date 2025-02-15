@@ -59,7 +59,7 @@ export const usePostComment = ({
       queryClient.invalidateQueries({ queryKey: ['get-community'] });
       queryClient.invalidateQueries({ queryKey: ['get-community-like'] });
       queryClient.invalidateQueries({
-        queryKey: ['get-article-defail'],
+        queryKey: ['get-article-detail'],
       });
       queryClient.invalidateQueries({
         queryKey: ['get-article-comments', communityId, articleId],

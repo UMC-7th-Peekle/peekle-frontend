@@ -29,8 +29,16 @@ const ArticleCommentSchema = z.object({
   updatedAt: z.string().transform(formatDateCardTime),
 });
 
+// **🚀 순서 변경: ArticleCommentSchema 이후에 ReplySchema 정의**
+const ReplySchema = z.array(ArticleCommentSchema);
+
+// **🚀 replies 속성을 optional로 설정**
+const ArticleCommentWithRepliesSchema = ArticleCommentSchema.extend({
+  replies: ReplySchema.optional(),
+});
+
 // 댓글 목록 스키마
-const ArticleCommentsSchema = z.array(ArticleCommentSchema);
+const ArticleCommentsSchema = z.array(ArticleCommentWithRepliesSchema);
 
 // 성공 응답 스키마
 const SuccessRespSchema = z.object({
@@ -47,7 +55,7 @@ const GetArticleCommentsSchema = z.object({
 
 export type ArticleCommentsResp = z.infer<typeof GetArticleCommentsSchema>;
 
-export type ArticleComment = z.infer<typeof ArticleCommentSchema>;
+export type ArticleComment = z.infer<typeof ArticleCommentWithRepliesSchema>;
 
 export type ArticleComments = z.infer<typeof ArticleCommentsSchema>;
 
@@ -76,7 +84,7 @@ export const useGetArticleComments = ({
   articleId,
 }: useGetCommunityDetailProps) => {
   return useQuery<ArticleCommentsResp>({
-    queryKey: ['get-community-defail', communityId, articleId],
+    queryKey: ['get-community-comment', communityId, articleId],
     queryFn: () => getArticleComments({ communityId, articleId }),
     enabled: Boolean(communityId && articleId),
   });

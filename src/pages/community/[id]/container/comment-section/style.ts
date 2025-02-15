@@ -28,4 +28,12 @@ const NoCommentText = styled.p`
   ${theme.typeFace.body['16R']};
 `;
 
-export { NoCommentContainer, NoCommentText, CommentIcon, CommentContainer };
+const ReplyContainer = styled.div``;
+
+export {
+  NoCommentContainer,
+  NoCommentText,
+  CommentIcon,
+  CommentContainer,
+  ReplyContainer,
+};

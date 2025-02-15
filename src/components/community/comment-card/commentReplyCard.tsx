@@ -1,12 +1,13 @@
 import * as S from './style';
 import LikedCount from './liked-count';
 import { ArticleComment } from '@/pages/community/hooks/comment/useGetArticleComments';
-import { usePostArticleCommentLike } from '@/pages/community/hooks/like/usePostArticleCommentLike';
+import Reply from '@/assets/images/community/reply.svg?react';
 import { useCommunityId } from '@/hooks';
+import { usePostArticleCommentLike } from '@/pages/community/hooks/like/usePostArticleCommentLike';
 import { useDelArticleCommentLike } from '@/pages/community/hooks/like/useDelArticleLikeComment';
 
-// 커뮤니티 댓글 컴포넌트
-export default function CommentCard({ comment }: CommentCardProps) {
+// 커뮤니티 대댓글 컴포넌트
+export default function CommentReplyCard({ comment }: CommentCardProps) {
   const { communityId, articleId } = useCommunityId();
 
   /*mutation*/
@@ -22,7 +23,10 @@ export default function CommentCard({ comment }: CommentCardProps) {
     ? comment.authorInfo.profileImage
     : '/image/peekle-profile.webp';
   return (
-    <S.MainContainer>
+    <S.ReplyContainer>
+      <S.ReplyWrapper>
+        <Reply />
+      </S.ReplyWrapper>
       <S.ProfileWrapper>
         <S.ProfileImage image={profile} />
       </S.ProfileWrapper>
@@ -58,7 +62,7 @@ export default function CommentCard({ comment }: CommentCardProps) {
           }}
         />
       </S.LeftContainer>
-    </S.MainContainer>
+    </S.ReplyContainer>
   );
 }
 
