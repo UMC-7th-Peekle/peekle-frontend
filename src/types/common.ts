@@ -93,8 +93,9 @@ export interface DropdownProps {
 
 // ToggleHeart
 export interface ToggleHeartProps {
-  size: number;
-  borderColor: string;
+  size?: number;
+  borderColor?: string;
+  filledColor?: string;
   isActive: boolean;
   onClick: () => void;
 }
@@ -102,6 +103,7 @@ export interface ToggleHeartProps {
 export interface HeartSVGProps extends React.SVGAttributes<SVGElement> {
   $size?: number;
   $borderColor?: string;
+  $filledColor?: string;
 }
 
 // Button

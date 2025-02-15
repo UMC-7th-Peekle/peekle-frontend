@@ -375,6 +375,9 @@ export type EventsScrappedResponse = z.infer<
 export const ToggleScrapEventResponseSchema = ApiResponseSchema(
   z.object({
     message: z.string(),
+    // FE에서 관리할 상태
+    isScrapped: z.boolean().optional(),
+    scrapCount: z.number().optional(),
   }),
 );
 

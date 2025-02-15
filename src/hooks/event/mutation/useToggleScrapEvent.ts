@@ -37,24 +37,46 @@ const useToggleScrapEvent = () => {
   >({
     mutationFn: ({ eventId, isScrapped }) =>
       toggleScrapEvent(eventId, isScrapped),
-    onSuccess: async (_, { eventId }) => {
+    onMutate: async ({ eventId, isScrapped }) => {
       await queryClient.cancelQueries({
         queryKey: [TOGGLE_SCRAP_EVENT_QK, eventId],
       });
+
       const prevData = queryClient.getQueryData<ToggleScrapEventResponse>([
         TOGGLE_SCRAP_EVENT_QK,
         eventId,
       ]);
+
       queryClient.setQueryData(
         [TOGGLE_SCRAP_EVENT_QK, eventId],
-        (prev: ToggleScrapEventResponse) => ({
-          ...prev,
-        }),
+        (old?: ToggleScrapEventResponse) =>
+          old
+            ? {
+                ...old,
+                success: {
+                  ...old.success,
+                  isScrapped: !old.success?.isScrapped,
+                  scrapCount: isScrapped
+                    ? Math.max(0, (old.success?.scrapCount ?? 0) - 1) // 하나 감소
+                    : (old.success?.scrapCount ?? 0) + 1, // 하나 증가
+                },
+              }
+            : {
+                resultType: 'SUCCESS',
+                error: null,
+                success: { message: '', isScrapped: true, scrapCount: 1 },
+              },
       );
-      return { prevData };
+      return {
+        prevData: prevData ?? {
+          resultType: 'SUCCESS',
+          error: null,
+          success: { message: '', isScrapped: false, scrapCount: 0 },
+        },
+      };
     },
     onError: (error, { eventId }, context) => {
-      if (context) {
+      if (context?.prevData) {
         queryClient.setQueryData(
           [TOGGLE_SCRAP_EVENT_QK, eventId],
           context.prevData,

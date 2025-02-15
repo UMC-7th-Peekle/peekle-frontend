@@ -186,12 +186,14 @@ export const BottomContainer = styled.div`
   bottom: 0;
   left: 0;
   z-index: 1;
+  height: 76px;
   border-top: 1px solid ${theme.color.gray[100]};
   background: ${theme.color.gray[0]};
   display: flex;
   padding: 16px 16px 16px 24px;
   align-items: center;
   gap: 24px;
+  justify-content: space-between;
 `;
 
 export const ApplyBtn = styled.button`
@@ -202,12 +204,11 @@ export const ApplyBtn = styled.button`
 
 // 공유 컨테이너
 export const ShareContainer = styled.div`
-  margin-bottom: 44px;
   display: inline-flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 24px;
-  padding: 0 20px;
+  padding: 20px 20px 40px;
   color: ${theme.color.gray[900]};
 `;
 

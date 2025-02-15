@@ -31,8 +31,6 @@ export const EventDetailPage = () => {
   const { handleShareKakao } = useShareKakao();
 
   // 스크랩 토글
-  // const [isScraped, setIsScraped] = useState(data.isScrapped);
-  const [isScrapped, setIsScrapped] = useState(false);
   const { toggleScrap } = useToggleScrapEvent();
 
   //디테일 가져오기
@@ -77,6 +75,7 @@ export const EventDetailPage = () => {
     category: { name: categoryName },
     price,
     eventUrl,
+    // isScrapped,
   } = eventDetail;
 
   // 데이터 포맷팅
@@ -92,14 +91,8 @@ export const EventDetailPage = () => {
   };
 
   const handleToggleHeart = async (eventId: bigint) => {
-    setIsScrapped((prev) => !prev); // UI 반영
-
-    try {
-      await toggleScrap({ eventId, isScrapped });
-    } catch (e) {
-      console.error('이벤트 스크랩 토글 중 에러 발생:', e);
-      setIsScrapped((prev) => !prev); // 실패 시 상태 복구
-    }
+    // await toggleScrap({ eventId, isScrapped });
+    await toggleScrap({ eventId, isScrapped: false });
   };
 
   const handleMoveSiteClick = async () => {
@@ -174,10 +167,10 @@ export const EventDetailPage = () => {
 
       <S.BottomContainer>
         <ToggleHeart
-          isActive={isScrapped}
+          // isActive={isScrapped}
+          isActive={false}
           onClick={() => handleToggleHeart(eventId)}
           size={24}
-          borderColor={'theme.color.gray[500]'}
         />
         {eventUrl ? (
           <Button color="primary500" size="small" onClick={handleMoveSiteClick}>

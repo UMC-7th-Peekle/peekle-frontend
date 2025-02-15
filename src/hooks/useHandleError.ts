@@ -1,10 +1,11 @@
 import { useErrorBoundary } from 'react-error-boundary';
+import { AxiosError } from 'axios';
 import ApiError from '@/apis/apiError';
 
 const useErrorHandler = () => {
   const { showBoundary } = useErrorBoundary();
   const handleError = (error: unknown) => {
-    if (error instanceof ApiError) {
+    if (error instanceof AxiosError) {
       showBoundary(error);
     } else {
       showBoundary(
