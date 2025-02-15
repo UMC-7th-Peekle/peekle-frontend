@@ -152,9 +152,8 @@ export interface BackSVGProps {
 
 // MetaTag
 export interface MetaTagProps {
-  title: string;
-  description: string;
-  keywords: string;
-  imgsrc?: string;
-  url: string;
+  title?: string;
+  description?: string;
+  imgSrc?: string;
+  url?: string;
 }

@@ -64,6 +64,7 @@ export interface FilteredEventStore {
 // event-card
 export interface EventCardProps {
   id: bigint;
+  eventData: EventData;
   onClick?: () => void;
 }
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Backward } from '@/components';
+import { FixedBackward } from '@/components';
 import { Button } from '@/components/common/input/button/index';
 import { useNavigate } from 'react-router-dom';
 const PhoneNumberPage = () => {
@@ -8,9 +8,6 @@ const PhoneNumberPage = () => {
   const api = import.meta.env.VITE_API_URL;
 
   const [phone, setPhone] = useState('');
-  const [phoneVerificationSessionId, setPhoneVerificationSessionId] = useState<
-    string | null
-  >(null);
   const [loading, setLoading] = useState(false);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value.replace(/[^0-9]/g, ''); // 숫자만 입력
@@ -22,19 +19,15 @@ const PhoneNumberPage = () => {
     }
     setPhone(value);
   };
-  const handleOnboarding = () => {
-    navigate('/onboarding');
-  };
   const handleSubmit = async () => {
     if (loading) return;
     setLoading(true);
     const PhoneNumber = phone.replace(/-/g, '');
     try {
       const statusResponse = await fetch(
-        `${api}/auth/phone/account/status?phone=${PhoneNumber}`,
+        `${api}auth/phone/account/status?phone=${PhoneNumber}`,
       );
       const statusData = await statusResponse.json();
-      console.log('상태:', statusData);
       if (statusData.resultType === 'FAIL') {
         if (statusData.error?.reason === '탈퇴한 사용자입니다.') {
           navigate('/auth/certify');
@@ -42,7 +35,7 @@ const PhoneNumberPage = () => {
           navigate('/auth/sleeper');
         }
       } else if (statusData.resultType === 'SUCCESS') {
-        const client = await fetch(`${api}/auth/phone/send`, {
+        const client = await fetch(`${api}auth/phone/send`, {
           method: 'POST',
           headers: {
             'Content-type': 'application/json',
@@ -51,11 +44,7 @@ const PhoneNumberPage = () => {
         });
         const data = await client.json();
         if (client.ok) {
-          setPhoneVerificationSessionId(data.phoneVerificationSessionId);
-          console.log(
-            'phoneVerificationSessionId:',
-            phoneVerificationSessionId,
-          );
+          localStorage.setItem('phone', phone);
           navigate('/auth/certify', {
             state: {
               phone: PhoneNumber,
@@ -76,9 +65,7 @@ const PhoneNumberPage = () => {
   return (
     <Container>
       {/* 뒤로가기 버튼 */}
-      <BackwardWrapper onClick={handleOnboarding}>
-        <Backward />
-      </BackwardWrapper>
+      <FixedBackward />
       {/* 입력 안내 문구 */}
       <Title>
         휴대폰 번호를
@@ -118,11 +105,6 @@ const Container = styled.div`
   height: 100vh;
   background: white;
   padding: 20px;
-`;
-const BackwardWrapper = styled.div`
-  position: absolute;
-  top: 15px;
-  left: 30px;
 `;
 const Title = styled.h1`
   font-family: 'Pretendard', sans-serif;

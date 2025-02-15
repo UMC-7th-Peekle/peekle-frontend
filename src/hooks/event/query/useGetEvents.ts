@@ -37,7 +37,6 @@ const getEvents = async ({
   // const parsedData = EventsResponseSchema.parse(response.data);
   // return parsedData;
   // console.log(typeof response.data.success.events[0].eventId);
-  console.log(response.data);
   return response.data;
 };
 

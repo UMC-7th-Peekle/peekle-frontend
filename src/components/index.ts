@@ -3,6 +3,8 @@ export { default as DeferredLoader } from './common/deferred-loader';
 export { default as ErrorFallback } from './common/error-fallback';
 export { default as Backward } from './common/backward';
 export { default as MetaTag } from './common/meta-tag';
+export { default as FixedBackward } from './common/fixed-backward';
+
 // navigation
 export { default as Chip } from './common/navigation/chip';
 
@@ -49,3 +51,4 @@ export { default as CommentCountCard } from './community/comment-count-card';
 export { default as CommentCard } from './community/comment-card';
 export { default as LikedCount } from './community/comment-card/liked-count';
 export { default as AnonymousCheck } from './community/anonymous-check';
+export { default as CommentInput } from './community/comment-input';

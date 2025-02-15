@@ -5,8 +5,6 @@ import NoFilteredResultSVG from '@/assets/images/null/noFilteredResult.svg?react
 import NoSearchResultSVG from '@/assets/images/null/noSearchResult.svg?react';
 import NoLikeResultSVG from '@/assets/images/null/noLike.svg?react';
 
-export const Container = styled.section``;
-
 export const EventsContainer = styled.div`
   display: flex;
   flex-direction: column;

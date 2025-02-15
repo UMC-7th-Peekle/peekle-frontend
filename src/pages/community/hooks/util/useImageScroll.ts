@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { CommunityDetailArticle } from '../query/useGetCommunityDetail';
+import { CommunityDetailArticle } from '../article/useGetCommunityDetail';
 
 export default function useImageScroll({
   article,

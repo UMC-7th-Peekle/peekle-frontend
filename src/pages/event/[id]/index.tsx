@@ -21,14 +21,17 @@ import {
   useId,
   // useGetEventDetail,
   useToggleScrapEvent,
+  useShareKakao,
 } from '@/hooks';
+import { events } from '@/sample-data/event';
 import { EventSchedule } from '@/types/event';
 import { getCategoryName } from '@/utils/eventFormatter';
-import { events } from '@/sample-data/event';
+// import getSubstring from '@/utils/getSubstring';
 
 const EventDetailPage = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const { setActiveBottomSheet } = useBottomSheetStore();
+  const { handleShareKakao } = useShareKakao();
 
   //디테일 가져오기
   const id = useId(); //url에서 뽑은 id
@@ -40,10 +43,11 @@ const EventDetailPage = () => {
   const [isScrapped, setIsScrapped] = useState(false);
   const { toggleScrap } = useToggleScrapEvent();
 
+  const thumbnailImg = event?.eventImages?.[0]?.imageUrl;
+
   useEffect(() => {
     if (!id || !event) return;
-    // const firstSentence =
-    //   event.content.match(/[^.!?]+[.!?]/)?.[0] ?? event.content;
+    // const firstSentence = getSubstring(event.content);
     document
       .querySelector('meta[property="og:title"]')
       ?.setAttribute('content', event.title);
@@ -52,12 +56,12 @@ const EventDetailPage = () => {
     //   ?.setAttribute('content', firstSentence);
     document
       .querySelector('meta[property="og:image"]')
-      ?.setAttribute('content', event.eventImages[0]?.imageUrl ?? '');
+      ?.setAttribute('content', thumbnailImg ?? '');
     document
       .querySelector('meta[property="og:url"]')
       ?.setAttribute('content', window.location.href);
     document.title = event.title;
-  }, [id, event]);
+  }, [id, event, thumbnailImg]);
 
   if (!id || !event) {
     return null;
@@ -79,10 +83,6 @@ const EventDetailPage = () => {
 
   const startDateTime = getStartDateTime(eventSchedules[0] as EventSchedule);
   const time = formatSchedules(eventSchedules[0] as EventSchedule);
-
-  const handleShareKakao = () => {
-    console.log('카카오톡 공윺 클릭');
-  };
 
   const handleCopyLink = () => {
     copyToClipboard(window.location.href);
@@ -114,8 +114,8 @@ const EventDetailPage = () => {
     <>
       <MetaTag
         title={title}
-        description={''?.slice(0, 50)}
-        imgSrc={eventImages?.[0]?.imageUrl}
+        description={content?.slice(0, 50)}
+        imgSrc={thumbnailImg}
         url={window.location.href}
       />
 
@@ -130,7 +130,7 @@ const EventDetailPage = () => {
         <ImageSlider images={eventImages} title={title} />
         <S.InfoContainer>
           <S.Category>{getCategoryName(categoryId)}</S.Category>
-          <S.Title>{title}</S.Title>
+          <S.Title className="event-title">{title}</S.Title>
           <S.Line />
           <S.Info>
             <S.InfoRow>
@@ -168,7 +168,7 @@ const EventDetailPage = () => {
 
       <S.ContentContainer>
         <S.ContentTitle>상세 정보</S.ContentTitle>
-        <S.Content>{content}</S.Content>
+        <S.Content className="event-content">{content}</S.Content>
       </S.ContentContainer>
 
       <S.BottomContainer>
@@ -189,7 +189,7 @@ const EventDetailPage = () => {
         <S.ShareContainer>
           <S.ShareTitle>공유하기</S.ShareTitle>
           <S.ShareOptions>
-            <S.ShareOption onClick={handleShareKakao}>
+            <S.ShareOption onClick={() => handleShareKakao(thumbnailImg)}>
               <S.KakaoIcon />
               <S.ShareOptionText>카카오톡</S.ShareOptionText>
               {/* api 연동 필요 */}

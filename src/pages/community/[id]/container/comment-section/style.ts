@@ -1,3 +1,4 @@
+// style.ts
 import styled from 'styled-components';
 import CommentSvg from '@/assets/images/community/comment.svg?react';
 import { theme } from '@/styles/theme';

@@ -5,9 +5,10 @@ import Heart from '@/assets/images/icons/heart-filled.svg?react';
 export default function LikeCard({
   count = 0,
   isLiked = false,
+  onClick = () => {},
 }: LikeCardProps) {
   return (
-    <S.Container isLiked={isLiked}>
+    <S.Container onClick={onClick} isLiked={isLiked}>
       <Heart />
       <S.Count>{count}</S.Count>
     </S.Container>
@@ -17,4 +18,5 @@ export default function LikeCard({
 interface LikeCardProps {
   count: number;
   isLiked?: boolean;
+  onClick?: () => void;
 }

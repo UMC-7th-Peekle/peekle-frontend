@@ -53,10 +53,10 @@ export const EventList = ({
     }
   }, [isFetching, fetchNextPage]);
 
-  console.log(data);
   const events = data.pages.flatMap((page) => page.success?.events ?? []) ?? [];
-  console.log(events);
 
+  console.log('events', events);
+  console.log('events.length > 0 ', events.length > 0);
   const isSearchPage = page === 'search';
   const isScrapPage = page === 'scrap';
 
@@ -74,7 +74,7 @@ export const EventList = ({
   };
 
   return (
-    <S.Container>
+    <section>
       {/*검색 결과 없어도 필터는 유지 - 필터 때문에 검색 결과 없는 걸수도 있음*/}
       {isSearchPage && <Filter isSearchPage={true} />}
       {events.length > 0 ? (
@@ -84,6 +84,7 @@ export const EventList = ({
               <EventCard
                 key={event.eventId}
                 id={event.eventId}
+                eventData={event}
                 onClick={handleCardClick}
               />
             ))}
@@ -110,16 +111,18 @@ export const EventList = ({
           )}
         </S.EmptyContainer>
       )}
-    </S.Container>
+    </section>
   );
 };
 
 export const EventListSkeleton = () => {
   return (
-    <S.Container>
-      {Array.from({ length: 5 }).map((_, index) => (
-        <EventCardSkeleton key={index} />
-      ))}
-    </S.Container>
+    <section>
+      <S.EventsContainer>
+        {Array.from({ length: 5 }).map((_, index) => (
+          <EventCardSkeleton key={index} />
+        ))}
+      </S.EventsContainer>
+    </section>
   );
 };

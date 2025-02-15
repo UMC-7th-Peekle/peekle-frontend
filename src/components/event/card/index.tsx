@@ -1,24 +1,25 @@
 import * as S from './style';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { EventCardProps } from '@/types/event';
-import { events } from '@/sample-data/event';
-import { EventData } from '@/types/event';
 import { priceFormatter } from '@/utils';
 
-export const EventCard = ({ id, onClick }: EventCardProps) => {
+export const EventCard = ({ id, eventData, onClick }: EventCardProps) => {
+  const [imageError, setImageError] = useState(false);
   const navigate = useNavigate();
-
-  const eventInfo = events.find((event: EventData) => event.eventId === id);
-  if (!eventInfo) return;
+  if (!eventData) return;
 
   const {
     eventImages,
     title,
     eventLocation: { sigungu },
     price,
-  } = eventInfo;
+  } = eventData;
+
+  const thumbnailImage =
+    eventImages && eventImages.length > 0 && eventImages[0].imageUrl;
 
   const handleCardClick = () => {
     navigate(`/event/${id}`);
@@ -35,8 +36,12 @@ export const EventCard = ({ id, onClick }: EventCardProps) => {
         </S.SubInfoWrapper>
       </S.Info>
       <S.ImageContainer>
-        {eventImages && eventImages.length > 0 && eventImages[0].imageUrl ? (
-          <S.Image src={eventImages[0].imageUrl} alt={`${title}-img`} />
+        {thumbnailImage && !imageError ? (
+          <S.Image
+            src={thumbnailImage}
+            alt={`${title}-img`}
+            onError={() => setImageError(true)}
+          />
         ) : (
           <S.DefaultImageIcon />
         )}
