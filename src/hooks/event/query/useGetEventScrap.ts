@@ -9,7 +9,7 @@ import {
 import { GET_EVENTS_SCRAPPED_QK } from '@/constants/event';
 
 // api 호출 함수
-const getEvents = async ({
+const getEventScrap = async ({
   limit,
   cursor,
   categories,
@@ -30,7 +30,7 @@ const getEvents = async ({
   return response.data;
 };
 
-const useGetEvents = ({
+const useGetEventScrap = ({
   limit = 10,
   cursor,
   categories,
@@ -44,7 +44,7 @@ const useGetEvents = ({
     >({
       queryKey: [GET_EVENTS_SCRAPPED_QK, limit, cursor, categories],
       queryFn: ({ pageParam }) =>
-        getEvents({
+        getEventScrap({
           limit,
           cursor: pageParam ? (pageParam as number) : undefined,
           categories,
@@ -59,4 +59,4 @@ const useGetEvents = ({
   return { data, error, fetchNextPage, hasNextPage, isFetching };
 };
 
-export default useGetEvents;
+export default useGetEventScrap;

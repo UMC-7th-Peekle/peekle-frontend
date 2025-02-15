@@ -1,4 +1,5 @@
 import * as S from './style';
+import { useCallback, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   EventCard,
@@ -6,7 +7,7 @@ import {
   Filter,
   RoundedButton,
 } from '@/components';
-import { useEventFilter } from '@/hooks';
+import { useEventFilter, useGetEvents } from '@/hooks';
 import { EventData } from '@/types/event';
 import { ROUTES } from '@/constants/routes';
 import { useMapStore } from '@/stores';
@@ -17,10 +18,44 @@ export const EventList = ({
   page?: 'search' | 'scrap' | 'index';
 }) => {
   const navigate = useNavigate();
-  const { sortedEvents } = useEventFilter();
+  const { formattedFilters } = useEventFilter();
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get('event-search') ?? '';
   const { setSelectedEvent } = useMapStore();
+
+  const { data, fetchNextPage, hasNextPage, isFetching } = useGetEvents({
+    ...formattedFilters,
+  });
+
+  // 스크롤 이벤트 핸들러
+  const handleScroll = useCallback(() => {
+    if (
+      document.documentElement.clientWidth +
+        document.documentElement.scrollTop >=
+      document.documentElement.offsetHeight - 100
+    ) {
+      if (hasNextPage && !isFetching) {
+        fetchNextPage();
+      }
+    }
+  }, [hasNextPage, isFetching, fetchNextPage]);
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [hasNextPage, isFetching, handleScroll]);
+
+  useEffect(() => {
+    if (isFetching) {
+      fetchNextPage();
+    }
+  }, [isFetching, fetchNextPage]);
+
+  console.log(data);
+  const events = data.pages.flatMap((page) => page.success?.events ?? []) ?? [];
+  console.log(events);
 
   const isSearchPage = page === 'search';
   const isScrapPage = page === 'scrap';
@@ -42,10 +77,10 @@ export const EventList = ({
     <S.Container>
       {/*검색 결과 없어도 필터는 유지 - 필터 때문에 검색 결과 없는 걸수도 있음*/}
       {isSearchPage && <Filter isSearchPage={true} />}
-      {sortedEvents.length > 0 ? (
+      {events.length > 0 ? (
         <>
           <S.EventsContainer>
-            {sortedEvents.map((event: EventData) => (
+            {events.map((event: EventData) => (
               <EventCard
                 key={event.eventId}
                 id={event.eventId}
@@ -82,7 +117,7 @@ export const EventList = ({
 export const EventListSkeleton = () => {
   return (
     <S.Container>
-      {Array.from({ length: 10 }).map((_, index) => (
+      {Array.from({ length: 5 }).map((_, index) => (
         <EventCardSkeleton key={index} />
       ))}
     </S.Container>

@@ -42,7 +42,7 @@ const getEvents = async ({
 };
 
 const useGetEvents = ({
-  limit = 10,
+  limit = 5,
   cursor,
   categories,
   locations,
@@ -51,7 +51,7 @@ const useGetEvents = ({
   endDate,
   query,
 }: getEventsParams) => {
-  const { data, error, fetchNextPage, hasNextPage, isFetching } =
+  const { data, fetchNextPage, hasNextPage, isFetching } =
     useSuspenseInfiniteQuery<
       EventsResponse,
       Error,
@@ -60,19 +60,21 @@ const useGetEvents = ({
     >({
       queryKey: [
         'events',
-        limit,
-        cursor,
-        categories,
-        locations,
-        price,
-        startDate,
-        endDate,
-        query,
+        {
+          limit,
+          cursor,
+          categories,
+          locations,
+          price,
+          startDate,
+          endDate,
+          query,
+        },
       ],
       queryFn: ({ pageParam }) =>
         getEvents({
           limit,
-          cursor: pageParam ? (pageParam as number) : undefined,
+          cursor: pageParam as number | undefined,
           categories,
           locations,
           price,
@@ -87,7 +89,7 @@ const useGetEvents = ({
       },
     });
 
-  return { data, error, fetchNextPage, hasNextPage, isFetching };
+  return { data, fetchNextPage, hasNextPage, isFetching };
 };
 
 export default useGetEvents;

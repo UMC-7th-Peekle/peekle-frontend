@@ -1,5 +1,5 @@
 import * as S from './style';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   ToggleHeart,
   BottomSheet,
@@ -17,44 +17,47 @@ import {
   priceFormatter,
 } from '@/utils';
 import { useBottomSheetStore } from '@/stores';
-import { useId } from '@/hooks';
+import {
+  useId,
+  // useGetEventDetail,
+  useToggleScrapEvent,
+} from '@/hooks';
 import { EventSchedule } from '@/types/event';
-import usePostScrapEvent from '../hooks/mutation/usePostScrapEvent';
-import useDeleteScrapEvent from '../hooks/mutation/useDeleteScrapEvent';
-// import useGetEventDetail from '../hooks/query/useGetEventDetail';
 import { getCategoryName } from '@/utils/eventFormatter';
 import { events } from '@/sample-data/event';
 
 const EventDetailPage = () => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isScraped, setIsScraped] = useState(false);
   const { setActiveBottomSheet } = useBottomSheetStore();
-  const { scrapEvent, isScrapEventPending } = usePostScrapEvent();
-  const { deleteScrap, isDeleteScrapPending } = useDeleteScrapEvent();
+
+  //디테일 가져오기
   const id = useId(); //url에서 뽑은 id
   const event = events.find((event) => String(event.eventId) === id);
-
-  // 디테일 가져오기
   // const { data } = useGetEventDetail(BigInt(id));
 
-  // useEffect(() => {
-  //   if (!id || !event) return;
-  //   const firstSentence =
-  //     event.content.match(/[^.!?]+[.!?]/)?.[0] ?? event.content;
-  //   document
-  //     .querySelector('meta[property="og:title"]')
-  //     ?.setAttribute('content', event.title);
-  //   document
-  //     .querySelector('meta[property="og:description"]')
-  //     ?.setAttribute('content', firstSentence);
-  //   document
-  //     .querySelector('meta[property="og:image"]')
-  //     ?.setAttribute('content', event.eventImages[0]?.imageUrl ?? '');
-  //   document
-  //     .querySelector('meta[property="og:url"]')
-  //     ?.setAttribute('content', window.location.href);
-  //   document.title = event.title;
-  // }, [id, event]);
+  // 스크랩 토글
+  // const [isScraped, setIsScraped] = useState(data.isScrapped);
+  const [isScrapped, setIsScrapped] = useState(false);
+  const { toggleScrap } = useToggleScrapEvent();
+
+  useEffect(() => {
+    if (!id || !event) return;
+    // const firstSentence =
+    //   event.content.match(/[^.!?]+[.!?]/)?.[0] ?? event.content;
+    document
+      .querySelector('meta[property="og:title"]')
+      ?.setAttribute('content', event.title);
+    // document
+    //   .querySelector('meta[property="og:description"]')
+    //   ?.setAttribute('content', firstSentence);
+    document
+      .querySelector('meta[property="og:image"]')
+      ?.setAttribute('content', event.eventImages[0]?.imageUrl ?? '');
+    document
+      .querySelector('meta[property="og:url"]')
+      ?.setAttribute('content', window.location.href);
+    document.title = event.title;
+  }, [id, event]);
 
   if (!id || !event) {
     return null;
@@ -94,19 +97,15 @@ const EventDetailPage = () => {
   };
 
   const handleToggleHeart = async (eventId: bigint) => {
-    if (!isScrapEventPending && !isDeleteScrapPending) {
-      if (isScraped) {
-        // 스크랩이 되어있다면 삭제
-        await deleteScrap(eventId);
-        setIsScraped(false);
-      } else {
-        // 스크랩이 되어있지 않다면 추가
-        await scrapEvent(eventId);
-        setIsScraped(true);
-      }
+    setIsScrapped((prev) => !prev); // UI 반영
+
+    try {
+      await toggleScrap({ eventId, isScrapped });
+    } catch (e) {
+      console.error('이벤트 스크랩 토글 중 에러 발생:', e);
+      setIsScrapped((prev) => !prev); // 실패 시 상태 복구
     }
   };
-
   const handleMoveSiteClick = async () => {
     window.open(eventUrl, '_blank'); // 새 탭에서 열기
   };
@@ -174,7 +173,7 @@ const EventDetailPage = () => {
 
       <S.BottomContainer>
         <ToggleHeart
-          isActive={isScraped}
+          isActive={isScrapped}
           onClick={() => handleToggleHeart(eventId)}
           size={24}
           borderColor={'theme.color.gray[500]'}

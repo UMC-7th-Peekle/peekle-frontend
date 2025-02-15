@@ -234,19 +234,21 @@ export const EventSchema = z.object({
 // 쿼리 키 타입
 export type EventsQkType = [
   typeof GET_EVENTS_QK,
-  number, // limit
-  number | undefined, // cursor
-  CategoryOptionWithoutAll[] | undefined,
-  LocationOptionWithoutAll[] | undefined,
-  PriceOption,
-  string | undefined, // startDate
-  string | undefined, // endDate
-  string | undefined, // query
+  {
+    limit: number; // limit
+    cursor?: number; // cursor
+    categories?: CategoryOptionWithoutAll[];
+    locations?: LocationOptionWithoutAll[];
+    price: PriceOption;
+    startDate?: string; // startDate
+    endDate?: string; // endDate
+    query?: string; // query
+  },
 ];
 
 // 훅 파람
 export interface getEventsParams {
-  limit: number;
+  limit?: number;
   cursor?: number;
   categories?: CategoryOptionWithoutAll[];
   locations?: LocationOptionWithoutAll[];
@@ -347,39 +349,22 @@ export type EventsScrappedResponse = z.infer<
   typeof EventsScrappedResponseSchema
 >;
 
-// ✅ 이벤트 스크랩
-export const ScrapResponseSchema = ApiResponseSchema(
+// ✅ 이벤트 스크랩, 취소
+export const ToggleScrapEventResponseSchema = ApiResponseSchema(
   z.object({
     message: z.string(),
   }),
 );
 
-export type ScrapResponse = z.infer<typeof DeleteScrapResponseSchema>;
+export type ToggleScrapEventResponse = z.infer<
+  typeof ToggleScrapEventResponseSchema
+>;
 
-// ✅ 이벤트 스크랩 취소
-export const DeleteScrapResponseSchema = ApiResponseSchema(
-  z.object({
-    message: z.string(),
-  }),
-);
+export interface ToggleScrapEventParams {
+  eventId: bigint;
+  isScrapped: boolean;
+}
 
-export type DeleteScrapResponse = z.infer<typeof DeleteScrapResponseSchema>;
-
-// 네이버 지도
-// 클러스터링
-type Icon = {
-  content: string;
-  anchor: naver.maps.Point;
-};
-export interface MarkerClusteringOptions {
-  map: naver.maps.Map | null;
-  markers: naver.maps.Marker[];
-  disableClickZoom: boolean;
-  minClusterSize: number;
-  maxZoom: number;
-  gridSize: number;
-  icons: Icon[];
-  indexGenerator: number[];
-  averageCenter: boolean;
-  stylingFunction: (clusterMarker: naver.maps.Marker, count: number) => void;
+export interface ToggleScrapEventContext {
+  prevData: ToggleScrapEventResponse;
 }
