@@ -1,11 +1,7 @@
-import {
-  // useCallback,
-  // useEffect,
-  useMemo,
-} from 'react';
+import { useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
-
-// import { useMyLocationStore } from '@/stores';
+import { events } from '@/sample-data/event';
+import { useMyLocationStore } from '@/stores';
 import {
   UseEventFilterProps,
   EventFilterKeys,
@@ -17,13 +13,13 @@ import {
   CATEGORY_IDS_WITHOUT_ALL,
   LOCATION_GROUP_IDS_WITHOUT_ALL,
 } from '@/constants/event';
-// import { calculateDistance } from '@/utils';
+import { calculateDistance } from '@/utils';
 
 const useEventFilter = ({
   key = '정렬',
   type = 'single',
 }: UseEventFilterProps = {}) => {
-  // const { myLocation } = useMyLocationStore();
+  const { myLocation } = useMyLocationStore();
   const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get('event-search');
 
@@ -74,63 +70,62 @@ const useEventFilter = ({
     query,
   };
 
-  // const sortedEvents = useMemo(() => {
-  //   console.log('filteredEvents', filteredEvents);
-  //   return [...filteredEvents].sort((a, b) => {
-  //     const eventScheduleA = a.eventSchedules[0];
-  //     const eventScheduleB = b.eventSchedules[0];
+  const sortedEvents = useMemo(() => {
+    return [...events].sort((a, b) => {
+      const eventScheduleA = a.eventSchedules[0];
+      const eventScheduleB = b.eventSchedules[0];
 
-  //     if (filters.정렬 === '가까운 날짜순') {
-  //       const startDateDiff =
-  //         new Date(eventScheduleA.startDate).getTime() -
-  //         new Date(eventScheduleB.startDate).getTime();
-  //       if (startDateDiff !== 0) return startDateDiff;
-  //       const endDateDiff =
-  //         new Date(eventScheduleA.endDate).getTime() -
-  //         new Date(eventScheduleB.endDate).getTime();
-  //       if (endDateDiff !== 0) return endDateDiff;
-  //       return a.title.localeCompare(b.title, 'ko');
-  //     }
+      if (filters.정렬 === '가까운 날짜순') {
+        const startDateDiff =
+          new Date(eventScheduleA.startDate).getTime() -
+          new Date(eventScheduleB.startDate).getTime();
+        if (startDateDiff !== 0) return startDateDiff;
+        const endDateDiff =
+          new Date(eventScheduleA.endDate).getTime() -
+          new Date(eventScheduleB.endDate).getTime();
+        if (endDateDiff !== 0) return endDateDiff;
+        return a.title.localeCompare(b.title, 'ko');
+      }
 
-  //     if (filters.정렬 === '낮은 금액순') {
-  //       const priceDiff = Number(a.price) - Number(b.price);
-  //       if (priceDiff !== 0) return priceDiff;
-  //       const startDateDiff =
-  //         new Date(eventScheduleA.startDate).getTime() -
-  //         new Date(eventScheduleB.startDate).getTime();
-  //       if (startDateDiff !== 0) return startDateDiff;
-  //       return a.title.localeCompare(b.title, 'ko');
-  //     }
+      if (filters.정렬 === '낮은 금액순') {
+        const priceDiff = Number(a.price) - Number(b.price);
+        if (priceDiff !== 0) return priceDiff;
+        const startDateDiff =
+          new Date(eventScheduleA.startDate).getTime() -
+          new Date(eventScheduleB.startDate).getTime();
+        if (startDateDiff !== 0) return startDateDiff;
+        return a.title.localeCompare(b.title, 'ko');
+      }
 
-  //     if (filters.정렬 === '가까운 거리순' && myLocation) {
-  //       const distanceA = calculateDistance(
-  //         myLocation.y,
-  //         myLocation.x,
-  //         a.eventLocation.coordinates[0],
-  //         a.eventLocation.coordinates[1],
-  //       );
-  //       const distanceB = calculateDistance(
-  //         myLocation.y,
-  //         myLocation.x,
-  //         b.eventLocation.coordinates[0],
-  //         b.eventLocation.coordinates[1],
-  //       );
-  //       const distanceDiff = distanceA - distanceB;
-  //       if (distanceDiff !== 0) return distanceDiff;
-  //       const startDateDiff =
-  //         new Date(eventScheduleA.startDate).getTime() -
-  //         new Date(eventScheduleB.startDate).getTime();
-  //       if (startDateDiff !== 0) return startDateDiff;
-  //       const endDateDiff =
-  //         new Date(eventScheduleA.endDate).getTime() -
-  //         new Date(eventScheduleB.endDate).getTime();
-  //       if (endDateDiff !== 0) return endDateDiff;
-  //       return a.title.localeCompare(b.title, 'ko');
-  //     }
+      if (filters.정렬 === '가까운 거리순' && myLocation) {
+        const distanceA = calculateDistance(
+          myLocation.y,
+          myLocation.x,
+          a.eventLocation.coordinates[0],
+          a.eventLocation.coordinates[1],
+        );
+        const distanceB = calculateDistance(
+          myLocation.y,
+          myLocation.x,
+          b.eventLocation.coordinates[0],
+          b.eventLocation.coordinates[1],
+        );
+        const distanceDiff = distanceA - distanceB;
+        if (distanceDiff !== 0) return distanceDiff;
+        const startDateDiff =
+          new Date(eventScheduleA.startDate).getTime() -
+          new Date(eventScheduleB.startDate).getTime();
+        if (startDateDiff !== 0) return startDateDiff;
+        const endDateDiff =
+          new Date(eventScheduleA.endDate).getTime() -
+          new Date(eventScheduleB.endDate).getTime();
+        if (endDateDiff !== 0) return endDateDiff;
+        return a.title.localeCompare(b.title, 'ko');
+      }
 
-  //     return 0;
-  //   });
-  // }, [filters.정렬, myLocation, data]);
+      return 0;
+    });
+  }, [filters.정렬, myLocation]);
 
   // 필터값 변경
   const handleSelect = (newValue: string) => {
@@ -233,7 +228,7 @@ const useEventFilter = ({
     storedValue: filters[key as EventFilterKeys],
     handleSelect,
     formattedFilters,
-    // sortedEvents,
+    sortedEvents,
     isSelected,
     clearFilter,
     activeFilterCount,

@@ -68,6 +68,10 @@ const ImageSlider = ({ images, title = 'event' }: ImageSliderProps) => {
     [images],
   );
   const imagesLength = sortedImages.length;
+  // 이미지 로드 에러 배열
+  const [imageErrors, setImageErrors] = useState<boolean[]>(
+    Array(imagesLength).fill(false),
+  );
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction] = useState(0);
@@ -102,10 +106,17 @@ const ImageSlider = ({ images, title = 'event' }: ImageSliderProps) => {
           }}
           transition={{ duration: 0.2 }}
         >
-          {sortedImages[currentIndex] ? (
+          {sortedImages[currentIndex] && !imageErrors[currentIndex] ? (
             <S.Image
               src={sortedImages[currentIndex].imageUrl}
               alt={`${title}-img-${currentIndex}`}
+              onError={() => {
+                setImageErrors((prev) => {
+                  const newErrors = [...prev];
+                  newErrors[currentIndex] = true;
+                  return newErrors;
+                });
+              }}
             />
           ) : (
             <S.DefaultImageIcon />

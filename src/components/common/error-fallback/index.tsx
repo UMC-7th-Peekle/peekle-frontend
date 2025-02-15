@@ -4,7 +4,7 @@ import { isNetworkError, isServerError, toast } from '@/utils';
 import { Button, Backward } from '@/components';
 
 const ErrorFallback = ({ error: propsError }: { error?: Error }) => {
-  const routeError = useRouteError();
+  const routeError = useRouteError(); // 라우터 내부에서만 동작
   const error = propsError ?? routeError;
 
   console.error('[에러 발생]:', error);

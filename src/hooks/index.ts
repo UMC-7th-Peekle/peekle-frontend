@@ -1,5 +1,6 @@
 export { default as useRecentSearch } from './common/useRecentSearch';
 export { default as useId } from './common/useId';
+export { default as useInfiniteScroll } from './common/useInfiniteScroll';
 export { default as useHandleError } from './useHandleError';
 // event
 export { default as useEventFilter } from './event/useEventFilter';

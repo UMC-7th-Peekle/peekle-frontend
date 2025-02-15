@@ -1,4 +1,5 @@
 import { InfiniteData, useSuspenseInfiniteQuery } from '@tanstack/react-query';
+import { useEffect } from 'react';
 import { client } from '@/apis/client';
 import {
   getEventsParams,
@@ -6,6 +7,7 @@ import {
   EventsResponse,
   EventsQkType,
 } from '@/types/event';
+import { useEventsStore } from '@/stores';
 
 // api 호출 함수
 const getEvents = async ({
@@ -33,6 +35,17 @@ const getEvents = async ({
     },
   });
 
+  // console.log({
+  //   limit,
+  //   cursor,
+  //   category: categories,
+  //   location: locations,
+  //   price,
+  //   startDate,
+  //   endDate,
+  //   query,
+  // });
+
   // 응답 데이터 검증
   // const parsedData = EventsResponseSchema.parse(response.data);
   // return parsedData;
@@ -41,7 +54,7 @@ const getEvents = async ({
 };
 
 const useGetEvents = ({
-  limit = 5,
+  limit = 10,
   cursor,
   categories,
   locations,
@@ -50,7 +63,9 @@ const useGetEvents = ({
   endDate,
   query,
 }: getEventsParams) => {
-  const { data, fetchNextPage, hasNextPage, isFetching } =
+  const { setEvents } = useEventsStore();
+
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useSuspenseInfiniteQuery<
       EventsResponse,
       Error,
@@ -88,7 +103,13 @@ const useGetEvents = ({
       },
     });
 
-  return { data, fetchNextPage, hasNextPage, isFetching };
+  // events가 변경될 때만 상태 업데이트
+  useEffect(() => {
+    const events = data.pages.flatMap((page) => page.success?.events ?? []);
+    setEvents(events);
+  }, [data, setEvents]);
+
+  return { data, fetchNextPage, hasNextPage, isFetchingNextPage };
 };
 
 export default useGetEvents;

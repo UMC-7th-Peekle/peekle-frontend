@@ -11,7 +11,7 @@ import {
   GET_EVENT_DETAIL_QK,
   GET_EVENTS_SCRAPPED_QK,
 } from '@/constants/event';
-import { getDistrict } from '@/utils/eventFormatter';
+import priceFormatter from '@/utils/priceFormatter';
 
 // CheckItem
 export interface CheckItemProps {
@@ -55,10 +55,10 @@ export type EventFilterKeys = '정렬' | '카테고리' | '기간' | '가격' | 
 // 캘린더
 export type DateRange = [Date | null, Date | null];
 
-// filteredEvent
-export interface FilteredEventStore {
-  filteredEvent: EventData[];
-  setFilteredEvent: (event: EventData[]) => void;
+// Events
+export interface EventStore {
+  events: EventData[];
+  setEvents: (event: EventData[]) => void;
 }
 
 // event-card
@@ -223,7 +223,7 @@ const EventLocationSchema = z.object({
 export const EventSchema = z.object({
   eventId: z.bigint(),
   title: z.string(),
-  price: z.number(),
+  price: z.number().transform(priceFormatter),
   categoryId: CategoryIdSchema,
   category: CategorySchema,
   createdUserId: z.bigint().nullable(),
@@ -265,7 +265,11 @@ export type EventSchedule = z.infer<typeof EventSchedulesSchema>;
 export type EventData = z.infer<typeof EventSchema>;
 
 const SuccessEventsReponeseSchema = z.object({
-  events: z.array(EventSchema),
+  events: z.array(
+    EventSchema.extend({
+      price: z.string(),
+    }),
+  ),
   nextCursor: z.number().optional().nullable(),
   hasNextPage: z.boolean(),
 });
@@ -281,37 +285,46 @@ export const EventDetailSchema = z.object({
   eventId: z.bigint(),
   title: z.string(),
   content: z.string(),
-  price: z.number(),
-  location: z.string().transform(getDistrict),
+  price: z.number().transform(priceFormatter),
   locationGroupId: locationGroupIdSchema,
   eventUrl: z.string().url(),
   applicationStart: z.string().datetime(),
   applicationEnd: z.string().datetime(),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
-  placeName: z.string(),
-  datailAddress: z.string(),
+  category: CategorySchema,
+  eventLocation: EventLocationSchema,
   eventImages: z.array(EventImagesSchema),
   eventSchedules: z.array(EventSchedulesSchema),
 });
 
 // 데이터 타입 추출
 export type EventDetailData = z.infer<typeof EventDetailSchema>;
-
-const SuccessEventDetailReponeseSchema = z.object({
-  events: z.array(EventSchema),
-  nextCursor: z.number().optional().nullable(),
-  hasNextPage: z.boolean(),
-});
-
 export const EventDetailResponseSchema = ApiResponseSchema(
-  SuccessEventDetailReponeseSchema,
+  z.object({
+    event: EventDetailSchema.extend({
+      price: z.string(),
+    }),
+  }),
 );
+
+export interface FormattedEventDetail {
+  eventId: bigint;
+  eventImages: EventImages[];
+  eventSchedules: EventSchedule[];
+  // detailAddress: string;
+  // buildingName: string;
+  eventUrl: string;
+  categoryName: string;
+  title: string;
+  content: string;
+  price: string;
+}
 
 // 쿼리 키 타입
 export type EventDetailQkType = [
   typeof GET_EVENT_DETAIL_QK,
-  bigint, // eventId
+  string, // eventId - queryKey는 내부적으로 직렬화되니까
 ];
 
 export type EventDetailResponse = z.infer<typeof EventDetailResponseSchema>;
@@ -319,12 +332,20 @@ export type EventDetailResponse = z.infer<typeof EventDetailResponseSchema>;
 // ✅ 이벤트 스크랩 조회
 export const GetEventsScrappedResponseSchema = ApiResponseSchema(
   z.object({
-    events: z.array(EventSchema),
+    events: z.array(
+      EventSchema.extend({
+        price: z.string(),
+      }),
+    ),
   }),
 );
 
 const SuccessEventsScrappedReponeseSchema = z.object({
-  events: z.array(EventSchema),
+  events: z.array(
+    EventSchema.extend({
+      price: z.string(),
+    }),
+  ),
   nextCursor: z.number().optional().nullable(),
   hasNextPage: z.boolean(),
 });

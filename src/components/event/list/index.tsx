@@ -1,5 +1,4 @@
 import * as S from './style';
-import { useCallback, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   EventCard,
@@ -7,7 +6,7 @@ import {
   Filter,
   RoundedButton,
 } from '@/components';
-import { useEventFilter, useGetEvents } from '@/hooks';
+import { useEventFilter, useGetEvents, useInfiniteScroll } from '@/hooks';
 import { EventData } from '@/types/event';
 import { ROUTES } from '@/constants/routes';
 import { useMapStore } from '@/stores';
@@ -23,40 +22,20 @@ export const EventList = ({
   const searchQuery = searchParams.get('event-search') ?? '';
   const { setSelectedEvent } = useMapStore();
 
-  const { data, fetchNextPage, hasNextPage, isFetching } = useGetEvents({
-    ...formattedFilters,
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useGetEvents(
+    {
+      ...formattedFilters,
+    },
+  );
+
+  const { lastElementRef } = useInfiniteScroll({
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
   });
-
-  // 스크롤 이벤트 핸들러
-  const handleScroll = useCallback(() => {
-    if (
-      document.documentElement.clientWidth +
-        document.documentElement.scrollTop >=
-      document.documentElement.offsetHeight - 100
-    ) {
-      if (hasNextPage && !isFetching) {
-        fetchNextPage();
-      }
-    }
-  }, [hasNextPage, isFetching, fetchNextPage]);
-
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [hasNextPage, isFetching, handleScroll]);
-
-  useEffect(() => {
-    if (isFetching) {
-      fetchNextPage();
-    }
-  }, [isFetching, fetchNextPage]);
 
   const events = data.pages.flatMap((page) => page.success?.events ?? []) ?? [];
 
-  console.log('events', events);
-  console.log('events.length > 0 ', events.length > 0);
   const isSearchPage = page === 'search';
   const isScrapPage = page === 'scrap';
 
@@ -80,12 +59,13 @@ export const EventList = ({
       {events.length > 0 ? (
         <>
           <S.EventsContainer>
-            {events.map((event: EventData) => (
+            {events.map((event: EventData, index, events) => (
               <EventCard
                 key={event.eventId}
                 id={event.eventId}
                 eventData={event}
                 onClick={handleCardClick}
+                ref={index === events.length - 1 ? lastElementRef : null}
               />
             ))}
           </S.EventsContainer>
@@ -119,7 +99,7 @@ export const EventListSkeleton = () => {
   return (
     <section>
       <S.EventsContainer>
-        {Array.from({ length: 5 }).map((_, index) => (
+        {Array.from({ length: 10 }).map((_, index) => (
           <EventCardSkeleton key={index} />
         ))}
       </S.EventsContainer>

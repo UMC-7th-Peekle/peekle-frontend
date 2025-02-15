@@ -92,6 +92,7 @@ const EventMap = ({ onMapLoad }: { onMapLoad: () => void }) => {
       latestPos,
       updateLatestPos,
       hasMyLocationChanged,
+      resetMyLocationChanged,
       isMapInitialed,
     ],
   );
@@ -269,7 +270,7 @@ const EventMap = ({ onMapLoad }: { onMapLoad: () => void }) => {
             transition={{ type: 'spring', stiffness: 300, damping: 20 }}
           >
             <S.EventCardWrapper>
-              <EventCard id={selectedEvent.eventId} />
+              <EventCard id={selectedEvent.eventId} eventData={selectedEvent} />
             </S.EventCardWrapper>
           </motion.div>
         )}

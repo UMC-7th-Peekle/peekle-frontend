@@ -8,5 +8,7 @@ export { default as useToastStore } from './common/useToastStore';
 export { useNavbarStore } from './layout/useNavbarStore';
 
 // event
+export { default as useEventsStore } from './event/useEventsStore';
+export { default as useFilterTabsStore } from './event/useFilterTabsStore';
 export { default as useMyLocationStore } from './event/useMyLocationStore';
 export { default as useMapStore } from './event/useMapStore';

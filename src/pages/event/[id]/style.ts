@@ -24,8 +24,7 @@ export const ShareBtn = styled(ShareSVG)`
 `;
 
 export const SkeletonContainer = styled.div`
-  position: fixed;
-  top: 48px; // 헤더 부분
+  width: 100%;
 `;
 
 export const MainSection = styled.section`

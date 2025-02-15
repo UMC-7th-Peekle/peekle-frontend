@@ -1,99 +1,94 @@
 import * as S from './style';
 import { useEffect, useState } from 'react';
+import Skeleton from 'react-loading-skeleton';
 import {
-  ToggleHeart,
   BottomSheet,
+  MetaTag,
+  ToggleHeart,
   ImageSlider,
   Backward,
   Button,
-  MetaTag,
 } from '@/components';
-import { BOTTOM_SHEET_ID_EVENT_SHARE } from '@/constants/event';
+import {
+  useId,
+  useGetEventDetail,
+  useShareKakao,
+  useToggleScrapEvent,
+} from '@/hooks';
 import {
   copyToClipboard,
   getStartDateTime,
   formatSchedules,
+  getSubstring,
   toast,
-  priceFormatter,
 } from '@/utils';
+import { BOTTOM_SHEET_ID_EVENT_SHARE } from '@/constants/event';
 import { useBottomSheetStore } from '@/stores';
-import {
-  useId,
-  // useGetEventDetail,
-  useToggleScrapEvent,
-  useShareKakao,
-} from '@/hooks';
-import { events } from '@/sample-data/event';
-import { EventSchedule } from '@/types/event';
-import { getCategoryName } from '@/utils/eventFormatter';
-// import getSubstring from '@/utils/getSubstring';
 
-const EventDetailPage = () => {
+export const EventDetailPage = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const { setActiveBottomSheet } = useBottomSheetStore();
   const { handleShareKakao } = useShareKakao();
-
-  //디테일 가져오기
-  const id = useId(); //url에서 뽑은 id
-  const event = events.find((event) => String(event.eventId) === id);
-  // const { data } = useGetEventDetail(BigInt(id));
 
   // 스크랩 토글
   // const [isScraped, setIsScraped] = useState(data.isScrapped);
   const [isScrapped, setIsScrapped] = useState(false);
   const { toggleScrap } = useToggleScrapEvent();
 
-  const thumbnailImg = event?.eventImages?.[0]?.imageUrl;
+  //디테일 가져오기
+  const id = useId(); //url에서 뽑은 id
+  const { data } = useGetEventDetail(BigInt(id));
+  const eventDetail = data.success?.event;
+
+  const thumbnailImg = eventDetail?.eventImages?.[0]?.imageUrl;
 
   useEffect(() => {
-    if (!id || !event) return;
-    // const firstSentence = getSubstring(event.content);
+    if (!id || !eventDetail) return;
+    const firstSentence = getSubstring(eventDetail.content);
     document
       .querySelector('meta[property="og:title"]')
-      ?.setAttribute('content', event.title);
-    // document
-    //   .querySelector('meta[property="og:description"]')
-    //   ?.setAttribute('content', firstSentence);
+      ?.setAttribute('content', eventDetail.title);
+    document
+      .querySelector('meta[property="og:description"]')
+      ?.setAttribute('content', firstSentence);
     document
       .querySelector('meta[property="og:image"]')
-      ?.setAttribute('content', thumbnailImg ?? '');
+      ?.setAttribute(
+        'content',
+        thumbnailImg ?? import.meta.env.VITE_BASE_IMAGE,
+      );
     document
       .querySelector('meta[property="og:url"]')
       ?.setAttribute('content', window.location.href);
-    document.title = event.title;
-  }, [id, event, thumbnailImg]);
+    document.title = eventDetail.title;
+  }, [id, thumbnailImg, eventDetail]);
 
-  if (!id || !event) {
+  if (!id || !eventDetail) {
     return null;
   }
 
   const {
     eventId,
     eventImages,
+    content,
     title,
     eventSchedules,
-    eventLocation: { detail: detailAddress, buildingName },
-    categoryId,
+    // eventLocation: { detail: detailAddress, buildingName },
+    category: { name: categoryName },
     price,
-  } = event;
+    eventUrl,
+  } = eventDetail;
 
-  const eventUrl =
-    'https://github.com/UMC-7th-Peekle/peekle-frontend/issues/85';
-  const content = `참여자 특전\n\n① 2025년 동작50플러스센터 프리스티지 커뮤니티(오픈단톡방) 초대\n② 관련 프로그램(교육훈련, 일자리) 우선 안내 및 우선 신청 기회부여\n③ 일자리 참여시 가산점 부여(서류 면제 등)\n④ 각종 이벤트 쿠폰 지급(카페, 강의 할인)\n\n※ 강좌수료 시 수료자에게 오픈 단톡방 안내링크 발송\n※ 우선신청기회는 오픈단톡방 통해 별도 안내\n※ 일자리참여 가산점 부여는 일관련 교육 및 공공일자리 등 공통.`;
+  // 데이터 포맷팅
+  const startDateTime = getStartDateTime(eventSchedules[0]);
+  const time = formatSchedules(eventSchedules[0]);
 
-  const startDateTime = getStartDateTime(eventSchedules[0] as EventSchedule);
-  const time = formatSchedules(eventSchedules[0] as EventSchedule);
-
-  const handleCopyLink = () => {
-    copyToClipboard(window.location.href);
-    toast('링크가 복사되었습니다.');
-  };
+  const detailAddress = '임시 주소';
+  const buildingName = '임시 건물명';
 
   const handleCopyAddress = () => {
-    if (detailAddress) {
-      copyToClipboard(detailAddress);
-      toast('주소가 복사되었습니다.');
-    } else console.log('주소가 null임');
+    copyToClipboard(detailAddress);
+    toast('주소가 복사되었습니다.');
   };
 
   const handleToggleHeart = async (eventId: bigint) => {
@@ -106,8 +101,14 @@ const EventDetailPage = () => {
       setIsScrapped((prev) => !prev); // 실패 시 상태 복구
     }
   };
+
   const handleMoveSiteClick = async () => {
     window.open(eventUrl, '_blank'); // 새 탭에서 열기
+  };
+
+  const handleCopyLink = () => {
+    copyToClipboard(window.location.href);
+    toast('링크가 복사되었습니다.');
   };
 
   return (
@@ -129,7 +130,7 @@ const EventDetailPage = () => {
       <S.MainSection>
         <ImageSlider images={eventImages} title={title} />
         <S.InfoContainer>
-          <S.Category>{getCategoryName(categoryId)}</S.Category>
+          <S.Category>{categoryName}</S.Category>
           <S.Title className="event-title">{title}</S.Title>
           <S.Line />
           <S.Info>
@@ -159,7 +160,7 @@ const EventDetailPage = () => {
             </S.InfoRow>
             <S.InfoRow>
               <S.CoinIcon />
-              <S.InfoRowText>{priceFormatter(price)}</S.InfoRowText>
+              <S.InfoRowText>{price}</S.InfoRowText>
             </S.InfoRow>
           </S.Info>
         </S.InfoContainer>
@@ -185,7 +186,7 @@ const EventDetailPage = () => {
         ) : null}
       </S.BottomContainer>
 
-      <BottomSheet id={BOTTOM_SHEET_ID_EVENT_SHARE} shouldShowLine={true}>
+      <BottomSheet id={BOTTOM_SHEET_ID_EVENT_SHARE}>
         <S.ShareContainer>
           <S.ShareTitle>공유하기</S.ShareTitle>
           <S.ShareOptions>
@@ -205,4 +206,55 @@ const EventDetailPage = () => {
   );
 };
 
-export default EventDetailPage;
+export const EventDetailPageskeleton = () => {
+  return (
+    <S.SkeletonContainer>
+      <S.Header>
+        <Skeleton width="28px" height="28px" />
+        <Skeleton width="28px" height="28px" />
+      </S.Header>
+
+      <S.MainSection>
+        <div style={{ width: '100%' }}>
+          <Skeleton width="100%" height="270px" />
+        </div>
+        <S.InfoContainer>
+          <Skeleton
+            width="30px"
+            height="23px"
+            style={{ borderRadius: '4px' }}
+          />
+          <Skeleton
+            width="267px"
+            height="32px"
+            style={{ borderRadius: '4px' }}
+          />
+          <S.Line />
+          <S.Info>
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div style={{ width: '100%' }} key={i}>
+                <Skeleton width="100%" height="24px" />
+              </div>
+            ))}
+          </S.Info>
+        </S.InfoContainer>
+      </S.MainSection>
+
+      <S.Separator />
+
+      <S.ContentContainer>
+        <Skeleton width="72px" height="32px" />
+        <div style={{ width: '100%' }}>
+          <Skeleton width="100%" height="100px" />
+        </div>
+      </S.ContentContainer>
+
+      <S.BottomContainer>
+        <Skeleton width="24px" height="24px" />
+        <div style={{ width: '100%' }}>
+          <Skeleton width="100%" height="56px" />
+        </div>
+      </S.BottomContainer>
+    </S.SkeletonContainer>
+  );
+};

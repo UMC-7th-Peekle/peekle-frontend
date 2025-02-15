@@ -1,6 +1,6 @@
 import * as S from './style';
 import { FilterTabsProps } from '@/types/event';
-import useFilterTabsStore from '@/stores/event/useFilterTabsStore';
+import { useFilterTabsStore } from '@/stores';
 import List from './components/List';
 import Trigger from './components/Trigger';
 import Panel from './components/Panel';

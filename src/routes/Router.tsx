@@ -1,4 +1,5 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { Suspense } from 'react';
 import Layout from '@/layouts/outlet';
 import {
   EventPage,
@@ -6,11 +7,15 @@ import {
   EventSearchPage,
   EventScrapPage,
   EventDetailPage,
-  NotFoundPage,
+  EventDetailPageskeleton,
   CommunityEditPage,
   CommunityDetailPage,
   OnboardingPage,
   GenderSelectionPage,
+  CommunityLikePage,
+  CommunityPage,
+  CommunitySearchPage,
+  NotFoundPage,
 } from '@/pages';
 import UserPage from '@/pages/user/page';
 import PhoneNumberPage from '@/pages/auth/phone-number';
@@ -25,12 +30,11 @@ import EditPage from '@/pages/user/edit';
 import NoticePage from '@/pages/user/notice';
 import TouPage from '@/pages/user/tou';
 import ManagePage from '@/pages/user/manage';
-import { ROUTES } from '@/constants/routes';
-import { CommunityLikePage, CommunityPage, CommunitySearchPage } from '@/pages';
-import { ErrorFallback } from '@/components';
 import ResignPage from '@/pages/user/resign';
 import TossPage from '@/pages/auth/toss';
 import RequestPage from '@/pages/user/request';
+import { ErrorFallback } from '@/components';
+import { ROUTES } from '@/constants/routes';
 
 const ProtectedPage = ({ children }: { children: React.ReactNode }) => {
   return children;
@@ -108,7 +112,11 @@ const router = createBrowserRouter([
       },
       {
         path: ROUTES.EVENT_DETAIL,
-        element: <EventDetailPage />,
+        element: (
+          <Suspense fallback={<EventDetailPageskeleton />}>
+            <EventDetailPage />
+          </Suspense>
+        ),
       },
       {
         path: ROUTES.COMMUNITY,

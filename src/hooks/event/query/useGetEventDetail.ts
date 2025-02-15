@@ -11,7 +11,7 @@ import { GET_EVENT_DETAIL_QK } from '@/constants/event';
 const getEvents = async (eventId: bigint): Promise<EventDetailResponse> => {
   const response = await client<EventDetailResponse>({
     method: 'GET',
-    url: `/events/${eventId}`,
+    url: `/events/${eventId.toString()}`,
   });
 
   // 응답 데이터 검증
@@ -20,18 +20,18 @@ const getEvents = async (eventId: bigint): Promise<EventDetailResponse> => {
   return response.data;
 };
 
-const useGetEvents = (eventId: bigint) => {
+const useGetEventDetail = (eventId: bigint) => {
   const { data } = useSuspenseQuery<
     EventDetailResponse,
     Error,
     EventDetailResponse,
     EventDetailQkType
   >({
-    queryKey: [GET_EVENT_DETAIL_QK, eventId],
+    queryKey: [GET_EVENT_DETAIL_QK, eventId.toString()],
     queryFn: () => getEvents(eventId),
   });
 
   return { data };
 };
 
-export default useGetEvents;
+export default useGetEventDetail;
