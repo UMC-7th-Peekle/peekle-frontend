@@ -23,7 +23,7 @@ export const formatSchedules = (schedule: EventSchedule) => {
 
   const repeatText =
     {
-      none: '',
+      none: `${customText} `,
       daily: '매일 ',
       weekly: '매주 ',
       monthly: '매달 ',

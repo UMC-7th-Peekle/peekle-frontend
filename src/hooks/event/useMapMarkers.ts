@@ -12,7 +12,7 @@ const useMapMarkers = (
   const whiteSBMarkersRef = useRef<Map<bigint, naver.maps.Marker>>(new Map());
   const blackSBMarkerRef = useRef<Map<bigint, naver.maps.Marker>>(new Map());
   const { selectedEvent, setSelectedEvent, setLatestPos } = useMapStore();
-  const { myLocation, hasMyLocationChanged } = useMyLocationStore();
+  const { hasMyLocationChanged } = useMyLocationStore();
 
   // 검정 마커 생성 함수
   const createBlackMarker = useCallback(
@@ -78,8 +78,8 @@ const useMapMarkers = (
 
       setSelectedEvent(mapEvent);
       const position = new naver.maps.LatLng(
-        mapEvent.latitude,
-        mapEvent.longitude,
+        mapEvent.eventLocation.coordinates[0],
+        mapEvent.eventLocation.coordinates[1],
       );
       setLatestPos(position);
 
@@ -150,7 +150,10 @@ const useMapMarkers = (
 
       // 새로운 마커 생성
       events.forEach((event) => {
-        const position = new naver.maps.LatLng(event.latitude, event.longitude);
+        const position = new naver.maps.LatLng(
+          event.eventLocation.coordinates[0],
+          event.eventLocation.coordinates[1],
+        );
         let marker = markersRef.current.get(event.eventId);
         if (!marker) {
           // 마커가 없으면 새로 생성
@@ -213,8 +216,8 @@ const useMapMarkers = (
           if (!blackSBMarkerRef.current.get(selectedEvent.eventId)) {
             createBlackMarker(
               new naver.maps.LatLng(
-                selectedEvent.latitude,
-                selectedEvent.longitude,
+                selectedEvent.eventLocation.coordinates[0],
+                selectedEvent.eventLocation.coordinates[1],
               ),
               selectedEvent,
             );
@@ -226,7 +229,7 @@ const useMapMarkers = (
     [
       markersRef,
       selectedEvent,
-      myLocation,
+      hasMyLocationChanged,
       mapInstance,
       events,
       createBlackMarker,
@@ -279,21 +282,19 @@ const useMapMarkers = (
           hasMarkerInMapBounds = true;
       }
     });
-    console.log(hasMarkerInMapBounds);
     // 모든 마커가 화면 밖에 있으면 가장 첫번째 요소로 lastestPos 변경
     if (!hasMarkerInMapBounds) {
       const fitEvent = events[0];
       if (fitEvent) {
         const fitEventPos = new naver.maps.LatLng(
-          fitEvent.latitude,
-          fitEvent.longitude,
+          fitEvent.eventLocation.coordinates[0],
+          fitEvent.eventLocation.coordinates[1],
         );
-        console.log('fitEvent', fitEvent.categoryId);
         mapInstance.setCenter(fitEventPos);
         setLatestPos(fitEventPos);
       }
     }
-  }, [mapInstance, setLatestPos, events, hasMyLocationChanged]);
+  }, [mapInstance, setLatestPos, events]);
 
   const removeBlackSBMarker = useCallback(() => {
     if (blackSBMarkerRef.current) {

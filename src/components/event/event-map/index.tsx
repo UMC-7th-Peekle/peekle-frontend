@@ -11,7 +11,9 @@ import {
 import { useMapStore, useMyLocationStore } from '@/stores';
 import { confirm, getCurrentPosition, debounce } from '@/utils';
 import { ROUTES } from '@/constants/routes';
-import { useEventFilter, useMapMarkers } from '@/hooks';
+import { useMapMarkers } from '@/hooks';
+import { events } from '@/sample-data/event';
+
 window.navermap_authFailure = function () {
   console.error('네이버 지도 인증 실패');
   throw new Error('네이버 지도 인증 실패');
@@ -39,9 +41,8 @@ const EventMap = ({ onMapLoad }: { onMapLoad: () => void }) => {
     hasMyLocationChanged,
     resetMyLocationChanged,
   } = useMyLocationStore();
-  const { sortedEvents } = useEventFilter();
   const { updateLatestPos, createMarkers, updateMarkers, removeBlackSBMarker } =
-    useMapMarkers(mapInstance, sortedEvents);
+    useMapMarkers(mapInstance, events);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -74,7 +75,6 @@ const EventMap = ({ onMapLoad }: { onMapLoad: () => void }) => {
         });
 
         setMapInstance(newMap);
-
         // 맵이 완전히 로드되었을 때 한 번
         naver.maps.Event.once(newMap, 'init', () => {
           onMapLoad();
