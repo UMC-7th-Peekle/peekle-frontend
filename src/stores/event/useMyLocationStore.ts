@@ -6,7 +6,7 @@ const useMyLocationStore = create<MyLocationStore>()(
   persist(
     (set) => ({
       myLocation: null,
-      hasMyLocationChanged: false,
+      hasMyLocationChanged: true,
       setMyLocation: (location) =>
         set((state) => ({
           myLocation: location,

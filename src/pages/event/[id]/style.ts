@@ -125,6 +125,13 @@ export const DetailAddressCopyText = styled.span`
   user-select: none;
 `;
 
+export const ViewMapText = styled.span`
+  color: ${theme.color.primary[500]};
+  margin-left: 10px;
+  cursor: pointer;
+  user-select: none;
+`;
+
 export const XIcon = styled(XSVG)`
   width: 18px;
   height: 18px;

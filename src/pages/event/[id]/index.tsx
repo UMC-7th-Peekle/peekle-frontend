@@ -1,5 +1,6 @@
 import * as S from './style';
 import { useEffect, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Skeleton from 'react-loading-skeleton';
 import {
   BottomSheet,
@@ -23,12 +24,25 @@ import {
   toast,
 } from '@/utils';
 import { BOTTOM_SHEET_ID_EVENT_SHARE } from '@/constants/event';
-import { useBottomSheetStore } from '@/stores';
+import { ROUTES } from '@/constants/routes';
+import {
+  useBottomSheetStore,
+  useMapStore,
+  useEventsStore,
+  useSearchBottomSheetStore,
+} from '@/stores';
 
 export const EventDetailPage = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const { setActiveBottomSheet } = useBottomSheetStore();
   const { handleShareKakao } = useShareKakao();
+  const { setSelectedEvent } = useMapStore();
+  const { events } = useEventsStore();
+  const navigate = useNavigate();
+  const { state } = useLocation();
+
+  // 검색 페이지에선 지도 보기 클릭시 BS 닫아놓기
+  const { setIsSearchBSOpen } = useSearchBottomSheetStore();
 
   // 스크랩 토글
   const { toggleScrap } = useToggleScrapEvent();
@@ -104,6 +118,19 @@ export const EventDetailPage = () => {
     toast('링크가 복사되었습니다.');
   };
 
+  const handleViewMap = () => {
+    const eventData = events.find((event) => event.eventId === eventId);
+    if (eventData) {
+      setSelectedEvent(eventData);
+      if (state?.isSearchPage) {
+        setIsSearchBSOpen(false);
+        navigate(ROUTES.EVENT_SEARCH);
+      } else {
+        navigate(ROUTES.EVENT_MAP);
+      }
+    }
+  };
+
   return (
     <>
       <MetaTag
@@ -148,6 +175,9 @@ export const EventDetailPage = () => {
                   <S.DetailAddressCopyText onClick={handleCopyAddress}>
                     주소 복사
                   </S.DetailAddressCopyText>
+                  <S.ViewMapText onClick={handleViewMap}>
+                    지도 보기
+                  </S.ViewMapText>
                 </S.DetailAddressTextWrapper>
               </S.DetailAddressCard>
             </S.InfoRow>

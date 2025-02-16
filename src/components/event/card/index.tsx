@@ -1,14 +1,17 @@
 import * as S from './style';
 import { forwardRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { ROUTES } from '@/constants/routes';
 import { EventCardProps } from '@/types/event';
 
 export const EventCard = forwardRef<HTMLDivElement, EventCardProps>(
   ({ id, eventData, onClick }, ref) => {
     const [imageError, setImageError] = useState(false);
     const navigate = useNavigate();
+    const { pathname } = useLocation();
+    const isSearchPage = pathname === ROUTES.EVENT_SEARCH;
     if (!eventData) return;
 
     const {
@@ -22,7 +25,7 @@ export const EventCard = forwardRef<HTMLDivElement, EventCardProps>(
       eventImages && eventImages.length > 0 && eventImages[0].imageUrl;
 
     const handleCardClick = () => {
-      navigate(`/event/${id}`);
+      navigate(`/event/${id}`, { state: { isSearchPage } });
       onClick?.();
     };
 

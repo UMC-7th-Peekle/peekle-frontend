@@ -37,6 +37,8 @@ const SearchBottomSheet = () => {
     localKey: 'recent-event-search',
   });
 
+  // const { state } = useLocation();
+
   const { isSearchBSOpen, setIsSearchBSOpen } = useSearchBottomSheetStore();
 
   // 드래그 상태 관리
@@ -47,7 +49,7 @@ const SearchBottomSheet = () => {
 
   const handleDragEnd = () => {
     const y = dragY.get();
-    console.log('y', y);
+    // console.log('y', y);
     if (y <= -DRAG_BUFFER) setIsSearchBSOpen(true);
     else if (y > DRAG_BUFFER) setIsSearchBSOpen(false);
   };
