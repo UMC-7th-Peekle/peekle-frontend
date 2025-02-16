@@ -12,3 +12,4 @@ export { default as useEventsStore } from './event/useEventsStore';
 export { default as useFilterTabsStore } from './event/useFilterTabsStore';
 export { default as useMyLocationStore } from './event/useMyLocationStore';
 export { default as useMapStore } from './event/useMapStore';
+export { default as useSearchBottomSheetStore } from './event/useSearchBottomSheetStore';

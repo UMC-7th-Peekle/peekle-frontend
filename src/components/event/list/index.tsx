@@ -1,11 +1,6 @@
 import * as S from './style';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import {
-  EventCard,
-  EventCardSkeleton,
-  Filter,
-  RoundedButton,
-} from '@/components';
+import { EventCard, EventCardSkeleton, RoundedButton } from '@/components';
 import { useEventFilter, useGetEvents, useInfiniteScroll } from '@/hooks';
 import { EventData } from '@/types/event';
 import { ROUTES } from '@/constants/routes';
@@ -52,10 +47,13 @@ export const EventList = ({
     }
   };
 
+  const handleGotoMapBtnClick = () => {
+    setSelectedEvent(null); // 선택돼있는 이벤트 풀기
+    navigate(ROUTES.EVENT_MAP);
+  };
+
   return (
     <section>
-      {/*검색 결과 없어도 필터는 유지 - 필터 때문에 검색 결과 없는 걸수도 있음*/}
-      {isSearchPage && <Filter isSearchPage={true} />}
       {events.length > 0 ? (
         <>
           <S.EventsContainer>
@@ -69,16 +67,15 @@ export const EventList = ({
               />
             ))}
           </S.EventsContainer>
-          <S.GotoMapBtnWrapper $isSearchPage={isSearchPage}>
-            <RoundedButton
-              icon="map"
-              text="지도 보기"
-              onClick={() => {
-                setSelectedEvent(null); // 선택돼있는 이벤트 풀기
-                navigate(ROUTES.EVENT_MAP);
-              }}
-            />
-          </S.GotoMapBtnWrapper>
+          {!isSearchPage && (
+            <S.GotoMapBtnWrapper>
+              <RoundedButton
+                icon="map"
+                text="지도 보기"
+                onClick={handleGotoMapBtnClick}
+              />
+            </S.GotoMapBtnWrapper>
+          )}
         </>
       ) : (
         <S.EmptyContainer>

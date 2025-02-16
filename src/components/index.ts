@@ -39,7 +39,10 @@ export { default as FilterTabs } from './event/filter-tabs';
 export { default as CategoryChips } from './event/category-chips';
 export { default as Filter } from './event/filter';
 export { default as EventMap } from './event/event-map';
+export { default as EventMapContainer } from './event/event-map-container';
 export { default as MapHeader } from './event/map-header';
+export { default as SearchBottomSheet } from './event/search-bottom-sheet';
+export { default as SearchHeader } from './event/search-header';
 // community
 export { default as EditButton } from './community/edit-button';
 export { default as ToggleSearch } from './community/toggle-search';

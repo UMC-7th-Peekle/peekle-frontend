@@ -33,9 +33,8 @@ export const EmptyText = styled.p`
   color: ${theme.color.gray[400]};
 `;
 
-export const GotoMapBtnWrapper = styled.div<{ $isSearchPage: boolean }>`
+export const GotoMapBtnWrapper = styled.div`
   position: fixed;
   right: 15px;
-  bottom: ${({ $isSearchPage }) =>
-    $isSearchPage ? '20px' : `calc(20px + var(--nav-height))`};
+  bottom: calc(20px + var(--nav-height));
 `;

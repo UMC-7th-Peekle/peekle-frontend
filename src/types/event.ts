@@ -107,6 +107,12 @@ export interface MapBottomSheetProps {
   children: React.ReactNode;
 }
 
+// SearchBottomSheet
+export interface SearchBottomSheetStore {
+  isSearchBSOpen: boolean;
+  setIsSearchBSOpen: (isOpen: boolean) => void;
+}
+
 // ImageSlider
 export interface ImageSliderProps {
   images: EventImages[];

@@ -17,7 +17,6 @@ const ImageSlider = ({ images, title = 'event' }: ImageSliderProps) => {
   );
 
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [, setDragging] = useState(false);
 
   const DRAG_BUFFER = 20;
 
@@ -32,11 +31,7 @@ const ImageSlider = ({ images, title = 'event' }: ImageSliderProps) => {
     });
   };
 
-  const onDragStart = () => {
-    setDragging(true);
-  };
-  const onDragEnd = () => {
-    setDragging(false);
+  const handleDragEnd = () => {
     const x = dragX.get();
     if (x <= -DRAG_BUFFER) slideImage(1);
     else if (x > DRAG_BUFFER) slideImage(-1);
@@ -44,8 +39,6 @@ const ImageSlider = ({ images, title = 'event' }: ImageSliderProps) => {
 
   const hasImages = imagesLength > 0;
   const currentPage = hasImages ? currentIndex + 1 : 0;
-
-  console.log(`-${currentIndex * 100}%`);
 
   return (
     <S.ImageSliderContainer>
@@ -62,8 +55,7 @@ const ImageSlider = ({ images, title = 'event' }: ImageSliderProps) => {
             translateX: `-${currentIndex * 100}%`,
           }}
           transition={{ duration: 0.2 }}
-          onDragStart={onDragStart}
-          onDragEnd={onDragEnd}
+          onDragEnd={handleDragEnd}
         >
           {sortedImages.map((image, index) => (
             <S.ImageItem key={index}>
