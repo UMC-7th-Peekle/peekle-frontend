@@ -4,6 +4,8 @@ export { default as ErrorFallback } from './common/error-fallback';
 export { default as Backward } from './common/backward';
 export { default as MetaTag } from './common/meta-tag';
 export { default as FixedBackward } from './common/fixed-backward';
+export { default as ValidateInput } from './common/input/validate-input';
+export * as FormStyle from './common/form-style/style';
 
 // navigation
 export { default as Chip } from './common/navigation/chip';

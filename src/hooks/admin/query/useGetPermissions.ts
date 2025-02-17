@@ -8,7 +8,7 @@ import {
 import { GET_PERMISSIONS_QK } from '@/constants/admin';
 
 // api 호출 함수
-const getPermission = async (): Promise<PermissionsResponse> => {
+const getPermissions = async (): Promise<PermissionsResponse> => {
   const response = await clientAuth<PermissionsResponse>({
     method: 'GET',
     url: `/admin/permissions`,
@@ -27,7 +27,7 @@ const useGetPermissions = () => {
     PermissionsQkType
   >({
     queryKey: [GET_PERMISSIONS_QK],
-    queryFn: () => getPermission(),
+    queryFn: () => getPermissions(),
   });
 
   return { data };

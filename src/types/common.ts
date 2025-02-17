@@ -163,6 +163,19 @@ export interface MetaTagProps {
   url?: string;
 }
 
+// ValidateInput
+export interface ValidateInputProps {
+  id: string;
+  ref?: React.Ref<HTMLInputElement>;
+  placeholder: string;
+  errorMessage?: string;
+  validatedMessage?: string;
+}
+export interface StyledValidateInputProps {
+  $errorMessage?: boolean;
+  $validatedMessage?: boolean;
+}
+
 // 전체 응답 스키마
 export const ApiResponseSchema = <T>(SuccessType: ZodSchema<T>) =>
   z.object({
