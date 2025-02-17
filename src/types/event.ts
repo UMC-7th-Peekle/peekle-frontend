@@ -1,4 +1,6 @@
-import { z, ZodSchema } from 'zod';
+import { z } from 'zod';
+import { ApiResponseSchema } from './common';
+
 import {
   CATEGORY_OPTIONS,
   CATEGORY_OPTIONS_WITHOUT_ALL,
@@ -129,22 +131,6 @@ export interface FilePaginationProps {
 
 // 이벤트 필터링
 // zod 스키마 정의
-
-// 전체 응답 스키마
-export const ApiResponseSchema = <T>(SuccessType: ZodSchema<T>) =>
-  z.object({
-    resultType: z.enum(['SUCCESS', 'FAIL']),
-    error: z
-      .object({
-        errorCode: z.string(),
-        reason: z.string(),
-        data: z.unknown().nullable(),
-      })
-      .nullable(),
-    success: z.union([SuccessType, z.null()]),
-  });
-export type ApiResponse<T> = z.infer<ReturnType<typeof ApiResponseSchema<T>>>;
-
 // ✅ 이벤트 조회
 export enum CategoryIdEnum {
   교육 = 1,

@@ -33,7 +33,7 @@ export const EventList = ({
 
   const isSearchPage = page === 'search';
   const isScrapPage = page === 'scrap';
-  const isAdmin = true; // 임시 변수
+  const isAdmin = true;
 
   const handleCardClick = () => {
     if (isSearchPage) {

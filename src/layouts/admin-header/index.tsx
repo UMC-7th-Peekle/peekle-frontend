@@ -1,7 +1,7 @@
 import * as S from './style';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
-import { EventListWithFilter, FilterTabs } from '@/components';
+import { Authority, EventListWithFilter, FilterTabs } from '@/components';
 
 const AdminHeader = () => {
   const navigate = useNavigate();
@@ -30,6 +30,7 @@ const AdminHeader = () => {
           <FilterTabs.Trigger value={'이벤트'} label="이벤트" />
           <FilterTabs.Trigger value={'커뮤니티'} label="커뮤니티" />
           <FilterTabs.Trigger value={'문의'} label="문의" />
+          <FilterTabs.Trigger value={'권한'} label="권한" />
         </FilterTabs.List>
         <FilterTabs.Panel value={'홈'}>
           <div>홈</div>
@@ -42,6 +43,9 @@ const AdminHeader = () => {
         </FilterTabs.Panel>
         <FilterTabs.Panel value={'문의'}>
           <div>문의</div>
+        </FilterTabs.Panel>
+        <FilterTabs.Panel value={'권한'}>
+          <Authority />
         </FilterTabs.Panel>
       </FilterTabs>
     </S.HeaderContainer>

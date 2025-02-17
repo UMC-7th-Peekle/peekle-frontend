@@ -12,3 +12,6 @@ export { default as useToggleScrapEvent } from './event/mutation/useToggleScrapE
 export { default as useShareKakao } from './event/useShareKakao';
 // community
 export { default as useCommunityId } from './community/useCommunityId';
+
+// admin
+export { default as useGetPermissions } from './admin/query/useGetPermissions';

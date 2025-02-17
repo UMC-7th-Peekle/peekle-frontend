@@ -1,3 +1,6 @@
+import z from 'zod';
+import { ZodSchema } from 'zod';
+
 // Portal
 export interface PortalProps {
   children: React.ReactNode;
@@ -159,3 +162,18 @@ export interface MetaTagProps {
   imgSrc?: string;
   url?: string;
 }
+
+// 전체 응답 스키마
+export const ApiResponseSchema = <T>(SuccessType: ZodSchema<T>) =>
+  z.object({
+    resultType: z.enum(['SUCCESS', 'FAIL']),
+    error: z
+      .object({
+        errorCode: z.string(),
+        reason: z.string(),
+        data: z.unknown().nullable(),
+      })
+      .nullable(),
+    success: z.union([SuccessType, z.null()]),
+  });
+export type ApiResponse<T> = z.infer<ReturnType<typeof ApiResponseSchema<T>>>;
