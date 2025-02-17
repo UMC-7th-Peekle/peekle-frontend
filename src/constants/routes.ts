@@ -19,6 +19,9 @@ export const ROUTES = {
   COMMUNITY_EDIT: '/community/edit',
   USER: '/user',
   ADMIN_SEARCH: '/admin/search',
+  CREATE_ROLE: '/admin/authority/create-role',
+  AUTHORIZE_ROLE: '/admin/authority/authorize-role',
+  UNAUTHORIZE_ROLE: '/admin/authority/unauthorize-role',
   NOT_FOUND: '*',
 };
 

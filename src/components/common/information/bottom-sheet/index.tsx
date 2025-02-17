@@ -3,7 +3,6 @@ import { useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { BottomSheetProps } from '@/types/common';
 import { useBottomSheetStore, useNavbarStore } from '@/stores';
-import { routesWithNavbar } from '@/layouts/outlet/const';
 
 const overlayVariants = {
   hidden: { opacity: 0 },
@@ -28,17 +27,15 @@ const BottomSheet = ({
 }: BottomSheetProps) => {
   const { activeBottomSheet, setActiveBottomSheet } = useBottomSheetStore();
   const isOpen = activeBottomSheet === id;
-  const { shouldShowNavbar, setShouldShowNavbar } = useNavbarStore();
+  const { setShouldShowNavbar } = useNavbarStore();
 
   useEffect(() => {
-    // 현재 경로가 routesWithNavbar에 포함되어 있으면 네비게이션바 표시
-    const shouldShow = isOpen
-      ? false
-      : routesWithNavbar.includes(location.pathname);
-    if (shouldShow !== shouldShowNavbar) {
-      setShouldShowNavbar(shouldShow);
+    if (isOpen) {
+      setShouldShowNavbar(false);
+    } else {
+      setShouldShowNavbar(true);
     }
-  }, [isOpen, shouldShowNavbar, setShouldShowNavbar]);
+  }, [isOpen, setShouldShowNavbar]);
 
   return (
     <AnimatePresence>

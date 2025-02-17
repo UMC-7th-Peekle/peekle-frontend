@@ -25,3 +25,6 @@ export { default as AdminPage } from './admin/index';
 export { default as AdminSearchPage } from './admin/search';
 export { default as EventCreatePage } from './admin/event/create';
 export { default as EventEditPage } from './admin/event/edit';
+export { default as AuthorizeRolePage } from './admin/authority/authorize-role';
+export { default as CreateRolePage } from './admin/authority/create-role';
+export { default as UnAuthorizeRolePage } from './admin/authority/un-authorize-role';

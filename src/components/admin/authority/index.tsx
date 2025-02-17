@@ -1,14 +1,37 @@
-import { useGetPermissions } from '@/hooks';
+import * as S from './style';
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '@/constants/routes';
+import { Button } from '@/components';
 
 const Authority = () => {
-  const { data } = useGetPermissions();
-  console.log(data);
+  const navigate = useNavigate();
   return (
-    <div>
-      <div>role 추가</div>
-      <div>사용자에게 role 부여</div>
-      <div>사용자에게 role 삭제</div>
-    </div>
+    <S.Container>
+      <Button
+        color="primary500"
+        size="medium"
+        width="300px"
+        onClick={() => navigate(ROUTES.CREATE_ROLE)}
+      >
+        role 생성
+      </Button>
+      <Button
+        color="primary500"
+        size="medium"
+        width="300px"
+        onClick={() => navigate(ROUTES.AUTHORIZE_ROLE)}
+      >
+        role 부여
+      </Button>
+      <Button
+        color="primary500"
+        size="medium"
+        width="300px"
+        onClick={() => navigate(ROUTES.UNAUTHORIZE_ROLE)}
+      >
+        role 삭제
+      </Button>
+    </S.Container>
   );
 };
 

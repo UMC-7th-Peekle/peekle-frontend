@@ -14,13 +14,11 @@ const Layout = () => {
     const shouldShow = routesWithNavbar.includes(
       normalizePath(location.pathname),
     );
-    if (shouldShow !== shouldShowNavbar) {
-      setShouldShowNavbar(shouldShow);
-    }
-  }, [location.pathname, shouldShowNavbar, setShouldShowNavbar]);
+    setShouldShowNavbar(shouldShow);
+  }, [location.pathname, setShouldShowNavbar]);
 
   return (
-    <S.MainContainer>
+    <S.MainContainer $shouldShowNavbar={shouldShowNavbar}>
       <Outlet />
       {shouldShowNavbar && <Navbar />}
     </S.MainContainer>

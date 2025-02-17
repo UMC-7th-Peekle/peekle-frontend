@@ -120,7 +120,7 @@ type BtnColor =
   | 'gray50TextGray400'
   | 'yellow'
   | 'none';
-type BtnSize = 'xsmall' | 'small' | 'medium';
+type BtnSize = 'xsmall' | 'small' | 'medium' | 'large';
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {

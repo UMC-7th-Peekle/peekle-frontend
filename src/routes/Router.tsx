@@ -24,6 +24,9 @@ import {
   CommunitySearchPage,
   AdminPage,
   AdminSearchPage,
+  AuthorizeRolePage,
+  CreateRolePage,
+  UnAuthorizeRolePage,
   NotFoundPage,
 } from '@/pages';
 import UserPage from '@/pages/user/page';
@@ -219,6 +222,18 @@ const router = createBrowserRouter([
       {
         path: ROUTES.ADMIN_SEARCH,
         element: <AdminSearchPage />,
+      },
+      {
+        path: ROUTES.AUTHORIZE_ROLE,
+        element: <AuthorizeRolePage />,
+      },
+      {
+        path: ROUTES.CREATE_ROLE,
+        element: <CreateRolePage />,
+      },
+      {
+        path: ROUTES.UNAUTHORIZE_ROLE,
+        element: <UnAuthorizeRolePage />,
       },
     ],
   },
