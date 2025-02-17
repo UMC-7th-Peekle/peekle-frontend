@@ -33,6 +33,7 @@ export const EventList = ({
 
   const isSearchPage = page === 'search';
   const isScrapPage = page === 'scrap';
+  const isAdmin = true; // 임시 변수
 
   const handleCardClick = () => {
     if (isSearchPage) {
@@ -50,6 +51,10 @@ export const EventList = ({
   const handleGotoMapBtnClick = () => {
     setSelectedEvent(null); // 선택돼있는 이벤트 풀기
     navigate(ROUTES.EVENT_MAP);
+  };
+
+  const handleAddEventBtnClick = () => {
+    navigate(ROUTES.EVENT_CREATE);
   };
 
   return (
@@ -73,6 +78,15 @@ export const EventList = ({
                 icon="map"
                 text="지도 보기"
                 onClick={handleGotoMapBtnClick}
+              />
+            </S.GotoMapBtnWrapper>
+          )}
+          {isAdmin && (
+            <S.GotoMapBtnWrapper>
+              <RoundedButton
+                icon="plus"
+                text="이벤트 추가하기"
+                onClick={handleAddEventBtnClick}
               />
             </S.GotoMapBtnWrapper>
           )}

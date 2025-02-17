@@ -8,16 +8,18 @@ export const TabsContainer = styled.section`
 `;
 
 export const ListContainer = styled.header`
-  width: 100%;
+  width: 100vw;
   display: flex;
   gap: 16px;
+  // 전체 너비 채우기
+  margin-left: -16px;
+  padding-left: 16px;
   border-bottom: 1px solid ${({ theme }) => theme.color.gray[50]};
-  padding: 0 20px; // 탭 아래 회색 줄때문에 패딩 분리함
 `;
 
 export const PanelContainer = styled.section`
   width: 100%;
-  padding: 20px 20px 120px; // 버튼 높이 제외
+  padding: 20px 0 120px; // 버튼 높이 제외
   display: flex;
   flex-direction: column;
   max-height: 80vh;

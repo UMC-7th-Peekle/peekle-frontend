@@ -140,7 +140,7 @@ export interface SquareButtonProps
 }
 
 // RoundedButton
-export type RoundedBtnIcon = 'map' | 'menu';
+export type RoundedBtnIcon = 'map' | 'menu' | 'plus';
 export interface RoundedButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   icon: RoundedBtnIcon;

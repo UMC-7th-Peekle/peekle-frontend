@@ -11,10 +11,13 @@ const Layout = () => {
   const { shouldShowNavbar, setShouldShowNavbar } = useNavbarStore();
 
   useEffect(() => {
-    setShouldShowNavbar(
-      routesWithNavbar.includes(normalizePath(location.pathname)),
+    const shouldShow = routesWithNavbar.includes(
+      normalizePath(location.pathname),
     );
-  }, [location.pathname, setShouldShowNavbar]);
+    if (shouldShow !== shouldShowNavbar) {
+      setShouldShowNavbar(shouldShow);
+    }
+  }, [location.pathname, shouldShowNavbar, setShouldShowNavbar]);
 
   return (
     <S.MainContainer>

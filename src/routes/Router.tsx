@@ -1,5 +1,10 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { Suspense } from 'react';
+import {
+  createBrowserRouter,
+  Navigate,
+  useLocation,
+  RouterProvider,
+} from 'react-router-dom';
+import { Suspense, useMemo } from 'react';
 import Layout from '@/layouts/outlet';
 import {
   EventPage,
@@ -8,6 +13,8 @@ import {
   EventScrapPage,
   EventDetailPage,
   EventDetailPageskeleton,
+  EventCreatePage,
+  EventEditPage,
   CommunityEditPage,
   CommunityDetailPage,
   OnboardingPage,
@@ -15,6 +22,8 @@ import {
   CommunityLikePage,
   CommunityPage,
   CommunitySearchPage,
+  AdminPage,
+  AdminSearchPage,
   NotFoundPage,
 } from '@/pages';
 import UserPage from '@/pages/user/page';
@@ -34,20 +43,30 @@ import ResignPage from '@/pages/user/resign';
 import TossPage from '@/pages/auth/toss';
 import RequestPage from '@/pages/user/request';
 import { ErrorFallback } from '@/components';
-import { ROUTES } from '@/constants/routes';
+import { ROUTES, ADMIN_PATHS } from '@/constants/routes';
 
 const ProtectedPage = ({ children }: { children: React.ReactNode }) => {
+  const { pathname } = useLocation();
+  const isAdmin = true; // 임시 변수
+
+  const adminCheck = useMemo(() => {
+    const isAdminRoute = ADMIN_PATHS.includes(
+      pathname as (typeof ADMIN_PATHS)[number],
+    );
+    return { isAdminRoute };
+  }, [pathname]);
+
+  // 관리자가 아닌데 관리자 path에 접근시 메인페이지로 이동
+  if (!isAdmin && adminCheck.isAdminRoute) {
+    return <Navigate to={'/'} replace />;
+  }
   return children;
 };
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: (
-      <ProtectedPage>
-        <Layout />
-      </ProtectedPage>
-    ),
+    element: <Layout />,
     errorElement: <ErrorFallback />,
     children: [
       {
@@ -95,7 +114,7 @@ const router = createBrowserRouter([
         element: <SleeperPage />,
       },
       {
-        path: '/event',
+        path: ROUTES.EVENT,
         element: <EventPage />,
       },
       {
@@ -121,6 +140,14 @@ const router = createBrowserRouter([
       {
         path: ROUTES.COMMUNITY,
         element: <CommunityPage />,
+      },
+      {
+        path: ROUTES.COMMUNITY_DETAIL,
+        element: <CommunityDetailPage />,
+      },
+      {
+        path: ROUTES.COMMUNITY_EDIT,
+        element: <CommunityEditPage />,
       },
       {
         path: ROUTES.COMMUNITY_SEARCH,
@@ -169,8 +196,31 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: ROUTES.COMMUNITY_DETAIL,
-    element: <CommunityDetailPage />,
+    path: ROUTES.ADMIN,
+    element: (
+      <ProtectedPage>
+        <Layout />
+      </ProtectedPage>
+    ),
+    errorElement: <ErrorFallback />,
+    children: [
+      {
+        index: true,
+        element: <AdminPage />,
+      },
+      {
+        path: ROUTES.EVENT_CREATE,
+        element: <EventCreatePage />,
+      },
+      {
+        path: ROUTES.EVENT_EDIT,
+        element: <EventEditPage />,
+      },
+      {
+        path: ROUTES.ADMIN_SEARCH,
+        element: <AdminSearchPage />,
+      },
+    ],
   },
 ]);
 

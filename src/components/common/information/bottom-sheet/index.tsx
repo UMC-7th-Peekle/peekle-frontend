@@ -31,12 +31,12 @@ const BottomSheet = ({
   const { shouldShowNavbar, setShouldShowNavbar } = useNavbarStore();
 
   useEffect(() => {
-    if (isOpen) {
-      // 네비게이션바 숨기기
-      if (shouldShowNavbar) setShouldShowNavbar(false);
-    } else if (routesWithNavbar.includes(location.pathname)) {
-      // 현재 경로가 routesWithNavbar에 포함되어 있으면 네비게이션바 표시
-      setShouldShowNavbar(true);
+    // 현재 경로가 routesWithNavbar에 포함되어 있으면 네비게이션바 표시
+    const shouldShow = isOpen
+      ? false
+      : routesWithNavbar.includes(location.pathname);
+    if (shouldShow !== shouldShowNavbar) {
+      setShouldShowNavbar(shouldShow);
     }
   }, [isOpen, shouldShowNavbar, setShouldShowNavbar]);
 

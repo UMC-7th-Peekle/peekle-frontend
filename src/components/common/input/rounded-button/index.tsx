@@ -5,6 +5,7 @@ const RoundedButton = ({ icon, text, ...props }: RoundedButtonProps) => {
   const iconMap: Record<RoundedBtnIcon, React.ReactNode> = {
     menu: <S.MenuIcon />,
     map: <S.MapIcon />,
+    plus: <S.PlusIcon />,
   };
   return (
     <S.RoundedButton {...props}>

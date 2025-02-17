@@ -12,7 +12,7 @@ import {
   RoundedButton,
 } from '@/components';
 import { useRecentSearch } from '@/hooks';
-import { useSearchBottomSheetStore } from '@/stores';
+import { useSearchBottomSheetStore, useEventsStore } from '@/stores';
 
 const DRAG_BUFFER = 30;
 const bottomSheetVariants = {
@@ -37,8 +37,7 @@ const SearchBottomSheet = () => {
     localKey: 'recent-event-search',
   });
 
-  // const { state } = useLocation();
-
+  const { events } = useEventsStore();
   const { isSearchBSOpen, setIsSearchBSOpen } = useSearchBottomSheetStore();
 
   // 드래그 상태 관리
@@ -119,7 +118,7 @@ const SearchBottomSheet = () => {
           </S.BottomSheetContent>
         </S.BottomSheetContainer>
       </AnimatePresence>
-      {isSearchBSOpen && (
+      {isSearchBSOpen && events.length > 0 && (
         <S.GotoMapBtnWrapper
           variants={goToMapBtnVariants}
           initial="initial"
