@@ -2,6 +2,7 @@ import * as S from './style';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
 import { Authority, EventListWithFilter, FilterTabs } from '@/components';
+import { AdminHomePage } from '@/pages';
 
 const AdminHeader = () => {
   const navigate = useNavigate();
@@ -33,7 +34,7 @@ const AdminHeader = () => {
           <FilterTabs.Trigger value={'권한'} label="권한" />
         </FilterTabs.List>
         <FilterTabs.Panel value={'홈'}>
-          <div>홈</div>
+          <AdminHomePage />
         </FilterTabs.Panel>
         <FilterTabs.Panel value={'이벤트'}>
           <EventListWithFilter />

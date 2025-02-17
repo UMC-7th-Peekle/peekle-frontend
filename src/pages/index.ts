@@ -28,3 +28,4 @@ export { default as EventEditPage } from './admin/event/edit';
 export { default as AuthorizeRolePage } from './admin/authority/authorize-role';
 export { default as CreateRolePage } from './admin/authority/create-role';
 export { default as UnAuthorizeRolePage } from './admin/authority/un-authorize-role';
+export { default as AdminHomePage } from './admin/home/index';
