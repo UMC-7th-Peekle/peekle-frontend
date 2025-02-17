@@ -1,27 +1,27 @@
 import { useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useMyLocationStore } from '@/stores';
+// import { events } from '@/sample-data/event';
+// import { useMyLocationStore } from '@/stores';
 import {
   UseEventFilterProps,
   EventFilterKeys,
   EventFilterType,
+  PriceOption,
 } from '@/types/event';
 import {
   DEFAULT_FILTERS,
   CATEGORY_IDS_WITHOUT_ALL,
   LOCATION_GROUP_IDS_WITHOUT_ALL,
 } from '@/constants/event';
-import { calculateDistance } from '@/utils';
-import { events } from '@/sample-data/event';
-import { useQueryState } from 'nuqs';
+// import { calculateDistance } from '@/utils';
 
 const useEventFilter = ({
   key = '정렬',
   type = 'single',
 }: UseEventFilterProps = {}) => {
-  const { myLocation } = useMyLocationStore();
-  const [searchQuery] = useQueryState('event-search', { defaultValue: '' });
+  // const { myLocation } = useMyLocationStore();
   const [searchParams, setSearchParams] = useSearchParams();
+  const searchQuery = searchParams.get('event-search');
 
   // 현재 필터 상태 가져오기
   const filters = useMemo(() => {
@@ -37,115 +37,42 @@ const useEventFilter = ({
     return currentFilters;
   }, [searchParams]);
 
-  // 이벤트 필터링
-  const filteredEvents = useMemo(() => {
-    return events.filter((event) => {
-      // 카테고리 필터
-      if (filters.카테고리 !== '전체') {
-        const categories = filters.카테고리.split(',');
-        if (!categories.includes(String(event.categoryId))) return false;
-      }
+  // 필터 정리
+  const categories =
+    filters.카테고리 === '전체'
+      ? undefined
+      : filters.카테고리.split(',').map((category) => Number(category));
+  const [startDate, endDate] =
+    filters.기간 === '전체'
+      ? [undefined, undefined]
+      : filters.기간.split(',').map((date) => {
+          const trimmedDate = date.trim();
+          return trimmedDate !== '' ? trimmedDate : undefined;
+        });
+  const price = filters.가격 as PriceOption;
+  const locations =
+    filters.지역 === '전체'
+      ? undefined
+      : filters.지역.split(',').map((loc) => Number(loc));
+  const query = searchQuery
+    ? searchQuery.length < 2
+      ? undefined
+      : searchQuery
+    : undefined;
 
-      // 기간 필터
-      if (filters.기간 !== '전체') {
-        const [startFilter, endFilter] = filters.기간
-          .split(',')
-          .map((date) => new Date(date));
-        const eventStart = new Date(event.eventSchedules[0].startDate);
-        const eventEnd = new Date(event.eventSchedules[0].endDate);
-
-        if (eventStart < startFilter || eventEnd > endFilter) return false;
-      }
-
-      // 가격 필터
-      if (filters.가격 !== '전체') {
-        if (filters.가격 === '무료') {
-          if (event.price !== 0) return false;
-        } else {
-          if (Number(event.price) <= 0) return false;
-        }
-      }
-
-      // 지역 필터
-      if (filters.지역 !== '전체') {
-        const locations = filters.지역.split(',');
-        if (!locations.includes(String(event.locationGroupId))) return false;
-      }
-
-      // 검색 필터
-      if (searchQuery) {
-        if (searchQuery.length < 2) {
-          return false;
-        } else {
-          if (!event.title.includes(searchQuery)) return false;
-        }
-      }
-
-      return true;
-    });
-  }, [filters, searchQuery]);
-
-  const sortedEvents = useMemo(() => {
-    return [...filteredEvents].sort((a, b) => {
-      const eventScheduleA = a.eventSchedules[0];
-      const eventScheduleB = b.eventSchedules[0];
-
-      if (filters.정렬 === '가까운 날짜순') {
-        const startDateDiff =
-          new Date(eventScheduleA.startDate).getTime() -
-          new Date(eventScheduleB.startDate).getTime();
-        if (startDateDiff !== 0) return startDateDiff;
-        const endDateDiff =
-          new Date(eventScheduleA.endDate).getTime() -
-          new Date(eventScheduleB.endDate).getTime();
-        if (endDateDiff !== 0) return endDateDiff;
-        return a.title.localeCompare(b.title, 'ko');
-      }
-
-      if (filters.정렬 === '낮은 금액순') {
-        const priceDiff = Number(a.price) - Number(b.price);
-        if (priceDiff !== 0) return priceDiff;
-        const startDateDiff =
-          new Date(eventScheduleA.startDate).getTime() -
-          new Date(eventScheduleB.startDate).getTime();
-        if (startDateDiff !== 0) return startDateDiff;
-        return a.title.localeCompare(b.title, 'ko');
-      }
-
-      if (filters.정렬 === '가까운 거리순' && myLocation) {
-        const distanceA = calculateDistance(
-          myLocation.y,
-          myLocation.x,
-          a.latitude,
-          a.longitude,
-        );
-        const distanceB = calculateDistance(
-          myLocation.y,
-          myLocation.x,
-          b.latitude,
-          b.longitude,
-        );
-        const distanceDiff = distanceA - distanceB;
-        if (distanceDiff !== 0) return distanceDiff;
-        const startDateDiff =
-          new Date(eventScheduleA.startDate).getTime() -
-          new Date(eventScheduleB.startDate).getTime();
-        if (startDateDiff !== 0) return startDateDiff;
-        const endDateDiff =
-          new Date(eventScheduleA.endDate).getTime() -
-          new Date(eventScheduleB.endDate).getTime();
-        if (endDateDiff !== 0) return endDateDiff;
-        return a.title.localeCompare(b.title, 'ko');
-      }
-
-      return 0;
-    });
-  }, [filteredEvents, filters.정렬, myLocation]);
+  const formattedFilters = {
+    ...filters,
+    categories,
+    startDate,
+    endDate,
+    price,
+    locations,
+    query,
+  };
 
   // 필터값 변경
   const handleSelect = (newValue: string) => {
     const updatedParams = new URLSearchParams(searchParams); // 기존 쿼리 파라미터 복사
-
     if (type === 'single') {
       updatedParams.set(key, newValue);
     } else {
@@ -212,7 +139,12 @@ const useEventFilter = ({
   };
 
   const clearFilter = () => {
-    setSearchParams(DEFAULT_FILTERS);
+    const updatedParams = new URLSearchParams(DEFAULT_FILTERS);
+    // 기존 event-search 값 유지
+    if (searchParams.has('event-search')) {
+      updatedParams.set('event-search', searchParams.get('event-search')!);
+    }
+    setSearchParams(updatedParams);
   };
 
   const activeFilterCount = useMemo(() => {
@@ -238,8 +170,8 @@ const useEventFilter = ({
   return {
     storedValue: filters[key as EventFilterKeys],
     handleSelect,
-    filteredEvents,
-    sortedEvents,
+    formattedFilters,
+    // sortedEvents,
     isSelected,
     clearFilter,
     activeFilterCount,

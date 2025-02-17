@@ -9,6 +9,8 @@ import KakaoSVG from '@/assets/images/icons/kakao.svg?react';
 import LinkSVG from '@/assets/images/icons/link-rounded.svg?react';
 import ArrowDownSVG from '@/assets/images/icons/arrow-down.svg?react';
 import XSVG from '@/assets/images/icons/X.svg?react';
+import EditSVG from '@/assets/images/icons/pen.svg?react';
+import DeleteSVG from '@/assets/images/icons/pen.svg?react'; // 쓰레기통 아이콘으로 교체 필요
 
 export const Header = styled.header`
   display: flex;
@@ -24,8 +26,7 @@ export const ShareBtn = styled(ShareSVG)`
 `;
 
 export const SkeletonContainer = styled.div`
-  position: fixed;
-  top: 48px; // 헤더 부분
+  width: 100%;
 `;
 
 export const MainSection = styled.section`
@@ -49,8 +50,33 @@ export const Category = styled.p`
   color: ${theme.color.gray[500]};
 `;
 
+export const TitleContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+`;
+
 export const Title = styled.h1`
   ${theme.typeFace.subTitle['20']}
+`;
+
+export const AdminIconContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+const IconStyle = css`
+  width: 24px;
+  height: 24px;
+  color: ${theme.color.gray[600]};
+`;
+export const EditIcon = styled(EditSVG)`
+  ${IconStyle}
+`;
+export const DeleteIcon = styled(DeleteSVG)`
+  ${IconStyle}
 `;
 
 export const Line = styled.div`
@@ -126,6 +152,13 @@ export const DetailAddressCopyText = styled.span`
   user-select: none;
 `;
 
+export const ViewMapText = styled.span`
+  color: ${theme.color.primary[500]};
+  margin-left: 10px;
+  cursor: pointer;
+  user-select: none;
+`;
+
 export const XIcon = styled(XSVG)`
   width: 18px;
   height: 18px;
@@ -187,12 +220,14 @@ export const BottomContainer = styled.div`
   bottom: 0;
   left: 0;
   z-index: 1;
+  height: 76px;
   border-top: 1px solid ${theme.color.gray[100]};
   background: ${theme.color.gray[0]};
   display: flex;
   padding: 16px 16px 16px 24px;
   align-items: center;
   gap: 24px;
+  justify-content: space-between;
 `;
 
 export const ApplyBtn = styled.button`
@@ -203,12 +238,11 @@ export const ApplyBtn = styled.button`
 
 // 공유 컨테이너
 export const ShareContainer = styled.div`
-  margin-bottom: 44px;
   display: inline-flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 24px;
-  padding: 0 20px;
+  padding: 20px 20px 40px;
   color: ${theme.color.gray[900]};
 `;
 

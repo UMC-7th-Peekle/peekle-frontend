@@ -7,11 +7,15 @@ const Panel = ({ value, children }: FilterTabsPanelProps) => {
 
   if (value !== selectedValue) return null;
 
+  const isAdminPage = option === '관리자 탭';
+  console.log('isAdminPage', isAdminPage);
+
   return (
     <PanelContainer
       id={`${option}-panel-${value}`}
       role="tabpanel"
       aria-labelledby={`${option}-trigger-${value}`}
+      $isAdminPage={isAdminPage}
     >
       {children}
     </PanelContainer>

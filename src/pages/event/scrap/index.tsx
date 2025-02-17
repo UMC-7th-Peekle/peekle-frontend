@@ -1,5 +1,11 @@
 import * as S from './style';
-import { Backward, CategoryChips, EventList } from '@/components';
+import { Suspense } from 'react';
+import {
+  Backward,
+  CategoryChips,
+  EventList,
+  EventListSkeleton,
+} from '@/components';
 
 const EventScrapPage = () => {
   return (
@@ -11,7 +17,9 @@ const EventScrapPage = () => {
       <S.CategoryFilterWrapper>
         <CategoryChips />
       </S.CategoryFilterWrapper>
-      <EventList page={'scrap'} />
+      <Suspense fallback={<EventListSkeleton />}>
+        <EventList page={'scrap'} />
+      </Suspense>
     </S.EventScrapContainer>
   );
 };

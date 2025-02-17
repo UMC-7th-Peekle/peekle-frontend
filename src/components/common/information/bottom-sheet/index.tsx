@@ -1,8 +1,24 @@
 import * as S from './style';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
+import { AnimatePresence } from 'framer-motion';
 import { BottomSheetProps } from '@/types/common';
 import { useBottomSheetStore, useNavbarStore } from '@/stores';
-import { routesWithNavbar } from '@/layouts/outlet/const';
+
+const overlayVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.2 } },
+  exit: { opacity: 0, transition: { duration: 0.2 } },
+};
+
+const bottomSheetVariants = {
+  hidden: { y: '100%', opacity: 0 },
+  visible: { y: 0, opacity: 1, transition: { duration: 0.3 } },
+  exit: {
+    y: '100%',
+    opacity: 0,
+    transition: { duration: 0.3 },
+  },
+};
 
 const BottomSheet = ({
   id,
@@ -11,40 +27,43 @@ const BottomSheet = ({
 }: BottomSheetProps) => {
   const { activeBottomSheet, setActiveBottomSheet } = useBottomSheetStore();
   const isOpen = activeBottomSheet === id;
-  const [isRendered, setIsRendered] = useState(false); // 애니메이션 후 렌더링 상태
-  const { shouldShowNavbar, setShouldShowNavbar } = useNavbarStore();
+  const { setShouldShowNavbar } = useNavbarStore();
 
-  // 애니메이션 후 렌더링 상태 관리
   useEffect(() => {
     if (isOpen) {
-      setIsRendered(true); // BottomSheet가 열릴 때 바로 렌더링
-      if (shouldShowNavbar) setShouldShowNavbar(false); // 네비게이션바 숨기기
-      return;
+      setShouldShowNavbar(false);
     } else {
-      const timer = setTimeout(() => {
-        setIsRendered(false); // 애니메이션 종료 후 렌더링 중지
-        // 현재 경로가 routesWithNavbar에 포함되어 있으면
-        if (routesWithNavbar.includes(location.pathname)) {
-          setShouldShowNavbar(true); // 네비게이션바 표시
-        }
-      }, 300); // 애니메이션 시간 (300ms)
-      return () => clearTimeout(timer);
+      setShouldShowNavbar(true);
     }
-  }, [isOpen, isRendered, setShouldShowNavbar, shouldShowNavbar]);
-
-  if (!isRendered) return null;
+  }, [isOpen, setShouldShowNavbar]);
 
   return (
-    <S.Overlay $isOpen={isOpen} onClick={() => setActiveBottomSheet(null)}>
-      <S.BottomSheet onClick={(e) => e.stopPropagation()} $isOpen={isOpen}>
-        {shouldShowLine && (
-          <S.BottomSheetHeader>
-            <S.lineIcon />
-          </S.BottomSheetHeader>
-        )}
-        <S.BottomSheetContent>{children}</S.BottomSheetContent>
-      </S.BottomSheet>
-    </S.Overlay>
+    <AnimatePresence>
+      {isOpen && (
+        <S.Overlay
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          variants={overlayVariants}
+          onClick={() => setActiveBottomSheet(null)}
+        >
+          <S.BottomSheet
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            variants={bottomSheetVariants}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {shouldShowLine && (
+              <S.BottomSheetHeader>
+                <S.lineIcon />
+              </S.BottomSheetHeader>
+            )}
+            <S.BottomSheetContent>{children}</S.BottomSheetContent>
+          </S.BottomSheet>
+        </S.Overlay>
+      )}
+    </AnimatePresence>
   );
 };
 

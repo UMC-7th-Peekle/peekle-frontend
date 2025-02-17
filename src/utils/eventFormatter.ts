@@ -2,14 +2,6 @@ import { EventSchedule } from '@/types/event';
 import { formatTime } from './timeFormatter';
 import { formatDateToMonthDay } from './dateFormatter';
 
-export const getCategoryName = (categoryId: number) => {
-  return {
-    1: '교육',
-    2: '문화',
-    3: '활동',
-  }[categoryId];
-};
-
 // 행정구,자치구 추출
 export const getDistrict = (address: string) => {
   return address.match(/(\S+)구/)?.[1] ?? '';
@@ -31,7 +23,7 @@ export const formatSchedules = (schedule: EventSchedule) => {
 
   const repeatText =
     {
-      none: '',
+      none: `${customText} `,
       daily: '매일 ',
       weekly: '매주 ',
       monthly: '매달 ',
@@ -40,4 +32,18 @@ export const formatSchedules = (schedule: EventSchedule) => {
     }[repeatType] ?? '';
 
   return `${repeatText} ${formatTime(startTime)} ~ ${formatTime(endTime)}`;
+};
+
+// 지도 발풍선용 이벤트 제목 자르기
+export const formatEventTitleForSB = (title: string, length: number) => {
+  let count = 0;
+  let result = '';
+
+  for (const char of title) {
+    result += char;
+    if (char.trim() !== '') count++; // 공백 제외하고 글자만 카운트
+    if (count >= length) return result + '...';
+  }
+
+  return result;
 };

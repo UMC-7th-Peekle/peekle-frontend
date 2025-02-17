@@ -7,8 +7,6 @@ import HeartFilledSVG from '@/assets/images/icons/heart-filled.svg?react';
 const IconStyle = css<HeartSVGProps>`
   width: ${(props) => `${props.$size}px`};
   height: ${(props) => `${props.$size}px`};
-  color: ${({ $borderColor }) =>
-    $borderColor ?? theme.color.gray[600]}; // filled에는 컬러 반영 안됨
   flex-shrink: 0;
 `;
 
@@ -18,10 +16,12 @@ export const HeartWrapper = styled.button`
   justify-content: center;
 `;
 
-export const HeartIcon = styled(HeartSVG)`
+export const HeartIcon = styled(HeartSVG)<HeartSVGProps>`
   ${IconStyle}
+  color: ${(props) => props.$borderColor ?? theme.color.gray[400]};
 `;
 
-export const HeartFilledIcon = styled(HeartFilledSVG)`
+export const HeartFilledIcon = styled(HeartFilledSVG)<HeartSVGProps>`
   ${IconStyle}
+  color: ${(props) => props.$filledColor ?? theme.color.sementic.red};
 `;

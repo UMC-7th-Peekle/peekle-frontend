@@ -1,10 +1,10 @@
 import * as S from './style';
+import { useEffect } from 'react';
 import { FilterTabsProps } from '@/types/event';
-import useFilterTabsStore from '@/stores/event/useFilterTabsStore';
+import { useFilterTabsStore } from '@/stores';
 import List from './components/List';
 import Trigger from './components/Trigger';
 import Panel from './components/Panel';
-import { useEffect } from 'react';
 
 const FilterTabs = ({ option, defaultValue, children }: FilterTabsProps) => {
   const { setSelectedValue, setOption } = useFilterTabsStore();
@@ -14,7 +14,11 @@ const FilterTabs = ({ option, defaultValue, children }: FilterTabsProps) => {
     setOption(option);
   }, [defaultValue, option, setSelectedValue, setOption]);
 
-  return <S.TabsContainer>{children}</S.TabsContainer>;
+  const isAdminPage = option === '관리자 탭';
+
+  return (
+    <S.TabsContainer $isAdminPage={isAdminPage}>{children}</S.TabsContainer>
+  );
 };
 
 FilterTabs.List = List;

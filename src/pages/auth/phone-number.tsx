@@ -1,33 +1,30 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import { FixedBackward } from '@/components';
 import { Button } from '@/components/common/input/button/index';
 import { useNavigate } from 'react-router-dom';
+import useFormatPhoneNumber from './hook/useFormatPhoneNumber';
+
 const PhoneNumberPage = () => {
   const navigate = useNavigate();
   const api = import.meta.env.VITE_API_URL;
 
   const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = e.target.value.replace(/[^0-9]/g, ''); // 숫자만 입력
+  useFormatPhoneNumber(phone, setPhone);
 
-    if (value.length > 6) {
-      value = `${value.slice(0, 3)}-${value.slice(3, 7)}-${value.slice(7, 11)}`;
-    } else if (value.length > 3) {
-      value = `${value.slice(0, 3)}-${value.slice(3)}`;
-    }
-    setPhone(value);
-  };
   const handleSubmit = async () => {
     if (loading) return;
     setLoading(true);
     const PhoneNumber = phone.replace(/-/g, '');
     try {
       const statusResponse = await fetch(
-        `${api}auth/phone/account/status?phone=${PhoneNumber}`,
+        `${api}/auth/phone/account/status?phone=${PhoneNumber}`,
       );
       const statusData = await statusResponse.json();
+
+      let alreadyRegisteredUser = false;
+
       if (statusData.resultType === 'FAIL') {
         if (statusData.error?.reason === '탈퇴한 사용자입니다.') {
           navigate('/auth/certify');
@@ -35,7 +32,10 @@ const PhoneNumberPage = () => {
           navigate('/auth/sleeper');
         }
       } else if (statusData.resultType === 'SUCCESS') {
-        const client = await fetch(`${api}auth/phone/send`, {
+        if (statusData.success.message === '가입된 사용자의 전화번호입니다.') {
+          alreadyRegisteredUser = true;
+        }
+        const client = await fetch(`${api}/auth/phone/send`, {
           method: 'POST',
           headers: {
             'Content-type': 'application/json',
@@ -43,17 +43,16 @@ const PhoneNumberPage = () => {
           body: JSON.stringify({ phone: PhoneNumber }),
         });
         const data = await client.json();
+        console.log(data);
         if (client.ok) {
-          localStorage.setItem('phone', phone);
           navigate('/auth/certify', {
             state: {
               phone: PhoneNumber,
               phoneVerificationSessionId:
                 data.success.phoneVerificationSessionId,
+              alreadyRegisteredUser,
             },
           });
-        } else {
-          console.error('Error,data');
         }
       }
     } catch (error) {
@@ -79,7 +78,7 @@ const PhoneNumberPage = () => {
         inputMode="numeric"
         name="phone"
         value={phone}
-        onChange={handleChange}
+        onChange={(e) => setPhone(e.target.value)}
         maxLength={13}
         placeholder="휴대폰 번호 입력"
       />

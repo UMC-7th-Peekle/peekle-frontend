@@ -1,27 +1,8 @@
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
+import { motion } from 'framer-motion';
 import LineSVG from '@/assets/images/icons/horizontal-line.svg?react';
 
-const fadeIn = keyframes`
-   from { opacity: 0; }
-   to { opacity: opacity; }
-`;
-
-const fadeOut = keyframes`
-  from { opacity: 1; }
-  to { opacity: 0; }
-`;
-
-const slideIn = keyframes`
-   from { transform: translateY(100%); }
-   to { transform: translateY(0); }
-`;
-
-const slideOut = keyframes`
-  from { transform: translateY(0); }
-  to { transform: translateY(100%); }
-`;
-
-export const Overlay = styled.div<{ $isOpen: boolean }>`
+export const Overlay = styled(motion.div)`
   position: fixed;
   top: 0;
   left: 0;
@@ -29,11 +10,9 @@ export const Overlay = styled.div<{ $isOpen: boolean }>`
   height: 100%;
   background-color: rgba(0, 0, 0, 0.25);
   z-index: 1;
-  animation: ${({ $isOpen }) => ($isOpen ? fadeIn : fadeOut)} 0.2s ease-out
-    forwards;
 `;
 
-export const BottomSheet = styled.div<{ $isOpen: boolean }>`
+export const BottomSheet = styled(motion.div)`
   position: fixed;
   bottom: 0;
   left: 0;
@@ -48,9 +27,6 @@ export const BottomSheet = styled.div<{ $isOpen: boolean }>`
   & > * {
     width: 100%;
   } //자식요소가 width를 100%로 채우게
-
-  animation: ${({ $isOpen }) => ($isOpen ? slideIn : slideOut)} 0.3s ease-out
-    forwards;
 `;
 
 export const BottomSheetHeader = styled.div`

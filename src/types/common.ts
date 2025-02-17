@@ -1,3 +1,6 @@
+import z from 'zod';
+import { ZodSchema } from 'zod';
+
 // Portal
 export interface PortalProps {
   children: React.ReactNode;
@@ -93,8 +96,9 @@ export interface DropdownProps {
 
 // ToggleHeart
 export interface ToggleHeartProps {
-  size: number;
-  borderColor: string;
+  size?: number;
+  borderColor?: string;
+  filledColor?: string;
   isActive: boolean;
   onClick: () => void;
 }
@@ -102,6 +106,7 @@ export interface ToggleHeartProps {
 export interface HeartSVGProps extends React.SVGAttributes<SVGElement> {
   $size?: number;
   $borderColor?: string;
+  $filledColor?: string;
 }
 
 // Button
@@ -115,7 +120,7 @@ type BtnColor =
   | 'gray50TextGray400'
   | 'yellow'
   | 'none';
-type BtnSize = 'xsmall' | 'small' | 'medium';
+type BtnSize = 'xsmall' | 'small' | 'medium' | 'large';
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -138,7 +143,7 @@ export interface SquareButtonProps
 }
 
 // RoundedButton
-export type RoundedBtnIcon = 'map' | 'menu';
+export type RoundedBtnIcon = 'map' | 'menu' | 'plus';
 export interface RoundedButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   icon: RoundedBtnIcon;
@@ -157,3 +162,31 @@ export interface MetaTagProps {
   imgSrc?: string;
   url?: string;
 }
+
+// ValidateInput
+export interface ValidateInputProps {
+  id: string;
+  ref?: React.Ref<HTMLInputElement>;
+  placeholder: string;
+  errorMessage?: string;
+  validatedMessage?: string;
+}
+export interface StyledValidateInputProps {
+  $errorMessage?: boolean;
+  $validatedMessage?: boolean;
+}
+
+// 전체 응답 스키마
+export const ApiResponseSchema = <T>(SuccessType: ZodSchema<T>) =>
+  z.object({
+    resultType: z.enum(['SUCCESS', 'FAIL']),
+    error: z
+      .object({
+        errorCode: z.string(),
+        reason: z.string(),
+        data: z.unknown().nullable(),
+      })
+      .nullable(),
+    success: z.union([SuccessType, z.null()]),
+  });
+export type ApiResponse<T> = z.infer<ReturnType<typeof ApiResponseSchema<T>>>;

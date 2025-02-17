@@ -13,5 +13,11 @@ export default ToggleHeart;
 
 /** 사용 예시
  * import { ToggleHeart } from '@/components';
- * <ToggleHeart size={28} borderColor={theme.color.gray[600]} isActive={true} />
+ * <ToggleHeart
+ *   size={28}
+ *   borderColor={theme.color.gray[600]}
+ *   filledColot={theme.color.sementic.red}
+ *   isActive={true} // 필수
+ *   onClick={() => {}} // 필수
+ * />
  */
