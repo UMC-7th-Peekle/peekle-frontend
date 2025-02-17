@@ -4,8 +4,7 @@ import { useState } from 'react';
 import { alert } from '@/utils';
 import { BottomSheet, Button } from '@/components';
 import { useBottomSheetStore } from '@/stores';
-import { useNavigate } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import ResendSVG from '@/assets/images/auth/resend.svg?react';
 import { useEffect } from 'react';
 import { ROUTES } from '@/constants/routes';
@@ -13,6 +12,7 @@ import { ROUTES } from '@/constants/routes';
 const CertifyPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { state } = location;
   const { phone, phoneVerificationSessionId } = location.state || {};
   const [code, setCode] = useState(['', '', '', '']); // 4자리 인증 코드
   const { setActiveBottomSheet } = useBottomSheetStore();
@@ -78,7 +78,7 @@ const CertifyPage = () => {
     const phoneVerificationCode = code.join('');
 
     try {
-      const response = await fetch(`${api}auth/phone/verify`, {
+      const response = await fetch(`${api}/auth/phone/verify`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -95,7 +95,11 @@ const CertifyPage = () => {
           'phoneVerificationSessionId',
           phoneVerificationSessionId,
         );
-        navigate(ROUTES.AUTH_GENDER);
+        if (state?.alreadyRegisteredUser) {
+          navigate(ROUTES.EVENT);
+        } else {
+          navigate(ROUTES.AUTH_GENDER);
+        }
       } else {
         alert('인증번호가 맞지 않아요!', 'warning', '확인');
       }

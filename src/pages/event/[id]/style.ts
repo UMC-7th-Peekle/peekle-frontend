@@ -9,6 +9,8 @@ import KakaoSVG from '@/assets/images/icons/kakao.svg?react';
 import LinkSVG from '@/assets/images/icons/link-rounded.svg?react';
 import ArrowDownSVG from '@/assets/images/icons/arrow-down.svg?react';
 import XSVG from '@/assets/images/icons/X.svg?react';
+import EditSVG from '@/assets/images/icons/pen.svg?react';
+import DeleteSVG from '@/assets/images/icons/pen.svg?react'; // 쓰레기통 아이콘으로 교체 필요
 
 export const Header = styled.header`
   display: flex;
@@ -48,8 +50,33 @@ export const Category = styled.p`
   color: ${theme.color.gray[500]};
 `;
 
+export const TitleContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+`;
+
 export const Title = styled.h1`
   ${theme.typeFace.subTitle['20']}
+`;
+
+export const AdminIconContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+const IconStyle = css`
+  width: 24px;
+  height: 24px;
+  color: ${theme.color.gray[600]};
+`;
+export const EditIcon = styled(EditSVG)`
+  ${IconStyle}
+`;
+export const DeleteIcon = styled(DeleteSVG)`
+  ${IconStyle}
 `;
 
 export const Line = styled.div`

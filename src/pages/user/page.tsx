@@ -142,9 +142,10 @@ const UserPage = () => {
             withCredentials: true,
           });
           localStorage.removeItem('accessToken');
-          navigate(ROUTES.ONBOARDING);
         } catch (error) {
           console.error('🚨 로그아웃 실패:', error);
+        } finally {
+          navigate(ROUTES.ONBOARDING);
         }
       },
     );

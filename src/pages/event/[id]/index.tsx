@@ -41,6 +41,8 @@ export const EventDetailPage = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
 
+  const isAdmin = true; // 임시 변수
+
   // 검색 페이지에선 지도 보기 클릭시 BS 닫아놓기
   const { setIsSearchBSOpen } = useSearchBottomSheetStore();
 
@@ -131,6 +133,12 @@ export const EventDetailPage = () => {
     }
   };
 
+  const handleEditEvent = () => {
+    navigate(ROUTES.EVENT_EDIT);
+  };
+
+  const handleDeleteEvent = () => {};
+
   return (
     <>
       <MetaTag
@@ -151,7 +159,15 @@ export const EventDetailPage = () => {
         <ImageSlider images={eventImages} title={title} />
         <S.InfoContainer>
           <S.Category>{categoryName}</S.Category>
-          <S.Title className="event-title">{title}</S.Title>
+          <S.TitleContainer>
+            <S.Title className="event-title">{title}</S.Title>
+            {isAdmin && (
+              <S.AdminIconContainer>
+                <S.EditIcon onClick={handleEditEvent} />
+                <S.DeleteIcon onClick={handleDeleteEvent} />
+              </S.AdminIconContainer>
+            )}
+          </S.TitleContainer>
           <S.Line />
           <S.Info>
             <S.InfoRow>
@@ -175,9 +191,11 @@ export const EventDetailPage = () => {
                   <S.DetailAddressCopyText onClick={handleCopyAddress}>
                     주소 복사
                   </S.DetailAddressCopyText>
-                  <S.ViewMapText onClick={handleViewMap}>
-                    지도 보기
-                  </S.ViewMapText>
+                  {!isAdmin && (
+                    <S.ViewMapText onClick={handleViewMap}>
+                      지도 보기
+                    </S.ViewMapText>
+                  )}
                 </S.DetailAddressTextWrapper>
               </S.DetailAddressCard>
             </S.InfoRow>

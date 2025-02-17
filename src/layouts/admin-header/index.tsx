@@ -1,7 +1,7 @@
 import * as S from './style';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
-import { FilterTabs } from '@/components';
+import { EventListWithFilter, FilterTabs } from '@/components';
 
 const AdminHeader = () => {
   const navigate = useNavigate();
@@ -35,7 +35,7 @@ const AdminHeader = () => {
           <div>홈</div>
         </FilterTabs.Panel>
         <FilterTabs.Panel value={'이벤트'}>
-          <div>이벤트</div>
+          <EventListWithFilter />
         </FilterTabs.Panel>
         <FilterTabs.Panel value={'커뮤니티'}>
           <div>커뮤니티</div>

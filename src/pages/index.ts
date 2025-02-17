@@ -16,8 +16,6 @@ export { default as EventMapPage } from './event/map';
 export { default as EventSearchPage } from './event/search';
 export { EventDetailPage, EventDetailPageskeleton } from './event/[id]';
 export { default as EventScrapPage } from './event/scrap';
-export { default as EventCreatePage } from './event/create';
-export { default as EventEditPage } from './event/edit';
 
 // default
 export { default as NotFoundPage } from './not-found';
@@ -25,3 +23,5 @@ export { default as NotFoundPage } from './not-found';
 // admin
 export { default as AdminPage } from './admin/index';
 export { default as AdminSearchPage } from './admin/search';
+export { default as EventCreatePage } from './admin/event/create';
+export { default as EventEditPage } from './admin/event/edit';
