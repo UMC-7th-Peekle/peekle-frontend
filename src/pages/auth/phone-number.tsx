@@ -4,6 +4,7 @@ import { FixedBackward } from '@/components';
 import { Button } from '@/components/common/input/button/index';
 import { useNavigate } from 'react-router-dom';
 import useFormatPhoneNumber from './hook/useFormatPhoneNumber';
+import usePostSend from './hook/query/usePostSend';
 
 const PhoneNumberPage = () => {
   const navigate = useNavigate();
@@ -11,6 +12,7 @@ const PhoneNumberPage = () => {
 
   const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
+  const { fetchPostSend } = usePostSend();
   useFormatPhoneNumber(phone, setPhone);
 
   const handleSubmit = async () => {
@@ -23,8 +25,6 @@ const PhoneNumberPage = () => {
       );
       const statusData = await statusResponse.json();
 
-      let alreadyRegisteredUser = false;
-
       if (statusData.resultType === 'FAIL') {
         if (statusData.error?.reason === '탈퇴한 사용자입니다.') {
           navigate('/auth/certify');
@@ -33,27 +33,11 @@ const PhoneNumberPage = () => {
         }
       } else if (statusData.resultType === 'SUCCESS') {
         if (statusData.success.message === '가입된 사용자의 전화번호입니다.') {
-          alreadyRegisteredUser = true;
+          localStorage.setItem('alreadyRegisteredUser', 'true');
         }
-        const client = await fetch(`${api}/auth/phone/send`, {
-          method: 'POST',
-          headers: {
-            'Content-type': 'application/json',
-          },
-          body: JSON.stringify({ phone: PhoneNumber }),
-        });
-        const data = await client.json();
-        console.log(data);
-        if (client.ok) {
-          navigate('/auth/certify', {
-            state: {
-              phone: PhoneNumber,
-              phoneVerificationSessionId:
-                data.success.phoneVerificationSessionId,
-              alreadyRegisteredUser,
-            },
-          });
-        }
+        localStorage.setItem('phone', PhoneNumber);
+        await fetchPostSend(PhoneNumber);
+        navigate('/auth/certify');
       }
     } catch (error) {
       console.error('Request failed:', error);

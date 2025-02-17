@@ -25,12 +25,6 @@ export const ROUTES = {
   NOT_FOUND: '*',
 };
 
-export const PUBLIC_PATHS = [
-  ROUTES.EVENT,
-  ROUTES.EVENT_SEARCH,
-  ROUTES.EVENT_DETAIL,
-] as const;
-
 // 여기에 관리자 path를 추가해주세요
 export const ADMIN_PATHS = [
   ROUTES.ADMIN,

@@ -4,19 +4,24 @@ import { useState } from 'react';
 import { alert } from '@/utils';
 import { BottomSheet, Button } from '@/components';
 import { useBottomSheetStore } from '@/stores';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import ResendSVG from '@/assets/images/auth/resend.svg?react';
 import { useEffect } from 'react';
 import { ROUTES } from '@/constants/routes';
+import usePostSend from './hook/query/usePostSend';
+import { theme } from '@/styles/theme';
 
 const CertifyPage = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const { phone, phoneVerificationSessionId, alreadyRegisteredUser } =
-    location.state ?? {};
+  const phone = localStorage.getItem('phone');
+  const phoneVerificationSessionId = localStorage.getItem(
+    'phoneVerificationSessionId',
+  );
+  const alreadyRegisteredUser = localStorage.getItem('alreadyRegisteredUser');
   const [code, setCode] = useState(['', '', '', '']); // 4자리 인증 코드
   const { setActiveBottomSheet } = useBottomSheetStore();
   const api = import.meta.env.VITE_API_URL;
+  const { fetchPostSend, isPending: isSendPending } = usePostSend();
 
   const [timeLeft, setTimeLeft] = useState(300); // 300초 = 5분
 
@@ -51,13 +56,14 @@ const CertifyPage = () => {
     }
   };
 
-  const handleResend = () => {
+  const handleResend = async () => {
+    if (!phone) {
+      alert('인증 정보를 찾을 수 없습니다.', 'warning', '확인');
+      return;
+    }
+    await fetchPostSend(phone);
     alert('인증번호를 다시 보냈어요!', 'none', '확인');
     setTimeLeft(300); // 타이머 다시 5분으로 설정
-  };
-
-  const handlePhone = () => {
-    navigate('/auth/phone-number');
   };
 
   const handleVerify = async () => {
@@ -90,6 +96,9 @@ const CertifyPage = () => {
         });
         const data = await response.json();
         localStorage.setItem('accessToken', data.success.accessToken);
+        localStorage.removeItem('phone');
+        localStorage.removeItem('phoneVerificationSessionId');
+        localStorage.removeItem('alreadyRegisteredUser');
         navigate(ROUTES.EVENT);
       } catch (error) {
         console.error('Local Login Request failed:', error);
@@ -126,8 +135,8 @@ const CertifyPage = () => {
   };
   return (
     <Container>
-      <BackwardWrapper onClick={handlePhone}>
-        <Backward />
+      <BackwardWrapper>
+        <Backward navigateTo={ROUTES.AUTH_PHONE_NUMBER} />
       </BackwardWrapper>
 
       <Title>
@@ -149,7 +158,7 @@ const CertifyPage = () => {
             $filled={!!num}
           />
         ))}
-        <ResendWrapper onClick={handleResend}>
+        <ResendWrapper onClick={handleResend} $disabled={isSendPending}>
           <ResendSVG /> 재전송
         </ResendWrapper>
       </InputWrapper>
@@ -163,7 +172,7 @@ const CertifyPage = () => {
         <StyledButton
           color="primary500"
           size="medium"
-          isCodeComplete={isCodeComplete}
+          $isCodeComplete={isCodeComplete}
           disabled={!isCodeComplete || timeLeft <= 0} // 🔥 입력이 다 안되었거나 시간이 0이면 비활성화
           onClick={handleVerify}
         >
@@ -205,12 +214,12 @@ const CertifyPage = () => {
 export default CertifyPage;
 
 /* ✅ 버튼 상태 변경 스타일 */
-const StyledButton = styled(Button)<{ isCodeComplete: boolean }>`
-  background-color: ${({ isCodeComplete }) =>
-    isCodeComplete ? '#4CAF50' : '#E0E0E0'};
-  color: ${({ isCodeComplete }) => (isCodeComplete ? 'white' : '#BDBDBD')};
-  cursor: ${({ isCodeComplete }) =>
-    isCodeComplete ? 'pointer' : 'not-allowed'};
+const StyledButton = styled(Button)<{ $isCodeComplete: boolean }>`
+  background-color: ${({ $isCodeComplete }) =>
+    $isCodeComplete ? '#4CAF50' : '#E0E0E0'};
+  color: ${({ $isCodeComplete }) => ($isCodeComplete ? 'white' : '#BDBDBD')};
+  cursor: ${({ $isCodeComplete }) =>
+    $isCodeComplete ? 'pointer' : 'not-allowed'};
 `;
 
 const Container = styled.div`
@@ -268,12 +277,12 @@ const Input = styled.input<{ $filled: boolean }>`
   background-color: #ffffff;
 `;
 
-const ResendWrapper = styled.div`
+const ResendWrapper = styled.div<{ $disabled: boolean }>`
   display: flex;
   align-items: center;
-  color: #4caf50;
+  color: ${({ $disabled }) => ($disabled ? theme.color.gray[500] : '#4caf50')};
   font-size: 20px;
-  cursor: pointer;
+  cursor: ${({ $disabled }) => ($disabled ? 'not-allowed' : 'pointer')};
   margin-top: 10px;
   font-family: 'Pretendard', sans-serif;
   font-weight: 700;

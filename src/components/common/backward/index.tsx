@@ -4,14 +4,20 @@ import { useNavigate } from 'react-router-dom';
 const Backward = ({
   size = '24px',
   isErrorFallback = false,
+  navigateTo,
 }: {
   size?: string;
   isErrorFallback?: boolean;
+  navigateTo?: string;
 }) => {
   const navigate = useNavigate();
 
   const handleBackClick = () =>
-    isErrorFallback ? window.history.back() : navigate(-1);
+    isErrorFallback
+      ? window.history.back()
+      : navigateTo
+        ? navigate(navigateTo)
+        : navigate(-1);
 
   return <S.BackIcon $size={size} onClick={handleBackClick} />;
 };
