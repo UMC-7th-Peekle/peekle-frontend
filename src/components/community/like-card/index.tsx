@@ -8,9 +8,9 @@ export default function LikeCard({
   onClick = () => {},
 }: LikeCardProps) {
   return (
-    <S.Container onClick={onClick} isLiked={isLiked}>
+    <S.Container onClick={onClick} $isLiked={isLiked}>
       <Heart />
-      <S.Count>{count}</S.Count>
+      <S.Count $isLiked={isLiked}>{count}</S.Count>
     </S.Container>
   );
 }

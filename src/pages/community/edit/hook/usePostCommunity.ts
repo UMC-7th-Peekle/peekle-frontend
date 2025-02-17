@@ -85,10 +85,10 @@ export default function usePostCommunity({
         content,
         isAnonymous,
         selectedImages,
-        thumbnail,
         navigate,
         patchCommunityMutation,
-        data,
+        data, // ✅ 기존 데이터를 함께 넘김
+        thumbnail,
       );
     } else {
       submitPost(

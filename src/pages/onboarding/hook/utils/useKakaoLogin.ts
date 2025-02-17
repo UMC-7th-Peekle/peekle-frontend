@@ -67,6 +67,7 @@ export const useKakaoLogin = () => {
           // ✅ 로그인 성공 시 처리
           if (validatedData.isRegistered && validatedData.accessToken) {
             localStorage.setItem('accessToken', validatedData.accessToken);
+            console.log(validatedData.accessToken);
             setLoginResult(validatedData);
             resolve(validatedData);
             navigate(ROUTES.EVENT);

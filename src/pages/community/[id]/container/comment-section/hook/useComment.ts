@@ -8,7 +8,7 @@ export default function useComment({
   communityId: number;
   articleId: number;
 }) {
-  const postCommentMutation = usePostComment();
+  const postCommentMutation = usePostComment({ communityId, articleId });
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [comment, setComment] = useState('');
 

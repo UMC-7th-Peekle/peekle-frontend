@@ -1,13 +1,12 @@
-import ToggleSearch from '@/components/community/toggle-search';
 import * as S from './style';
 import { useNavigate } from 'react-router-dom';
-import { ROUTES } from '@/constants/routes';
-import ToggleHeart from '@/components/common/toggle-heart';
 import { useGetCommunity } from './hooks/community/useGetCommunity';
 import BodySection from '@/pages/community/container/body-section';
 import CommunityCard from '@/components/community/community-card';
 import { EditButton, ErrorFallback } from '@/components';
 import { useInfiniteScroll } from './hooks/util/useInfiniteScroll';
+import Header from '@/layouts/header';
+import { ROUTES } from '@/constants/routes';
 
 export default function CommunityPage() {
   const navigate = useNavigate();
@@ -30,16 +29,7 @@ export default function CommunityPage() {
   if (isLoading) {
     return (
       <S.MainContainer>
-        <S.Appbar>
-          <S.LogoContainer>
-            <S.PeekleLogo />
-            <S.Title>게시판</S.Title>
-          </S.LogoContainer>
-          <S.AppbarIcon>
-            <ToggleHeart />
-            <ToggleSearch />
-          </S.AppbarIcon>
-        </S.Appbar>
+        <Header page={'community'} />
         <BodySection.Skeleton />
       </S.MainContainer>
     );
@@ -48,23 +38,13 @@ export default function CommunityPage() {
   // ✅ 에러 발생 시
   if (error) return <ErrorFallback />;
 
-  // ✅ 데이터 가공
   const articles =
     data?.pages.flatMap((page) => page?.success.articles ?? []) ?? [];
 
   return (
     <S.MainContainer>
       {/* 상단 앱바 */}
-      <S.Appbar>
-        <S.LogoContainer>
-          <S.PeekleLogo />
-          <S.Title>게시판</S.Title>
-        </S.LogoContainer>
-        <S.AppbarIcon>
-          <ToggleHeart onClick={() => navigate(ROUTES.COMMUNITY_LIKE)} />
-          <ToggleSearch onClick={() => navigate(ROUTES.COMMUNITY_SEARCH)} />
-        </S.AppbarIcon>
-      </S.Appbar>
+      <Header page={'community'} />
 
       {/* 게시글 목록 */}
       {articles.length > 0 ? (
@@ -93,7 +73,7 @@ export default function CommunityPage() {
       {/* 글 작성 버튼 */}
       {articles.length > 0 && (
         <S.EditButtonWrapper>
-          <EditButton onClick={() => navigate('/community/edit')} />
+          <EditButton onClick={() => navigate(ROUTES.COMMUNITY_EDIT)} />
         </S.EditButtonWrapper>
       )}
     </S.MainContainer>

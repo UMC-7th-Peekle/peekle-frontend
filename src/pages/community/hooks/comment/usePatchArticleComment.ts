@@ -3,12 +3,13 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { z } from 'zod';
 
-// 커뮤니티 게시글 댓글 등록 API
+// 커뮤니티 게시글 댓글 수정정 API
 
 // 요청 데이터 검증을 위한 스키마
-const PostArticleComment = z.object({
+const PatchArticleComment = z.object({
   communityId: z.number().int(),
   articleId: z.number().int(),
+  commentId: z.number().int(),
   content: z.string(),
   isAnonymous: z.boolean(),
 });
@@ -26,35 +27,35 @@ const RespSchema = z.object({
 
 // 타입으로 정의
 export type PostCommentResp = z.infer<typeof RespSchema>;
-export type PostCommentParams = z.infer<typeof PostArticleComment>;
+export type PostCommentParams = z.infer<typeof PatchArticleComment>;
 
 // 함수
-const postComment = async (
+const patchComment = async (
   params: PostCommentParams,
 ): Promise<PostCommentResp> => {
   // 입력 데이터 검증
-  PostArticleComment.parse(params);
+  PatchArticleComment.parse(params);
 
-  const { communityId, articleId, content, isAnonymous } = params;
+  const { communityId, articleId, commentId, content, isAnonymous } = params;
 
   const resp = await clientAuth<PostCommentResp>({
-    method: 'POST',
+    method: 'PATCH',
     url: `/community/articles/comments`,
-    data: { communityId, articleId, content, isAnonymous },
+    data: { communityId, articleId, commentId, content, isAnonymous },
   });
 
   return RespSchema.parse(resp.data);
 };
 
 // 훅
-export const usePostComment = ({
+export const usePatchComment = ({
   articleId,
   communityId,
 }: usePostCommentsProps) => {
   const queryClient = useQueryClient();
 
   return useMutation<PostCommentResp, AxiosError, PostCommentParams>({
-    mutationFn: postComment,
+    mutationFn: patchComment,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['get-community'] });
       queryClient.invalidateQueries({ queryKey: ['get-community-like'] });

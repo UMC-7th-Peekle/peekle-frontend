@@ -3,14 +3,13 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { z } from 'zod';
 
-// 커뮤니티 게시글 댓글 등록 API
+// 커뮤니티 게시글 댓글 삭제 API
 
 // 요청 데이터 검증을 위한 스키마
-const PostArticleComment = z.object({
+const DelArticleCommentSchema = z.object({
   communityId: z.number().int(),
   articleId: z.number().int(),
-  content: z.string(),
-  isAnonymous: z.boolean(),
+  commentId: z.number().int(),
 });
 
 // 응답 스키마
@@ -26,35 +25,35 @@ const RespSchema = z.object({
 
 // 타입으로 정의
 export type PostCommentResp = z.infer<typeof RespSchema>;
-export type PostCommentParams = z.infer<typeof PostArticleComment>;
+export type PostCommentParams = z.infer<typeof DelArticleCommentSchema>;
 
 // 함수
-const postComment = async (
+const delComment = async (
   params: PostCommentParams,
 ): Promise<PostCommentResp> => {
   // 입력 데이터 검증
-  PostArticleComment.parse(params);
+  DelArticleCommentSchema.parse(params);
 
-  const { communityId, articleId, content, isAnonymous } = params;
+  const { communityId, articleId, commentId } = params;
 
   const resp = await clientAuth<PostCommentResp>({
-    method: 'POST',
+    method: 'DELETE',
     url: `/community/articles/comments`,
-    data: { communityId, articleId, content, isAnonymous },
+    data: { communityId, articleId, commentId },
   });
 
   return RespSchema.parse(resp.data);
 };
 
 // 훅
-export const usePostComment = ({
+export const useDelComment = ({
   articleId,
   communityId,
 }: usePostCommentsProps) => {
   const queryClient = useQueryClient();
 
   return useMutation<PostCommentResp, AxiosError, PostCommentParams>({
-    mutationFn: postComment,
+    mutationFn: delComment,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['get-community'] });
       queryClient.invalidateQueries({ queryKey: ['get-community-like'] });

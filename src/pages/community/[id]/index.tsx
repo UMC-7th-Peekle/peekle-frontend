@@ -5,8 +5,9 @@ import useCommunityId from '@/hooks/community/useCommunityId';
 import * as S from './style';
 import ThreeDot from '@/components/common/list';
 import MainSection from './container/main-section';
-import CommentSection from './container/comment-section';
-import ModalSection from './container/modal-section'; // ✅ 모달 추가
+import ModalSection from './container/modal-section';
+import { ROUTES } from '@/constants/routes';
+import CommentSection from '@/pages/community/[id]/container/comment-section';
 
 export default function CommunityDetailPage() {
   const { communityId, articleId } = useCommunityId();
@@ -26,24 +27,21 @@ export default function CommunityDetailPage() {
     return <ErrorFallback />;
   }
 
+  const article = data?.success.article;
+
   return (
     <>
       <S.MainContainer>
         <S.Appbar>
-          <Backward />
+          <Backward navigateUrl={ROUTES.COMMUNITY} />
           <S.Title>게시글 상세</S.Title>
           <ThreeDot size="20px" onClick={() => setModalType('bottomSheet')} />
         </S.Appbar>
-        {data?.success.article && (
-          <MainSection article={data?.success.article} />
-        )}
+
+        {article && <MainSection article={article} />}
         <S.Boundary />
-        {data?.success.article.articleComments && (
-          <CommentSection
-            article={data?.success.article}
-            comments={data?.success.article.articleComments}
-          />
-        )}
+
+        {article && <CommentSection article={article} />}
       </S.MainContainer>
 
       {/* ✅ 모달 추가 */}

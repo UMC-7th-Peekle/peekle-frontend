@@ -11,6 +11,23 @@ const MainContainer = styled.div`
   height: auto;
 `;
 
+const ReplyContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: start;
+  padding: 16px 28px 16px 20px;
+  height: auto;
+`;
+
+const ReplyWrapper = styled.div`
+  display: flex;
+  height: auto;
+  align-items: center;
+  justify-content: center;
+  padding-right: 8px;
+`;
+
 const ProfileWrapper = styled.div`
   display: flex;
   justify-content: start;
@@ -111,4 +128,6 @@ export {
   ReplyButton,
   BottomContainer,
   ListButton,
+  ReplyContainer,
+  ReplyWrapper,
 };

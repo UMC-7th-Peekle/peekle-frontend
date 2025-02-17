@@ -8,6 +8,7 @@ const Column = styled.div`
   gap: 4px;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 `;
 
 const Heart = styled(HeartSvg).withConfig({
@@ -20,9 +21,10 @@ const Heart = styled(HeartSvg).withConfig({
   }
 `;
 
-const Count = styled.p`
+const Count = styled.p<{ $isLiked: boolean }>`
   ${theme.typeFace.caption['14B']};
-  color: ${theme.color.gray[200]};
+  color: ${({ $isLiked }) =>
+    $isLiked ? theme.color.sementic.red : theme.color.gray[200]};
 `;
 
 export { Column, Heart, Count };

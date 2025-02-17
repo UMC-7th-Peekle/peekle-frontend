@@ -33,7 +33,7 @@ export default function CommunityEditPage() {
   return (
     <S.MainContainer>
       <S.Appbar>
-        <Backward />
+        <Backward navigateUrl={`/community/${communityId}/${articleId}`} />
         <S.Title>{isPatch ? '글 수정' : '글쓰기'}</S.Title>
         <S.SubmitButton as="button" $isActive={isFormFilled} onClick={onSubmit}>
           완료
@@ -53,6 +53,7 @@ export default function CommunityEditPage() {
         isAnonymous={isAnonymous}
         onToggleAnonymous={handleToggleAnonymous}
         onImageUpload={handleImageUpload}
+        selectedImageCount={selectedImages.length}
       />
     </S.MainContainer>
   );

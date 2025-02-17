@@ -1,10 +1,16 @@
 import * as S from './style';
-import { Backward, CommunityCard, TextFields } from '@/components';
+import {
+  Backward,
+  CommunityCard,
+  ErrorFallback,
+  TextFields,
+} from '@/components';
 import * as SS from '../../event/search/style';
 import BodySection from '../container/body-section';
 import { useRecentSearch } from '@/hooks';
 import { useGetCommunity } from '../hooks/community/useGetCommunity';
 import { useInfiniteScroll } from '../hooks/util/useInfiniteScroll';
+import { ROUTES } from '@/constants/routes';
 
 export default function CommunitySearchPage() {
   const {
@@ -32,19 +38,44 @@ export default function CommunitySearchPage() {
     communityId: 1,
   });
 
-  const articles = data?.pages.flatMap((page) => page.success.articles) ?? [];
-
   const { lastElementRef } = useInfiniteScroll({
     isFetchingNextPage,
     hasNextPage,
     fetchNextPage,
   });
 
+  if (isLoading) {
+    return (
+      <>
+        <S.MainContainer>
+          <S.Appbar>
+            <Backward size={'28px'} />
+            <TextFields
+              queryKey="community-search"
+              localKey="recent-community-search"
+              placeholder="글 제목, 내용을 검색해보세요"
+              min_width={333}
+              max_width={333}
+            />
+          </S.Appbar>
+          <BodySection.Skeleton />
+        </S.MainContainer>
+      </>
+    );
+  }
+
+  if (error) {
+    return <ErrorFallback />;
+  }
+
+  const articles =
+    data?.pages.flatMap((page) => page?.success.articles ?? []) ?? [];
+
   return (
     <>
       <S.MainContainer>
         <S.Appbar>
-          <Backward size={'28px'} />
+          <Backward size={'28px'} navigateUrl={ROUTES.COMMUNITY} />
           <TextFields
             queryKey="community-search"
             localKey="recent-community-search"
@@ -80,15 +111,12 @@ export default function CommunitySearchPage() {
             <SS.NoRecentSearch />
           ))}
 
-        {/* 에러 발생 시 */}
-        {error && (
+        {/* 검색어가 없을때 */}
+        {articles.length === 0 && (
           <BodySection.None
             subTitle={`"${query}"에 관한\n첫 게시글을 작성해보세요!`}
           ></BodySection.None>
         )}
-
-        {/* 로딩 UI */}
-        {isLoading && <BodySection.Skeleton />}
 
         {/* 검색된 게시글 리스트 */}
         {isSearched && articles.length > 0 && (
