@@ -14,8 +14,17 @@ export { default as CommunityDetailPage } from './community/[id]/index';
 export { default as EventPage } from './event/index';
 export { default as EventMapPage } from './event/map';
 export { default as EventSearchPage } from './event/search';
-export { default as EventDetailPage } from './event/[id]';
+export { EventDetailPage, EventDetailPageskeleton } from './event/[id]';
 export { default as EventScrapPage } from './event/scrap';
 
 // default
 export { default as NotFoundPage } from './not-found';
+
+// admin
+export { default as AdminPage } from './admin/index';
+export { default as AdminSearchPage } from './admin/search';
+export { default as EventCreatePage } from './admin/event/create';
+export { default as EventEditPage } from './admin/event/edit';
+export { default as AuthorizeRolePage } from './admin/authority/authorize-role';
+export { default as CreateRolePage } from './admin/authority/create-role';
+export { default as UnAuthorizeRolePage } from './admin/authority/un-authorize-role';

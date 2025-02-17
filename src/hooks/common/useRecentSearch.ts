@@ -1,9 +1,10 @@
-import { useQueryState } from 'nuqs';
 import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 // 최근 검색을 위한 커스텀 훅
 const useRecentSearch = ({ queryKey, localKey }: useRecentSearchProps) => {
-  const [query, setQuery] = useQueryState(queryKey);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const query = searchParams.get(queryKey) ?? '';
   const isSearched = !!query;
   const [recentSearch, setRecentSearch] = useState<string[]>(() =>
     JSON.parse(localStorage.getItem(localKey) ?? '[]'),
@@ -22,13 +23,16 @@ const useRecentSearch = ({ queryKey, localKey }: useRecentSearchProps) => {
   };
 
   const handleRecentSearchClick = (search: string) => {
-    setQuery(search);
+    setSearchParams((prev) => {
+      prev.set(queryKey, search);
+      return prev;
+    });
   };
 
   return {
     query,
     isSearched,
-    setQuery,
+    setQuery: handleRecentSearchClick,
     recentSearch,
     handleClear,
     handleRemoveRecentSearch,

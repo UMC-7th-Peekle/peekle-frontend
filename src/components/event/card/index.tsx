@@ -1,44 +1,58 @@
 import * as S from './style';
-import { useNavigate } from 'react-router-dom';
+import { forwardRef, useState } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { ROUTES } from '@/constants/routes';
 import { EventCardProps } from '@/types/event';
-import { events } from '@/sample-data/event';
-import { EventData } from '@/types/event';
-import { priceFormatter } from '@/utils';
 
-export const EventCard = ({ id, onClick }: EventCardProps) => {
-  const navigate = useNavigate();
+export const EventCard = forwardRef<HTMLDivElement, EventCardProps>(
+  ({ id, eventData, onClick }, ref) => {
+    const [imageError, setImageError] = useState(false);
+    const navigate = useNavigate();
+    const { pathname } = useLocation();
+    const isSearchPage = pathname === ROUTES.EVENT_SEARCH;
+    if (!eventData) return;
 
-  const eventInfo = events.find((event: EventData) => event.eventId === id);
-  if (!eventInfo) return;
+    const {
+      eventImages,
+      title,
+      eventLocation: { sigungu },
+      price,
+    } = eventData;
 
-  const { eventImages, title, location, price } = eventInfo;
+    const thumbnailImage =
+      eventImages && eventImages.length > 0 && eventImages[0].imageUrl;
 
-  const handleCardClick = () => {
-    navigate(`/event/${id}`);
-    onClick?.();
-  };
+    const handleCardClick = () => {
+      navigate(`/event/${id}`, { state: { isSearchPage } });
+      onClick?.();
+    };
 
-  return (
-    <S.EventCard onClick={handleCardClick}>
-      <S.Info>
-        <S.Title>{title}</S.Title>
-        <S.SubInfoWrapper>
-          <S.SubInfo>{location}</S.SubInfo>
-          <S.SubInfo>{priceFormatter(price)}</S.SubInfo>
-        </S.SubInfoWrapper>
-      </S.Info>
-      <S.ImageContainer>
-        {eventImages && eventImages.length > 0 && eventImages[0].imageUrl ? (
-          <S.Image src={eventImages[0].imageUrl} alt={`${title}-img`} />
-        ) : (
-          <S.DefaultImageIcon />
-        )}
-      </S.ImageContainer>
-    </S.EventCard>
-  );
-};
+    return (
+      <S.EventCard onClick={handleCardClick} ref={ref}>
+        <S.Info>
+          <S.Title>{title}</S.Title>
+          <S.SubInfoWrapper>
+            <S.SubInfo>{sigungu}</S.SubInfo>
+            <S.SubInfo>{price}</S.SubInfo>
+          </S.SubInfoWrapper>
+        </S.Info>
+        <S.ImageContainer>
+          {thumbnailImage && !imageError ? (
+            <S.Image
+              src={thumbnailImage}
+              alt={`${title}-img`}
+              onError={() => setImageError(true)}
+            />
+          ) : (
+            <S.DefaultImageIcon />
+          )}
+        </S.ImageContainer>
+      </S.EventCard>
+    );
+  },
+);
 
 export const EventCardSkeleton = () => {
   return (
@@ -48,10 +62,10 @@ export const EventCardSkeleton = () => {
         <S.SubInfoWrapper>
           <Skeleton
             width="53px"
-            height="20px"
+            height="30px"
             style={{ borderRadius: '4px' }}
           />
-          <Skeleton width="70px" height="20px" />
+          <Skeleton width="70px" height="30px" />
         </S.SubInfoWrapper>
       </S.Info>
       <S.ImageContainer>

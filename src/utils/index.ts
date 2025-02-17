@@ -13,6 +13,8 @@ export { default as toast } from './toast';
 
 export { isNetworkError, isServerError } from './error';
 
+export { debounce } from './debounce';
+
 export { default as getBaseUrl } from './getBaseUrl';
 export { default as getSubstring } from './getSubstring';
 export { default as calculateDistance } from './calculateDistance';
@@ -26,4 +28,5 @@ export {
   getDistrict,
   getStartDateTime,
   formatSchedules,
+  formatEventTitleForSB,
 } from './eventFormatter';

@@ -1,48 +1,61 @@
 import * as S from './style';
 import { useEffect, useCallback, useState } from 'react';
-import { useQueryState } from 'nuqs';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
 import {
   EventCard,
   LocationConfirm,
   SquareButton,
   RoundedButton,
+  SearchBottomSheet,
 } from '@/components';
-import { useMapStore, useMyLocationStore } from '@/stores';
-import { confirm, getCurrentPosition } from '@/utils';
+import {
+  useMapStore,
+  useMyLocationStore,
+  useSearchBottomSheetStore,
+} from '@/stores';
+import { confirm, getCurrentPosition, debounce, alert } from '@/utils';
 import { ROUTES } from '@/constants/routes';
-import { useEventFilter, useMapMarkers } from '@/hooks';
+import { useMapMarkers } from '@/hooks';
+import { events } from '@/sample-data/event';
 
 window.navermap_authFailure = function () {
   console.error('네이버 지도 인증 실패');
   throw new Error('네이버 지도 인증 실패');
 };
 
-const EventMap = ({ onMapLoad }: { onMapLoad: () => void }) => {
+const EventMap = ({
+  onMapLoad,
+  isSearchPage = false,
+}: {
+  onMapLoad: () => void;
+  isSearchPage?: boolean;
+}) => {
   // localStorage.clear();
   // sessionStorage.clear();
   const [mapInstance, setMapInstance] = useState<naver.maps.Map>();
-  const [searchQuery] = useQueryState('event-search', { defaultValue: '' });
+  const [isMapInitialed, setIsMapInitialed] = useState<boolean>(false);
+  const [searchParams] = useSearchParams();
+  const searchQuery = searchParams.get('event-search') ?? '';
+
+  const { setIsSearchBSOpen } = useSearchBottomSheetStore();
 
   const {
     selectedEvent,
     setSelectedEvent,
     setIsLoading,
     setLoadingMessage,
-    // setLatestPos,
     latestPos,
+    setLatestPos,
   } = useMapStore();
-  const { myLocation, setMyLocation } = useMyLocationStore();
-  const { sortedEvents } = useEventFilter();
   const {
-    markers,
-    blackSBMarker,
-    createBlackMarker,
-    createMarkers,
-    updateMarkers,
-    removeBlackSBMarker,
-  } = useMapMarkers(mapInstance, sortedEvents);
+    myLocation,
+    setMyLocation,
+    hasMyLocationChanged,
+    resetMyLocationChanged,
+  } = useMyLocationStore();
+  const { updateLatestPos, createMarkers, updateMarkers, removeBlackSBMarker } =
+    useMapMarkers(mapInstance, events);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -53,11 +66,21 @@ const EventMap = ({ onMapLoad }: { onMapLoad: () => void }) => {
       if (!mapDiv) return;
 
       // latestPos가 있으면 그 위치를 사용
-      const latLng = latestPos ?? new naver.maps.LatLng(centerLat, centerLng);
+      updateLatestPos();
+      let latLng = null;
+      // 내 위치 바뀌면 센터로 이동
+      if (hasMyLocationChanged) {
+        latLng = new naver.maps.LatLng(centerLat, centerLng);
+        resetMyLocationChanged();
+      }
+      // 맵 초기화돼있으면 latestPos 사용
+      if (isMapInitialed && latestPos) latLng = latestPos;
+      else latLng = new naver.maps.LatLng(centerLat, centerLng);
+
+      setIsMapInitialed(true);
 
       if (!mapInstance) {
         const newMap = new naver.maps.Map(mapDiv, {
-          // center: new naver.maps.LatLng(centerLat, centerLng),
           center: latLng,
           zoom: 15,
           minZoom: 10,
@@ -65,55 +88,43 @@ const EventMap = ({ onMapLoad }: { onMapLoad: () => void }) => {
         });
 
         setMapInstance(newMap);
-
-        // 맵이 완전히 로드되었을 때
-        naver.maps.Event.addListener(newMap, 'init', () => {
+        // 맵이 완전히 로드되었을 때 한 번
+        naver.maps.Event.once(newMap, 'init', () => {
           onMapLoad();
         });
       } else {
-        // mapInstance.setCenter(new naver.maps.LatLng(centerLat, centerLng));
+        // mapInstance 있으면
         mapInstance.setCenter(latLng);
-        mapInstance.setZoom(15);
       }
       createMarkers(centerLat, centerLng);
-      // selectedEvent가 있을 땐 해당 검정 말풍선 열기
-      if (selectedEvent) {
-        const marker = markers.get(selectedEvent.eventId);
-        if (marker) {
-          console.log('blackSBMarker:', blackSBMarker);
-          if (!blackSBMarker) {
-            createBlackMarker(
-              new naver.maps.LatLng(
-                selectedEvent.latitude,
-                selectedEvent.longitude,
-              ),
-              selectedEvent,
-            );
-          }
-        }
-      }
     },
     [
       mapInstance,
       createMarkers,
       onMapLoad,
       latestPos,
-      selectedEvent,
-      markers,
-      blackSBMarker,
-      createBlackMarker,
+      updateLatestPos,
+      hasMyLocationChanged,
+      resetMyLocationChanged,
+      isMapInitialed,
     ],
   );
 
   // 지도 움직임
   const idleHandler = useCallback(() => {
     updateMarkers();
-  }, [updateMarkers]);
+
+    // 움직임 멈추고 latestPos 업데이트 해두기
+    const center = mapInstance?.getCenter();
+    if (center) {
+      const centerLatLng = new naver.maps.LatLng(center.y, center.x);
+      debounce(() => setLatestPos(centerLatLng), 1000);
+    }
+  }, [updateMarkers, mapInstance, setLatestPos]);
 
   const mapClickHandler = useCallback(() => {
-    // 선택된 infowindow 기본 색으로 변경
+    // 지도 부분 클릭시 선택된 infowindow 기본 색으로 변경
     if (selectedEvent) {
-      console.log('selectedEvent:', selectedEvent);
       setSelectedEvent(null);
       removeBlackSBMarker();
     }
@@ -189,10 +200,6 @@ const EventMap = ({ onMapLoad }: { onMapLoad: () => void }) => {
       if (mapDiv) {
         if (myLocation) initMap(myLocation.y, myLocation.x);
         else {
-          console.log(
-            import.meta.env.VITE_MAP_CENTER_LAT,
-            import.meta.env.VITE_MAP_CENTER_LNG,
-          );
           initMap(
             import.meta.env.VITE_MAP_CENTER_LAT,
             import.meta.env.VITE_MAP_CENTER_LNG,
@@ -208,10 +215,6 @@ const EventMap = ({ onMapLoad }: { onMapLoad: () => void }) => {
             observer.disconnect(); // 요소를 찾으면 감지 중단
             if (myLocation) initMap(myLocation.y, myLocation.x);
             else {
-              console.log(
-                import.meta.env.VITE_MAP_CENTER_LAT,
-                import.meta.env.VITE_MAP_CENTER_LNG,
-              );
               initMap(
                 import.meta.env.VITE_MAP_CENTER_LAT,
                 import.meta.env.VITE_MAP_CENTER_LNG,
@@ -250,42 +253,62 @@ const EventMap = ({ onMapLoad }: { onMapLoad: () => void }) => {
   }, [mapInstance, myLocation, showLocationConfirm]);
 
   const handleGotoListBtnClick = () => {
-    const targetRoute =
-      searchQuery.length > 1 ? ROUTES.EVENT_SEARCH : ROUTES.EVENT;
-
-    navigate({
-      pathname: targetRoute,
-      search: location.search, // 현재 쿼리 파람 유지
-    });
+    // 검색어가 한 글자밖에 없으면 alert 띄우기
+    if (searchQuery.length === 1)
+      alert('두 글자 이상 입력해주세요.', 'none', '확인');
+    // 검색 페이지가 아니면 페이지 이동
+    else if (!isSearchPage) {
+      navigate({
+        pathname: ROUTES.EVENT,
+        search: location.search, // 현재 쿼리 파람 유지
+      });
+    }
+    // 검색 페이지이면 검색 바텀시트 활성화
+    else {
+      setIsSearchBSOpen(true);
+    }
   };
 
+  const hasSelectedEvent = selectedEvent !== null;
+
   return (
-    <S.MapContainer id="mapContainer">
-      <S.Map id="map" />
-      <S.BottomContainer>
-        <S.ButtonContainer>
-          <SquareButton icon="myLocation" onClick={handleMyLocationClick} />
-          <RoundedButton
-            icon="menu"
-            text="목록 보기"
-            onClick={handleGotoListBtnClick}
-          />
-        </S.ButtonContainer>
-        {selectedEvent && (
-          <motion.div
-            key={selectedEvent.eventId}
-            initial={{ opacity: 0, y: 20, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.9 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-          >
-            <S.EventCardWrapper>
-              <EventCard id={selectedEvent.eventId} />
-            </S.EventCardWrapper>
-          </motion.div>
-        )}
-      </S.BottomContainer>
-    </S.MapContainer>
+    <>
+      <S.MapContainer $isSearchPage={isSearchPage}>
+        <S.Map id="map" />
+        <S.BottomContainer
+          $isSearchPage={isSearchPage}
+          $hasSelectedEvent={hasSelectedEvent}
+        >
+          <S.ButtonContainer>
+            <SquareButton icon="myLocation" onClick={handleMyLocationClick} />
+            <RoundedButton
+              icon="menu"
+              text="목록 보기"
+              onClick={handleGotoListBtnClick}
+            />
+          </S.ButtonContainer>
+          {selectedEvent && (
+            <AnimatePresence>
+              <motion.div
+                key={selectedEvent.eventId}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+              >
+                <S.EventCardWrapper>
+                  <EventCard
+                    id={selectedEvent.eventId}
+                    eventData={selectedEvent}
+                  />
+                </S.EventCardWrapper>
+              </motion.div>
+            </AnimatePresence>
+          )}
+        </S.BottomContainer>
+      </S.MapContainer>
+      {isSearchPage && !selectedEvent && <SearchBottomSheet />}
+    </>
   );
 };
 

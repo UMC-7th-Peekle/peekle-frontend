@@ -1,63 +1,6 @@
-// import * as S from './style';
-// import { useState, useMemo, useRef } from 'react';
-// import { Swiper, SwiperSlide } from 'swiper/react';
-// import { Swiper as SwiperCore } from 'swiper';
-// import { FilePagination } from '@/components';
-// import { ImageSliderProps } from '@/types/event';
-
-// const ImageSlider = ({ images, title = 'event' }: ImageSliderProps) => {
-//   // sequence 오름차순으로 정렬된 이미지 배열
-//   const sortedImages = useMemo(
-//     () => [...images].sort((a, b) => a.sequence - b.sequence),
-//     [images],
-//   );
-//   const imagesLength = sortedImages.length;
-
-//   const [currentIndex, setCurrentIndex] = useState(0);
-//   const swiperRef = useRef<SwiperCore | null>(null);
-//   const onPrevPage = () => swiperRef.current?.slidePrev();
-//   const onNextPage = () => swiperRef.current?.slideNext();
-
-//   return (
-//     <S.ImageContainer>
-//       <Swiper
-//         // slidesPerView={1}
-//         // direction="horizontal"
-//         loop={false}
-//         onSwiper={(swiper) => (swiperRef.current = swiper)} // Swiper 인스턴스 저장
-//         onSlideChange={(swiper) => setCurrentIndex(swiper.activeIndex)} // 슬라이드 변경 시 인덱스 업데이트
-//       >
-//         {imagesLength > 0 ? (
-//           sortedImages.map((img, index) => (
-//             <SwiperSlide key={index}>
-//               <S.Image src={img.imageUrl} alt={`${title}-img-${index}`} />
-//             </SwiperSlide>
-//           ))
-//         ) : (
-//           <SwiperSlide>
-//             <S.DefaultImageIcon />
-//           </SwiperSlide>
-//         )}
-//       </Swiper>
-//       {imagesLength > 0 && (
-//         <S.FilePaginationWrapper>
-//           <FilePagination
-//             fileLength={imagesLength}
-//             currentPage={currentIndex + 1}
-//             onPrevPage={onPrevPage}
-//             onNextPage={onNextPage}
-//           />
-//         </S.FilePaginationWrapper>
-//       )}
-//     </S.ImageContainer>
-//   );
-// };
-
-// export default ImageSlider;
-
 import * as S from './style';
 import { useMemo, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useMotionValue } from 'framer-motion';
 import { FilePagination } from '@/components';
 import { ImageSliderProps } from '@/types/event';
 
@@ -68,50 +11,74 @@ const ImageSlider = ({ images, title = 'event' }: ImageSliderProps) => {
     [images],
   );
   const imagesLength = sortedImages.length;
+  // 이미지 로드 에러 배열
+  const [imageErrors, setImageErrors] = useState<boolean[]>(
+    Array(imagesLength).fill(false),
+  );
 
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [direction] = useState(0);
+
+  const DRAG_BUFFER = 20;
+
+  const dragX = useMotionValue(0);
 
   const slideImage = (direction: number) => {
     setCurrentIndex((prevIndex) => {
       const newIndex = prevIndex + direction;
-      if (newIndex < 0 || newIndex >= images.length) return prevIndex;
+      if (newIndex < 0) return 0;
+      if (newIndex >= imagesLength) return imagesLength - 1;
       return newIndex;
     });
+  };
+
+  const handleDragEnd = () => {
+    const x = dragX.get();
+    if (x <= -DRAG_BUFFER) slideImage(1);
+    else if (x > DRAG_BUFFER) slideImage(-1);
   };
 
   const hasImages = imagesLength > 0;
   const currentPage = hasImages ? currentIndex + 1 : 0;
 
   return (
-    <S.ImageContainer>
-      <AnimatePresence initial={false} custom={direction}>
-        <motion.div
-          key={currentIndex}
+    <S.ImageSliderContainer>
+      <S.ImageSliderWrapper>
+        <S.ImageSlider
+          style={{
+            display: 'flex',
+            width: `${imagesLength * 100}%`,
+            x: dragX,
+          }}
           drag="x"
           dragConstraints={{ left: 0, right: 0 }}
-          onDragEnd={(_, info) => {
-            if (info.offset.x < -100) slideImage(1);
-            if (info.offset.x > 100) slideImage(-1);
-          }}
-          initial={{
-            opacity: 0,
-          }}
           animate={{
-            opacity: 1,
+            translateX: `-${currentIndex * 100}%`,
           }}
           transition={{ duration: 0.2 }}
+          onDragEnd={handleDragEnd}
         >
-          {sortedImages[currentIndex] ? (
-            <S.Image
-              src={sortedImages[currentIndex].imageUrl}
-              alt={`${title}-img-${currentIndex}`}
-            />
-          ) : (
-            <S.DefaultImageIcon />
-          )}
-        </motion.div>
-      </AnimatePresence>
+          {sortedImages.map((image, index) => (
+            <S.ImageItem key={index}>
+              {!imageErrors[index] ? (
+                <S.Image
+                  src={image.imageUrl}
+                  alt={`${title}-img-${index}`}
+                  onError={() => {
+                    setImageErrors((prev) => {
+                      const newErrors = [...prev];
+                      newErrors[index] = true;
+                      return newErrors;
+                    });
+                  }}
+                />
+              ) : (
+                <S.DefaultImageIcon />
+              )}
+            </S.ImageItem>
+          ))}
+        </S.ImageSlider>
+      </S.ImageSliderWrapper>
+
       {hasImages && (
         <S.FilePaginationWrapper>
           <FilePagination
@@ -122,7 +89,7 @@ const ImageSlider = ({ images, title = 'event' }: ImageSliderProps) => {
           />
         </S.FilePaginationWrapper>
       )}
-    </S.ImageContainer>
+    </S.ImageSliderContainer>
   );
 };
 

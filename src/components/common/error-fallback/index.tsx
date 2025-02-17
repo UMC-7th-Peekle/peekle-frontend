@@ -2,12 +2,15 @@ import * as S from './style';
 import { useRouteError } from 'react-router-dom';
 import { isNetworkError, isServerError, toast } from '@/utils';
 import { Button, Backward } from '@/components';
+import { AxiosError } from 'axios';
 
 const ErrorFallback = ({ error: propsError }: { error?: Error }) => {
-  const routeError = useRouteError();
+  const routeError = useRouteError(); // 라우터 내부에서만 동작
   const error = propsError ?? routeError;
 
-  console.error('[에러 발생]:', error);
+  if (error instanceof AxiosError) {
+    console.error('[에러 발생]:', error.response?.data.error.reason);
+  }
 
   const handleRefresh = () => {
     if (isNetworkError(error as Error)) {

@@ -4,8 +4,7 @@ import { useState } from 'react';
 import { alert } from '@/utils';
 import { BottomSheet, Button } from '@/components';
 import { useBottomSheetStore } from '@/stores';
-import { useNavigate } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import ResendSVG from '@/assets/images/auth/resend.svg?react';
 import { useEffect } from 'react';
 import { ROUTES } from '@/constants/routes';
@@ -13,7 +12,8 @@ import { ROUTES } from '@/constants/routes';
 const CertifyPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { phone, phoneVerificationSessionId } = location.state || {};
+  const { phone, phoneVerificationSessionId, alreadyRegisteredUser } =
+    location.state ?? {};
   const [code, setCode] = useState(['', '', '', '']); // 4자리 인증 코드
   const { setActiveBottomSheet } = useBottomSheetStore();
   const api = import.meta.env.VITE_API_URL;
@@ -77,30 +77,45 @@ const CertifyPage = () => {
 
     const phoneVerificationCode = code.join('');
 
-    try {
-      const response = await fetch(`${api}auth/phone/verify`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          phone,
-          phoneVerificationSessionId,
-          phoneVerificationCode,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok && data.resultType === 'SUCCESS') {
-        localStorage.setItem(
-          'phoneVerificationSessionId',
-          phoneVerificationSessionId,
-        );
-        navigate(ROUTES.AUTH_GENDER);
-      } else {
-        alert('인증번호가 맞지 않아요!', 'warning', '확인');
+    if (alreadyRegisteredUser) {
+      try {
+        const response = await fetch(`${api}/auth/login/local`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            phone,
+            phoneVerificationSessionId,
+            phoneVerificationCode,
+          }),
+        });
+        const data = await response.json();
+        localStorage.setItem('accessToken', data.success.accessToken);
+        navigate(ROUTES.EVENT);
+      } catch (error) {
+        console.error('Local Login Request failed:', error);
       }
-    } catch (error) {
-      console.error('Request failed:', error);
+    } else {
+      try {
+        const response = await fetch(`${api}/auth/phone/verify`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            phone,
+            phoneVerificationSessionId,
+            phoneVerificationCode,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.resultType === 'SUCCESS') {
+          navigate(ROUTES.AUTH_GENDER);
+        } else {
+          alert('인증번호가 맞지 않아요!', 'warning', '확인');
+        }
+      } catch (error) {
+        console.error('Request failed:', error);
+      }
     }
   };
 

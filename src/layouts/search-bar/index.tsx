@@ -6,9 +6,9 @@ import { ROUTES } from '@/constants/routes';
 interface SearchBarProps {
   page: 'event' | 'community';
   queryKey: string;
+  localKey: string;
   placeholder?: string;
   onQuerySubmit?: (query: string) => void;
-  localKey: string;
 }
 
 export const SearchBar = ({
@@ -16,6 +16,7 @@ export const SearchBar = ({
   queryKey,
   localKey,
   placeholder = '관심 있는 활동 검색',
+  onQuerySubmit,
 }: SearchBarProps) => {
   const navigate = useNavigate();
 
@@ -32,6 +33,7 @@ export const SearchBar = ({
         placeholder={placeholder}
         onClick={handleTextFieldsClick}
         localKey={localKey}
+        onQuerySubmit={onQuerySubmit}
       />
     </S.SearchBarWrapper>
   );
