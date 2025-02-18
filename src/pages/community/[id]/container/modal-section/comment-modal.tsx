@@ -1,10 +1,8 @@
 import { useState } from 'react';
 import * as S from './style';
-import { useNavigate } from 'react-router-dom';
-import { ROUTES } from '@/constants/routes';
 import { ReportInput } from '@/pages/community/[id]/container/modal-section/component/ReportInput';
-import { useDelCommunityArticle } from '@/pages/community/hooks/article/useDelCommunityArticle';
-import { useCommunityModal } from '@/stores/community/useCommunityModal';
+import { useDelComment } from '@/pages/community/hooks/comment/useDelArticleComment';
+import { useCommentModalState } from '@/stores/community/useCommentModalState';
 
 interface ModalSectionProps {
   type: 'bottomSheet' | 'deleteConfirm' | null;
@@ -14,7 +12,7 @@ interface ModalSectionProps {
   articleId: string;
 }
 
-export default function ModalSection({
+export default function CommentModalSection({
   type,
   onClose,
   onReportClick,
@@ -49,7 +47,7 @@ export default function ModalSection({
                 }
               }}
             >
-              신고하기
+              댓글 신고하기
             </S.BottomSheetOption>
             <S.BottomSheetCancel onClick={handleClose}>
               닫기
@@ -71,11 +69,12 @@ export default function ModalSection({
   );
 }
 
-// 🟢 게시글 수정 & 삭제 모달
-ModalSection.Mine = function ModalSectionMine({
+// 🟢 댓글 수정 & 삭제 모달
+CommentModalSection.Mine = function CommentModalSectionMine({
   type,
   onClose,
   onConfirm,
+  onDeleteClick,
   articleId,
   communityId = 1,
 }: {
@@ -87,11 +86,11 @@ ModalSection.Mine = function ModalSectionMine({
   communityId: number;
 }) {
   const [isClosing, setIsClosing] = useState(false);
-  const navigate = useNavigate();
-  const delCommunityMutation = useDelCommunityArticle();
-  const { setActiveModal } = useCommunityModal();
+  const { activeCommentModal } = useCommentModalState();
+  const commentId = activeCommentModal?.commentId; // 현재 활성화된 commentId 가져오기
+  const delCommentMutation = useDelComment({ articleId, communityId });
 
-  if (!type) return null;
+  if (!type || !commentId) return null; // commentId가 없으면 렌더링 안 함
 
   const handleClose = () => {
     setIsClosing(true);
@@ -109,31 +108,19 @@ ModalSection.Mine = function ModalSectionMine({
             $isClosing={isClosing}
             onClick={(e) => e.stopPropagation()}
           >
+            <S.BottomSheetOption onClick={() => {}}>
+              댓글 수정하기
+            </S.BottomSheetOption>
             <S.BottomSheetOption
               onClick={() => {
                 handleClose();
-                setTimeout(() => {
-                  navigate(ROUTES.COMMUNITY_EDIT, {
-                    state: {
-                      communityId: String(communityId),
-                      articleId: String(articleId),
-                    },
-                  });
-                }, 300);
+                if (onDeleteClick) {
+                  setTimeout(onDeleteClick, 300);
+                }
               }}
             >
-              게시글 수정하기
+              댓글 삭제하기
             </S.BottomSheetOption>
-
-            {/* ✅ 삭제 클릭 시 deleteConfirm 모달로 변경 */}
-            <S.BottomSheetOption
-              onClick={() => {
-                setActiveModal(Number(articleId), 'deleteConfirm');
-              }}
-            >
-              게시글 삭제하기
-            </S.BottomSheetOption>
-
             <S.BottomSheetCancel onClick={handleClose}>
               닫기
             </S.BottomSheetCancel>
@@ -152,21 +139,21 @@ ModalSection.Mine = function ModalSectionMine({
               <S.CancelButton onClick={handleClose}>취소</S.CancelButton>
               <S.DeleteButton
                 onClick={() => {
-                  delCommunityMutation.mutate(
+                  delCommentMutation.mutate(
                     {
                       communityId: communityId || 1,
                       articleId: articleId,
+                      commentId: commentId,
                     },
                     {
                       onSuccess: () => {
-                        navigate(ROUTES.COMMUNITY);
+                        handleClose();
+                        if (onConfirm) {
+                          setTimeout(onConfirm, 300);
+                        }
                       },
                     },
                   );
-                  handleClose();
-                  if (onConfirm) {
-                    setTimeout(onConfirm, 300);
-                  }
                 }}
               >
                 삭제

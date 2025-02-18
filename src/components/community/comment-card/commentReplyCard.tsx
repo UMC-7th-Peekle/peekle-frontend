@@ -6,11 +6,13 @@ import { useCommunityId } from '@/hooks';
 import { usePostArticleCommentLike } from '@/pages/community/hooks/like/usePostArticleCommentLike';
 import { useDelArticleCommentLike } from '@/pages/community/hooks/like/useDelArticleLikeComment';
 import { useCommentReply } from '@/stores/community/useCommentReply';
+import { useCommentList } from '@/stores/community/useCommentList';
 
 // 커뮤니티 대댓글 컴포넌트
 export default function CommentReplyCard({ comment }: CommentCardProps) {
   const { communityId, articleId } = useCommunityId();
   const { replyingTo, setReplyingTo } = useCommentReply();
+  const { commentAuthors, setCommentAuthor } = useCommentList();
 
   /*mutation*/
   const postArticleCommentLike = usePostArticleCommentLike();
@@ -27,6 +29,12 @@ export default function CommentReplyCard({ comment }: CommentCardProps) {
 
   // ✅ 현재 commentId가 reply 대상과 일치하면 primary100 배경 적용
   const isHighlighted = replyingTo?.commentId === comment.commentId;
+  if (commentAuthors[comment.commentId] === undefined) {
+    setCommentAuthor(
+      comment.commentId,
+      comment.authorId === Number(localStorage.getItem('user-id')),
+    );
+  }
 
   return (
     <S.ReplyContainer $highlight={isHighlighted}>
@@ -53,7 +61,7 @@ export default function CommentReplyCard({ comment }: CommentCardProps) {
           >
             답글달기
           </S.ReplyButton>
-          <S.ListButton />
+          <S.ListButton onClick={() => {}} />
         </S.BottomContainer>
       </S.Container>
       <S.LeftContainer>

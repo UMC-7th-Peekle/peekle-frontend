@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Backward, ErrorFallback } from '@/components';
 import { useGetCommunityDetail } from '../hooks/article/useGetCommunityDetail';
 import useCommunityId from '@/hooks/community/useCommunityId';
@@ -8,6 +7,7 @@ import MainSection from './container/main-section';
 import ModalSection from './container/modal-section';
 import { ROUTES } from '@/constants/routes';
 import CommentSection from '@/pages/community/[id]/container/comment-section';
+import { useCommunityModal } from '@/stores/community/useCommunityModal';
 
 export default function CommunityDetailPage() {
   const { communityId, articleId } = useCommunityId();
@@ -16,9 +16,7 @@ export default function CommunityDetailPage() {
     articleId: articleId ?? '',
   });
 
-  const [modalType, setModalType] = useState<
-    'bottomSheet' | 'deleteConfirm' | null
-  >(null);
+  const { activeModal, setActiveModal, closeModal } = useCommunityModal();
 
   if (isLoading) {
     return <></>;
@@ -40,7 +38,10 @@ export default function CommunityDetailPage() {
         <S.Appbar>
           <Backward navigateUrl={ROUTES.COMMUNITY} />
           <S.Title>게시글 상세</S.Title>
-          <ThreeDot size="20px" onClick={() => setModalType('bottomSheet')} />
+          <ThreeDot
+            size="20px"
+            onClick={() => setActiveModal(Number(articleId), 'bottomSheet')}
+          />
         </S.Appbar>
 
         {article && <MainSection article={article} />}
@@ -50,23 +51,28 @@ export default function CommunityDetailPage() {
       </S.MainContainer>
 
       {/* ✅ 모달 추가 */}
-      {isMyArticle ? (
-        <ModalSection.Mine
-          communityId={1}
-          articleId={Number(articleId)}
-          type={modalType}
-          onClose={() => setModalType(null)}
-          onDeleteClick={() => setModalType('deleteConfirm')}
-        />
-      ) : (
-        <ModalSection
-          type={modalType}
-          onClose={() => setModalType(null)}
-          onReportClick={() => setModalType('deleteConfirm')}
-          communityId={communityId}
-          articleId={articleId}
-        />
-      )}
+      {activeModal?.articleId === Number(articleId) &&
+        (isMyArticle ? (
+          <ModalSection.Mine
+            communityId={1}
+            articleId={Number(articleId)}
+            type={activeModal.type}
+            onClose={closeModal}
+            onDeleteClick={() =>
+              setActiveModal(Number(articleId), 'deleteConfirm')
+            }
+          />
+        ) : (
+          <ModalSection
+            type={activeModal.type}
+            onClose={closeModal}
+            onReportClick={() =>
+              setActiveModal(Number(articleId), 'deleteConfirm')
+            }
+            communityId={communityId}
+            articleId={articleId}
+          />
+        ))}
     </>
   );
 }
