@@ -1,6 +1,7 @@
 import { clientAuth } from '@/apis/client';
 import { formatDateCardTime } from '@/utils/dateFormatter';
 import { useInfiniteQuery } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
 import { z } from 'zod';
 
 // 커뮤니티 게시글 목록 API
@@ -58,7 +59,7 @@ const getCommunity = async ({
   try {
     const response = await clientAuth<CommunityResponse>({
       method: 'GET',
-      url: `/community`,
+      url: `/community/articles`,
       params: {
         limit,
         cursor: pageParam,
@@ -89,7 +90,7 @@ export const useGetCommunity = ({
   communityId?: number;
   query?: string | null;
 }) => {
-  return useInfiniteQuery<CommunityResponse | null, Error>({
+  return useInfiniteQuery<CommunityResponse | null, AxiosError>({
     queryKey: ['get-community', communityId],
     queryFn: async ({ pageParam }) =>
       getCommunity({

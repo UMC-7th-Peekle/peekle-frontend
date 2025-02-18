@@ -145,10 +145,6 @@ const router = createBrowserRouter([
         element: <CommunityPage />,
       },
       {
-        path: ROUTES.COMMUNITY_DETAIL,
-        element: <CommunityDetailPage />,
-      },
-      {
         path: ROUTES.COMMUNITY_EDIT,
         element: <CommunityEditPage />,
       },
@@ -236,6 +232,10 @@ const router = createBrowserRouter([
         element: <UnAuthorizeRolePage />,
       },
     ],
+  },
+  {
+    path: ROUTES.COMMUNITY_DETAIL,
+    element: <CommunityDetailPage />,
   },
 ]);
 

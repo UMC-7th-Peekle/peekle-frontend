@@ -23,6 +23,7 @@ client.interceptors.request.use(
   (config: CustomInternalAxiosRequestConfig) => {
     if (config.requireAuth) {
       const accessToken = localStorage.getItem('accessToken');
+      console.log(accessToken);
 
       if (accessToken) {
         config.headers = config.headers || {};

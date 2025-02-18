@@ -5,10 +5,12 @@ import Reply from '@/assets/images/community/reply.svg?react';
 import { useCommunityId } from '@/hooks';
 import { usePostArticleCommentLike } from '@/pages/community/hooks/like/usePostArticleCommentLike';
 import { useDelArticleCommentLike } from '@/pages/community/hooks/like/useDelArticleLikeComment';
+import { useCommentReply } from '@/stores/community/useCommentReply';
 
 // 커뮤니티 대댓글 컴포넌트
 export default function CommentReplyCard({ comment }: CommentCardProps) {
   const { communityId, articleId } = useCommunityId();
+  const { replyingTo, setReplyingTo } = useCommentReply();
 
   /*mutation*/
   const postArticleCommentLike = usePostArticleCommentLike();
@@ -22,8 +24,12 @@ export default function CommentReplyCard({ comment }: CommentCardProps) {
   const profile = comment.authorInfo.profileImage
     ? comment.authorInfo.profileImage
     : '/image/peekle-profile.webp';
+
+  // ✅ 현재 commentId가 reply 대상과 일치하면 primary100 배경 적용
+  const isHighlighted = replyingTo?.commentId === comment.commentId;
+
   return (
-    <S.ReplyContainer>
+    <S.ReplyContainer $highlight={isHighlighted}>
       <S.ReplyWrapper>
         <Reply />
       </S.ReplyWrapper>
@@ -37,7 +43,16 @@ export default function CommentReplyCard({ comment }: CommentCardProps) {
         </S.TopTextContainer>
         <S.Content>{comment.content}</S.Content>
         <S.BottomContainer>
-          <S.ReplyButton>답글달기</S.ReplyButton>
+          <S.ReplyButton
+            onClick={() => {
+              if (!authorName || !comment.commentId) {
+                return;
+              }
+              setReplyingTo(authorName, comment.commentId);
+            }}
+          >
+            답글달기
+          </S.ReplyButton>
           <S.ListButton />
         </S.BottomContainer>
       </S.Container>

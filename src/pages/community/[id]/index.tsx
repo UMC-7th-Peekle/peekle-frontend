@@ -23,11 +23,16 @@ export default function CommunityDetailPage() {
   if (isLoading) {
     return <></>;
   }
-  if (error) {
+  if (error || !communityId || !articleId) {
     return <ErrorFallback />;
   }
 
   const article = data?.success.article;
+
+  // 자신의 게시글인지 여부
+  const isMyArticle = Boolean(
+    article?.authorId === Number(localStorage.getItem('user-id')),
+  );
 
   return (
     <>
@@ -45,13 +50,23 @@ export default function CommunityDetailPage() {
       </S.MainContainer>
 
       {/* ✅ 모달 추가 */}
-      <ModalSection
-        communityId={1}
-        articleId={Number(articleId)}
-        type={modalType}
-        onClose={() => setModalType(null)}
-        onDeleteClick={() => setModalType('deleteConfirm')}
-      />
+      {isMyArticle ? (
+        <ModalSection.Mine
+          communityId={1}
+          articleId={Number(articleId)}
+          type={modalType}
+          onClose={() => setModalType(null)}
+          onDeleteClick={() => setModalType('deleteConfirm')}
+        />
+      ) : (
+        <ModalSection
+          type={modalType}
+          onClose={() => setModalType(null)}
+          onReportClick={() => setModalType('deleteConfirm')}
+          communityId={communityId}
+          articleId={articleId}
+        />
+      )}
     </>
   );
 }

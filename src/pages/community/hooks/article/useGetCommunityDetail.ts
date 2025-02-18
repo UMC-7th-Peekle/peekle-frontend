@@ -5,6 +5,30 @@ import { z } from 'zod';
 
 // 커뮤니티 게시판 상세 페이지 정보를 불러오는 API, 훅 그리고 이와 관련된 스키마입니다.
 
+// 유저 정보 스키마
+
+const CommentAuthorInfoSchema = z.object({
+  userId: z.number().int().nullable().optional(),
+  nickname: z.string().nullable().optional(),
+  profileImage: z.string().nullable().optional(),
+});
+
+// 댓글 요소 스키마
+const ArticleCommentSchema = z.object({
+  authorInfo: CommentAuthorInfoSchema.default({}),
+  isLikedByUser: z.boolean(),
+  commentLikesCount: z.number().int(),
+  content: z.string(),
+  isAnonymous: z.number().int(),
+  status: z.enum(['active', 'inactive', 'deleted']),
+  commentId: z.number(),
+  articleId: z.number(),
+  parentCommentId: z.number().nullable(),
+  authorId: z.number(),
+  createdAt: z.string().transform(formatDateCardTime),
+  updatedAt: z.string().transform(formatDateCardTime),
+});
+
 // 이미지 요소 스키마
 const ArticleImageSchema = z.object({
   imageUrl: z.string().url(),
@@ -37,6 +61,7 @@ const ArticleSchema = z.object({
   createdAt: z.string().transform(formatDateCardTime),
   updatedAt: z.string(),
   articleImages: ArticleImagesSchema,
+  articleComments: z.array(ArticleCommentSchema).default([]),
 });
 
 // 성공 응답 스키마

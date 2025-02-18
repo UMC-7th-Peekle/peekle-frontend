@@ -1,6 +1,7 @@
 import { clientAuth } from '@/apis/client';
 import { formatDateCardTime } from '@/utils/dateFormatter';
 import { useQuery } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
 import { z } from 'zod';
 
 // 커뮤니티 게시판 댓글을 불러오는 API
@@ -83,8 +84,8 @@ export const useGetArticleComments = ({
   communityId,
   articleId,
 }: useGetCommunityDetailProps) => {
-  return useQuery<ArticleCommentsResp>({
-    queryKey: ['get-community-comment', communityId, articleId],
+  return useQuery<ArticleCommentsResp, AxiosError>({
+    queryKey: ['get-article-comments', communityId, articleId],
     queryFn: () => getArticleComments({ communityId, articleId }),
     enabled: Boolean(communityId && articleId),
   });
