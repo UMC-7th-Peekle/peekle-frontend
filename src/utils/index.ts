@@ -29,4 +29,5 @@ export {
   getStartDateTime,
   formatSchedules,
   formatEventTitleForSB,
+  transformFormData,
 } from './eventFormatter';

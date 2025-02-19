@@ -5,6 +5,7 @@ import { Button } from '@/components/common/input/button/index';
 import { useNavigate } from 'react-router-dom';
 import useFormatPhoneNumber from './hook/useFormatPhoneNumber';
 import usePostSend from './hook/query/usePostSend';
+import { alert } from '@/utils';
 
 const PhoneNumberPage = () => {
   const navigate = useNavigate();
@@ -32,8 +33,12 @@ const PhoneNumberPage = () => {
           navigate('/auth/sleeper');
         }
       } else if (statusData.resultType === 'SUCCESS') {
+        // 가입된 사용자면 인증번호 보내고 바로 certify로 이동
         if (statusData.success.message === '가입된 사용자의 전화번호입니다.') {
           localStorage.setItem('alreadyRegisteredUser', 'true');
+        } else {
+          // 가입되지 않은 사용자면 회원가입 alert 띄우고 certify로 이동
+          alert('회원가입이 필요합니다.', 'none', '확인');
         }
         localStorage.setItem('phone', PhoneNumber);
         await fetchPostSend(PhoneNumber);

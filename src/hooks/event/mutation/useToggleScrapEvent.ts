@@ -11,10 +11,10 @@ import {
 import { TOGGLE_SCRAP_EVENT_QK } from '@/constants/event';
 
 // API 호출 함수
-const toggleScrapEvent = async (
-  eventId: bigint,
-  isScrapped: boolean,
-): Promise<ToggleScrapEventResponse> => {
+const toggleScrapEvent = async ({
+  eventId,
+  isScrapped,
+}: ToggleScrapEventParams): Promise<ToggleScrapEventResponse> => {
   const response = await clientAuth<ToggleScrapEventResponse>({
     method: isScrapped ? 'DELETE' : 'POST',
     url: `/events/scrap`,
@@ -36,7 +36,7 @@ const useToggleScrapEvent = () => {
     ToggleScrapEventContext
   >({
     mutationFn: ({ eventId, isScrapped }) =>
-      toggleScrapEvent(eventId, isScrapped),
+      toggleScrapEvent({ eventId, isScrapped }),
     onMutate: async ({ eventId, isScrapped }) => {
       await queryClient.cancelQueries({
         queryKey: [TOGGLE_SCRAP_EVENT_QK, eventId],

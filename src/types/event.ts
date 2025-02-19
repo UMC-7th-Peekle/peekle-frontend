@@ -129,7 +129,7 @@ export interface FilePaginationProps {
   onNextPage: () => void;
 }
 
-// 이벤트 필터링
+// 이벤트 api 관련 타입
 // zod 스키마 정의
 // ✅ 이벤트 조회
 export enum CategoryIdEnum {
@@ -167,30 +167,34 @@ export type LocationOptionWithoutAll =
     ? number
     : never;
 
-const CategoryIdSchema = z.nativeEnum(CategoryIdEnum);
+export const CategoryIdSchema = z.nativeEnum(CategoryIdEnum);
 const CategorySchema = z.object({
   name: z.string(),
   description: z.string(),
 });
-const locationGroupIdSchema = z.nativeEnum(LocationGroupIdEnum).nullable();
+const locationGroupIdSchema = z.nativeEnum(LocationGroupIdEnum);
 
 const EventImagesSchema = z.object({
   imageUrl: z.string().url(),
   sequence: z.number(),
 });
 
+export const EventScheduleRepeatTypeSchema = z.enum([
+  'none',
+  'daily',
+  'weekly',
+  'monthly',
+  'yearly',
+  'custom',
+]);
+export type EventScheduleRepeatType = z.infer<
+  typeof EventScheduleRepeatTypeSchema
+>;
 const EventSchedulesSchema = z.object({
-  repeatType: z.enum([
-    'none',
-    'daily',
-    'weekly',
-    'monthly',
-    'yearly',
-    'custom',
-  ]),
+  repeatType: EventScheduleRepeatTypeSchema,
   repeatEndDate: z.string().nullable(),
   isAllDay: z.boolean(),
-  customText: z.string(),
+  customText: z.string().nullable(),
   startDate: z.string(),
   endDate: z.string(),
   startTime: z.string(),
@@ -212,6 +216,90 @@ const EventLocationSchema = z.object({
   detail: z.string().nullable(),
 });
 
+// 이벤트 생성 스키마
+// 폼 스키마
+export const EventCreateFormSchema = z.object({
+  title: z.string().trim().min(1, '제목을 입력하세요.'),
+  content: z.string().trim().min(1, '내용을 입력하세요.'),
+  priceType: z.enum(['무료', '유료']),
+  price: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
+    message: '양수를 입력해주세요.',
+  }),
+  categoryId: CategoryIdSchema,
+  eventUrl: z.string().url('올바른 URL 형식이 아닙니다.').nullable(),
+  location: z.object({
+    address: z
+      .string()
+      .min(1, '주소를 검색해 선택해주세요.')
+      .refine((val) => val.includes('서울'), {
+        message: '아직 서울 주소만 입력 가능해요',
+      }),
+    buildingName: z.string().min(1, '건물 이름을 입력해주세요.'),
+  }),
+  applicationStartDate: z.string().min(1, '시작 날짜를 입력하세요.'),
+  applicationEndDate: z.string().min(1, '종료 날짜를 입력하세요.'),
+  schedules: z.array(
+    z
+      .object({
+        repeatType: EventScheduleRepeatTypeSchema,
+        isAllDay: z.boolean(),
+        customText: z.string().nullable(),
+        startDate: z.string().trim().min(1, '시작 날짜를 입력하세요.'),
+        startTime: z.string().trim().min(1, '시작 시간을 입력하세요.'),
+        endDate: z.string().trim().min(1, '종료 날짜를 입력하세요.'),
+        endTime: z.string().trim().min(1, '종료 시간을 입력하세요.'),
+      })
+      .refine(
+        (data) => {
+          if (data.repeatType === 'custom') {
+            return (
+              data.customText !== null && data.customText.trim().length > 0
+            );
+          }
+          return true; // custom이 아닐 경우 검증 통과
+        },
+        {
+          message: '반복 설명을 입력하세요.',
+          path: ['customText'], // customText 필드에 에러 표시
+        },
+      ),
+  ),
+});
+
+export type EventCreateFormSchedule = z.infer<
+  typeof EventCreateFormSchema
+>['schedules'][0];
+export type EventCreateFormValues = z.infer<typeof EventCreateFormSchema>;
+
+// 데이터 스키마
+export const EventCreateSchema = z.object({
+  title: z.string(),
+  content: z.string(),
+  price: z.number(),
+  categoryId: CategoryIdSchema,
+  eventUrl: z.string().nullable(),
+  applicationStart: z.string(),
+  applicationEnd: z.string(),
+  schedules: z.array(
+    z.object({
+      repeatType: EventScheduleRepeatTypeSchema,
+      repeatEndDate: z.string().nullable(),
+      isAllDay: z.boolean(),
+      customText: z.string().nullable(),
+      startDate: z.string(),
+      endDate: z.string(),
+      startTime: z.string(),
+      endTime: z.string(),
+    }),
+  ),
+  locations: z.object({
+    locationGroupId: locationGroupIdSchema,
+    address: z.string(),
+    buildingName: z.string(),
+  }),
+});
+export type EventCreateData = z.infer<typeof EventCreateSchema>;
+
 export const EventSchema = z.object({
   eventId: z.bigint(),
   title: z.string(),
@@ -219,7 +307,6 @@ export const EventSchema = z.object({
   categoryId: CategoryIdSchema,
   category: CategorySchema,
   createdUserId: z.bigint().nullable(),
-  eventImages: z.array(EventImagesSchema),
   eventSchedules: z.array(EventSchedulesSchema),
   eventLocation: EventLocationSchema,
 });
@@ -385,3 +472,26 @@ export interface ToggleScrapEventParams {
 export interface ToggleScrapEventContext {
   prevData: ToggleScrapEventResponse;
 }
+
+// ✅ 이벤트 생성
+export const CreateEventResponseSchema = ApiResponseSchema(
+  z.object({
+    message: z.string(),
+  }),
+);
+
+export type CreateEventResponse = z.infer<typeof CreateEventResponseSchema>;
+
+export interface CreateEventParams {
+  eventData: EventCreateData;
+  files?: File[];
+}
+
+// ✅ 이벤트 삭제
+export const RemoveEventResponseSchema = ApiResponseSchema(
+  z.object({
+    message: z.string(),
+  }),
+);
+
+export type RemoveEventResponse = z.infer<typeof RemoveEventResponseSchema>;

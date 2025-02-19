@@ -120,7 +120,7 @@ type BtnColor =
   | 'gray50TextGray400'
   | 'yellow'
   | 'none';
-type BtnSize = 'xsmall' | 'small' | 'medium' | 'large';
+type BtnSize = 'xxsmall' | 'xsmall' | 'small' | 'medium' | 'large';
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -164,14 +164,34 @@ export interface MetaTagProps {
 }
 
 // ValidateInput
-export interface ValidateInputProps {
+export interface BaseValidateInputProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {
   id: string;
-  ref?: React.Ref<HTMLInputElement>;
-  placeholder: string;
+  placeholder?: string;
   errorMessage?: string;
   validatedMessage?: string;
 }
+
+export interface ValidateInputProps
+  extends React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> {
+  errorMessage?: string;
+  validatedMessage?: string;
+}
+
 export interface StyledValidateInputProps {
+  $errorMessage?: boolean;
+  $validatedMessage?: boolean;
+}
+
+// ValidateSelect
+export interface ValidateSelectProps {
+  id: string;
+  options: { label: string; value: string | number }[];
+  errorMessage?: string;
+  validatedMessage?: string;
+}
+
+export interface StyledValidateSelectProps {
   $errorMessage?: boolean;
   $validatedMessage?: boolean;
 }

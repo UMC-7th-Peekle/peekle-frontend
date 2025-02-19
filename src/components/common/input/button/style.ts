@@ -51,6 +51,15 @@ const colorStyles = {
 };
 
 const sizeStyles = {
+  xxsmall: css`
+    border-radius: ${theme.borderRadius.md};
+    ${theme.typeFace.caption['14B']};
+    padding: 8px 30px; // 실제 너비는 사용하는 컴포넌트에서 조정
+
+    ${mediaQuery.sMobile`
+      ${theme.typeFace.caption['12B']};
+    `}
+  `,
   xsmall: css`
     border-radius: ${theme.borderRadius.xlg};
     ${theme.typeFace.body['16SB']};
@@ -94,6 +103,7 @@ export const Button = styled.button<StyledButtonProps>`
   align-items: center;
   flex: 1;
   width: 100%;
+  white-space: nowrap;
   max-width: ${({ $width }) => $width};
 
   &:disabled {
