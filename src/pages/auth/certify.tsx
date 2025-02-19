@@ -72,6 +72,11 @@ const CertifyPage = () => {
       return;
     }
 
+    // 가입되지 않은 사용자면 회원가입 alert 띄우고 다음 단계 진행
+    if (!alreadyRegisteredUser) {
+      alert('회원가입이 필요합니다.', 'none', '확인');
+    }
+
     if (timeLeft <= 0) {
       alert(
         '인증 시간이 만료되었습니다. 인증번호를 다시 요청해주세요.',

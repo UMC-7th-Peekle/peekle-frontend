@@ -559,7 +559,7 @@ const EventForm = ({
                   onClick={() => handleRemoveImage(index)}
                 />
               </S.RemoveImageBtnWrapper>
-              {imageErrors[index] || imageErrors[index] === undefined ? (
+              {imageErrors[index] ? (
                 <S.DefaultImageIcon />
               ) : (
                 <S.StyledImage
