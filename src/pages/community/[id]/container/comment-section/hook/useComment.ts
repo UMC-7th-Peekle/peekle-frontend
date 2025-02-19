@@ -16,7 +16,7 @@ export default function useComment({
     articleId,
   });
 
-  const { replyingTo, clearReply } = useCommentReply();
+  const { replyingTo, reReplyingTo, clearReply } = useCommentReply();
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [comment, setComment] = useState('');
 
@@ -27,8 +27,17 @@ export default function useComment({
   const onSubmit = () => {
     if (!comment.trim()) return; // ✅ 빈 댓글 방지
 
-    if (replyingTo) {
+    if (reReplyingTo) {
       // ✅ 답글 요청
+      postCommentReplyMutation.mutate({
+        communityId,
+        articleId,
+        content: comment,
+        isAnonymous,
+        commentId: reReplyingTo.parentCommentId,
+      });
+      clearReply();
+    } else if (replyingTo) {
       postCommentReplyMutation.mutate({
         communityId,
         articleId,
@@ -45,7 +54,6 @@ export default function useComment({
         isAnonymous,
       });
     }
-
     setComment('');
   };
 

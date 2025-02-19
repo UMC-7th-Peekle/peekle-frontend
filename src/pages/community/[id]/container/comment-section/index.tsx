@@ -77,7 +77,11 @@ export default function CommentSection({ article }: CommentSectionProps) {
             {comment.replies.length > 0 && (
               <S.ReplyContainer>
                 {comment.replies.map((reply) => (
-                  <CommentReplyCard key={reply.commentId} comment={reply} />
+                  <CommentReplyCard
+                    key={reply.commentId}
+                    parentCommentId={reply.parentCommentId || 0}
+                    comment={reply}
+                  />
                 ))}
               </S.ReplyContainer>
             )}

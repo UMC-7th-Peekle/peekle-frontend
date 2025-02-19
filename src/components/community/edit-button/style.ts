@@ -44,6 +44,7 @@ const PenIconRect = styled(Pen)`
 
 const ButtonText = styled.p`
   ${theme.typeFace.body['16SB']};
+  color: ${theme.color.gray[0]};
 `;
 
 export {

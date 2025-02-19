@@ -52,6 +52,10 @@ const BottomSheet = styled.div<{ $isClosing?: boolean }>`
         `}
 `;
 
+const ReplyBottomSheet = styled(BottomSheet)`
+  height: 138px;
+`;
+
 const ReportBottomSheet = styled(BottomSheet)`
   height: 138px;
 `;
@@ -162,4 +166,5 @@ export {
   DeleteConfirmButtonWrapper,
   CancelButton,
   DeleteButton,
+  ReplyBottomSheet,
 };

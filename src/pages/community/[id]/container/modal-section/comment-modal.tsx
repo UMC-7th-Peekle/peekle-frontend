@@ -104,13 +104,10 @@ CommentModalSection.Mine = function CommentModalSectionMine({
     <>
       {type === 'bottomSheet' && (
         <S.BottomSheetOverlay onClick={handleClose}>
-          <S.BottomSheet
+          <S.ReplyBottomSheet
             $isClosing={isClosing}
             onClick={(e) => e.stopPropagation()}
           >
-            <S.BottomSheetOption onClick={() => {}}>
-              댓글 수정하기
-            </S.BottomSheetOption>
             <S.BottomSheetOption
               onClick={() => {
                 handleClose();
@@ -124,7 +121,7 @@ CommentModalSection.Mine = function CommentModalSectionMine({
             <S.BottomSheetCancel onClick={handleClose}>
               닫기
             </S.BottomSheetCancel>
-          </S.BottomSheet>
+          </S.ReplyBottomSheet>
         </S.BottomSheetOverlay>
       )}
 

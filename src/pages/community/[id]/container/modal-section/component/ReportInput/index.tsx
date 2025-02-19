@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import * as S from './style';
 import { usePostArticleReport } from '@/pages/community/hooks/report/usePostArticleReport';
+import { usePostArticleCommentReport } from '@/pages/community/hooks/report/usePostArticleCommentReport';
+import { useCommentReply } from '@/stores/community/useCommentReply';
 
 interface ReportInputProps {
   onClose: () => void;
@@ -14,11 +16,32 @@ export function ReportInput({
   communityId,
 }: ReportInputProps) {
   const [reason, setReason] = useState('');
+  const { replyingTo, reReplyingTo, clearReply } = useCommentReply();
   const maxLength = 100;
 
   const ArticleReportMutation = usePostArticleReport();
+  const ArticleCommentReportMutation = usePostArticleCommentReport();
 
   const onSubmit = () => {
+    // 댓글 신고의 경우
+    if (replyingTo?.commentId) {
+      ArticleCommentReportMutation.mutate({
+        communityId: Number(communityId),
+        articleId: Number(articleId),
+        commentId: replyingTo.commentId,
+        reason,
+      });
+      clearReply();
+    } else if (reReplyingTo?.commentId) {
+      ArticleCommentReportMutation.mutate({
+        communityId: Number(communityId),
+        articleId: Number(articleId),
+        commentId: reReplyingTo.commentId,
+        reason,
+      });
+      clearReply();
+    }
+    // 게시글 신고의 경우
     ArticleReportMutation.mutate({
       communityId: Number(communityId),
       articleId: Number(articleId),

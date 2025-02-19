@@ -16,7 +16,7 @@ const AuthorInfoSchema = z.object({
 
 // 댓글 요소 스키마
 const ArticleCommentSchema = z.object({
-  authorInfo: AuthorInfoSchema.default({}),
+  authorInfo: AuthorInfoSchema.nullable(),
   isLikedByUser: z.boolean(),
   commentLikesCount: z.number().int(),
   content: z.string(),

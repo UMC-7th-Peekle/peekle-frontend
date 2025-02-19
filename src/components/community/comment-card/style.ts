@@ -71,8 +71,10 @@ const TopTextContainer = styled.div`
   padding-top: 8px;
 `;
 
-const Content = styled.div`
+const Content = styled.div<{ $isDeleted: boolean }>`
   ${theme.typeFace.body['16R']};
+  color: ${({ $isDeleted, theme }) =>
+    $isDeleted ? theme.color.gray[200] : theme.color.gray[900]};
 `;
 
 const BottomContainer = styled.div`

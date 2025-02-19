@@ -5,11 +5,11 @@ import {
   ErrorFallback,
   TextFields,
 } from '@/components';
-import * as SS from '../../event/search/style';
 import BodySection from '../container/body-section';
 import { useRecentSearch } from '@/hooks';
 import { useGetCommunity } from '../hooks/community/useGetCommunity';
 import { useInfiniteScroll } from '../hooks/util/useInfiniteScroll';
+import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
 
 export default function CommunitySearchPage() {
@@ -37,6 +37,8 @@ export default function CommunitySearchPage() {
     query: query ?? '',
     communityId: 1,
   });
+
+  const navigate = useNavigate();
 
   const { lastElementRef } = useInfiniteScroll({
     isFetchingNextPage,
@@ -75,7 +77,7 @@ export default function CommunitySearchPage() {
     <>
       <S.MainContainer>
         <S.Appbar>
-          <Backward size={'28px'} navigateUrl={ROUTES.COMMUNITY} />
+          <Backward size={'28px'} />
           <TextFields
             queryKey="community-search"
             localKey="recent-community-search"
@@ -88,32 +90,33 @@ export default function CommunitySearchPage() {
         {/* 최근 검색어 목록 */}
         {!isSearched &&
           (recentSearch.length > 0 ? (
-            <SS.RecentSearchContainer>
-              <SS.RecentSearchRow>
-                <SS.RecentSearchTitle>최근 검색</SS.RecentSearchTitle>
-                <SS.ClearButton onClick={handleClear}>전체 삭제</SS.ClearButton>
-              </SS.RecentSearchRow>
-              <SS.RecentSearchTextContainer>
+            <S.RecentSearchContainer>
+              <S.RecentSearchRow>
+                <S.RecentSearchTitle>최근 검색</S.RecentSearchTitle>
+                <S.ClearButton onClick={handleClear}>전체 삭제</S.ClearButton>
+              </S.RecentSearchRow>
+              <S.RecentSearchTextContainer>
                 {recentSearch.map((search) => (
-                  <SS.RecentSearchRow
+                  <S.RecentSearchRow
                     key={search}
                     onClick={() => handleRecentSearchClick(search)}
                   >
-                    <SS.RecentSearchText>{search}</SS.RecentSearchText>
-                    <SS.XIcon
+                    <S.RecentSearchText>{search}</S.RecentSearchText>
+                    <S.XIcon
                       onClick={(e) => handleRemoveRecentSearch(search, e)}
                     />
-                  </SS.RecentSearchRow>
+                  </S.RecentSearchRow>
                 ))}
-              </SS.RecentSearchTextContainer>
-            </SS.RecentSearchContainer>
+              </S.RecentSearchTextContainer>
+            </S.RecentSearchContainer>
           ) : (
-            <SS.NoRecentSearch />
+            <S.NoRecentSearch />
           ))}
 
         {/* 검색어가 없을때 */}
-        {articles.length === 0 && (
+        {articles.length === 0 && query && isSearched && (
           <BodySection.None
+            onClick={() => navigate(ROUTES.COMMUNITY_EDIT)}
             subTitle={`"${query}"에 관한\n첫 게시글을 작성해보세요!`}
           ></BodySection.None>
         )}

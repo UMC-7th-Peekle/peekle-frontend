@@ -3,7 +3,6 @@ import { useGetCommunityLike } from '../hooks/community/useGetCommunityLike';
 import * as S from './style';
 import BodySection from './container/body-section';
 import { useInfiniteScroll } from '../hooks/util/useInfiniteScroll';
-import { ROUTES } from '@/constants/routes';
 
 export default function CommunityLikePage() {
   const {
@@ -45,7 +44,7 @@ export default function CommunityLikePage() {
   return (
     <S.MainContainer>
       <S.Appbar>
-        <Backward size="20px" navigateUrl={ROUTES.COMMUNITY} />
+        <Backward size="20px" />
         <S.Title>좋아요</S.Title>
         <S.SizedBox />
       </S.Appbar>

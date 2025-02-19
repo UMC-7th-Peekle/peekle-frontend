@@ -5,7 +5,6 @@ import * as S from './style';
 import ThreeDot from '@/components/common/list';
 import MainSection from './container/main-section';
 import ModalSection from './container/modal-section';
-import { ROUTES } from '@/constants/routes';
 import CommentSection from '@/pages/community/[id]/container/comment-section';
 import { useCommunityModal } from '@/stores/community/useCommunityModal';
 
@@ -36,7 +35,7 @@ export default function CommunityDetailPage() {
     <>
       <S.MainContainer>
         <S.Appbar>
-          <Backward navigateUrl={ROUTES.COMMUNITY} />
+          <Backward />
           <S.Title>게시글 상세</S.Title>
           <ThreeDot
             size="20px"

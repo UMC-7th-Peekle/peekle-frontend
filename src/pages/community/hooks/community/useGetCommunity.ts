@@ -1,7 +1,7 @@
 import { clientAuth } from '@/apis/client';
 import { formatDateCardTime } from '@/utils/dateFormatter';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
+import axios, { AxiosError } from 'axios';
 import { z } from 'zod';
 
 // 커뮤니티 게시글 목록 API
@@ -30,7 +30,7 @@ const ArticleSchema = z.object({
 
 const SuccessResponseSchema = z.object({
   message: z.string().nullable(),
-  articles: z.array(ArticleSchema),
+  articles: z.array(ArticleSchema).nullable(),
   nextCursor: z.number().nullable(),
   hasNextPage: z.boolean(),
 });
@@ -76,6 +76,21 @@ const getCommunity = async ({
 
     return CommunityResponseSchema.parse(response.data);
   } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.status === 404) {
+      console.log('📌 404 Not Found - 더 이상 게시글이 없습니다.');
+      return {
+        resultType: 'SUCCESS',
+        error: null,
+        success: {
+          message: null,
+          articles: [],
+          nextCursor: null,
+          hasNextPage: false,
+        },
+      };
+    } else if (axios.isAxiosError(error) && error.response?.status === 400) {
+      return null;
+    }
     console.error('❌ Zod 파싱 에러 또는 API 에러:', error);
     throw error;
   }
@@ -91,7 +106,7 @@ export const useGetCommunity = ({
   query?: string | null;
 }) => {
   return useInfiniteQuery<CommunityResponse | null, AxiosError>({
-    queryKey: ['get-community', communityId],
+    queryKey: ['get-community', communityId, query],
     queryFn: async ({ pageParam }) =>
       getCommunity({
         pageParam: pageParam as number | undefined,

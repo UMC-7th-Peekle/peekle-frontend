@@ -65,6 +65,7 @@ const StyledTextarea = styled.textarea`
 `;
 
 const SendButton = styled.button`
+  margin-bottom: 20px;
   width: 34px;
   height: 34px;
   background-color: ${theme.color.gray[600]};
@@ -76,9 +77,8 @@ const SendButton = styled.button`
   justify-content: center;
   transition: opacity 0.2s ease-in-out;
   margin-right: 16px;
-  margin-bottom: 20px;
   svg {
-    width: 20px;
+    width: 18px;
   }
 `;
 
