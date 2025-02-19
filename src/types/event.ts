@@ -13,7 +13,6 @@ import {
   GET_EVENT_DETAIL_QK,
   GET_EVENTS_SCRAPPED_QK,
 } from '@/constants/event';
-import priceFormatter from '@/utils/priceFormatter';
 
 // CheckItem
 export interface CheckItemProps {
@@ -174,6 +173,9 @@ const CategorySchema = z.object({
 });
 const locationGroupIdSchema = z.nativeEnum(LocationGroupIdEnum);
 
+export const PriceTypeSchema = z.enum(['무료', '유료']);
+export type PriceType = z.infer<typeof PriceTypeSchema>;
+
 const EventImagesSchema = z.object({
   imageUrl: z.string().url(),
   sequence: z.number(),
@@ -190,7 +192,7 @@ export const EventScheduleRepeatTypeSchema = z.enum([
 export type EventScheduleRepeatType = z.infer<
   typeof EventScheduleRepeatTypeSchema
 >;
-const EventSchedulesSchema = z.object({
+export const EventSchedulesSchema = z.object({
   repeatType: EventScheduleRepeatTypeSchema,
   repeatEndDate: z.string().nullable(),
   isAllDay: z.boolean(),
@@ -203,17 +205,17 @@ const EventSchedulesSchema = z.object({
 
 const EventLocationSchema = z.object({
   coordinates: z.array(z.number()),
-  locationGroupId: locationGroupIdSchema,
-  roadAddress: z.string().nullable(),
-  jibunAddress: z.string().nullable(),
-  buildingCode: z.string().nullable(),
-  buildingName: z.string().nullable(),
-  sido: z.string().nullable(),
-  sigungu: z.string().nullable(),
-  sigunguCode: z.string().nullable(),
-  roadnameCode: z.string().nullable(),
-  zoneCode: z.string().nullable(),
-  detail: z.string().nullable(),
+  // locationGroupId: locationGroupIdSchema,
+  // roadAddress: z.string().nullable(),
+  // jibunAddress: z.string().nullable(),
+  // buildingCode: z.string().nullable(),
+  // buildingName: z.string().nullable(),
+  // sido: z.string().nullable(),
+  // sigungu: z.string().nullable(),
+  // sigunguCode: z.string().nullable(),
+  // roadnameCode: z.string().nullable(),
+  // zoneCode: z.string().nullable(),
+  // detail: z.string().nullable(),
 });
 
 // 이벤트 생성 스키마
@@ -221,8 +223,11 @@ const EventLocationSchema = z.object({
 export const EventCreateFormSchema = z.object({
   title: z.string().trim().min(1, '제목을 입력하세요.'),
   content: z.string().trim().min(1, '내용을 입력하세요.'),
-  priceType: z.enum(['무료', '유료']),
-  price: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
+  priceType: PriceTypeSchema,
+  // price: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
+  //   message: '양수를 입력해주세요.',
+  // }),
+  price: z.number().refine((val) => val > 0, {
     message: '양수를 입력해주세요.',
   }),
   categoryId: CategoryIdSchema,
@@ -298,17 +303,49 @@ export const EventCreateSchema = z.object({
     buildingName: z.string(),
   }),
 });
+
 export type EventCreateData = z.infer<typeof EventCreateSchema>;
+
+// ✅ 이벤트 수정
+export const EventUpdateSchema = EventCreateSchema.extend({
+  existingImageSequence: z.array(z.number()),
+  newImageSequence: z.array(z.number()),
+});
+export type UpdateEventData = z.infer<typeof EventUpdateSchema>;
+
+export const UpdateEventResponseSchema = ApiResponseSchema(
+  z.object({
+    message: z.string(),
+  }),
+);
+
+export type UpdateEventResponse = z.infer<typeof UpdateEventResponseSchema>;
+
+export interface UpdateEventParams {
+  eventId: bigint;
+  eventData: UpdateEventData;
+  files?: File[];
+}
+
+// ✅ 이벤트 삭제
+export const RemoveEventResponseSchema = ApiResponseSchema(
+  z.object({
+    message: z.string(),
+  }),
+);
+
+export type RemoveEventResponse = z.infer<typeof RemoveEventResponseSchema>;
 
 export const EventSchema = z.object({
   eventId: z.bigint(),
   title: z.string(),
-  price: z.number().transform(priceFormatter),
+  price: z.number(),
   categoryId: CategoryIdSchema,
   category: CategorySchema,
   createdUserId: z.bigint().nullable(),
   eventSchedules: z.array(EventSchedulesSchema),
   eventLocation: EventLocationSchema,
+  eventImages: z.array(EventImagesSchema),
 });
 
 // 쿼리 키 타입
@@ -344,11 +381,7 @@ export type EventSchedule = z.infer<typeof EventSchedulesSchema>;
 export type EventData = z.infer<typeof EventSchema>;
 
 const SuccessEventsReponeseSchema = z.object({
-  events: z.array(
-    EventSchema.extend({
-      price: z.string(),
-    }),
-  ),
+  events: z.array(EventSchema),
   nextCursor: z.number().optional().nullable(),
   hasNextPage: z.boolean(),
 });
@@ -364,7 +397,7 @@ export const EventDetailSchema = z.object({
   eventId: z.bigint(),
   title: z.string(),
   content: z.string(),
-  price: z.number().transform(priceFormatter),
+  price: z.number(),
   locationGroupId: locationGroupIdSchema,
   eventUrl: z.string().url(),
   applicationStart: z.string().datetime(),
@@ -381,24 +414,9 @@ export const EventDetailSchema = z.object({
 export type EventDetailData = z.infer<typeof EventDetailSchema>;
 export const EventDetailResponseSchema = ApiResponseSchema(
   z.object({
-    event: EventDetailSchema.extend({
-      price: z.string(),
-    }),
+    event: EventDetailSchema,
   }),
 );
-
-export interface FormattedEventDetail {
-  eventId: bigint;
-  eventImages: EventImages[];
-  eventSchedules: EventSchedule[];
-  // detailAddress: string;
-  // buildingName: string;
-  eventUrl: string;
-  categoryName: string;
-  title: string;
-  content: string;
-  price: string;
-}
 
 // 쿼리 키 타입
 export type EventDetailQkType = [
@@ -416,21 +434,9 @@ export const GetEventsScrappedResponseSchema = ApiResponseSchema(
         price: z.string(),
       }),
     ),
+    hasNextPage: z.boolean(),
+    nextCursor: z.number().optional().nullable(),
   }),
-);
-
-const SuccessEventsScrappedReponeseSchema = z.object({
-  events: z.array(
-    EventSchema.extend({
-      price: z.string(),
-    }),
-  ),
-  nextCursor: z.number().optional().nullable(),
-  hasNextPage: z.boolean(),
-});
-
-export const EventsScrappedResponseSchema = ApiResponseSchema(
-  SuccessEventsScrappedReponeseSchema,
 );
 
 export interface getEventsScrappedParams {
@@ -447,7 +453,7 @@ export type EventsScrappedQKType = [
 ];
 
 export type EventsScrappedResponse = z.infer<
-  typeof EventsScrappedResponseSchema
+  typeof GetEventsScrappedResponseSchema
 >;
 
 // ✅ 이벤트 스크랩, 취소
@@ -486,12 +492,3 @@ export interface CreateEventParams {
   eventData: EventCreateData;
   files?: File[];
 }
-
-// ✅ 이벤트 삭제
-export const RemoveEventResponseSchema = ApiResponseSchema(
-  z.object({
-    message: z.string(),
-  }),
-);
-
-export type RemoveEventResponse = z.infer<typeof RemoveEventResponseSchema>;

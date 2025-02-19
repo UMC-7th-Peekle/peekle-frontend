@@ -55,6 +55,10 @@ export const formatEventTitleForSB = (title: string, length: number) => {
   return result;
 };
 
+export const getCategoryId = (categoryName: string) => {
+  return CategoryIdEnum[categoryName as keyof typeof CategoryIdEnum];
+};
+
 // 폼 데이터 변환
 const getLocationGroupId = (address: string): LocationGroupIdEnum => {
   const mapping: { [key: string]: LocationGroupIdEnum } = {

@@ -45,7 +45,7 @@ import ManagePage from '@/pages/user/manage';
 import ResignPage from '@/pages/user/resign';
 import TossPage from '@/pages/auth/toss';
 import RequestPage from '@/pages/user/request';
-import { ErrorFallback } from '@/components';
+import { ErrorFallback, DeferredLoader } from '@/components';
 import { ROUTES, ADMIN_PATHS } from '@/constants/routes';
 
 const ProtectedPage = ({ children }: { children: React.ReactNode }) => {
@@ -217,7 +217,11 @@ const router = createBrowserRouter([
       },
       {
         path: ROUTES.EVENT_EDIT,
-        element: <EventEditPage />,
+        element: (
+          <Suspense fallback={<DeferredLoader />}>
+            <EventEditPage />
+          </Suspense>
+        ),
       },
       {
         path: ROUTES.ADMIN_SEARCH,

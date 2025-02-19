@@ -70,6 +70,13 @@ const ImageSlider = ({ images, title = 'event' }: ImageSliderProps) => {
                       return newErrors;
                     });
                   }}
+                  onLoad={() => {
+                    setImageErrors((prev) => {
+                      const newErrors = [...prev];
+                      newErrors[index] = false;
+                      return newErrors;
+                    });
+                  }}
                 />
               ) : (
                 <S.DefaultImageIcon />

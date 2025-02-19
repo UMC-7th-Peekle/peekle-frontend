@@ -5,6 +5,7 @@ import 'react-loading-skeleton/dist/skeleton.css';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
 import { EventCardProps } from '@/types/event';
+import { getDistrict, priceFormatter } from '@/utils';
 
 export const EventCard = forwardRef<HTMLDivElement, EventCardProps>(
   ({ id, eventData, onClick }, ref) => {
@@ -17,9 +18,12 @@ export const EventCard = forwardRef<HTMLDivElement, EventCardProps>(
     const {
       eventImages,
       title,
-      eventLocation: { sigungu },
+      // eventLocation: { address },
       price,
     } = eventData;
+
+    const address = '서울시 강남구 서초동 123'; // 임시
+    const district = getDistrict(address);
 
     const thumbnailImage =
       eventImages && eventImages.length > 0 && eventImages[0].imageUrl;
@@ -34,8 +38,8 @@ export const EventCard = forwardRef<HTMLDivElement, EventCardProps>(
         <S.Info>
           <S.Title>{title}</S.Title>
           <S.SubInfoWrapper>
-            <S.SubInfo>{sigungu}</S.SubInfo>
-            <S.SubInfo>{price}</S.SubInfo>
+            <S.SubInfo>{district}</S.SubInfo>
+            <S.SubInfo>{priceFormatter(price)}</S.SubInfo>
           </S.SubInfoWrapper>
         </S.Info>
         <S.ImageContainer>
@@ -44,6 +48,7 @@ export const EventCard = forwardRef<HTMLDivElement, EventCardProps>(
               src={thumbnailImage}
               alt={`${title}-img`}
               onError={() => setImageError(true)}
+              onLoad={() => setImageError(false)}
             />
           ) : (
             <S.DefaultImageIcon />

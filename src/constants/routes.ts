@@ -11,7 +11,7 @@ export const ROUTES = {
   EVENT_SCRAP: '/event/scrap',
   EVENT_DETAIL: '/event/:id',
   EVENT_CREATE: '/admin/event/create',
-  EVENT_EDIT: '/admin/event/edit',
+  EVENT_EDIT: '/admin/event/edit/:id',
   COMMUNITY: '/community',
   COMMUNITY_SEARCH: '/community/search',
   COMMUNITY_LIKE: '/community/like',
