@@ -7,7 +7,7 @@ export default function EditButton({
   return (
     <S.DefaultTypeContainer onClick={onClick}>
       <S.PenIcon />
-      <S.ButtonText>{text}</S.ButtonText>
+      <S.DarkButtonText>{text}</S.DarkButtonText>
     </S.DefaultTypeContainer>
   );
 }

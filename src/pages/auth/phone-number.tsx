@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import { FixedBackward } from '@/components';
-import { Button } from '@/components/common/input/button/index';
 import { useNavigate } from 'react-router-dom';
 import useFormatPhoneNumber from './hook/useFormatPhoneNumber';
+import { theme } from '@/styles/theme';
 
 const PhoneNumberPage = () => {
   const navigate = useNavigate();
@@ -16,10 +16,10 @@ const PhoneNumberPage = () => {
   const handleSubmit = async () => {
     if (loading) return;
     setLoading(true);
-    const PhoneNumber = phone.replace(/-/g, '');
+    const phoneNumber = phone.replace(/-/g, '');
     try {
       const statusResponse = await fetch(
-        `${api}/auth/phone/account/status?phone=${PhoneNumber}`,
+        `${api}/auth/phone/account/status?phone=${phoneNumber}`,
       );
       const statusData = await statusResponse.json();
 
@@ -40,19 +40,21 @@ const PhoneNumberPage = () => {
           headers: {
             'Content-type': 'application/json',
           },
-          body: JSON.stringify({ phone: PhoneNumber }),
+          body: JSON.stringify({ phone: phoneNumber }),
         });
         const data = await client.json();
         console.log(data);
         if (client.ok) {
-          navigate('/auth/certify', {
-            state: {
-              phone: PhoneNumber,
-              phoneVerificationSessionId:
-                data.success.phoneVerificationSessionId,
-              alreadyRegisteredUser,
-            },
-          });
+          localStorage.setItem('phone-number', String(phoneNumber));
+          localStorage.setItem(
+            'phoneVerificationSessionId',
+            data.success.phoneVerificationSessionId,
+          );
+          localStorage.setItem(
+            'alreadyRegisteredUser',
+            String(alreadyRegisteredUser),
+          );
+          navigate('/auth/certify');
         }
       }
     } catch (error) {
@@ -62,38 +64,35 @@ const PhoneNumberPage = () => {
     }
   };
   return (
-    <Container>
-      {/* 뒤로가기 버튼 */}
-      <FixedBackward />
-      {/* 입력 안내 문구 */}
-      <Title>
-        휴대폰 번호를
-        <br />
-        입력해주세요
-      </Title>
+    <>
+      <Container>
+        {/* 뒤로가기 버튼 */}
+        <FixedBackward />
+        {/* 입력 안내 문구 */}
+        <Title>
+          휴대폰 번호를
+          <br />
+          입력해주세요
+        </Title>
 
-      {/* 전화번호 입력 필드 */}
-      <Input
-        type="text"
-        inputMode="numeric"
-        name="phone"
-        value={phone}
-        onChange={(e) => setPhone(e.target.value)}
-        maxLength={13}
-        placeholder="휴대폰 번호 입력"
-      />
-      <ButtonWrapper>
-        <Button
-          color="primary500"
-          size="medium"
-          width="412px"
-          disabled={phone.length < 13 || loading}
-          onClick={handleSubmit}
-        >
-          {loading ? '전송 중...' : '인증 번호 받기'}
-        </Button>
-      </ButtonWrapper>
-    </Container>
+        {/* 전화번호 입력 필드 */}
+        <Input
+          type="text"
+          inputMode="numeric"
+          name="phone"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          maxLength={13}
+          placeholder="휴대폰 번호 입력"
+        />
+      </Container>
+      <NextButton
+        disabled={phone.length < 13 || loading}
+        onClick={handleSubmit}
+      >
+        {loading ? '전송 중...' : '인증 번호 받기'}
+      </NextButton>
+    </>
   );
 };
 
@@ -134,11 +133,20 @@ const Input = styled.input`
   }
   margin-bottom: 100px;
 `;
-const ButtonWrapper = styled.div`
+const NextButton = styled.button`
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
+  height: 72px;
   display: flex;
   justify-content: center;
+  align-items: center;
+  ${theme.typeFace.subTitle[20]};
+  background-color: ${theme.color.primary[500]};
+  color: ${theme.color.gray[50]};
+  :disabled {
+    background-color: ${theme.color.gray[100]};
+    color: ${theme.color.gray[200]};
+  }
 `;
