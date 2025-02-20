@@ -25,7 +25,7 @@ const RequestPage = () => {
             <BoxText>토 · 일 · 공휴일 휴무</BoxText>
           </TextContainer>
         </LeftContent>
-        <ArrowSVG />
+        <ArrowSVG onClick={handleArrowClick} style={{ cursor: 'pointer' }} />
       </Box>
     </Container>
   );
