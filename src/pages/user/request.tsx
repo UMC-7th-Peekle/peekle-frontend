@@ -16,7 +16,7 @@ const RequestPage = () => {
         <Backward />
       </BackwardWrapper>
       <Header>문의하기</Header>
-      <Box>
+      <Box onClick={handleArrowClick} style={{ cursor: 'pointer' }}>
         <LeftContent>
           <KakaoIcon />
           <TextContainer>
@@ -25,7 +25,7 @@ const RequestPage = () => {
             <BoxText>토 · 일 · 공휴일 휴무</BoxText>
           </TextContainer>
         </LeftContent>
-        <ArrowSVG onClick={handleArrowClick} style={{ cursor: 'pointer' }} />
+        <ArrowSVG />
       </Box>
     </Container>
   );
