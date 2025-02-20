@@ -8,9 +8,9 @@ const useMapMarkers = (
   mapInstance: naver.maps.Map | undefined,
   events: EventData[],
 ) => {
-  const markersRef = useRef<Map<bigint, naver.maps.Marker>>(new Map());
-  const whiteSBMarkersRef = useRef<Map<bigint, naver.maps.Marker>>(new Map());
-  const blackSBMarkerRef = useRef<Map<bigint, naver.maps.Marker>>(new Map());
+  const markersRef = useRef<Map<number, naver.maps.Marker>>(new Map());
+  const whiteSBMarkersRef = useRef<Map<number, naver.maps.Marker>>(new Map());
+  const blackSBMarkerRef = useRef<Map<number, naver.maps.Marker>>(new Map());
   const { selectedEvent, setSelectedEvent, setLatestPos } = useMapStore();
   const { hasMyLocationChanged } = useMyLocationStore();
 
@@ -117,7 +117,7 @@ const useMapMarkers = (
       if (!mapInstance) return;
 
       // 내 위치 마커 생성
-      let myLocMarker = markersRef.current.get(0n);
+      let myLocMarker = markersRef.current.get(0);
       if (!myLocMarker || hasMyLocationChanged) {
         myLocMarker = new naver.maps.Marker({
           position: new naver.maps.LatLng(lat, lng),
@@ -129,14 +129,14 @@ const useMapMarkers = (
             anchor: new naver.maps.Point(18, 18),
           },
         });
-        markersRef.current.set(0n, myLocMarker);
+        markersRef.current.set(0, myLocMarker);
       }
 
       const currentEventIds = new Set(events.map((event) => event.eventId));
 
       // 불필요한 마커 제거
       markersRef.current.forEach((marker, eventId) => {
-        if (eventId === 0n) return; // 내 위치 마커는 pass
+        if (eventId === 0) return; // 내 위치 마커는 pass
         if (!currentEventIds.has(eventId)) {
           // 이벤트가 없으면 마커 제거
           marker.setMap(null);
@@ -278,7 +278,7 @@ const useMapMarkers = (
     let hasMarkerInMapBounds = false;
     markersRef.current.forEach((marker, eventId) => {
       if (mapBounds.hasPoint(marker.getPosition())) {
-        if (eventId !== 0n && hasMarkerInMapBounds === false)
+        if (eventId !== 0 && hasMarkerInMapBounds === false)
           hasMarkerInMapBounds = true;
       }
     });

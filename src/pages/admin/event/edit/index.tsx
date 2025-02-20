@@ -3,7 +3,7 @@ import { useId, useGetEventDetail } from '@/hooks';
 
 const EventEditPage = () => {
   const id = useId();
-  const { data: eventDetailData } = useGetEventDetail(BigInt(id));
+  const { data: eventDetailData } = useGetEventDetail(Number(id));
 
   return (
     <EventForm mode="update" eventDetailData={eventDetailData.success?.event} />

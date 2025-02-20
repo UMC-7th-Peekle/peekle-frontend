@@ -18,7 +18,7 @@ const toggleScrapEvent = async ({
   const response = await clientAuth<ToggleScrapEventResponse>({
     method: isScrapped ? 'DELETE' : 'POST',
     url: `/events/scrap`,
-    data: { eventId: eventId.toString() },
+    data: { eventId: eventId },
   });
 
   // 응답 데이터 검증

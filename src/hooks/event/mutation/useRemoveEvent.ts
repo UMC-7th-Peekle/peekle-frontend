@@ -5,10 +5,10 @@ import { RemoveEventResponseSchema, RemoveEventResponse } from '@/types/event';
 import { toast } from '@/utils';
 
 // API 호출 함수
-const deleteEvent = async (eventId: bigint): Promise<RemoveEventResponse> => {
+const deleteEvent = async (eventId: number): Promise<RemoveEventResponse> => {
   const response = await clientAuth<RemoveEventResponse>({
     url: `/events`,
-    data: { eventId: eventId.toString() },
+    data: { eventId: eventId },
   });
 
   // 응답 데이터 검증
@@ -22,13 +22,14 @@ const useRemoveEvent = () => {
   const { mutateAsync: removeEvent } = useMutation<
     RemoveEventResponse,
     Error,
-    bigint
+    number
   >({
-    mutationFn: (eventId: bigint) => deleteEvent(eventId),
+    mutationFn: (eventId: number) => deleteEvent(eventId),
     onSuccess: () => {
       toast('이벤트가 삭제되었어요.');
     },
     onError: (error) => {
+      console.log(error);
       handleError(error);
     },
   });

@@ -8,19 +8,19 @@ import { EventCardProps } from '@/types/event';
 import { getDistrict, priceFormatter } from '@/utils';
 
 export const EventCard = forwardRef<HTMLDivElement, EventCardProps>(
-  ({ id, eventData, onClick }, ref) => {
+  ({ id, eventCardData, onClick }, ref) => {
     const [imageError, setImageError] = useState(false);
     const navigate = useNavigate();
     const { pathname } = useLocation();
     const isSearchPage = pathname === ROUTES.EVENT_SEARCH;
-    if (!eventData) return;
+    if (!eventCardData) return;
 
     const {
       eventImages,
       title,
       // eventLocation: { address },
       price,
-    } = eventData;
+    } = eventCardData;
 
     const address = '서울시 강남구 서초동 123'; // 임시
     const district = getDistrict(address);
@@ -28,8 +28,13 @@ export const EventCard = forwardRef<HTMLDivElement, EventCardProps>(
     const thumbnailImage =
       eventImages && eventImages.length > 0 && eventImages[0].imageUrl;
 
+    const isAdmin = true; // 임시 변수
     const handleCardClick = () => {
-      navigate(`/event/${id}`, { state: { isSearchPage } });
+      if (isAdmin) {
+        navigate(`/admin/event/${id}`);
+      } else {
+        navigate(`/event/${id}`, { state: { isSearchPage } });
+      }
       onClick?.();
     };
 

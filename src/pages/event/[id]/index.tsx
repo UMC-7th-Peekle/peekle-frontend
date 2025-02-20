@@ -15,10 +15,12 @@ import {
   useGetEventDetail,
   useShareKakao,
   useToggleScrapEvent,
+  useRemoveEvent,
 } from '@/hooks';
 import {
+  priceFormatter,
   copyToClipboard,
-  getStartDateTime,
+  formatDateToMonthDay,
   formatSchedules,
   getSubstring,
   toast,
@@ -32,8 +34,9 @@ import {
   useSearchBottomSheetStore,
 } from '@/stores';
 
-export const EventDetailPage = () => {
-  const [isExpanded, setIsExpanded] = useState(false);
+export const EventDetailPage = ({ isAdmin }: { isAdmin: boolean }) => {
+  const [isExpandedTime, setIsExpandedTime] = useState(false);
+  const [isExpandedAddress, setIsExpandedAddress] = useState(false);
   const { setActiveBottomSheet } = useBottomSheetStore();
   const { handleShareKakao } = useShareKakao();
   const { setSelectedEvent } = useMapStore();
@@ -41,17 +44,18 @@ export const EventDetailPage = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
 
-  const isAdmin = true; // 임시 변수
-
   // 검색 페이지에선 지도 보기 클릭시 BS 닫아놓기
   const { setIsSearchBSOpen } = useSearchBottomSheetStore();
+
+  // 이벤트 삭제
+  const { removeEvent } = useRemoveEvent();
 
   // 스크랩 토글
   const { toggleScrap } = useToggleScrapEvent();
 
   //디테일 가져오기
   const id = useId(); //url에서 뽑은 id
-  const { data } = useGetEventDetail(BigInt(id));
+  const { data } = useGetEventDetail(Number(id));
   const eventDetail = data.success?.event;
 
   const thumbnailImg = eventDetail?.eventImages?.[0]?.imageUrl;
@@ -91,12 +95,21 @@ export const EventDetailPage = () => {
     category: { name: categoryName },
     price,
     eventUrl,
+    applicationStart,
+    applicationEnd,
     // isScrapped,
   } = eventDetail;
 
   // 데이터 포맷팅
-  const startDateTime = getStartDateTime(eventSchedules[0]);
-  const time = formatSchedules(eventSchedules[0]);
+  const startDate = formatDateToMonthDay(applicationStart, true, true);
+  const endDate = formatDateToMonthDay(applicationEnd, true, true);
+  const schedules = formatSchedules(
+    eventSchedules,
+    applicationStart,
+    applicationEnd,
+  );
+
+  const isManySchedules = Array.isArray(schedules) && schedules.length > 1;
 
   const detailAddress = '임시 주소';
   const buildingName = '임시 건물명';
@@ -106,7 +119,7 @@ export const EventDetailPage = () => {
     toast('주소가 복사되었습니다.');
   };
 
-  const handleToggleHeart = async (eventId: bigint) => {
+  const handleToggleHeart = async (eventId: number) => {
     // await toggleScrap({ eventId, isScrapped });
     await toggleScrap({ eventId, isScrapped: false });
   };
@@ -134,10 +147,12 @@ export const EventDetailPage = () => {
   };
 
   const handleEditEvent = () => {
-    navigate(ROUTES.EVENT_EDIT);
+    navigate(`${ROUTES.EVENT_EDIT}/${eventId}`);
   };
 
-  const handleDeleteEvent = () => {};
+  const handleDeleteEvent = async () => {
+    await removeEvent(eventId);
+  };
 
   return (
     <>
@@ -172,20 +187,42 @@ export const EventDetailPage = () => {
           <S.Info>
             <S.InfoRow>
               <S.DateIcon />
-              <S.InfoRowText>{startDateTime}</S.InfoRowText>
+              <S.InfoRowText>
+                {startDate} ~ {endDate}
+              </S.InfoRowText>
             </S.InfoRow>
             <S.InfoRow>
               <S.TimeIcon />
-              <S.InfoRowText>{time}</S.InfoRowText>
+              <S.InfoRowText>
+                {isManySchedules ? schedules[0] : schedules}
+              </S.InfoRowText>
+              {isManySchedules && (
+                <S.ArrowDownIcon
+                  $isExpanded={isExpandedTime}
+                  onClick={() => setIsExpandedTime(!isExpandedTime)}
+                />
+              )}
             </S.InfoRow>
+            {isExpandedTime && (
+              <>
+                {schedules.map((schedule, index) => {
+                  return index > 0 ? (
+                    <S.InfoRow>
+                      <S.TimeIcon />
+                      <S.InfoRowText key={index}>{schedule}</S.InfoRowText>
+                    </S.InfoRow>
+                  ) : null;
+                })}
+              </>
+            )}
             <S.InfoRow>
               <S.LocationIcon />
               <S.InfoRowText>{buildingName}</S.InfoRowText>
               <S.ArrowDownIcon
-                $isExpanded={isExpanded}
-                onClick={() => setIsExpanded(!isExpanded)}
+                $isExpanded={isExpandedAddress}
+                onClick={() => setIsExpandedAddress(!isExpandedAddress)}
               />
-              <S.DetailAddressCard $isExpanded={isExpanded}>
+              <S.DetailAddressCard $isExpanded={isExpandedAddress}>
                 <S.DetailAddressTextWrapper>
                   <S.DetailAddressText>{detailAddress}</S.DetailAddressText>
                   <S.DetailAddressCopyText onClick={handleCopyAddress}>
@@ -201,7 +238,7 @@ export const EventDetailPage = () => {
             </S.InfoRow>
             <S.InfoRow>
               <S.CoinIcon />
-              <S.InfoRowText>{price}</S.InfoRowText>
+              <S.InfoRowText>{priceFormatter(price)}</S.InfoRowText>
             </S.InfoRow>
           </S.Info>
         </S.InfoContainer>

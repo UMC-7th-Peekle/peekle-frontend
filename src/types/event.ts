@@ -63,9 +63,15 @@ export interface EventStore {
 }
 
 // event-card
+export interface EventCardData {
+  eventImages: EventImages[];
+  title: string;
+  price: number;
+  // eventLocation: EventLocation;
+}
 export interface EventCardProps {
-  id: bigint;
-  eventData: EventData;
+  id: number;
+  eventCardData: EventCardData;
   onClick?: () => void;
 }
 
@@ -322,7 +328,7 @@ export const UpdateEventResponseSchema = ApiResponseSchema(
 export type UpdateEventResponse = z.infer<typeof UpdateEventResponseSchema>;
 
 export interface UpdateEventParams {
-  eventId: bigint;
+  eventId: number;
   eventData: UpdateEventData;
   files?: File[];
 }
@@ -337,12 +343,12 @@ export const RemoveEventResponseSchema = ApiResponseSchema(
 export type RemoveEventResponse = z.infer<typeof RemoveEventResponseSchema>;
 
 export const EventSchema = z.object({
-  eventId: z.bigint(),
+  eventId: z.number(),
   title: z.string(),
   price: z.number(),
   categoryId: CategoryIdSchema,
   category: CategorySchema,
-  createdUserId: z.bigint().nullable(),
+  createdUserId: z.number().nullable(),
   eventSchedules: z.array(EventSchedulesSchema),
   eventLocation: EventLocationSchema,
   eventImages: z.array(EventImagesSchema),
@@ -394,7 +400,7 @@ export type EventsResponse = z.infer<typeof EventsResponseSchema>;
 
 // ✅ 이벤트 디테일
 export const EventDetailSchema = z.object({
-  eventId: z.bigint(),
+  eventId: z.number(),
   title: z.string(),
   content: z.string(),
   price: z.number(),
@@ -427,20 +433,36 @@ export type EventDetailQkType = [
 export type EventDetailResponse = z.infer<typeof EventDetailResponseSchema>;
 
 // ✅ 이벤트 스크랩 조회
+export const EventSchemaFromScrap = z.object({
+  eventScrapId: z.number(),
+  eventId: z.number(),
+  event: z.object({
+    title: z.string(),
+    content: z.string(),
+    price: z.number(),
+    categoryId: CategoryIdSchema,
+    category: CategorySchema,
+    locationGroupId: locationGroupIdSchema,
+    eventUrl: z.string().url(),
+    applicationStart: z.string().datetime(),
+    applicationEnd: z.string().datetime(),
+    eventImages: z.array(EventImagesSchema),
+    eventSchedules: z.array(EventSchedulesSchema),
+  }),
+});
+
+export type EventDataFromScrap = z.infer<typeof EventSchemaFromScrap>;
+
 export const GetEventsScrappedResponseSchema = ApiResponseSchema(
   z.object({
-    events: z.array(
-      EventSchema.extend({
-        price: z.string(),
-      }),
-    ),
+    events: z.array(EventSchemaFromScrap),
     hasNextPage: z.boolean(),
     nextCursor: z.number().optional().nullable(),
   }),
 );
 
 export interface getEventsScrappedParams {
-  limit: number;
+  limit?: number;
   cursor?: number;
   categories?: CategoryOptionWithoutAll[];
 }
@@ -471,7 +493,7 @@ export type ToggleScrapEventResponse = z.infer<
 >;
 
 export interface ToggleScrapEventParams {
-  eventId: bigint;
+  eventId: number;
   isScrapped: boolean;
 }
 

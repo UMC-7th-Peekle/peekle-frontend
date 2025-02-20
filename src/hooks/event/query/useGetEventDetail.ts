@@ -8,7 +8,7 @@ import {
 import { GET_EVENT_DETAIL_QK } from '@/constants/event';
 
 // api 호출 함수
-const getEvents = async (eventId: bigint): Promise<EventDetailResponse> => {
+const getEvents = async (eventId: number): Promise<EventDetailResponse> => {
   const response = await client<EventDetailResponse>({
     method: 'GET',
     url: `/events/${eventId.toString()}`,
@@ -20,7 +20,7 @@ const getEvents = async (eventId: bigint): Promise<EventDetailResponse> => {
   return response.data;
 };
 
-const useGetEventDetail = (eventId: bigint) => {
+const useGetEventDetail = (eventId: number) => {
   const { data } = useSuspenseQuery<
     EventDetailResponse,
     Error,

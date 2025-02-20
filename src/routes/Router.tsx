@@ -136,7 +136,15 @@ const router = createBrowserRouter([
         path: ROUTES.EVENT_DETAIL,
         element: (
           <Suspense fallback={<EventDetailPageskeleton />}>
-            <EventDetailPage />
+            <EventDetailPage isAdmin={false} />
+          </Suspense>
+        ),
+      },
+      {
+        path: ROUTES.EVENT_DETAIL_ADMIN,
+        element: (
+          <Suspense fallback={<EventDetailPageskeleton />}>
+            <EventDetailPage isAdmin={true} />
           </Suspense>
         ),
       },
@@ -216,7 +224,7 @@ const router = createBrowserRouter([
         element: <EventCreatePage />,
       },
       {
-        path: ROUTES.EVENT_EDIT,
+        path: ROUTES.EVENT_EDIT_ID,
         element: (
           <Suspense fallback={<DeferredLoader />}>
             <EventEditPage />

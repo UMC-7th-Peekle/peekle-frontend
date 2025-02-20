@@ -32,7 +32,6 @@ export const EventList = ({
   const events = data.pages.flatMap((page) => page.success?.events ?? []) ?? [];
 
   const isSearchPage = page === 'search';
-  const isScrapPage = page === 'scrap';
   const isAdmin = true;
 
   const handleCardClick = () => {
@@ -66,7 +65,7 @@ export const EventList = ({
               <EventCard
                 key={event.eventId}
                 id={event.eventId}
-                eventData={event}
+                eventCardData={event}
                 onClick={handleCardClick}
                 ref={index === events.length - 1 ? lastElementRef : null}
               />
@@ -93,13 +92,7 @@ export const EventList = ({
         </>
       ) : (
         <S.EmptyContainer>
-          {isSearchPage ? (
-            <S.NoSearchResult />
-          ) : isScrapPage ? (
-            <S.NoLikeResult />
-          ) : (
-            <S.NoFilteredResult />
-          )}
+          {isSearchPage ? <S.NoSearchResult /> : <S.NoFilteredResult />}
         </S.EmptyContainer>
       )}
     </section>

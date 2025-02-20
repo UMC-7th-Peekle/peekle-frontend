@@ -3,8 +3,8 @@ import { Suspense } from 'react';
 import {
   Backward,
   CategoryChips,
-  EventList,
   EventListSkeleton,
+  EventScrapList,
 } from '@/components';
 
 const EventScrapPage = () => {
@@ -18,7 +18,7 @@ const EventScrapPage = () => {
         <CategoryChips />
       </S.CategoryFilterWrapper>
       <Suspense fallback={<EventListSkeleton />}>
-        <EventList page={'scrap'} />
+        <EventScrapList />
       </Suspense>
     </S.EventScrapContainer>
   );

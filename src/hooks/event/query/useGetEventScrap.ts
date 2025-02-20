@@ -2,7 +2,7 @@ import { InfiniteData, useSuspenseInfiniteQuery } from '@tanstack/react-query';
 import { clientAuth } from '@/apis/client';
 import {
   getEventsScrappedParams,
-  // GetEventsScrappedResponseSchema,
+  GetEventsScrappedResponseSchema,
   EventsScrappedResponse,
   EventsScrappedQKType,
 } from '@/types/event';
@@ -25,8 +25,8 @@ const getEventScrap = async ({
   });
 
   // 응답 데이터 검증
-  // const parsedData = EventsResponseSchema.parse(response.data);
-  // return parsedData;
+  const parsedData = GetEventsScrappedResponseSchema.parse(response.data);
+  return parsedData;
   return response.data;
 };
 
@@ -35,7 +35,7 @@ const useGetEventScrap = ({
   cursor,
   categories,
 }: getEventsScrappedParams) => {
-  const { data, error, fetchNextPage, hasNextPage, isFetching } =
+  const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useSuspenseInfiniteQuery<
       EventsScrappedResponse,
       Error,
@@ -56,7 +56,7 @@ const useGetEventScrap = ({
       },
     });
 
-  return { data, error, fetchNextPage, hasNextPage, isFetching };
+  return { data, error, fetchNextPage, hasNextPage, isFetchingNextPage };
 };
 
 export default useGetEventScrap;

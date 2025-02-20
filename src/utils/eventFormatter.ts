@@ -7,38 +7,130 @@ import {
   EventCreateFormSchedule,
 } from '@/types/event';
 import { formatTime, formatTimeToHHMMSSZ } from './timeFormatter';
-import { formatDateToMonthDay } from './dateFormatter';
+import {
+  formatDate,
+  formatDateToMonthDay,
+  getDayOfWeek,
+} from './dateFormatter';
+import {
+  format,
+  isSameWeek,
+  isSameMonth,
+  isSameYear,
+  parseISO,
+} from 'date-fns';
+import { ko } from 'date-fns/locale';
 
 // 행정구,자치구 추출
 export const getDistrict = (address: string) => {
-  return address.match(/(\S+)구/)?.[1] ?? '';
+  return address.match(/(\S+구)/)?.[1] ?? '';
 };
 
-// 시작일시 추출
-export const getStartDateTime = (schedule: EventSchedule) => {
-  const { startDate, startTime } = schedule;
+// 시작일시, 종료일시 추출
+export const getScheduleDateTime = (
+  schedule: EventSchedule,
+  isEnd: boolean,
+) => {
+  const { startDate, endDate, startTime, endTime } = schedule;
 
-  const date = formatDateToMonthDay(startDate, true);
+  const date = isEnd
+    ? formatDateToMonthDay(endDate, true)
+    : formatDateToMonthDay(startDate, true);
   const time = formatTime(startTime);
 
-  return `${date} ${formatTime(time)}`;
+  return `${date} ${formatTime(time)} ~ ${formatTime(endTime)}`;
 };
 
 // 스케줄 포맷팅
-export const formatSchedules = (schedule: EventSchedule) => {
-  const { repeatType, customText, startTime, endTime } = schedule;
+export const formatSchedules = (
+  schedules: EventSchedule[],
+  applicationEndStart: string,
+  applicationEnd: string,
+) => {
+  if (schedules.length === 0) return '';
 
-  const repeatText =
-    {
-      none: `${customText} `,
-      daily: '매일 ',
-      weekly: '매주 ',
-      monthly: '매달 ',
-      yearly: '매년 ',
-      custom: `${customText} `,
-    }[repeatType] ?? '';
+  const firstSchedule = schedules[0];
+  const { repeatType, startTime, endTime } = firstSchedule;
 
-  return `${repeatText} ${formatTime(startTime)} ~ ${formatTime(endTime)}`;
+  // 모든 스케줄의 repeatText가 동일한지 확인
+  const allSameRepeatText = schedules.every((s) => s.repeatType === repeatType);
+
+  // startDate, endDate가 전체 기간과 일치하는지 확인
+  const allMatchEventPeriod = schedules.every((s) => {
+    // 날짜 파싱
+    const startDate = parseISO(s.startDate);
+    const endDate = parseISO(s.endDate);
+    const appStartDate = parseISO(applicationEndStart);
+    const appEndDate = parseISO(applicationEnd);
+
+    switch (repeatType) {
+      case 'daily':
+        return (
+          s.startDate === applicationEndStart && s.endDate === applicationEnd
+        );
+      case 'weekly':
+        return (
+          isSameWeek(startDate, appStartDate, { weekStartsOn: 1 }) &&
+          isSameWeek(endDate, appEndDate, { weekStartsOn: 1 })
+        );
+      case 'monthly':
+        return (
+          isSameMonth(startDate, appStartDate) &&
+          isSameMonth(endDate, appEndDate)
+        );
+      case 'yearly':
+        return (
+          isSameYear(startDate, appStartDate) && isSameYear(endDate, appEndDate)
+        );
+      default:
+        return false;
+    }
+  });
+
+  // repeatType에 따른 반복 텍스트 설정
+  const getRepeatText = (schedule: EventSchedule) => {
+    const startDateObj = parseISO(schedule.startDate);
+
+    switch (schedule.repeatType) {
+      case 'daily':
+        return '매일';
+      case 'weekly':
+        return `매주 ${format(startDateObj, 'E', { locale: ko })}`; // 화요일
+      case 'monthly':
+        return `매달 ${format(startDateObj, 'd')}일`; // 15일
+      case 'yearly':
+        return `매년 ${format(startDateObj, 'M월 d일')}`; // 3월 15일
+      case 'custom':
+        return schedule.customText ?? '';
+      default:
+        return '';
+    }
+  };
+
+  // 요일이 여러 개일 경우, 중복 없이 정렬된 형태로 가져오기
+  if (repeatType === 'weekly' && allSameRepeatText && allMatchEventPeriod) {
+    const uniqueDays = Array.from(
+      new Set(schedules.map((s) => getDayOfWeek(s.startDate))),
+    ).sort();
+
+    return `매주 ${uniqueDays.join(', ')} ${formatTime(startTime)} ~ ${formatTime(endTime)}`;
+  }
+
+  if (allSameRepeatText && allMatchEventPeriod) {
+    return `${getRepeatText(firstSchedule)} ${formatTime(
+      startTime,
+    )} ~ ${formatTime(endTime)}`;
+  }
+
+  // repeatType이 다르거나 기간이 차이나는 경우 날짜도 표시
+  return schedules.map(
+    (s) =>
+      `${formatDate(new Date(s.startDate))} ~ ${formatDate(
+        new Date(s.endDate),
+      )} ${getRepeatText(s)} ${formatTime(s.startTime)} ~ ${formatTime(
+        s.endTime,
+      )}`,
+  );
 };
 
 // 지도 발풍선용 이벤트 제목 자르기
