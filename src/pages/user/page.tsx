@@ -14,6 +14,7 @@ import ArrowSVG from '@/assets/images/user/arrow.svg?react';
 import { ROUTES } from '@/constants/routes';
 import { client } from '@/apis/client';
 import { useLocation } from 'react-router-dom';
+import { theme } from '@/styles/theme';
 const Container = styled.div`
   display: fixed;
   flex-direction: column;
@@ -24,14 +25,14 @@ const Container = styled.div`
 const Header = styled.div`
   display: flex;
   align-items: center;
-  padding: 16px;
   background-color: #fff;
   font-size: 20px;
   font-weight: bold;
-  margin-top: -5px;
+  margin-top: 11px;
   font-family: 'Pretendard', sans-serif;
   font-weight: 600;
-  justify-content: space-between;
+  justify-content: start;
+  gap: 8px;
   color: black;
 `;
 const Logo2Icon = styled(Logo2SVG)`
@@ -40,11 +41,11 @@ const Logo2Icon = styled(Logo2SVG)`
 
 const ProfileSection = styled.div`
   background-color: #fff;
-  padding: 20px;
+
   display: flex; /* Flexbox 활성화 */
   align-items: center; /* 세로 중앙 정렬 */
   justify-content: space-between;
-  margin-top: -20px;
+  margin-top: 24px;
 `;
 
 const Username = styled.h2`
@@ -94,11 +95,25 @@ const MenuItem = styled.div`
     border-bottom: none;
   }
   gap: 20px;
+  svg {
+    path {
+      stroke: black;
+    }
+  }
+`;
+
+const LeftContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
 `;
 
 const MenuText = styled.span`
   font-size: 18px;
   margin-right: 190px;
+  color: black;
 `;
 
 const Divider = styled.div`
@@ -170,18 +185,27 @@ const UserPage = () => {
       <Section>
         <SectionTitle>고객센터</SectionTitle>
         <MenuItem onClick={handleNotice}>
-          <NoticeSVG />
-          <MenuText>공지사항</MenuText>
+          <LeftContainer>
+            <NoticeSVG />
+            <MenuText>공지사항</MenuText>
+          </LeftContainer>
+
           <ArrowSVG />
         </MenuItem>
         <MenuItem onClick={handleRequest}>
-          <RequestSVG />
-          <MenuText>문의하기</MenuText>
+          <LeftContainer>
+            <RequestSVG />
+            <MenuText>문의하기</MenuText>
+          </LeftContainer>
+
           <ArrowSVG />
         </MenuItem>
         <MenuItem onClick={handleTou}>
-          <TouSVG />
-          <MenuText>약관 및 정책</MenuText>
+          <LeftContainer>
+            <TouSVG />
+            <MenuText>약관 및 정책</MenuText>
+          </LeftContainer>
+
           <ArrowSVG />
         </MenuItem>
       </Section>
@@ -190,18 +214,27 @@ const UserPage = () => {
       <Section>
         <SectionTitle>기타</SectionTitle>
         <MenuItem onClick={handleManage}>
-          <ManageSVG />
-          <MenuText>내 정보 관리</MenuText>
+          <LeftContainer>
+            <ManageSVG />
+            <MenuText>내 정보 관리</MenuText>
+          </LeftContainer>
+
           <ArrowSVG />
         </MenuItem>
         <MenuItem onClick={handleLogout}>
-          <LogoutSVG />
-          <MenuText>로그아웃</MenuText>
+          <LeftContainer>
+            <LogoutSVG />
+            <MenuText>로그아웃</MenuText>
+          </LeftContainer>
+
           <ArrowSVG />
         </MenuItem>
         <MenuItem onClick={handleResign}>
-          <ResignSVG />
-          <MenuText>회원 탈퇴</MenuText>
+          <LeftContainer>
+            <ResignSVG />
+            <MenuText>회원 탈퇴</MenuText>
+          </LeftContainer>
+
           <ArrowSVG />
         </MenuItem>
       </Section>
