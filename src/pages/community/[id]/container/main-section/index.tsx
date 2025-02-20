@@ -22,7 +22,6 @@ export default function MainSection({ article }: MainSectionProps) {
 
   const postArticleLikeMutation = usePostArticleLike();
   const delArticleLikeMutation = useDelArticleLike();
-
   return (
     <S.MainContainer>
       {/* 프로필 정보 */}

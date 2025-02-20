@@ -44,9 +44,16 @@ const PenIconRect = styled(Pen)`
 
 const ButtonText = styled.p`
   ${theme.typeFace.body['16SB']};
+  color: ${theme.color.gray[0]};
+`;
+
+const DarkButtonText = styled.p`
+  ${theme.typeFace.body['16SB']};
+  color: ${theme.color.gray[600]};
 `;
 
 export {
+  DarkButtonText,
   PenIconRect,
   DefaultTypeContainer,
   RectTypeContainer,

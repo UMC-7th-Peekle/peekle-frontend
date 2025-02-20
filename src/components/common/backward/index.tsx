@@ -5,11 +5,11 @@ import { useBottomSheetStore } from '@/stores';
 const Backward = ({
   size = '24px',
   isErrorFallback = false,
-  navigateTo,
+  navigateUrl,
 }: {
   size?: string;
   isErrorFallback?: boolean;
-  navigateTo?: string;
+  navigateUrl?: string;
 }) => {
   const navigate = useNavigate();
   const { setActiveBottomSheet } = useBottomSheetStore();
@@ -18,8 +18,11 @@ const Backward = ({
     setActiveBottomSheet(null); // 바텀시트 닫기
     if (isErrorFallback) {
       window.history.back();
-    } else if (navigateTo) {
-      navigate(navigateTo);
+      return;
+    }
+
+    if (navigateUrl) {
+      navigate(navigateUrl);
     } else {
       navigate(-1);
     }
@@ -27,6 +30,7 @@ const Backward = ({
 
   return <S.BackIcon $size={size} onClick={handleBackClick} />;
 };
+
 export default Backward;
 
 /** 사용 예시

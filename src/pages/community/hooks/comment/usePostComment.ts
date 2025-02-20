@@ -47,7 +47,10 @@ const postComment = async (
 };
 
 // 훅
-export const usePostComment = () => {
+export const usePostComment = ({
+  articleId,
+  communityId,
+}: usePostCommentsProps) => {
   const queryClient = useQueryClient();
 
   return useMutation<PostCommentResp, AxiosError, PostCommentParams>({
@@ -56,8 +59,16 @@ export const usePostComment = () => {
       queryClient.invalidateQueries({ queryKey: ['get-community'] });
       queryClient.invalidateQueries({ queryKey: ['get-community-like'] });
       queryClient.invalidateQueries({
-        queryKey: ['get-community-detail'],
+        queryKey: ['get-article-detail'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['get-article-comments', communityId, articleId],
       });
     },
   });
 };
+
+interface usePostCommentsProps {
+  articleId: number;
+  communityId: number;
+}

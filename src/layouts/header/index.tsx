@@ -8,12 +8,12 @@ const Header = ({ page }: { page: 'event' | 'community' }) => {
 
   const handleHeartIconClick = () => {
     if (page === 'event') navigate(ROUTES.EVENT_SCRAP);
-    else navigate('/community/scrap');
+    else navigate(ROUTES.COMMUNITY_LIKE);
   };
 
   const handleSearchIconClick = () => {
     if (page === 'event') navigate(ROUTES.EVENT_SEARCH);
-    else navigate('/community/search');
+    else navigate(ROUTES.COMMUNITY_SEARCH);
   };
 
   return (

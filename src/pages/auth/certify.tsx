@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { Backward } from '@/components';
 import { useState } from 'react';
 import { alert } from '@/utils';
-import { BottomSheet, Button } from '@/components';
+import { BottomSheet } from '@/components';
 import { useBottomSheetStore } from '@/stores';
 import { useNavigate } from 'react-router-dom';
 import ResendSVG from '@/assets/images/auth/resend.svg?react';
@@ -13,7 +13,7 @@ import { theme } from '@/styles/theme';
 
 const CertifyPage = () => {
   const navigate = useNavigate();
-  const phone = localStorage.getItem('phone');
+  const phone = localStorage.getItem('phone-number');
   const phoneVerificationSessionId = localStorage.getItem(
     'phoneVerificationSessionId',
   );
@@ -33,7 +33,7 @@ const CertifyPage = () => {
     return () => clearInterval(timer);
   }, [timeLeft]);
 
-  const isCodeComplete = code.every((digit) => digit !== '');
+  const $isCodeComplete = code.every((digit) => digit !== '');
 
   const handleChange = (index: number, value: string) => {
     if (/[^0-9]/.test(value)) return;
@@ -86,9 +86,7 @@ const CertifyPage = () => {
       return;
     }
 
-    const phoneVerificationCode = code.join('');
-
-    if (alreadyRegisteredUser) {
+    if (alreadyRegisteredUser === 'true') {
       try {
         const response = await fetch(`${api}/auth/login/local`, {
           method: 'POST',
@@ -96,7 +94,7 @@ const CertifyPage = () => {
           body: JSON.stringify({
             phone,
             phoneVerificationSessionId,
-            phoneVerificationCode,
+            phoneVerificationCode: code.join(''),
           }),
         });
         const data = await response.json();
@@ -116,13 +114,14 @@ const CertifyPage = () => {
           body: JSON.stringify({
             phone,
             phoneVerificationSessionId,
-            phoneVerificationCode,
+            phoneVerificationCode: code.join(''),
           }),
         });
 
         const data = await response.json();
 
         if (response.ok && data.resultType === 'SUCCESS') {
+          localStorage.removeItem('phone-number');
           navigate(ROUTES.AUTH_GENDER);
         } else {
           alert('인증번호가 맞지 않아요!', 'warning', '확인');
@@ -141,7 +140,7 @@ const CertifyPage = () => {
   return (
     <Container>
       <BackwardWrapper>
-        <Backward navigateTo={ROUTES.AUTH_PHONE_NUMBER} />
+        <Backward navigateUrl={ROUTES.AUTH_PHONE_NUMBER} />
       </BackwardWrapper>
 
       <Title>
@@ -173,17 +172,13 @@ const CertifyPage = () => {
       </HelpButton>
 
       {/* ✅ 인증 버튼 상태 변경 */}
-      <ButtonWrapper>
-        <StyledButton
-          color="primary500"
-          size="medium"
-          $isCodeComplete={isCodeComplete}
-          disabled={!isCodeComplete || timeLeft <= 0} // 🔥 입력이 다 안되었거나 시간이 0이면 비활성화
-          onClick={handleVerify}
-        >
-          {isCodeComplete ? '인증하기' : formatTime(timeLeft)}
-        </StyledButton>
-      </ButtonWrapper>
+      <StyledButton
+        $isCodeComplete={$isCodeComplete}
+        disabled={!$isCodeComplete || timeLeft <= 0} // 🔥 입력이 다 안되었거나 시간이 0이면 비활성화
+        onClick={handleVerify}
+      >
+        {$isCodeComplete ? '인증하기' : formatTime(timeLeft)}
+      </StyledButton>
 
       <BottomSheet id="helpsheet">
         <SheetContent>
@@ -219,12 +214,27 @@ const CertifyPage = () => {
 export default CertifyPage;
 
 /* ✅ 버튼 상태 변경 스타일 */
-const StyledButton = styled(Button)<{ $isCodeComplete: boolean }>`
+const StyledButton = styled.button<{ $isCodeComplete: boolean }>`
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  border: none;
+  cursor: ${({ $isCodeComplete }) =>
+    $isCodeComplete ? 'pointer' : 'not-allowed'};
+  height: 72px;
+  width: 100%;
+  transition: background-color 0.3s ease-in-out;
   background-color: ${({ $isCodeComplete }) =>
     $isCodeComplete ? '#4CAF50' : '#E0E0E0'};
   color: ${({ $isCodeComplete }) => ($isCodeComplete ? 'white' : '#BDBDBD')};
   cursor: ${({ $isCodeComplete }) =>
     $isCodeComplete ? 'pointer' : 'not-allowed'};
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 700;
 `;
 
 const Container = styled.div`
@@ -250,14 +260,7 @@ const BackwardWrapper = styled.div`
   top: 22px;
   left: 20px;
 `;
-const ButtonWrapper = styled.div`
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-`;
+
 const InputWrapper = styled.div`
   display: flex;
   justify-content: space-between;

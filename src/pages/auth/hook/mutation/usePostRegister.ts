@@ -19,7 +19,6 @@ const BaseAuthRegisterSchema = z.object({
     .string()
     .regex(/^\d{4}-\d{2}-\d{2}$/, 'YYYY-MM-DD 형식이 아닙니다.'),
   gender: z.enum(['male', 'female']),
-  email: z.string().email('유효한 이메일을 입력해주세요.'),
   phone: z
     .string()
     .transform((val) => val.replace(/-/g, '')) // ✅ '-' 제거
@@ -37,6 +36,7 @@ export const PostAuthRegisterSchema = BaseAuthRegisterSchema;
 export const PostAuthRegisterKakaoSchema = BaseAuthRegisterSchema.extend({
   oauthId: z.number().int(),
   oauthType: z.enum(['kakao']),
+  email: z.string().email('유효한 이메일을 입력해주세요.'),
 });
 
 // ✅ 응답 스키마

@@ -2,15 +2,21 @@ import styled from 'styled-components';
 import { Backward } from '@/components';
 import KakaoSVG from '@/assets/images/user/kakao.svg?react';
 import ArrowSVG from '@/assets/images/user/arrow.svg?react';
-
 const RequestPage = () => {
+  const handleArrowClick = () => {
+    window.open(
+      'https://open.kakao.com/o/sv8H2c8g',
+      '_blank',
+      'noopener noreferrer',
+    );
+  };
   return (
     <Container>
       <BackwardWrapper>
         <Backward />
       </BackwardWrapper>
       <Header>문의하기</Header>
-      <Box>
+      <Box onClick={handleArrowClick} style={{ cursor: 'pointer' }}>
         <LeftContent>
           <KakaoIcon />
           <TextContainer>
@@ -19,7 +25,7 @@ const RequestPage = () => {
             <BoxText>토 · 일 · 공휴일 휴무</BoxText>
           </TextContainer>
         </LeftContent>
-        <ArrowSVG />
+        <ArrowSVG onClick={handleArrowClick} style={{ cursor: 'pointer' }} />
       </Box>
     </Container>
   );

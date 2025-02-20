@@ -107,6 +107,25 @@ const Indicator = styled.div<{ $isActive: boolean }>`
   transition: all 0.3s ease-in-out;
 `;
 
+const KakaoButton = styled.button`
+  width: 96%;
+  height: 56px;
+  background-color: #fee500;
+  ${theme.typeFace.body['18SB']};
+  color: black;
+  border: none;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: center;
+  justify-content: center;
+`;
+
+const PhoneButton = styled(KakaoButton)`
+  background-color: ${theme.color.gray[50]};
+`;
+
 export {
   Container,
   Header,
@@ -119,4 +138,6 @@ export {
   SlideImage,
   IndicatorWrapper,
   Indicator,
+  PhoneButton,
+  KakaoButton,
 };

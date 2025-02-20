@@ -32,6 +32,11 @@ const useRecentSearch = ({ queryKey, localKey }: useRecentSearchProps) => {
     localStorage.setItem(localKey, JSON.stringify(recentSearch));
   }, [recentSearch, localKey]);
 
+  useEffect(() => {
+    const storedSearches = JSON.parse(localStorage.getItem(localKey) ?? '[]');
+    setRecentSearch(storedSearches);
+  }, [query, localKey, setRecentSearch]);
+
   const handleClear = () => {
     clearRecentSearch();
   };

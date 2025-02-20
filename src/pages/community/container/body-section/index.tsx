@@ -21,17 +21,18 @@ BodySection.Skeleton = () => {
   );
 };
 
-BodySection.None = ({ subTitle }: BodySectionNoneProps) => {
+BodySection.None = ({ subTitle, onClick }: BodySectionNoneProps) => {
   return (
     <S.NoneContainer>
       <S.SubTitle>{subTitle}</S.SubTitle>
-      <EditButton.RectType></EditButton.RectType>
+      <EditButton.RectType onClick={onClick}></EditButton.RectType>
     </S.NoneContainer>
   );
 };
 
 interface BodySectionNoneProps {
   subTitle: string;
+  onClick?: () => void;
 }
 
 export default BodySection;
