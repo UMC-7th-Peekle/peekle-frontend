@@ -169,40 +169,40 @@ const UserPage = () => {
       {/* 고객센터 */}
       <Section>
         <SectionTitle>고객센터</SectionTitle>
-        <MenuItem>
+        <MenuItem onClick={handleNotice}>
           <NoticeSVG />
           <MenuText>공지사항</MenuText>
-          <ArrowSVG onClick={handleNotice} />
+          <ArrowSVG />
         </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={handleRequest}>
           <RequestSVG />
           <MenuText>문의하기</MenuText>
-          <ArrowSVG onClick={handleRequest} />
+          <ArrowSVG />
         </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={handleTou}>
           <TouSVG />
           <MenuText>약관 및 정책</MenuText>
-          <ArrowSVG onClick={handleTou} />
+          <ArrowSVG />
         </MenuItem>
       </Section>
       <Divider />
       {/* 기타 */}
       <Section>
         <SectionTitle>기타</SectionTitle>
-        <MenuItem>
+        <MenuItem onClick={handleManage}>
           <ManageSVG />
           <MenuText>내 정보 관리</MenuText>
-          <ArrowSVG onClick={handleManage} />
+          <ArrowSVG />
         </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={handleLogout}>
           <LogoutSVG />
           <MenuText>로그아웃</MenuText>
-          <ArrowSVG onClick={handleLogout} />
+          <ArrowSVG />
         </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={handleResign}>
           <ResignSVG />
           <MenuText>회원 탈퇴</MenuText>
-          <ArrowSVG onClick={handleResign} />
+          <ArrowSVG />
         </MenuItem>
       </Section>
     </Container>
