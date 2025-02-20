@@ -4,16 +4,19 @@ import { useState } from 'react';
 import { alert } from '@/utils';
 import { BottomSheet } from '@/components';
 import { useBottomSheetStore } from '@/stores';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import ResendSVG from '@/assets/images/auth/resend.svg?react';
 import { useEffect } from 'react';
 import { ROUTES } from '@/constants/routes';
 
 const CertifyPage = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const { phone, phoneVerificationSessionId, alreadyRegisteredUser } =
-    location.state ?? {};
+  const phone = localStorage.getItem('phone-number');
+  const phoneVerificationSessionId = localStorage.getItem(
+    'phoneVerificationSessionId',
+  );
+  const alreadyRegisteredUser = localStorage.getItem('alreadyRegisteredUser');
+
   const [code, setCode] = useState(['', '', '', '']); // 4자리 인증 코드
   const { setActiveBottomSheet } = useBottomSheetStore();
   const api = import.meta.env.VITE_API_URL;
@@ -28,7 +31,7 @@ const CertifyPage = () => {
     return () => clearInterval(timer);
   }, [timeLeft]);
 
-  const isCodeComplete = code.every((digit) => digit !== '');
+  const $isCodeComplete = code.every((digit) => digit !== '');
 
   const handleChange = (index: number, value: string) => {
     if (/[^0-9]/.test(value)) return;
@@ -51,9 +54,19 @@ const CertifyPage = () => {
     }
   };
 
-  const handleResend = () => {
-    alert('인증번호를 다시 보냈어요!', 'none', '확인');
-    setTimeLeft(300); // 타이머 다시 5분으로 설정
+  const phoneVerificationCode = code.join('');
+
+  const handleResend = async () => {
+    const phoneNumber = localStorage.getItem('phone-number');
+    const client = await fetch(`${api}/auth/phone/send`, {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({ phone: phoneNumber }),
+    });
+    const data = await client.json();
+    console.log(data);
   };
 
   const handlePhone = () => {
@@ -75,9 +88,7 @@ const CertifyPage = () => {
       return;
     }
 
-    const phoneVerificationCode = code.join('');
-
-    if (alreadyRegisteredUser) {
+    if (alreadyRegisteredUser === 'true') {
       try {
         const response = await fetch(`${api}/auth/login/local`, {
           method: 'POST',
@@ -109,6 +120,7 @@ const CertifyPage = () => {
         const data = await response.json();
 
         if (response.ok && data.resultType === 'SUCCESS') {
+          localStorage.removeItem('phone-number');
           navigate(ROUTES.AUTH_GENDER);
         } else {
           alert('인증번호가 맞지 않아요!', 'warning', '확인');
@@ -160,11 +172,11 @@ const CertifyPage = () => {
 
       {/* ✅ 인증 버튼 상태 변경 */}
       <StyledButton
-        isCodeComplete={isCodeComplete}
-        disabled={!isCodeComplete || timeLeft <= 0} // 🔥 입력이 다 안되었거나 시간이 0이면 비활성화
+        $isCodeComplete={$isCodeComplete}
+        disabled={!$isCodeComplete || timeLeft <= 0} // 🔥 입력이 다 안되었거나 시간이 0이면 비활성화
         onClick={handleVerify}
       >
-        {isCodeComplete ? '인증하기' : formatTime(timeLeft)}
+        {$isCodeComplete ? '인증하기' : formatTime(timeLeft)}
       </StyledButton>
 
       <BottomSheet id="helpsheet">
@@ -201,7 +213,7 @@ const CertifyPage = () => {
 export default CertifyPage;
 
 /* ✅ 버튼 상태 변경 스타일 */
-const StyledButton = styled.button<{ isCodeComplete: boolean }>`
+const StyledButton = styled.button<{ $isCodeComplete: boolean }>`
   position: fixed;
   bottom: 0;
   left: 0;
@@ -210,16 +222,16 @@ const StyledButton = styled.button<{ isCodeComplete: boolean }>`
   align-items: center;
   width: 100%;
   border: none;
-  cursor: ${({ isCodeComplete }) =>
-    isCodeComplete ? 'pointer' : 'not-allowed'};
+  cursor: ${({ $isCodeComplete }) =>
+    $isCodeComplete ? 'pointer' : 'not-allowed'};
   height: 72px;
   width: 100%;
   transition: background-color 0.3s ease-in-out;
-  background-color: ${({ isCodeComplete }) =>
-    isCodeComplete ? '#4CAF50' : '#E0E0E0'};
-  color: ${({ isCodeComplete }) => (isCodeComplete ? 'white' : '#BDBDBD')};
-  cursor: ${({ isCodeComplete }) =>
-    isCodeComplete ? 'pointer' : 'not-allowed'};
+  background-color: ${({ $isCodeComplete }) =>
+    $isCodeComplete ? '#4CAF50' : '#E0E0E0'};
+  color: ${({ $isCodeComplete }) => ($isCodeComplete ? 'white' : '#BDBDBD')};
+  cursor: ${({ $isCodeComplete }) =>
+    $isCodeComplete ? 'pointer' : 'not-allowed'};
   font-family: 'Pretendard', sans-serif;
   font-weight: 700;
 `;

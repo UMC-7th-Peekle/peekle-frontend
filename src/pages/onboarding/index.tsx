@@ -50,8 +50,14 @@ const OnboardingPage = () => {
         </S.IndicatorWrapper>
       </S.CarouselContainer>
       <S.ButtonWrapper>
-        <KakaoSVG onClick={handleKakaoLogin} />
-        <PhoneSVG onClick={handlephone} />
+        <S.KakaoButton onClick={handleKakaoLogin}>
+          <KakaoSVG />
+          <p>카카오로 5초만에 시작</p>
+        </S.KakaoButton>
+        <S.PhoneButton onClick={handlephone}>
+          <PhoneSVG />
+          <p>전화번호로 시작</p>
+        </S.PhoneButton>
       </S.ButtonWrapper>
     </S.Container>
   );

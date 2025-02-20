@@ -58,6 +58,7 @@ const StyledTextarea = styled.textarea`
   max-height: 120px;
   overflow-y: auto;
   line-height: 1.5;
+  width: 50%;
 
   &::-webkit-input-placeholder {
     color: #bbb;
@@ -77,9 +78,6 @@ const SendButton = styled.button`
   justify-content: center;
   transition: opacity 0.2s ease-in-out;
   margin-right: 16px;
-  svg {
-    width: 18px;
-  }
 `;
 
 export {
