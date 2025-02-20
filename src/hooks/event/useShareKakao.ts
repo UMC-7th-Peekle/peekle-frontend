@@ -10,8 +10,9 @@ const useShareKakao = () => {
     if (kakao && !kakao.isInitialized())
       kakao.init(import.meta.env.VITE_KAKAO_JS_KEY);
     if (kakao) {
-      // 현재 링크 가져오기
-      const currentURL = window.location.href;
+      // 현재 링크 가져오고 shared 쿼리 파라미터 추가
+      const currentURL = new URL(window.location.href);
+      currentURL.searchParams.set('shared', 'true');
       // 이벤트 정보 가져오기
       const eventTitleEl = document.querySelector(
         '.event-title',
@@ -34,16 +35,16 @@ const useShareKakao = () => {
           description: eventContent,
           imageUrl: eventThumbnailImg,
           link: {
-            mobileWebUrl: currentURL,
-            webUrl: currentURL,
+            mobileWebUrl: currentURL.href,
+            webUrl: currentURL.href,
           },
         },
         buttons: [
           {
             title: '자세히 보기',
             link: {
-              mobileWebUrl: currentURL,
-              webUrl: currentURL,
+              mobileWebUrl: currentURL.href,
+              webUrl: currentURL.href,
             },
           },
         ],

@@ -9,6 +9,7 @@ import {
 import { useHandleError } from '@/hooks';
 import { toast } from '@/utils';
 import { clientAuth } from '@/apis/client';
+import queryClient from '@/lib/tanstack-query/queryClient';
 
 const postEvent = async ({
   eventData,
@@ -19,10 +20,8 @@ const postEvent = async ({
   formData.append('body', JSON.stringify(eventData));
 
   // 이미지 파일 추가
-  if (files && files.length > 0) {
-    Array.from(files).forEach((file) => {
-      formData.append('event-images', file);
-    });
+  if (files?.length) {
+    files.forEach((file) => formData.append('event-images', file));
   }
 
   const response = await clientAuth<CreateEventResponse>({
@@ -31,7 +30,7 @@ const postEvent = async ({
     },
     method: 'POST',
     url: '/events',
-    data: eventData,
+    data: formData,
   });
 
   // 응답 데이터 검증
@@ -52,6 +51,7 @@ const useCreateEvent = () => {
     onSuccess: () => {
       toast('이벤트가 생성되었어요.');
       navigate(ROUTES.ADMIN);
+      queryClient.invalidateQueries({ queryKey: ['events'] });
     },
     onError: (error) => {
       handleError(error);

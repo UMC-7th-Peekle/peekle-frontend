@@ -194,14 +194,15 @@ const EventForm = ({
           title: '',
           content: '',
           priceType: '무료' as PriceType,
-          price: 1000,
+          price: '1000',
           categoryId: undefined,
-          eventUrl: null,
+          eventUrl: '',
           schedules: [
             {
               repeatType: 'none' as EventScheduleRepeatType,
+              repeatEndDate: null,
               isAllDay: false,
-              customText: null,
+              customText: '',
               startDate: '',
               startTime: '',
               endDate: '',
@@ -222,24 +223,40 @@ const EventForm = ({
             eventDetailData?.price && eventDetailData.price > 0
               ? ('유료' as PriceType)
               : ('무료' as PriceType),
-          price: eventDetailData?.price,
+          price: eventDetailData?.price.toString(),
           categoryId: getCategoryId(eventDetailData?.category.name ?? ''),
           eventUrl: eventDetailData?.eventUrl,
-          schedules: eventDetailData?.eventSchedules.map(
-            (schedule: EventSchedule) => ({
-              repeatType: schedule.repeatType,
-              isAllDay: schedule.isAllDay,
-              customText: schedule.customText,
-              startDate: schedule.startDate,
-              startTime: schedule.startTime,
-              endDate: schedule.endDate,
-              endTime: schedule.endTime,
-            }),
-          ),
+          schedules:
+            eventDetailData &&
+            eventDetailData.eventSchedules &&
+            eventDetailData.eventSchedules.length > 0
+              ? eventDetailData?.eventSchedules.map(
+                  (schedule: EventSchedule) => ({
+                    repeatType: schedule.repeatType,
+                    repeatEndDate: schedule.repeatEndDate,
+                    isAllDay: schedule.isAllDay,
+                    customText: schedule.customText ?? '',
+                    startDate: schedule.startDate ?? '',
+                    endDate: schedule.endDate ?? '',
+                    startTime: schedule.startTime ?? '',
+                    endTime: schedule.endTime ?? '',
+                  }),
+                )
+              : [
+                  {
+                    repeatType: 'none' as EventScheduleRepeatType,
+                    repeatEndDate: null,
+                    isAllDay: false,
+                    customText: '',
+                    startDate: eventDetailData?.applicationStart ?? '',
+                    startTime: '',
+                    endDate: eventDetailData?.applicationEnd ?? '',
+                    endTime: '',
+                  },
+                ],
           location: {
-            // 채워야 함
-            address: '',
-            buildingName: '',
+            address: eventDetailData?.eventLocation?.address,
+            buildingName: eventDetailData?.eventLocation?.buildingName,
           },
           applicationStartDate:
             formatDate(new Date(eventDetailData?.applicationStart ?? '')) ?? '',
@@ -260,7 +277,7 @@ const EventForm = ({
   } = useForm<EventCreateFormValues>({
     resolver: zodResolver(EventCreateFormSchema),
     mode: 'onChange',
-    defaultValues,
+    defaultValues: defaultValues as EventCreateFormValues,
   });
 
   const { fields, append, remove } = useFieldArray({
@@ -394,8 +411,9 @@ const EventForm = ({
   const handlePlusRepeatClick = () => {
     append({
       repeatType: 'none',
+      repeatEndDate: null,
       isAllDay: false,
-      customText: null,
+      customText: '',
       startDate: '',
       startTime: '',
       endDate: '',
@@ -455,6 +473,17 @@ const EventForm = ({
           {...register('content')}
           errorMessage={
             (touchedFields.content && errors.content?.message) || ''
+          }
+        />
+      </FormField>
+      <FormField>
+        <FormInput
+          type="text"
+          id="eventUrl"
+          placeholder="홈페이지 주소"
+          {...register('eventUrl')}
+          errorMessage={
+            (touchedFields.eventUrl && errors.eventUrl?.message) || ''
           }
         />
       </FormField>

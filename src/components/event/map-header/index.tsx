@@ -18,7 +18,6 @@ const MapHeader = () => {
         <SquareButton
           icon="filter"
           onClick={() => {
-            console.log('맵 필터 버튼 클릭');
             setActiveBottomSheet(BOTTOM_SHEET_ID_EVENT_FILTER);
           }}
         />
@@ -29,3 +28,27 @@ const MapHeader = () => {
 };
 
 export default MapHeader;
+
+// import * as S from './style';
+// import { CategoryChips, SquareButton } from '@/components';
+// import { useBottomSheetStore } from '@/stores';
+// import { BOTTOM_SHEET_ID_EVENT_FILTER } from '@/constants/event';
+
+// const MapHeader = () => {
+//   const { setActiveBottomSheet } = useBottomSheetStore();
+//   return (
+//     <S.HeaderContainer>
+//       <S.SearchBarWrapper>
+//         <CategoryChips />
+//         <SquareButton
+//           icon="filter"
+//           onClick={() => {
+//             setActiveBottomSheet(BOTTOM_SHEET_ID_EVENT_FILTER);
+//           }}
+//         />
+//       </S.SearchBarWrapper>
+//     </S.HeaderContainer>
+//   );
+// };
+
+// export default MapHeader;

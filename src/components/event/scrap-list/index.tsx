@@ -31,7 +31,6 @@ const EventScrapList = () => {
                 eventImages: event.event.eventImages,
                 title: event.event.title,
                 price: event.event.price,
-                // location: event.event.eventLocation,
               }}
               ref={index === events.length - 1 ? lastElementRef : null}
             />

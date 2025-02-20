@@ -32,6 +32,7 @@ export const getScheduleDateTime = (
   isEnd: boolean,
 ) => {
   const { startDate, endDate, startTime, endTime } = schedule;
+  if (!startDate || !endDate || !startTime || !endTime) return '';
 
   const date = isEnd
     ? formatDateToMonthDay(endDate, true)
@@ -47,10 +48,11 @@ export const formatSchedules = (
   applicationEndStart: string,
   applicationEnd: string,
 ) => {
-  if (schedules.length === 0) return '';
+  if (schedules.length === 0) return '스케줄 정보 없음';
 
   const firstSchedule = schedules[0];
   const { repeatType, startTime, endTime } = firstSchedule;
+  if (!repeatType || !startTime || !endTime) return '';
 
   // 모든 스케줄의 repeatText가 동일한지 확인
   const allSameRepeatText = schedules.every((s) => s.repeatType === repeatType);
@@ -107,29 +109,43 @@ export const formatSchedules = (
     }
   };
 
+  let allDayText = '';
+  if (startTime === '00:00:00Z' && endTime === '23:59:59Z') {
+    allDayText = '하루 종일';
+  }
+
   // 요일이 여러 개일 경우, 중복 없이 정렬된 형태로 가져오기
   if (repeatType === 'weekly' && allSameRepeatText && allMatchEventPeriod) {
     const uniqueDays = Array.from(
       new Set(schedules.map((s) => getDayOfWeek(s.startDate))),
     ).sort();
 
-    return `매주 ${uniqueDays.join(', ')} ${formatTime(startTime)} ~ ${formatTime(endTime)}`;
+    return allDayText
+      ? `매주 ${uniqueDays.join(', ')} ${allDayText}`
+      : `매주 ${uniqueDays.join(', ')} ${formatTime(startTime)} ~ ${formatTime(
+          endTime,
+        )}`;
   }
 
   if (allSameRepeatText && allMatchEventPeriod) {
-    return `${getRepeatText(firstSchedule)} ${formatTime(
-      startTime,
-    )} ~ ${formatTime(endTime)}`;
+    return allDayText
+      ? `${getRepeatText(firstSchedule)} ${allDayText}`
+      : `${getRepeatText(firstSchedule)} ${formatTime(startTime)} ~ ${formatTime(
+          endTime,
+        )}`;
   }
 
   // repeatType이 다르거나 기간이 차이나는 경우 날짜도 표시
-  return schedules.map(
-    (s) =>
-      `${formatDate(new Date(s.startDate))} ~ ${formatDate(
-        new Date(s.endDate),
-      )} ${getRepeatText(s)} ${formatTime(s.startTime)} ~ ${formatTime(
-        s.endTime,
-      )}`,
+  return schedules.map((s) =>
+    allDayText
+      ? `${formatDate(new Date(s.startDate))} ~ ${formatDate(
+          new Date(s.endDate),
+        )} ${allDayText}`
+      : `${formatDate(new Date(s.startDate))} ~ ${formatDate(
+          new Date(s.endDate),
+        )} ${getRepeatText(s)} ${formatTime(s.startTime)} ~ ${formatTime(
+          s.endTime,
+        )}`,
   );
 };
 
@@ -203,7 +219,7 @@ export const transformFormData = (
 ): EventCreateData => {
   return {
     title: formData.title,
-    content: formData.content,
+    content: formData.content ?? '',
     price: formData.priceType === '유료' ? Number(formData.price) : 0,
     categoryId: formData.categoryId as CategoryIdEnum, // enum 값 변환
     eventUrl: formData.eventUrl ?? null, // nullable
@@ -212,7 +228,7 @@ export const transformFormData = (
     schedules: formData.schedules.map((schedule: EventCreateFormSchedule) => {
       return {
         repeatType: schedule.repeatType,
-        repeatEndDate: schedule.endDate,
+        repeatEndDate: schedule.repeatEndDate,
         isAllDay: schedule.isAllDay,
         customText: schedule.customText ?? null, // nullable
         startDate: schedule.startDate,
@@ -221,7 +237,7 @@ export const transformFormData = (
         endTime: formatTimeToHHMMSSZ(schedule.endTime),
       };
     }),
-    locations: {
+    location: {
       locationGroupId: getLocationGroupId(formData.location.address),
       address: formData.location.address,
       buildingName: formData.location.buildingName,

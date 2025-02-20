@@ -19,7 +19,13 @@ const getEvents = async ({
   startDate,
   endDate,
   query,
+  lat,
+  lng,
+  southWest,
+  northEast,
+  sort,
 }: getEventsParams): Promise<EventsResponse> => {
+  console.log('getEvents 호출', query);
   const response = await client<EventsResponse>({
     method: 'GET',
     url: `/events`,
@@ -32,24 +38,27 @@ const getEvents = async ({
       startDate,
       endDate,
       query,
+      lat,
+      lng,
+      southWest,
+      northEast,
+      sort,
     },
   });
 
-  // console.log({
-  //   limit,
-  //   cursor,
-  //   category: categories,
-  //   location: locations,
-  //   price,
-  //   startDate,
-  //   endDate,
-  //   query,
-  // });
+  // 204 No Content 처리
+  if (!response.data || Object.keys(response.data).length === 0) {
+    return {
+      resultType: 'SUCCESS',
+      error: null,
+      success: {
+        events: [], // 빈 배열로 초기화
+        hasNextPage: false,
+        nextCursor: null,
+      },
+    };
+  }
 
-  // 응답 데이터 검증
-  // const parsedData = EventsResponseSchema.parse(response.data);
-  // return parsedData;
-  // console.log(typeof response.data.success.events[0].eventId);
   return response.data;
 };
 
@@ -62,10 +71,15 @@ const useGetEvents = ({
   startDate,
   endDate,
   query,
+  lat,
+  lng,
+  southWest,
+  northEast,
+  sort,
 }: getEventsParams) => {
   const { setEvents } = useEventsStore();
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+  const { data, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage } =
     useSuspenseInfiniteQuery<
       EventsResponse,
       Error,
@@ -77,12 +91,17 @@ const useGetEvents = ({
         {
           limit,
           cursor,
-          categories,
-          locations,
+          categories: JSON.stringify(categories),
+          locations: JSON.stringify(locations),
           price,
           startDate,
           endDate,
           query,
+          lat,
+          lng,
+          southWest,
+          northEast,
+          sort,
         },
       ],
       queryFn: ({ pageParam }) =>
@@ -95,6 +114,11 @@ const useGetEvents = ({
           startDate,
           endDate,
           query,
+          lat,
+          lng,
+          southWest,
+          northEast,
+          sort,
         }),
       initialPageParam: undefined,
       getNextPageParam: (lastPage) => {
@@ -109,7 +133,7 @@ const useGetEvents = ({
     setEvents(events);
   }, [data, setEvents]);
 
-  return { data, fetchNextPage, hasNextPage, isFetchingNextPage };
+  return { data, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage };
 };
 
 export default useGetEvents;

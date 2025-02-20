@@ -31,7 +31,11 @@ const Duration = () => {
   const [selectedChip, setSelectedChip] = useState<string>('전체');
   const [dateRange, setDateRange] = useState<DateRange>(() => {
     const range = getDateRangeFromStoredValue(storedValue);
-    return [range[0] ?? null, range[1] ?? null] as DateRange;
+    const startDate =
+      range[0] instanceof Date && !isNaN(range[0].getTime()) ? range[0] : null;
+    const endDate =
+      range[1] instanceof Date && !isNaN(range[1].getTime()) ? range[1] : null;
+    return [startDate, endDate] as DateRange;
   });
 
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
@@ -39,6 +43,7 @@ const Duration = () => {
   useEffect(() => {
     const decodedValue = storedValue.replace('%2C', ',');
     const [storedStart, storedEnd] = decodedValue.split(',');
+    const storedEndDate = storedEnd ? new Date(storedEnd) : null;
 
     if (storedValue === '전체') {
       setSelectedChip('전체');
@@ -48,7 +53,7 @@ const Duration = () => {
       const matchedChip = Object.entries(PREDEFINED_RANGES).find(
         ([, [start, end]]) =>
           formatDate(new Date(storedStart)) === formatDate(start) &&
-          formatDate(new Date(storedEnd)) === formatDate(end),
+          formatDate(storedEndDate) === formatDate(end),
       );
 
       setSelectedChip(matchedChip ? matchedChip[0] : '직접 입력');

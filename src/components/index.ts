@@ -35,7 +35,7 @@ export { EventCard, EventCardSkeleton } from './event/card';
 export { default as BottomSheetTabs } from './event/bottom-sheet-tabs';
 export { EventList, EventListSkeleton } from './event/list';
 export { default as EventScrapList } from './event/scrap-list';
-export { default as LocationConfirm } from './event/location-confirm';
+export { default as ShowLocationConfirm } from './event/show-location-confirm/ShowLocationConfirm';
 export { default as FilePagination } from './event/file-pagenation';
 export { default as ImageSlider } from './event/image-slider';
 export { default as MapBottomSheet } from './event/map-bottom-sheet';

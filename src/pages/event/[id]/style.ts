@@ -10,7 +10,8 @@ import LinkSVG from '@/assets/images/icons/link-rounded.svg?react';
 import ArrowDownSVG from '@/assets/images/icons/arrow-down.svg?react';
 import XSVG from '@/assets/images/icons/X.svg?react';
 import EditSVG from '@/assets/images/icons/pen.svg?react';
-import RemoveSVG from '@/assets/images/icons/trash.svg?react'; // 쓰레기통 아이콘으로 교체 필요
+import RemoveSVG from '@/assets/images/icons/trash.svg?react';
+import CharacterLogoSVG from '@/assets/images/event/character-logo.svg?react';
 
 export const Header = styled.header`
   display: flex;
@@ -273,6 +274,7 @@ export const ShareOptionText = styled.span`
 const ShareIconStyle = css`
   width: 24px;
   height: 24px;
+  flex-shrink: 0;
 `;
 
 export const KakaoIcon = styled(KakaoSVG)`
@@ -281,4 +283,9 @@ export const KakaoIcon = styled(KakaoSVG)`
 
 export const LinkIcon = styled(LinkSVG)`
   ${ShareIconStyle}
+`;
+
+export const CharacterLogo = styled(CharacterLogoSVG)`
+  width: 28px;
+  height: 28px;
 `;

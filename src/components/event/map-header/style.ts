@@ -14,4 +14,13 @@ export const SearchBarWrapper = styled.div`
   align-items: center;
   gap: 12px;
   align-self: stretch;
+  z-index: 1;
 `;
+
+// export const SearchBarWrapper = styled.div`
+//   display: flex;
+//   align-items: center;
+//   justify-content: space-between;
+//   align-self: stretch;
+//   z-index: 1;
+// `;

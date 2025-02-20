@@ -15,15 +15,11 @@ export const EventCard = forwardRef<HTMLDivElement, EventCardProps>(
     const isSearchPage = pathname === ROUTES.EVENT_SEARCH;
     if (!eventCardData) return;
 
-    const {
-      eventImages,
-      title,
-      // eventLocation: { address },
-      price,
-    } = eventCardData;
+    const { eventImages, title, eventLocation, price } = eventCardData;
 
-    const address = '서울시 강남구 서초동 123'; // 임시
-    const district = getDistrict(address);
+    // 주소가 있을때만 행정구 표시
+    const district =
+      eventLocation?.address && getDistrict(eventLocation.address);
 
     const thumbnailImage =
       eventImages && eventImages.length > 0 && eventImages[0].imageUrl;
@@ -43,7 +39,7 @@ export const EventCard = forwardRef<HTMLDivElement, EventCardProps>(
         <S.Info>
           <S.Title>{title}</S.Title>
           <S.SubInfoWrapper>
-            <S.SubInfo>{district}</S.SubInfo>
+            {district && <S.SubInfo>{district}</S.SubInfo>}
             <S.SubInfo>{priceFormatter(price)}</S.SubInfo>
           </S.SubInfoWrapper>
         </S.Info>

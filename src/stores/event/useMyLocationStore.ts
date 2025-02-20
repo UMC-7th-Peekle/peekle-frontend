@@ -5,6 +5,9 @@ import { MyLocationStore } from '@/types/event';
 const useMyLocationStore = create<MyLocationStore>()(
   persist(
     (set) => ({
+      isMyLocationLoading: false,
+      setIsMyLocationLoading: (isLoading) =>
+        set({ isMyLocationLoading: isLoading }),
       myLocation: null,
       hasMyLocationChanged: true,
       setMyLocation: (location) =>

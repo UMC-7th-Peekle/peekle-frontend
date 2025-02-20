@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { useRecentSearchStore } from '@/stores';
 import { alert } from '@/utils';
 
 interface UseTextFieldsProps {
@@ -10,13 +11,14 @@ interface UseTextFieldsProps {
 
 export const useTextFields = ({
   queryKey,
-  localKey,
   onQuerySubmit = () => {},
 }: UseTextFieldsProps) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get(queryKey) ?? '';
   const [inputValue, setInputValue] = useState(query ?? '');
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const { setRecentSearch } = useRecentSearchStore();
 
   // unmount시 timeoutRef 정리
   useEffect(() => {
@@ -54,11 +56,7 @@ export const useTextFields = ({
       clearTimeout(timeoutRef.current);
     }
     setSearchParams({ [queryKey]: inputValue }); // 현재 input 값으로 즉시 쿼리 업데이트
-    const recentSearch = JSON.parse(localStorage.getItem(localKey) || '[]');
-    localStorage.setItem(
-      localKey,
-      JSON.stringify([...new Set([inputValue, ...recentSearch])]),
-    );
+    setRecentSearch(inputValue);
     onQuerySubmit?.(inputValue);
   };
 

@@ -52,7 +52,7 @@ export interface FilterTabsListProps {
 }
 
 export type EventFilterKeys = '정렬' | '카테고리' | '기간' | '가격' | '지역';
-
+export type EventSortKeys = '가까운 날짜순' | '낮은 금액순' | '가까운 거리순';
 // 캘린더
 export type DateRange = [Date | null, Date | null];
 
@@ -67,7 +67,7 @@ export interface EventCardData {
   eventImages: EventImages[];
   title: string;
   price: number;
-  // eventLocation: EventLocation;
+  eventLocation?: EventLocation;
 }
 export interface EventCardProps {
   id: number;
@@ -103,6 +103,8 @@ export interface LocationConfirmProps {
 }
 
 export interface MyLocationStore {
+  isMyLocationLoading: boolean;
+  setIsMyLocationLoading: (isLoading: boolean) => void;
   myLocation: naver.maps.LatLng | null;
   hasMyLocationChanged: boolean;
   setMyLocation: (location: naver.maps.LatLng) => void;
@@ -202,7 +204,7 @@ export const EventSchedulesSchema = z.object({
   repeatType: EventScheduleRepeatTypeSchema,
   repeatEndDate: z.string().nullable(),
   isAllDay: z.boolean(),
-  customText: z.string().nullable(),
+  customText: z.string(),
   startDate: z.string(),
   endDate: z.string(),
   startTime: z.string(),
@@ -210,34 +212,35 @@ export const EventSchedulesSchema = z.object({
 });
 
 const EventLocationSchema = z.object({
-  coordinates: z.array(z.number()),
-  // locationGroupId: locationGroupIdSchema,
-  // roadAddress: z.string().nullable(),
-  // jibunAddress: z.string().nullable(),
-  // buildingCode: z.string().nullable(),
-  // buildingName: z.string().nullable(),
-  // sido: z.string().nullable(),
-  // sigungu: z.string().nullable(),
-  // sigunguCode: z.string().nullable(),
-  // roadnameCode: z.string().nullable(),
-  // zoneCode: z.string().nullable(),
-  // detail: z.string().nullable(),
+  coordinates: z.array(z.number()).nullable().optional(),
+  address: z.string().nullable().optional(),
+  buildingName: z.string().nullable().optional(),
 });
+
+export type EventLocation = z.infer<typeof EventLocationSchema>;
 
 // 이벤트 생성 스키마
 // 폼 스키마
 export const EventCreateFormSchema = z.object({
   title: z.string().trim().min(1, '제목을 입력하세요.'),
-  content: z.string().trim().min(1, '내용을 입력하세요.'),
+  content: z
+    .string()
+    .trim()
+    .min(1, '내용을 입력하세요.')
+    .nullable() // null 허용
+    .refine((val) => val !== '', {
+      message: '내용을 입력하세요.',
+    }),
   priceType: PriceTypeSchema,
-  // price: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
-  //   message: '양수를 입력해주세요.',
-  // }),
-  price: z.number().refine((val) => val > 0, {
-    message: '양수를 입력해주세요.',
-  }),
+  price: z.string(),
   categoryId: CategoryIdSchema,
-  eventUrl: z.string().url('올바른 URL 형식이 아닙니다.').nullable(),
+  eventUrl: z
+    .string()
+    .min(1, '홈페이지 주소를 입력해주세요.')
+    .url('올바른 URL 형식이 아닙니다.')
+    .refine((val) => val !== null && val !== '', {
+      message: '홈페이지 주소를 입력해주세요.',
+    }),
   location: z.object({
     address: z
       .string()
@@ -245,7 +248,7 @@ export const EventCreateFormSchema = z.object({
       .refine((val) => val.includes('서울'), {
         message: '아직 서울 주소만 입력 가능해요',
       }),
-    buildingName: z.string().min(1, '건물 이름을 입력해주세요.'),
+    buildingName: z.string().min(1, '시설 이름을 입력해주세요.'),
   }),
   applicationStartDate: z.string().min(1, '시작 날짜를 입력하세요.'),
   applicationEndDate: z.string().min(1, '종료 날짜를 입력하세요.'),
@@ -253,8 +256,9 @@ export const EventCreateFormSchema = z.object({
     z
       .object({
         repeatType: EventScheduleRepeatTypeSchema,
+        repeatEndDate: z.string().nullable(),
         isAllDay: z.boolean(),
-        customText: z.string().nullable(),
+        customText: z.string(),
         startDate: z.string().trim().min(1, '시작 날짜를 입력하세요.'),
         startTime: z.string().trim().min(1, '시작 시간을 입력하세요.'),
         endDate: z.string().trim().min(1, '종료 날짜를 입력하세요.'),
@@ -263,9 +267,7 @@ export const EventCreateFormSchema = z.object({
       .refine(
         (data) => {
           if (data.repeatType === 'custom') {
-            return (
-              data.customText !== null && data.customText.trim().length > 0
-            );
+            return data.customText.trim().length > 0;
           }
           return true;
         },
@@ -278,7 +280,19 @@ export const EventCreateFormSchema = z.object({
 });
 
 EventCreateFormSchema.superRefine((data, ctx) => {
-  console.log('🔍 검증 시작', data);
+  // 가격
+  if (data.priceType === '유료') {
+    if (isNaN(Number(data.price)) || Number(data.price) <= 0) {
+      ctx.addIssue({
+        path: ['price'],
+        message: '양수를 입력해주세요.',
+        code: 'invalid_literal',
+        expected: '양수',
+        received: data.price,
+      });
+    }
+  }
+
   const applicationStartDate = new Date(data.applicationStartDate);
   const applicationEndDate = new Date(data.applicationEndDate);
 
@@ -324,7 +338,7 @@ export const EventCreateSchema = z.object({
   content: z.string(),
   price: z.number(),
   categoryId: CategoryIdSchema,
-  eventUrl: z.string().nullable(),
+  eventUrl: z.string(),
   applicationStart: z.string(),
   applicationEnd: z.string(),
   schedules: z.array(
@@ -332,14 +346,14 @@ export const EventCreateSchema = z.object({
       repeatType: EventScheduleRepeatTypeSchema,
       repeatEndDate: z.string().nullable(),
       isAllDay: z.boolean(),
-      customText: z.string().nullable(),
+      customText: z.string(),
       startDate: z.string(),
       endDate: z.string(),
       startTime: z.string(),
       endTime: z.string(),
     }),
   ),
-  locations: z.object({
+  location: z.object({
     locationGroupId: locationGroupIdSchema,
     address: z.string(),
     buildingName: z.string(),
@@ -378,6 +392,7 @@ export const RemoveEventResponseSchema = ApiResponseSchema(
 
 export type RemoveEventResponse = z.infer<typeof RemoveEventResponseSchema>;
 
+// ✅ 이벤트 조회
 export const EventSchema = z.object({
   eventId: z.number(),
   title: z.string(),
@@ -394,14 +409,19 @@ export const EventSchema = z.object({
 export type EventsQkType = [
   typeof GET_EVENTS_QK,
   {
-    limit: number; // limit
-    cursor?: number; // cursor
-    categories?: CategoryOptionWithoutAll[];
-    locations?: LocationOptionWithoutAll[];
-    price: PriceOption;
-    startDate?: string; // startDate
-    endDate?: string; // endDate
-    query?: string; // query
+    limit?: number;
+    cursor?: number;
+    categories?: string;
+    locations?: string;
+    price?: PriceOption;
+    startDate?: string;
+    endDate?: string;
+    query?: string;
+    lat?: number;
+    lng?: number;
+    southWest?: string;
+    northEast?: string;
+    sort?: EventSortKeys;
   },
 ];
 
@@ -415,6 +435,11 @@ export interface getEventsParams {
   startDate?: string;
   endDate?: string;
   query?: string;
+  lat?: number;
+  lng?: number;
+  southWest?: string;
+  northEast?: string;
+  sort?: EventSortKeys;
 }
 
 // 데이터 타입 추출
@@ -438,9 +463,9 @@ export type EventsResponse = z.infer<typeof EventsResponseSchema>;
 export const EventDetailSchema = z.object({
   eventId: z.number(),
   title: z.string(),
-  content: z.string(),
+  content: z.string().nullable(),
   price: z.number(),
-  locationGroupId: locationGroupIdSchema,
+  locationGroupId: locationGroupIdSchema.nullable(),
   eventUrl: z.string().url(),
   applicationStart: z.string().datetime(),
   applicationEnd: z.string().datetime(),
@@ -450,6 +475,7 @@ export const EventDetailSchema = z.object({
   eventLocation: EventLocationSchema,
   eventImages: z.array(EventImagesSchema),
   eventSchedules: z.array(EventSchedulesSchema),
+  isScraped: z.boolean(),
 });
 
 // 데이터 타입 추출
@@ -474,11 +500,11 @@ export const EventSchemaFromScrap = z.object({
   eventId: z.number(),
   event: z.object({
     title: z.string(),
-    content: z.string(),
+    content: z.string().nullable(),
     price: z.number(),
     categoryId: CategoryIdSchema,
     category: CategorySchema,
-    locationGroupId: locationGroupIdSchema,
+    locationGroupId: locationGroupIdSchema.nullable(),
     eventUrl: z.string().url(),
     applicationStart: z.string().datetime(),
     applicationEnd: z.string().datetime(),
@@ -507,7 +533,7 @@ export type EventsScrappedQKType = [
   typeof GET_EVENTS_SCRAPPED_QK,
   number, // limit
   number | undefined, // cursor
-  CategoryOptionWithoutAll[] | undefined, // categories
+  string | undefined, // categories
 ];
 
 export type EventsScrappedResponse = z.infer<
@@ -518,9 +544,6 @@ export type EventsScrappedResponse = z.infer<
 export const ToggleScrapEventResponseSchema = ApiResponseSchema(
   z.object({
     message: z.string(),
-    // FE에서 관리할 상태
-    isScrapped: z.boolean().optional(),
-    scrapCount: z.number().optional(),
   }),
 );
 
@@ -530,11 +553,7 @@ export type ToggleScrapEventResponse = z.infer<
 
 export interface ToggleScrapEventParams {
   eventId: number;
-  isScrapped: boolean;
-}
-
-export interface ToggleScrapEventContext {
-  prevData: ToggleScrapEventResponse;
+  isScraped: boolean;
 }
 
 // ✅ 이벤트 생성

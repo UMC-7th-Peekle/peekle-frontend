@@ -14,22 +14,26 @@ const patchEvent = async ({
 }: UpdateEventParams): Promise<UpdateEventResponse> => {
   const formData = new FormData();
   // JSON 데이터는 문자열로 변환해서 추가
+  console.log('eventData', eventData);
   formData.append('body', JSON.stringify(eventData));
 
   // 이미지 파일 추가
-  if (files && files.length > 0) {
-    Array.from(files).forEach((file) => {
-      formData.append('event-images', file);
-    });
+  if (files?.length) {
+    files.forEach((file) => formData.append('event-images', file));
+  }
+  // FormData 내부 데이터 확인
+  console.log('formData Entries:');
+  for (const pair of formData.entries()) {
+    console.log(`${pair[0]}:`, pair[1]);
   }
 
   const response = await clientAuth<UpdateEventResponse>({
     headers: {
       'Content-Type': 'multipart/form-data',
     },
-    method: 'POST',
+    method: 'PATCH',
     url: `/events/${eventId}`,
-    data: eventData,
+    data: formData,
   });
 
   // 응답 데이터 검증
@@ -45,8 +49,7 @@ const useUpdateEvent = () => {
     Error,
     UpdateEventParams
   >({
-    mutationFn: ({ eventId, eventData, files }) =>
-      patchEvent({ eventId, eventData, files }),
+    mutationFn: patchEvent,
     onError: (error) => {
       handleError(error);
     },

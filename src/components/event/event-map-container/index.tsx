@@ -1,5 +1,5 @@
 import * as S from './style';
-import { useCallback } from 'react';
+import { Suspense, useCallback } from 'react';
 import {
   BottomSheet,
   BottomSheetTabs,
@@ -20,16 +20,24 @@ const EventMapContainer = ({
   const handleMapLoad = useCallback(() => {
     setIsLoading(false);
     setLoadingMessage('');
-  }, [setIsLoading, setLoadingMessage]);
+  }, [setLoadingMessage, setIsLoading]);
 
   return (
     <>
-      <EventMap onMapLoad={handleMapLoad} isSearchPage={isSearchPage} />
+      <Suspense
+        fallback={
+          <S.LoadingContainer $isSearchPage={isSearchPage}>
+            <DeferredLoader text={loadingMessage} />
+          </S.LoadingContainer>
+        }
+      >
+        <EventMap onMapLoad={handleMapLoad} isSearchPage={isSearchPage} />
+      </Suspense>
       <BottomSheet id={BOTTOM_SHEET_ID_EVENT_FILTER}>
         <BottomSheetTabs />
       </BottomSheet>
       {isLoading && (
-        <S.LoadingContainer>
+        <S.LoadingContainer $isSearchPage={isSearchPage}>
           <DeferredLoader text={loadingMessage} />
         </S.LoadingContainer>
       )}

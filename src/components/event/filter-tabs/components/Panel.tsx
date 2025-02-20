@@ -8,7 +8,6 @@ const Panel = ({ value, children }: FilterTabsPanelProps) => {
   if (value !== selectedValue) return null;
 
   const isAdminPage = option === '관리자 탭';
-  console.log('isAdminPage', isAdminPage);
 
   return (
     <PanelContainer

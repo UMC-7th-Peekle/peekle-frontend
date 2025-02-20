@@ -24,10 +24,22 @@ const getEventScrap = async ({
     },
   });
 
+  // 204 No Content 처리
+  if (!response.data || Object.keys(response.data).length === 0) {
+    return {
+      resultType: 'SUCCESS',
+      error: null,
+      success: {
+        events: [], // 빈 배열로 초기화
+        hasNextPage: false,
+        nextCursor: null,
+      },
+    };
+  }
+
   // 응답 데이터 검증
   const parsedData = GetEventsScrappedResponseSchema.parse(response.data);
   return parsedData;
-  return response.data;
 };
 
 const useGetEventScrap = ({
@@ -42,7 +54,12 @@ const useGetEventScrap = ({
       InfiniteData<EventsScrappedResponse>,
       EventsScrappedQKType
     >({
-      queryKey: [GET_EVENTS_SCRAPPED_QK, limit, cursor, categories],
+      queryKey: [
+        GET_EVENTS_SCRAPPED_QK,
+        limit,
+        cursor,
+        JSON.stringify(categories), // 배열을 문자열로 변환하여 정확한 비교
+      ],
       queryFn: ({ pageParam }) =>
         getEventScrap({
           limit,

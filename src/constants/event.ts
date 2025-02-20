@@ -142,4 +142,3 @@ export const MAP_MARKERS = {
 export const GET_EVENTS_QK = 'events';
 export const GET_EVENT_DETAIL_QK = 'event-detail';
 export const GET_EVENTS_SCRAPPED_QK = 'event-scrapped';
-export const TOGGLE_SCRAP_EVENT_QK = 'event-toggle-scrap';

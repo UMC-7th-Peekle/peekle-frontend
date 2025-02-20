@@ -9,7 +9,7 @@ import {
 import Header from '@/layouts/header';
 
 const EventListWithFilter = () => {
-  const isAdmin = true; // 임시 변수
+  const isAdmin = false; // 임시 변수
   return (
     <>
       {!isAdmin && <Header page="event" />}

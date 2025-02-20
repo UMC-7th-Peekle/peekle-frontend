@@ -73,6 +73,10 @@ const router = createBrowserRouter([
     errorElement: <ErrorFallback />,
     children: [
       {
+        index: true,
+        element: <OnboardingPage />,
+      },
+      {
         path: ROUTES.ONBOARDING,
         element: <OnboardingPage />,
       },

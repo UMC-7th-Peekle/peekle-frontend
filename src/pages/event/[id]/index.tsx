@@ -1,6 +1,6 @@
 import * as S from './style';
 import { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import Skeleton from 'react-loading-skeleton';
 import {
   BottomSheet,
@@ -24,6 +24,7 @@ import {
   formatSchedules,
   getSubstring,
   toast,
+  alert,
 } from '@/utils';
 import { BOTTOM_SHEET_ID_EVENT_SHARE } from '@/constants/event';
 import { ROUTES } from '@/constants/routes';
@@ -43,15 +44,15 @@ export const EventDetailPage = ({ isAdmin }: { isAdmin: boolean }) => {
   const { events } = useEventsStore();
   const navigate = useNavigate();
   const { state } = useLocation();
+  // 공유된 페이지인지 확인
+  const [searchParams] = useSearchParams();
+  const isShared = searchParams.get('shared') === 'true';
 
   // 검색 페이지에선 지도 보기 클릭시 BS 닫아놓기
   const { setIsSearchBSOpen } = useSearchBottomSheetStore();
 
   // 이벤트 삭제
-  const { removeEvent } = useRemoveEvent();
-
-  // 스크랩 토글
-  const { toggleScrap } = useToggleScrapEvent();
+  const { removeEvent, isPending } = useRemoveEvent();
 
   //디테일 가져오기
   const id = useId(); //url에서 뽑은 id
@@ -62,7 +63,9 @@ export const EventDetailPage = ({ isAdmin }: { isAdmin: boolean }) => {
 
   useEffect(() => {
     if (!id || !eventDetail) return;
-    const firstSentence = getSubstring(eventDetail.content);
+    const firstSentence = getSubstring(
+      eventDetail.content ?? '피클의 이벤트 정보',
+    );
     document
       .querySelector('meta[property="og:title"]')
       ?.setAttribute('content', eventDetail.title);
@@ -81,6 +84,16 @@ export const EventDetailPage = ({ isAdmin }: { isAdmin: boolean }) => {
     document.title = eventDetail.title;
   }, [id, thumbnailImg, eventDetail]);
 
+  // 스크랩 토글
+  const { toggleScrap } = useToggleScrapEvent();
+  const [isLocalScraped, setIsLocalScraped] = useState(
+    eventDetail?.isScraped ?? false,
+  );
+
+  useEffect(() => {
+    setIsLocalScraped(eventDetail?.isScraped ?? false);
+  }, [eventDetail]);
+
   if (!id || !eventDetail) {
     return null;
   }
@@ -91,37 +104,49 @@ export const EventDetailPage = ({ isAdmin }: { isAdmin: boolean }) => {
     content,
     title,
     eventSchedules,
-    // eventLocation: { detail: detailAddress, buildingName },
+    eventLocation,
     category: { name: categoryName },
     price,
     eventUrl,
     applicationStart,
     applicationEnd,
-    // isScrapped,
   } = eventDetail;
 
+  let startDate = '';
+  let endDate = '';
+  let schedules: string | string[] = '';
   // 데이터 포맷팅
-  const startDate = formatDateToMonthDay(applicationStart, true, true);
-  const endDate = formatDateToMonthDay(applicationEnd, true, true);
-  const schedules = formatSchedules(
-    eventSchedules,
-    applicationStart,
-    applicationEnd,
-  );
+  if (!applicationStart || !applicationEnd) {
+    startDate = '시작 일자 없음';
+    endDate = '종료 일자 없음';
+    schedules = '스케줄 정보 없음';
+  } else {
+    startDate = formatDateToMonthDay(applicationStart, true, true);
+    endDate = formatDateToMonthDay(applicationEnd, true, true);
+    schedules = formatSchedules(
+      eventSchedules,
+      applicationStart,
+      applicationEnd,
+    );
+  }
 
   const isManySchedules = Array.isArray(schedules) && schedules.length > 1;
 
-  const detailAddress = '임시 주소';
-  const buildingName = '임시 건물명';
+  let address = '';
+  let buildingName = '';
+  if (eventLocation) {
+    address = eventLocation.address ?? '주소 정보 없음';
+    buildingName = eventLocation.buildingName ?? '센터 정보 없음';
+  }
 
   const handleCopyAddress = () => {
-    copyToClipboard(detailAddress);
+    copyToClipboard(address);
     toast('주소가 복사되었습니다.');
   };
 
   const handleToggleHeart = async (eventId: number) => {
-    // await toggleScrap({ eventId, isScrapped });
-    await toggleScrap({ eventId, isScrapped: false });
+    await toggleScrap({ eventId, isScraped: isLocalScraped });
+    setIsLocalScraped(!isLocalScraped); // UI 반영
   };
 
   const handleMoveSiteClick = async () => {
@@ -129,7 +154,10 @@ export const EventDetailPage = ({ isAdmin }: { isAdmin: boolean }) => {
   };
 
   const handleCopyLink = () => {
-    copyToClipboard(window.location.href);
+    // shared 쿼리 파라미터 추가
+    const currentURL = new URL(window.location.href);
+    currentURL.searchParams.set('shared', 'true');
+    copyToClipboard(currentURL.href);
     toast('링크가 복사되었습니다.');
   };
 
@@ -150,8 +178,21 @@ export const EventDetailPage = ({ isAdmin }: { isAdmin: boolean }) => {
     navigate(`${ROUTES.EVENT_EDIT}/${eventId}`);
   };
 
-  const handleDeleteEvent = async () => {
-    await removeEvent(eventId);
+  const handleDeleteEvent = () => {
+    alert(
+      `이벤트를 삭제하시면\n 복구할 수 없습니다.\n 정말 삭제 하시겠습니까?`,
+      'warning',
+      '아니오',
+      '예',
+      () => {},
+      async () => {
+        await removeEvent(eventId);
+      },
+    );
+  };
+
+  const handleCharacterLogoClick = () => {
+    navigate(ROUTES.ONBOARDING);
   };
 
   return (
@@ -164,7 +205,11 @@ export const EventDetailPage = ({ isAdmin }: { isAdmin: boolean }) => {
       />
 
       <S.Header>
-        <Backward size={'28px'} />
+        {isShared ? (
+          <S.CharacterLogo onClick={handleCharacterLogoClick} />
+        ) : (
+          <Backward size={'28px'} />
+        )}
         <S.ShareBtn
           onClick={() => setActiveBottomSheet(BOTTOM_SHEET_ID_EVENT_SHARE)}
         />
@@ -179,7 +224,11 @@ export const EventDetailPage = ({ isAdmin }: { isAdmin: boolean }) => {
             {isAdmin && (
               <S.AdminIconContainer>
                 <S.EditIcon onClick={handleEditEvent} />
-                <S.DeleteIcon onClick={handleDeleteEvent} />
+                {isPending ? (
+                  <p>삭제 중</p>
+                ) : (
+                  <S.DeleteIcon onClick={handleDeleteEvent} />
+                )}
               </S.AdminIconContainer>
             )}
           </S.TitleContainer>
@@ -194,7 +243,9 @@ export const EventDetailPage = ({ isAdmin }: { isAdmin: boolean }) => {
             <S.InfoRow>
               <S.TimeIcon />
               <S.InfoRowText>
-                {isManySchedules ? schedules[0] : schedules}
+                {isManySchedules
+                  ? schedules[0]
+                  : schedules || '스케줄 정보 없음'}
               </S.InfoRowText>
               {isManySchedules && (
                 <S.ArrowDownIcon
@@ -203,7 +254,7 @@ export const EventDetailPage = ({ isAdmin }: { isAdmin: boolean }) => {
                 />
               )}
             </S.InfoRow>
-            {isExpandedTime && (
+            {isManySchedules && isExpandedTime && Array.isArray(schedules) && (
               <>
                 {schedules.map((schedule, index) => {
                   return index > 0 ? (
@@ -224,11 +275,13 @@ export const EventDetailPage = ({ isAdmin }: { isAdmin: boolean }) => {
               />
               <S.DetailAddressCard $isExpanded={isExpandedAddress}>
                 <S.DetailAddressTextWrapper>
-                  <S.DetailAddressText>{detailAddress}</S.DetailAddressText>
-                  <S.DetailAddressCopyText onClick={handleCopyAddress}>
-                    주소 복사
-                  </S.DetailAddressCopyText>
-                  {!isAdmin && (
+                  <S.DetailAddressText>{address}</S.DetailAddressText>
+                  {eventLocation.address && (
+                    <S.DetailAddressCopyText onClick={handleCopyAddress}>
+                      주소 복사
+                    </S.DetailAddressCopyText>
+                  )}
+                  {!isAdmin && eventLocation.buildingName && (
                     <S.ViewMapText onClick={handleViewMap}>
                       지도 보기
                     </S.ViewMapText>
@@ -247,13 +300,14 @@ export const EventDetailPage = ({ isAdmin }: { isAdmin: boolean }) => {
 
       <S.ContentContainer>
         <S.ContentTitle>상세 정보</S.ContentTitle>
-        <S.Content className="event-content">{content}</S.Content>
+        <S.Content className="event-content">
+          {content ?? '상세 정보 없음'}
+        </S.Content>
       </S.ContentContainer>
 
       <S.BottomContainer>
         <ToggleHeart
-          // isActive={isScrapped}
-          isActive={false}
+          isActive={isLocalScraped}
           onClick={() => handleToggleHeart(eventId)}
           size={24}
         />

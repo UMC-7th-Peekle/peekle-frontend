@@ -1,10 +1,10 @@
 import * as S from './style';
-import { useEffect, useCallback, useState } from 'react';
-import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
+import { useEffect, useCallback, useState, useRef } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   EventCard,
-  LocationConfirm,
+  ShowLocationConfirm,
   SquareButton,
   RoundedButton,
   SearchBottomSheet,
@@ -13,12 +13,12 @@ import {
   useMapStore,
   useMyLocationStore,
   useSearchBottomSheetStore,
+  useEventsStore,
 } from '@/stores';
-import { confirm, getCurrentPosition, debounce, alert } from '@/utils';
+import { getCurrentPosition, alert } from '@/utils';
 import { ROUTES } from '@/constants/routes';
-import { useMapMarkers } from '@/hooks';
-import { events } from '@/sample-data/event';
-
+import { useGetEvents, useMapMarkers, useEventFilter } from '@/hooks';
+import queryClient from '@/lib/tanstack-query/queryClient';
 window.navermap_authFailure = function () {
   console.error('네이버 지도 인증 실패');
   throw new Error('네이버 지도 인증 실패');
@@ -35,14 +35,40 @@ const EventMap = ({
   // sessionStorage.clear();
   const [mapInstance, setMapInstance] = useState<naver.maps.Map>();
   const [isMapInitialed, setIsMapInitialed] = useState<boolean>(false);
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get('event-search') ?? '';
 
+  const { events } = useEventsStore();
+  const { formattedFilters } = useEventFilter();
+
+  // 지도 영역
+  const [bounds, setBounds] = useState({
+    southWest: '',
+    northEast: '',
+  });
+
+  const { data: eventsData, isFetching: isEventsFetching } = useGetEvents({
+    ...formattedFilters,
+    limit: 200, // 지도에 표시할 이벤트 수
+    southWest: bounds.southWest || undefined, // 빈 문자열이면 무시
+    northEast: bounds.northEast || undefined,
+  });
+
+  const { createMarkers, updateMarkers, removeBlackSBMarker, updateLatestPos } =
+    useMapMarkers(
+      mapInstance,
+      isSearchPage ? events : (eventsData?.pages[0].success?.events ?? []),
+    );
+
   const { setIsSearchBSOpen } = useSearchBottomSheetStore();
+
+  // 마지막 API 호출 시간을 추적
+  const lastApiCallTimeRef = useRef<number>(Date.now());
 
   const {
     selectedEvent,
     setSelectedEvent,
+    isLoading,
     setIsLoading,
     setLoadingMessage,
     latestPos,
@@ -54,20 +80,22 @@ const EventMap = ({
     hasMyLocationChanged,
     resetMyLocationChanged,
   } = useMyLocationStore();
-  const { updateLatestPos, createMarkers, updateMarkers, removeBlackSBMarker } =
-    useMapMarkers(mapInstance, events);
+
+  // 이전 위치 저장
+  const latestPosRef = useRef(latestPos);
 
   const navigate = useNavigate();
-  const location = useLocation();
+
+  console.log('events in map', events);
 
   const initMap = useCallback(
     (centerLat: number, centerLng: number) => {
       const mapDiv = document.getElementById('map');
       if (!mapDiv) return;
 
-      // latestPos가 있으면 그 위치를 사용
       updateLatestPos();
       let latLng = null;
+
       // 내 위치 바뀌면 센터로 이동
       if (hasMyLocationChanged) {
         latLng = new naver.maps.LatLng(centerLat, centerLng);
@@ -88,22 +116,18 @@ const EventMap = ({
         });
 
         setMapInstance(newMap);
-        // 맵이 완전히 로드되었을 때 한 번
-        naver.maps.Event.once(newMap, 'init', () => {
-          onMapLoad();
-        });
       } else {
         // mapInstance 있으면
         mapInstance.setCenter(latLng);
       }
+
       createMarkers(centerLat, centerLng);
     },
     [
       mapInstance,
-      createMarkers,
-      onMapLoad,
-      latestPos,
       updateLatestPos,
+      latestPos,
+      createMarkers,
       hasMyLocationChanged,
       resetMyLocationChanged,
       isMapInitialed,
@@ -112,15 +136,68 @@ const EventMap = ({
 
   // 지도 움직임
   const idleHandler = useCallback(() => {
+    if (!mapInstance) return;
+
     updateMarkers();
+
+    // 지도 영역 (mapBounds) 변경 시 - searchPage에선 사용 x
+    if (!isSearchPage) {
+      // 마지막 API 호출 시간 추적
+      const now = Date.now();
+      const timeDifference = now - lastApiCallTimeRef.current;
+
+      if (timeDifference > 500) {
+        // 500ms 이상 지났으면 api 호출
+        lastApiCallTimeRef.current = now;
+
+        const bounds = mapInstance?.getBounds();
+        if (bounds) {
+          const southWest = {
+            lat: bounds.minX(),
+            lng: bounds.minY(),
+          };
+          const northEast = {
+            lat: bounds.maxX(),
+            lng: bounds.maxY(),
+          };
+
+          setBounds({
+            southWest: `${southWest.lat}, ${southWest.lng}`,
+            northEast: `${northEast.lat}, ${northEast.lng}`,
+          });
+
+          queryClient.invalidateQueries({
+            queryKey: ['events'],
+            refetch: true,
+          });
+          queryClient.setQueryData(['events'], {
+            ...formattedFilters,
+            southWest: `${southWest.lat},${southWest.lng}`,
+            northEast: `${northEast.lat},${northEast.lng}`,
+          });
+        }
+      }
+    }
+    if (!isEventsFetching) onMapLoad();
 
     // 움직임 멈추고 latestPos 업데이트 해두기
     const center = mapInstance?.getCenter();
     if (center) {
       const centerLatLng = new naver.maps.LatLng(center.y, center.x);
-      debounce(() => setLatestPos(centerLatLng), 1000);
+      if (latestPosRef.current !== centerLatLng) {
+        latestPosRef.current = centerLatLng;
+        setLatestPos(centerLatLng);
+      }
     }
-  }, [updateMarkers, mapInstance, setLatestPos]);
+  }, [
+    updateMarkers,
+    formattedFilters,
+    mapInstance,
+    isSearchPage,
+    isEventsFetching,
+    onMapLoad,
+    setLatestPos,
+  ]);
 
   const mapClickHandler = useCallback(() => {
     // 지도 부분 클릭시 선택된 infowindow 기본 색으로 변경
@@ -162,40 +239,40 @@ const EventMap = ({
   );
 
   // 위치 동의 확인
-  const showLocationConfirm = useCallback(() => {
-    confirm(
-      <LocationConfirm
-        onLocationAllow={() => {
-          localStorage.setItem('curr-location-agree', 'true');
-          setIsLoading(true);
-          setLoadingMessage('위치 정보를 가져오는 중이에요...');
-          getCurrentPosition()
-            .then(handleLocationSuccess)
-            .finally(() => {
-              setIsLoading(false);
-              setLoadingMessage('');
-            });
-        }}
-        onLocationDeny={() => {
-          localStorage.setItem('curr-location-agree', 'false');
-          initMap(
-            import.meta.env.VITE_MAP_CENTER_LAT,
-            import.meta.env.VITE_MAP_CENTER_LNG,
-          );
-          setIsLoading(false);
-          setLoadingMessage('');
-        }}
-      />,
+  const handleLocationConfirm = useCallback(() => {
+    ShowLocationConfirm(
+      () => {
+        localStorage.setItem('curr-location-agree', 'true');
+        setIsLoading(true);
+        setLoadingMessage('위치 정보를 가져오는 중이에요...');
+        getCurrentPosition()
+          .then(handleLocationSuccess)
+          .finally(() => {
+            setIsLoading(false);
+            setLoadingMessage('');
+          });
+      },
+      () => {
+        localStorage.setItem('curr-location-agree', 'false');
+        initMap(
+          import.meta.env.VITE_MAP_CENTER_LAT,
+          import.meta.env.VITE_MAP_CENTER_LNG,
+        );
+        setIsLoading(false);
+        setLoadingMessage('');
+      },
     );
   }, [handleLocationSuccess, setIsLoading, setLoadingMessage, initMap]);
 
   useEffect(() => {
     const locationAgreed = localStorage.getItem('curr-location-agree');
     if (locationAgreed === null) {
-      showLocationConfirm();
+      handleLocationConfirm();
     } else {
-      setIsLoading(true);
-      setLoadingMessage('위치 정보를 가져오는 중이에요...');
+      if (!isLoading) {
+        setIsLoading(true);
+        setLoadingMessage('위치 정보를 가져오는 중이에요...');
+      }
       const mapDiv = document.getElementById('map');
       if (mapDiv) {
         if (myLocation) initMap(myLocation.y, myLocation.x);
@@ -234,9 +311,10 @@ const EventMap = ({
     return undefined;
   }, [
     handleLocationSuccess,
-    showLocationConfirm,
+    handleLocationConfirm,
     initMap,
     myLocation,
+    isLoading,
     setIsLoading,
     setLoadingMessage,
     mapInstance,
@@ -248,9 +326,9 @@ const EventMap = ({
       mapInstance?.setCenter(new naver.maps.LatLng(myLocation.y, myLocation.x));
       mapInstance?.setZoom(15);
     } else {
-      showLocationConfirm(); // 위치 동의 띄우기
+      handleLocationConfirm(); // 위치 동의 띄우기
     }
-  }, [mapInstance, myLocation, showLocationConfirm]);
+  }, [mapInstance, myLocation, handleLocationConfirm]);
 
   const handleGotoListBtnClick = () => {
     // 검색어가 한 글자밖에 없으면 alert 띄우기
@@ -258,9 +336,13 @@ const EventMap = ({
       alert('두 글자 이상 입력해주세요.', 'none', '확인');
     // 검색 페이지가 아니면 페이지 이동
     else if (!isSearchPage) {
+      // 검색어 삭제 후 쿼리 재호충
+      const newSearchParams = new URLSearchParams(searchParams.toString());
+      newSearchParams.delete('event-search');
+      setSearchParams(newSearchParams);
       navigate({
         pathname: ROUTES.EVENT,
-        search: location.search, // 현재 쿼리 파람 유지
+        search: newSearchParams.toString(), // 현재 쿼리 파람 유지
       });
     }
     // 검색 페이지이면 검색 바텀시트 활성화
@@ -299,7 +381,7 @@ const EventMap = ({
                 <S.EventCardWrapper>
                   <EventCard
                     id={selectedEvent.eventId}
-                    eventData={selectedEvent}
+                    eventCardData={selectedEvent}
                   />
                 </S.EventCardWrapper>
               </motion.div>

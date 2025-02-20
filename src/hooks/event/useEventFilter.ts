@@ -1,27 +1,29 @@
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
-// import { events } from '@/sample-data/event';
-// import { useMyLocationStore } from '@/stores';
 import {
   UseEventFilterProps,
   EventFilterKeys,
   EventFilterType,
   PriceOption,
+  EventSortKeys,
 } from '@/types/event';
 import {
   DEFAULT_FILTERS,
   CATEGORY_IDS_WITHOUT_ALL,
   LOCATION_GROUP_IDS_WITHOUT_ALL,
 } from '@/constants/event';
-// import { calculateDistance } from '@/utils';
+import { getCurrentPosition } from '@/utils';
+import { ShowLocationConfirm } from '@/components';
+import { useMyLocationStore } from '@/stores';
 
 const useEventFilter = ({
   key = '정렬',
   type = 'single',
 }: UseEventFilterProps = {}) => {
-  // const { myLocation } = useMyLocationStore();
   const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get('event-search');
+  const { myLocation, setMyLocation, setIsMyLocationLoading } =
+    useMyLocationStore();
 
   // 현재 필터 상태 가져오기
   const filters = useMemo(() => {
@@ -36,6 +38,32 @@ const useEventFilter = ({
     });
     return currentFilters;
   }, [searchParams]);
+
+  const handleLocationSuccess = useCallback(
+    (position: GeolocationPosition) => {
+      const { latitude, longitude } = position.coords;
+      setMyLocation(new naver.maps.LatLng(latitude, longitude));
+    },
+    [setMyLocation],
+  );
+
+  const handleLocationConfirm = useCallback(() => {
+    ShowLocationConfirm(
+      () => {
+        localStorage.setItem('curr-location-agree', 'true');
+        setIsMyLocationLoading(true);
+        getCurrentPosition()
+          .then(handleLocationSuccess)
+          .finally(() => {
+            setIsMyLocationLoading(false);
+          });
+      },
+      () => {
+        localStorage.setItem('curr-location-agree', 'false');
+        setIsMyLocationLoading(false);
+      },
+    );
+  }, [handleLocationSuccess, setIsMyLocationLoading]);
 
   // 필터 정리
   const categories =
@@ -59,6 +87,13 @@ const useEventFilter = ({
       ? undefined
       : searchQuery
     : undefined;
+  const sort = filters.정렬 as EventSortKeys;
+  if (sort === '가까운 거리순') {
+    const locationAgreed = localStorage.getItem('curr-location-agree');
+    if (locationAgreed !== 'true') {
+      handleLocationConfirm();
+    }
+  }
 
   const formattedFilters = {
     ...filters,
@@ -68,6 +103,9 @@ const useEventFilter = ({
     price,
     locations,
     query,
+    sort,
+    lat: myLocation ? myLocation.y : undefined, // 위도
+    lng: myLocation ? myLocation.x : undefined, // 경도
   };
 
   // 필터값 변경
@@ -171,7 +209,6 @@ const useEventFilter = ({
     storedValue: filters[key as EventFilterKeys],
     handleSelect,
     formattedFilters,
-    // sortedEvents,
     isSelected,
     clearFilter,
     activeFilterCount,
