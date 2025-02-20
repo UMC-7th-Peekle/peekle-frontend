@@ -1,6 +1,7 @@
 import styled, { css } from 'styled-components';
 import MenuSVG from '@/assets/images/icons/menu.svg?react';
 import MapSVG from '@/assets/images/icons/map-filled.svg?react';
+import PlusSVG from '@/assets/images/icons/plus.svg?react';
 import { theme } from '@/styles/theme';
 
 const IconStyle = css`
@@ -13,6 +14,9 @@ export const MenuIcon = styled(MenuSVG)`
   ${IconStyle}
 `;
 export const MapIcon = styled(MapSVG)`
+  ${IconStyle}
+`;
+export const PlusIcon = styled(PlusSVG)`
   ${IconStyle}
 `;
 

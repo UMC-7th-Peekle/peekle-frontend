@@ -5,8 +5,6 @@ import NoFilteredResultSVG from '@/assets/images/null/noFilteredResult.svg?react
 import NoSearchResultSVG from '@/assets/images/null/noSearchResult.svg?react';
 import NoLikeResultSVG from '@/assets/images/null/noLike.svg?react';
 
-export const Container = styled.section``;
-
 export const EventsContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -35,9 +33,8 @@ export const EmptyText = styled.p`
   color: ${theme.color.gray[400]};
 `;
 
-export const GotoMapBtnWrapper = styled.div<{ $isSearchPage: boolean }>`
+export const GotoMapBtnWrapper = styled.div`
   position: fixed;
   right: 15px;
-  bottom: ${({ $isSearchPage }) =>
-    $isSearchPage ? '20px' : `calc(20px + var(--nav-height))`};
+  bottom: calc(20px + var(--nav-height));
 `;

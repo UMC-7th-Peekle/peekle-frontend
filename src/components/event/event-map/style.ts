@@ -1,12 +1,16 @@
 import { theme } from '@/styles/theme';
 import styled from 'styled-components';
 
-export const MapContainer = styled.div`
+export const MapContainer = styled.div<{ $isSearchPage?: boolean }>`
   width: 100vw;
-  height: calc(100vh - var(--nav-height)); // nav 영역 빼기
-  margin-left: -16px;
+  height: ${({ $isSearchPage }) =>
+    $isSearchPage
+      ? 'calc(100vh - var(--search-header-height))'
+      : 'calc(100vh - var(--nav-height))'};
+  margin-left: ${({ $isSearchPage }) => ($isSearchPage ? '0' : '-16px')};
   position: absolute;
-  top: 0;
+  top: ${({ $isSearchPage }) =>
+    $isSearchPage ? 'var(--search-header-height)' : '0'};
 `;
 
 export const Map = styled.div`
@@ -15,7 +19,10 @@ export const Map = styled.div`
   z-index: 0;
 `;
 
-export const BottomContainer = styled.div`
+export const BottomContainer = styled.div<{
+  $isSearchPage: boolean;
+  $hasSelectedEvent: boolean;
+}>`
   width: 100%;
   position: fixed;
   bottom: 0;
@@ -23,13 +30,19 @@ export const BottomContainer = styled.div`
   flex-direction: column;
   gap: 20px;
   padding: 0 20px;
-  bottom: calc(20px + var(--nav-height));
+  bottom: ${({ $isSearchPage, $hasSelectedEvent }) =>
+    !$isSearchPage
+      ? 'calc(20px + var(--nav-height))'
+      : $hasSelectedEvent
+        ? '20px'
+        : 'calc(20px + var(--search-bottom-sheet-height))'};
 `;
 
 export const ButtonContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 `;
 
 export const EventCardWrapper = styled.div`

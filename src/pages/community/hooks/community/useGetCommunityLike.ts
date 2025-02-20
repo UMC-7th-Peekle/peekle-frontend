@@ -43,7 +43,7 @@ const getCommunityLike = async ({
 }: UseGetCommunityLikeProps): Promise<CommunityResponse> => {
   const response = await clientAuth<CommunityResponse>({
     method: 'GET',
-    url: `/community/article/like`,
+    url: `/community/articles/like`,
     params: {
       limit,
       cursor: pageParam,

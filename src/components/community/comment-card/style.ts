@@ -2,13 +2,34 @@ import { theme } from '@/styles/theme';
 import styled from 'styled-components';
 import ListSvg from '@/assets/images/icons/three-dot.svg?react';
 
-const MainContainer = styled.div`
+const MainContainer = styled.div<{ $highlight: boolean }>`
+  background-color: ${({ $highlight }) =>
+    $highlight ? theme.color.primary[100] : 'transparent'};
   display: flex;
   flex-direction: row;
   width: 100%;
   align-items: stretch;
   padding: 16px 28px 16px 20px;
   height: auto;
+`;
+
+const ReplyContainer = styled.div<{ $highlight: boolean }>`
+  background-color: ${({ $highlight }) =>
+    $highlight ? theme.color.primary[100] : 'transparent'};
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: start;
+  padding: 16px 28px 16px 20px;
+  height: auto;
+`;
+
+const ReplyWrapper = styled.div`
+  display: flex;
+  height: auto;
+  align-items: center;
+  justify-content: center;
+  padding-right: 8px;
 `;
 
 const ProfileWrapper = styled.div`
@@ -50,8 +71,10 @@ const TopTextContainer = styled.div`
   padding-top: 8px;
 `;
 
-const Content = styled.div`
+const Content = styled.div<{ $isDeleted: boolean }>`
   ${theme.typeFace.body['16R']};
+  color: ${({ $isDeleted, theme }) =>
+    $isDeleted ? theme.color.gray[200] : theme.color.gray[900]};
 `;
 
 const BottomContainer = styled.div`
@@ -111,4 +134,6 @@ export {
   ReplyButton,
   BottomContainer,
   ListButton,
+  ReplyContainer,
+  ReplyWrapper,
 };

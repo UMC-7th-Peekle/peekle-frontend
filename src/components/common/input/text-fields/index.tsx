@@ -38,10 +38,11 @@ export const TextFields = ({
         value={inputValue}
         onChange={(e) => handleChange(e.target.value)}
         onKeyDown={(e) => handleKeyDown(e.key)}
-        onClick={onClick}
+        onClick={onClick} // 검색 페이지로 이동할 경우 사용
         placeholder={placeholder}
         aria-label="검색어 입력"
         autoComplete="off"
+        enterKeyHint="search" // 🔥 스마트폰 키보드에서 돋보기 버튼 활성화
         $page={page}
       />
       {inputValue && <S.DeleteIcon onClick={handleClear} />}

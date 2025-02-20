@@ -12,8 +12,7 @@ export const submitPatch = async (
   title: string,
   content: string,
   isAnonymous: boolean,
-  selectedImages: string[],
-  thumbnail: string | null,
+  selectedImages: string[], // ✅ UI에서 선택된 이미지 목록
   navigate: NavigateFunction,
   patchCommunityMutation: UseMutationResult<
     PatchCommunityResp,
@@ -21,29 +20,37 @@ export const submitPatch = async (
     PatchCommunityParams,
     unknown
   >,
-  existingData: CommunityDetailResp,
+  existingData: CommunityDetailResp, // ✅ 기존 데이터 추가
+  thumbnail: string | null, // ✅ 썸네일로 설정할 이미지 추가
 ) => {
   if (!communityId || !articleId) {
     console.error('❌ PATCH 실패: communityId 또는 articleId가 없습니다.');
     return;
   }
 
-  // ✅ 기존 이미지와 새 이미지 분리
+  // ✅ 기존 이미지 및 신규 이미지 분리
   const existingImageUrls = selectedImages.filter((img) =>
     img.startsWith('http'),
   );
   const newImages = selectedImages.filter((img) => !img.startsWith('http'));
 
-  // ✅ 기존 이미지 시퀀스 설정 (삭제된 이미지는 -1)
+  // ✅ 원래 저장된 기존 이미지 리스트 (DB 기준)
   const originalImages = existingData.success.article.articleImages.map(
     (image) => image.imageUrl,
   );
 
-  const existingImageSequence = originalImages.map((url, index) =>
-    existingImageUrls.includes(url) ? index + 1 : -1,
+  // ✅ 기존 이미지 순서 재배치 (삭제된 이미지는 -1)
+  let existingImageSequence = originalImages.map((url) =>
+    existingImageUrls.includes(url) ? originalImages.indexOf(url) + 1 : -1,
   );
 
-  // ✅ 새 이미지 변환 (Blob → File)
+  // ✅ 기존 이미지의 중복된 순서를 제거하고 오름차순 부여
+  let validIndex = 1;
+  existingImageSequence = existingImageSequence.map((num) =>
+    num === -1 ? -1 : validIndex++,
+  );
+
+  // ✅ 신규 이미지 변환 (Blob → File)
   const newFiles = (
     await Promise.all(
       newImages.map(async (imageUrl) => {
@@ -61,122 +68,62 @@ export const submitPatch = async (
     )
   ).filter((file): file is File => file !== null);
 
-  // ✅ 새 이미지 시퀀스 설정
-  const newImageSequence = newFiles.map((_, index) => index + 1);
+  let newImageSequence = newFiles.map(
+    (_, index) => existingImageUrls.length + index + 1, // ✅ 기존 이미지 개수 이후 번호 부여
+  );
 
-  // ✅ 썸네일 변환 (기존 URL이면 유지)
-  let thumbnailFile: File | null = null;
-  if (thumbnail && !thumbnail.startsWith('http')) {
-    try {
-      const res = await fetch(thumbnail);
-      const blob = await res.blob();
-      thumbnailFile = new File([blob], `thumbnail-${Date.now()}.jpg`, {
-        type: 'image/jpeg',
-      });
-    } catch (err) {
-      console.error('❌ 썸네일 변환 실패:', err);
+  // ✅ 썸네일 변경 적용
+  if (thumbnail) {
+    if (existingImageUrls.includes(thumbnail)) {
+      // ✅ 기존 이미지 중 썸네일이 변경된 경우
+      const index = existingImageUrls.indexOf(thumbnail);
+      existingImageSequence = [
+        index + 1,
+        ...existingImageSequence.filter((_, i) => i !== index),
+      ];
+    } else {
+      // ✅ 신규 이미지 중 썸네일이 변경된 경우
+      const index = newFiles.findIndex((file) => file.name === thumbnail);
+      if (index !== -1) {
+        newImageSequence = [
+          existingImageUrls.length + 1, // ✅ 신규 이미지 중 첫 번째를 가장 앞에 배치
+          ...newImageSequence.filter((_, i) => i !== index),
+        ];
+      }
     }
   }
 
-  // ✅ 최종 이미지 배열 구성
-  const articleImages: File[] = [
-    ...(thumbnailFile ? [thumbnailFile] : []),
-    ...newFiles,
-  ];
+  // ✅ FormData 생성
+  const formData = new FormData();
 
-  console.log('📤 PATCH 요청 전 최종 이미지:', articleImages);
-
-  // ✅ **1차 PATCH 요청 (본문 + 이미지 변경)**
-  console.log('📤 1차 PATCH 요청 (본문 변경 포함):', {
-    title,
-    content,
-    isAnonymous,
-    existingImageSequence,
-    newImageSequence,
+  // ✅ 신규 이미지 파일 추가
+  newFiles.forEach((file) => {
+    formData.append('article_images', file);
   });
 
-  try {
-    const response = await patchCommunityMutation.mutateAsync({
-      communityId,
-      articleId,
-      articleImages,
-      data: {
-        title,
-        content,
-        isAnonymous,
-        existingImageSequence,
-        newImageSequence,
-      },
-    });
-
-    console.log('✅ 1차 PATCH 성공:', response);
-  } catch (error) {
-    console.error('❌ 1차 PATCH 요청 실패:', error);
-    return;
-  }
-
-  // ✅ 기존 이미지 순서 변경이 필요한지 확인
-  let needsReorder = false;
-  let reorderedSequence = [...existingImageSequence];
-
-  if (thumbnail && !thumbnail.startsWith('http')) {
-    const thumbnailIndex = newFiles.findIndex(
-      (file) => file.name === thumbnailFile?.name,
-    );
-    if (thumbnailIndex !== -1) {
-      reorderedSequence = [
-        ...newImageSequence.slice(thumbnailIndex, thumbnailIndex + 1),
-        ...existingImageSequence.filter((num): num is number => num !== -1),
-        ...newImageSequence.filter((_, idx) => idx !== thumbnailIndex),
-      ];
-
-      console.log('🔹 썸네일이 새 이미지일 때 순서 변경:', reorderedSequence);
-      needsReorder = true;
-    }
-  }
-
-  // ✅ 기존 이미지 순서가 변경되었는지 확인
-  if (
-    JSON.stringify(reorderedSequence) !== JSON.stringify(existingImageSequence)
-  ) {
-    needsReorder = true;
-    existingImageSequence.length = 0;
-    existingImageSequence.push(...reorderedSequence);
-  }
-
-  // ✅ **2차 PATCH 요청 (이미지 순서 변경)**
-  if (needsReorder) {
-    console.log('📤 2차 PATCH 요청 (이미지 순서 변경):', {
+  formData.append(
+    'data',
+    JSON.stringify({
       title,
       content,
       isAnonymous,
       existingImageSequence,
-      newImageSequence: [],
-    });
+      newImageSequence,
+    }),
+  );
 
-    try {
-      const response = await patchCommunityMutation.mutateAsync({
-        communityId,
-        articleId,
-        articleImages: [],
-        data: {
-          title,
-          content,
-          isAnonymous,
-          existingImageSequence,
-          newImageSequence: [],
-        },
-      });
+  patchCommunityMutation.mutateAsync({
+    communityId,
+    articleId,
+    article_images: newFiles, // ✅ 신규 이미지 파일만 추가
+    data: {
+      title,
+      content,
+      isAnonymous,
+      existingImageSequence,
+      newImageSequence,
+    },
+  });
 
-      console.log('✅ 2차 PATCH 성공:', response);
-    } catch (error) {
-      console.error('❌ 2차 PATCH 요청 실패:', error);
-      return;
-    }
-  } else {
-    console.log('🚀 2차 PATCH 요청 생략 (이미지 순서 변경 필요 없음)');
-  }
-
-  console.log('🎉 PATCH 완료, 페이지 이동');
   navigate(`/community/${communityId}/${articleId}`);
 };

@@ -15,7 +15,7 @@ const PatchCommunityDataSchema = z.object({
 const PatchCommunityParamsSchema = z.object({
   communityId: z.string(),
   articleId: z.string(),
-  articleImages: z.array(z.instanceof(File)),
+  article_images: z.array(z.instanceof(File)),
   data: PatchCommunityDataSchema,
 });
 
@@ -37,8 +37,6 @@ export type PatchCommunityParams = z.infer<typeof PatchCommunityParamsSchema>;
 const patchCommunity = async (
   params: PatchCommunityParams,
 ): Promise<PatchCommunityResp> => {
-  console.log('📤 PATCH 요청 시작:', params);
-
   // 요청 데이터 검증
   try {
     PatchCommunityParamsSchema.parse(params);
@@ -47,32 +45,26 @@ const patchCommunity = async (
     throw err;
   }
 
-  const { communityId, articleId, articleImages, data } = params;
+  const { communityId, articleId, article_images, data } = params;
   const formData = new FormData();
 
   // 이미지 파일 추가
-  articleImages.forEach((image) => {
+  article_images.forEach((image) => {
     formData.append('article_images', image);
   });
 
   // JSON 데이터를 문자열로 변환하여 추가
   formData.append('data', JSON.stringify(data));
 
-  console.log('📤 PATCH 요청 데이터:', {
-    communityId,
-    articleId,
-    articleImages: articleImages.map((img) => img.name),
-    data,
-  });
-
   try {
     const resp = await clientAuth<PatchCommunityResp>({
       method: 'PATCH',
       url: `/community/${communityId}/articles/${articleId}`,
       data: formData,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
     });
-
-    console.log('✅ PATCH 요청 성공:', resp.data);
     return RespSchema.parse(resp.data);
   } catch (error) {
     console.error('❌ PATCH 요청 실패:', error);

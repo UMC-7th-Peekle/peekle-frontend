@@ -1,4 +1,4 @@
-// BottomSheet
-export const BS_MIN_Y = 100; // 바텀시트가 최대로 올라갈 수 있는 위치
-export const BS_MAX_Y = window.innerHeight; // 화면 하단까지 내려가는 위치
-export const BS_MIN_TOP = 350; // bottom sheet가 올라갈지 내려갈지 결정하는 중간값
+// 공유
+export const SHARE_TITLE = '피클(peekle) - 액티브 시니어 플랫폼';
+export const SHARE_DESCRIPTION =
+  '액티브 시니어 커뮤니티 플랫폼 피클(Peekle)입니다. 시니어 세대가 건강하고 주체적인 삶을 살 수 있는 사회를 만드는 것이 목표입니다.';

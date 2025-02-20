@@ -1,19 +1,15 @@
 import { Helmet } from 'react-helmet-async';
-
-interface MetaTagProps {
-  title?: string;
-  description?: string;
-  imgSrc?: string;
-  url?: string;
-}
+import { getBaseUrl, getSubstring } from '@/utils';
+import { MetaTagProps } from '@/types/common';
+import { SHARE_TITLE, SHARE_DESCRIPTION } from '@/constants/common';
 
 const MetaTag = ({
-  title = '피클(peekle) - 액티브 시니어 플랫폼',
-  description = '액티브 시니어 커뮤니티 플랫폼 피클(Peekle)입니다. 시니어 세대가 건강하고 주체적인 삶을 살 수 있는 사회를 만드는 것이 목표입니다.',
+  title = SHARE_TITLE,
+  description = SHARE_DESCRIPTION,
   imgSrc = import.meta.env.VITE_BASE_IMAGE, //디폴트 이미지
   url = window.location.href,
-}: MetaTagProps) => {
-  const firstSentence = description.match(/[^.!?]+[.!?]/)?.[0] ?? description;
+}: MetaTagProps = {}) => {
+  const firstSentence = getSubstring(description);
   return (
     <Helmet>
       <title>{title}</title>
@@ -22,7 +18,7 @@ const MetaTag = ({
       <meta property="og:title" content={title} />
       <meta property="og:site_name" content="peekle" />
       <meta property="og:description" content={firstSentence} />
-      <meta property="og:image" content={imgSrc} />
+      <meta property="og:image" content={`${getBaseUrl()}${imgSrc}`} />
       <meta property="og:url" content={url} />
 
       {/* Twitter Card (트위터 공유용) */}

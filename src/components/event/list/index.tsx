@@ -1,13 +1,7 @@
 import * as S from './style';
-import { useQueryState } from 'nuqs';
-import { useNavigate } from 'react-router-dom';
-import {
-  EventCard,
-  EventCardSkeleton,
-  Filter,
-  RoundedButton,
-} from '@/components';
-import { useEventFilter } from '@/hooks';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { EventCard, EventCardSkeleton, RoundedButton } from '@/components';
+import { useEventFilter, useGetEvents, useInfiniteScroll } from '@/hooks';
 import { EventData } from '@/types/event';
 import { ROUTES } from '@/constants/routes';
 import { useMapStore } from '@/stores';
@@ -18,12 +12,28 @@ export const EventList = ({
   page?: 'search' | 'scrap' | 'index';
 }) => {
   const navigate = useNavigate();
-  const { sortedEvents } = useEventFilter();
-  const [searchQuery] = useQueryState('event-search', { defaultValue: '' });
+  const { formattedFilters } = useEventFilter();
+  const [searchParams] = useSearchParams();
+  const searchQuery = searchParams.get('event-search') ?? '';
   const { setSelectedEvent } = useMapStore();
+
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useGetEvents(
+    {
+      ...formattedFilters,
+    },
+  );
+
+  const { lastElementRef } = useInfiniteScroll({
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+  });
+
+  const events = data.pages.flatMap((page) => page.success?.events ?? []) ?? [];
 
   const isSearchPage = page === 'search';
   const isScrapPage = page === 'scrap';
+  const isAdmin = true;
 
   const handleCardClick = () => {
     if (isSearchPage) {
@@ -38,31 +48,48 @@ export const EventList = ({
     }
   };
 
+  const handleGotoMapBtnClick = () => {
+    setSelectedEvent(null); // 선택돼있는 이벤트 풀기
+    navigate(ROUTES.EVENT_MAP);
+  };
+
+  const handleAddEventBtnClick = () => {
+    navigate(ROUTES.EVENT_CREATE);
+  };
+
   return (
-    <S.Container>
-      {/*검색 결과 없어도 필터는 유지 - 필터 때문에 검색 결과 없는 걸수도 있음*/}
-      {isSearchPage && <Filter isSearchPage={true} />}
-      {sortedEvents.length > 0 ? (
+    <section>
+      {events.length > 0 ? (
         <>
           <S.EventsContainer>
-            {sortedEvents.map((event: EventData) => (
+            {events.map((event: EventData, index, events) => (
               <EventCard
                 key={event.eventId}
                 id={event.eventId}
+                eventData={event}
                 onClick={handleCardClick}
+                ref={index === events.length - 1 ? lastElementRef : null}
               />
             ))}
           </S.EventsContainer>
-          <S.GotoMapBtnWrapper $isSearchPage={isSearchPage}>
-            <RoundedButton
-              icon="map"
-              text="지도 보기"
-              onClick={() => {
-                setSelectedEvent(null); // 선택돼있는 이벤트 풀기
-                navigate(ROUTES.EVENT_MAP);
-              }}
-            />
-          </S.GotoMapBtnWrapper>
+          {!isSearchPage && (
+            <S.GotoMapBtnWrapper>
+              <RoundedButton
+                icon="map"
+                text="지도 보기"
+                onClick={handleGotoMapBtnClick}
+              />
+            </S.GotoMapBtnWrapper>
+          )}
+          {isAdmin && (
+            <S.GotoMapBtnWrapper>
+              <RoundedButton
+                icon="plus"
+                text="이벤트 추가하기"
+                onClick={handleAddEventBtnClick}
+              />
+            </S.GotoMapBtnWrapper>
+          )}
         </>
       ) : (
         <S.EmptyContainer>
@@ -75,16 +102,18 @@ export const EventList = ({
           )}
         </S.EmptyContainer>
       )}
-    </S.Container>
+    </section>
   );
 };
 
 export const EventListSkeleton = () => {
   return (
-    <S.Container>
-      {Array.from({ length: 10 }).map((_, index) => (
-        <EventCardSkeleton key={index} />
-      ))}
-    </S.Container>
+    <section>
+      <S.EventsContainer>
+        {Array.from({ length: 10 }).map((_, index) => (
+          <EventCardSkeleton key={index} />
+        ))}
+      </S.EventsContainer>
+    </section>
   );
 };

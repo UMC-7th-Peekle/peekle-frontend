@@ -5,6 +5,8 @@ import { DefaultTheme } from 'styled-components';
 const designTokens = (theme: DefaultTheme) => css`
   /* --css-variable-example: ${theme.color.primary['500']}; */
   --nav-height: 64px;
+  --search-header-height: 64px;
+  --search-bottom-sheet-height: 50px;
 `;
 
 export default designTokens;

@@ -1,19 +1,22 @@
 import * as S from './style';
 import useEventFilter from '@/hooks/event/useEventFilter';
-import useFilterTabsStore from '@/stores/event/useFilterTabsStore';
-import useBottomSheetStore from '@/stores/common/useBottomSheetStore';
-
+import {
+  useFilterTabsStore,
+  useEventsStore,
+  useBottomSheetStore,
+} from '@/stores';
 import { FilterTabs, Button } from '@/components';
+
 import Duration from './duration';
 import Price from './price';
 import Location from './location';
 
 export const BottomSheetTabs = () => {
   const { setActiveBottomSheet } = useBottomSheetStore();
-  const { sortedEvents, clearFilter } = useEventFilter();
+  const { clearFilter } = useEventFilter();
   const { selectedValue } = useFilterTabsStore();
+  const { events } = useEventsStore();
 
-  // console.log(filteredEvent);
   return (
     <S.Container>
       <S.Header>
@@ -51,7 +54,7 @@ export const BottomSheetTabs = () => {
             setActiveBottomSheet(null);
           }}
         >
-          {sortedEvents.length}개 활동 보기
+          {events.length}개 활동 보기
         </Button>
       </S.BtnContainer>
     </S.Container>
