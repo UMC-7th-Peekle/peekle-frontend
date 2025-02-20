@@ -253,6 +253,7 @@ const EventForm = ({
     formState: { errors, touchedFields, isSubmitting },
     trigger,
     setValue,
+    setError,
     clearErrors,
     control,
     watch, // 디버깅용
@@ -304,14 +305,21 @@ const EventForm = ({
   }, [address, trigger]);
 
   // `repeatType`과 `isAllDay` 값이 바뀔 때마다 상태 업데이트
+  // 스케줄 시작날짜, 끝나는날짜 범위 검사
   // 스케줄 값 채워두기 - error 발생 방지
-
   // schedules 배열의 모든 항목 감시
   const schedules = useWatch({ control, name: 'schedules' });
   useEffect(() => {
+    if (!schedules || schedules.length === 0) return;
     schedules.forEach((schedule, index) => {
+      console.log('schedule 검사 실행');
       const repeatType = schedule.repeatType;
       const isAllDay = schedule.isAllDay;
+
+      const startDate = new Date(schedule.startDate);
+      const endDate = new Date(schedule.endDate);
+      const applicationStartDateDate = new Date(applicationStartDate);
+      const applicationEndDateDate = new Date(applicationEndDate);
 
       // repeatType이 'none'일 때 startDate, endDate 설정
       if (repeatType === 'none') {
@@ -340,12 +348,45 @@ const EventForm = ({
         clearErrors(`schedules.${index}.startTime`);
         clearErrors(`schedules.${index}.endTime`);
       }
+
+      // 날짜 유효성 검사: 이벤트 기간 내에 속하는지 확인
+      if (
+        startDate < applicationStartDateDate ||
+        startDate > applicationEndDateDate
+      ) {
+        console.log('startDate 검사 실행');
+        // 에러 추가
+        setError(`schedules.${index}.startDate`, {
+          type: 'manual',
+          message: '이벤트 기간 내로 입력해주세요.',
+        });
+      }
+
+      if (
+        endDate < applicationStartDateDate ||
+        endDate > applicationEndDateDate
+      ) {
+        console.log('endDate 검사 실행');
+        setError(`schedules.${index}.endDate`, {
+          type: 'manual',
+          message: '이벤트 기간 내로 입력해주세요.',
+        });
+      }
+
+      if (startDate > endDate) {
+        console.log('startDate > endDate 검사 실행');
+        setError(`schedules.${index}.endDate`, {
+          type: 'manual',
+          message: '시작 날짜 이후여야 합니다.',
+        });
+      }
     });
   }, [
     schedules,
     applicationStartDate,
     applicationEndDate,
     setValue,
+    setError,
     clearErrors,
   ]);
 
@@ -683,9 +724,7 @@ const EventForm = ({
                     id={`schedules.${index}.startDate`}
                     {...register(`schedules.${index}.startDate`)}
                     errorMessage={
-                      (touchedFields.schedules?.[index]?.startDate &&
-                        errors.schedules?.[index]?.startDate?.message) ||
-                      ''
+                      errors.schedules?.[index]?.startDate?.message || ''
                     }
                   />
                 </FormInputWrapper>
@@ -717,9 +756,7 @@ const EventForm = ({
                     id={`schedules.${index}.endDate`}
                     {...register(`schedules.${index}.endDate`)}
                     errorMessage={
-                      (touchedFields.schedules?.[index]?.endDate &&
-                        errors.schedules?.[index]?.endDate?.message) ||
-                      ''
+                      errors.schedules?.[index]?.endDate?.message || ''
                     }
                   />
                 </FormInputWrapper>

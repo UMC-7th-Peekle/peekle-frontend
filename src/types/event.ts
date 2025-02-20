@@ -267,14 +267,50 @@ export const EventCreateFormSchema = z.object({
               data.customText !== null && data.customText.trim().length > 0
             );
           }
-          return true; // custom이 아닐 경우 검증 통과
+          return true;
         },
         {
           message: '반복 설명을 입력하세요.',
-          path: ['customText'], // customText 필드에 에러 표시
+          path: ['customText'],
         },
       ),
   ),
+});
+
+EventCreateFormSchema.superRefine((data, ctx) => {
+  console.log('🔍 검증 시작', data);
+  const applicationStartDate = new Date(data.applicationStartDate);
+  const applicationEndDate = new Date(data.applicationEndDate);
+
+  data.schedules.forEach((schedule, index) => {
+    const startDate = new Date(schedule.startDate);
+    const endDate = new Date(schedule.endDate);
+
+    if (startDate < applicationStartDate || startDate > applicationEndDate) {
+      console.log('startDate 범위 이상함');
+      ctx.addIssue({
+        path: [`schedules`, index, `startDate`],
+        message: '스케줄 시작 날짜는 이벤트 기간 내로 입력해주세요.',
+        code: 'invalid_date',
+      });
+    }
+
+    if (endDate < applicationStartDate || endDate > applicationEndDate) {
+      ctx.addIssue({
+        path: [`schedules`, index, `endDate`],
+        message: '스케줄 종료 날짜는 이벤트 기간 내로 입력해주세요.',
+        code: 'invalid_date',
+      });
+    }
+
+    if (startDate > endDate) {
+      ctx.addIssue({
+        path: [`schedules`, index, `endDate`],
+        message: '스케줄 종료 날짜는 시작 날짜 이후여야 합니다.',
+        code: 'invalid_date',
+      });
+    }
+  });
 });
 
 export type EventCreateFormSchedule = z.infer<

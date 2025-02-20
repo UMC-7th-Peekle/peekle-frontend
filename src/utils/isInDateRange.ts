@@ -6,7 +6,7 @@ const isInRange = (
   end: Date | null,
 ): boolean => {
   if (!date || !start || !end) return false;
-  return isWithinInterval(date, { start, end }); // date-fns 사용
+  return isWithinInterval(date, { start, end });
 };
 
 export default isInRange;
