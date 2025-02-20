@@ -13,7 +13,7 @@ import Logo2SVG from '@/assets/images/user/logo2.svg?react';
 import ArrowSVG from '@/assets/images/user/arrow.svg?react';
 import { ROUTES } from '@/constants/routes';
 import { client } from '@/apis/client';
-
+import { useLocation } from 'react-router-dom';
 const Container = styled.div`
   display: fixed;
   flex-direction: column;
@@ -109,6 +109,8 @@ const Divider = styled.div`
 
 const UserPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const nickname = location.state?.nickname || '자연32';
   const handleEdit = () => {
     navigate('/user/edit');
   };
@@ -124,6 +126,7 @@ const UserPage = () => {
   const handleManage = () => {
     navigate('/user/manage');
   };
+
   const handleResign = () => {
     navigate('/user/resign');
   };
@@ -160,7 +163,7 @@ const UserPage = () => {
       {/* 프로필 영역 */}
       <ProfileSection>
         <ProfileSVG />
-        <Username>자연32</Username> {/*데이터 가져와야함*/}
+        <Username>{nickname}</Username> {/*데이터 가져와야함*/}
         <EditButton onClick={handleEdit}>프로필 수정</EditButton>
       </ProfileSection>
       {/* 고객센터 */}
@@ -173,7 +176,7 @@ const UserPage = () => {
         </MenuItem>
         <MenuItem>
           <RequestSVG />
-          <MenuText>문의하기</MenuText>D
+          <MenuText>문의하기</MenuText>
           <ArrowSVG onClick={handleRequest} />
         </MenuItem>
         <MenuItem>
