@@ -31,6 +31,8 @@ import { ErrorFallback } from '@/components';
 import ResignPage from '@/pages/user/resign';
 import TossPage from '@/pages/auth/toss';
 import RequestPage from '@/pages/user/request';
+import UserPhonePage from '@/pages/user/user-phone';
+import UserCertifyPage from '@/pages/user/user-certify';
 
 const ProtectedPage = ({ children }: { children: React.ReactNode }) => {
   return children;
@@ -153,6 +155,14 @@ const router = createBrowserRouter([
       {
         path: '/user/resign',
         element: <ResignPage />,
+      },
+      {
+        path: '/user/user-phone',
+        element: <UserPhonePage />,
+      },
+      {
+        path: '/user/user-certify',
+        element: <UserCertifyPage />,
       },
       {
         path: '*',

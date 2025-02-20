@@ -97,7 +97,6 @@ export default function PersonalDataPage() {
         nickname,
         birthdate: birth,
         gender, // 🔥 이제 TypeScript가 올바른 타입으로 인식
-        email: localStorage.getItem('email') || '',
         phone: localStorage.getItem('phone') || '',
         phoneVerificationSessionId:
           localStorage.getItem('phoneVerificationSessionId') || '',
@@ -118,6 +117,7 @@ export default function PersonalDataPage() {
           ...rawData,
           oauthId: Number(localStorage.getItem('kakao-id')),
           oauthType: 'kakao',
+          email: localStorage.getItem('email') || '',
         } as PostAuthRegisterKakaoParams;
       }
 
