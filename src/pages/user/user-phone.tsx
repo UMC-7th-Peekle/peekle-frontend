@@ -45,7 +45,7 @@ const UserPhonePage = () => {
         });
         const data = await client.json();
         if (client.ok) {
-          localStorage.setItem('phone', phone);
+          localStorage.setItem('phone-number', PhoneNumber);
           navigate('/user/user-certify', {
             state: {
               phone: PhoneNumber,

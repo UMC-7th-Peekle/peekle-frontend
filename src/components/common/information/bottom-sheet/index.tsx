@@ -3,6 +3,8 @@ import { useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { BottomSheetProps } from '@/types/common';
 import { useBottomSheetStore, useNavbarStore } from '@/stores';
+import { routesWithNavbar } from '@/layouts/outlet/const';
+import normalizePath from '@/utils/normalizePath';
 
 const overlayVariants = {
   hidden: { opacity: 0 },
@@ -30,10 +32,15 @@ const BottomSheet = ({
   const { setShouldShowNavbar } = useNavbarStore();
 
   useEffect(() => {
-    if (isOpen) {
-      setShouldShowNavbar(false);
-    } else {
-      setShouldShowNavbar(true);
+    const shouldShow = routesWithNavbar.includes(
+      normalizePath(location.pathname),
+    );
+    if (shouldShow) {
+      if (isOpen) {
+        setShouldShowNavbar(false);
+      } else if (!isOpen) {
+        setShouldShowNavbar(true);
+      }
     }
   }, [isOpen, setShouldShowNavbar]);
 

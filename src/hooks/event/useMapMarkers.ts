@@ -8,9 +8,9 @@ const useMapMarkers = (
   mapInstance: naver.maps.Map | undefined,
   events: EventData[],
 ) => {
-  const markersRef = useRef<Map<bigint, naver.maps.Marker>>(new Map());
-  const whiteSBMarkersRef = useRef<Map<bigint, naver.maps.Marker>>(new Map());
-  const blackSBMarkerRef = useRef<Map<bigint, naver.maps.Marker>>(new Map());
+  const markersRef = useRef<Map<number, naver.maps.Marker>>(new Map());
+  const whiteSBMarkersRef = useRef<Map<number, naver.maps.Marker>>(new Map());
+  const blackSBMarkerRef = useRef<Map<number, naver.maps.Marker>>(new Map());
   const { selectedEvent, setSelectedEvent, setLatestPos } = useMapStore();
   const { hasMyLocationChanged } = useMyLocationStore();
 
@@ -76,6 +76,8 @@ const useMapMarkers = (
       if (!mapInstance) return;
       if (mapEvent.eventId === selectedEvent?.eventId) return;
 
+      // 위경도 정보 있을때만 선택
+      if (!mapEvent.eventLocation?.coordinates) return;
       setSelectedEvent(mapEvent);
       const position = new naver.maps.LatLng(
         mapEvent.eventLocation.coordinates[0],
@@ -117,7 +119,7 @@ const useMapMarkers = (
       if (!mapInstance) return;
 
       // 내 위치 마커 생성
-      let myLocMarker = markersRef.current.get(0n);
+      let myLocMarker = markersRef.current.get(0);
       if (!myLocMarker || hasMyLocationChanged) {
         myLocMarker = new naver.maps.Marker({
           position: new naver.maps.LatLng(lat, lng),
@@ -129,14 +131,14 @@ const useMapMarkers = (
             anchor: new naver.maps.Point(18, 18),
           },
         });
-        markersRef.current.set(0n, myLocMarker);
+        markersRef.current.set(0, myLocMarker);
       }
 
       const currentEventIds = new Set(events.map((event) => event.eventId));
 
       // 불필요한 마커 제거
       markersRef.current.forEach((marker, eventId) => {
-        if (eventId === 0n) return; // 내 위치 마커는 pass
+        if (eventId === 0) return; // 내 위치 마커는 pass
         if (!currentEventIds.has(eventId)) {
           // 이벤트가 없으면 마커 제거
           marker.setMap(null);
@@ -150,6 +152,7 @@ const useMapMarkers = (
 
       // 새로운 마커 생성
       events.forEach((event) => {
+        if (!event.eventLocation?.coordinates) return;
         const position = new naver.maps.LatLng(
           event.eventLocation.coordinates[0],
           event.eventLocation.coordinates[1],
@@ -210,7 +213,7 @@ const useMapMarkers = (
       });
 
       // selectedEvent가 있을 땐 해당 검정 말풍선 열기
-      if (selectedEvent) {
+      if (selectedEvent && selectedEvent.eventLocation?.coordinates) {
         const marker = markersRef.current.get(selectedEvent.eventId);
         if (marker) {
           if (!blackSBMarkerRef.current.get(selectedEvent.eventId)) {
@@ -247,6 +250,7 @@ const useMapMarkers = (
     const center = mapInstance.getCenter();
 
     markersRef.current.forEach((marker, eventId) => {
+      if (!marker) return;
       const position = marker.getPosition();
       const distance = projection.getDistance(center, position);
       const whiteSBMarker = whiteSBMarkersRef.current.get(eventId);
@@ -278,14 +282,18 @@ const useMapMarkers = (
     let hasMarkerInMapBounds = false;
     markersRef.current.forEach((marker, eventId) => {
       if (mapBounds.hasPoint(marker.getPosition())) {
-        if (eventId !== 0n && hasMarkerInMapBounds === false)
+        if (eventId !== 0 && hasMarkerInMapBounds === false)
           hasMarkerInMapBounds = true;
       }
     });
-    // 모든 마커가 화면 밖에 있으면 가장 첫번째 요소로 lastestPos 변경
+    // 모든 마커가 화면 밖에 있으면 가장 첫번째 요소로 시점 변경
     if (!hasMarkerInMapBounds) {
-      const fitEvent = events[0];
-      if (fitEvent) {
+      const fitEvent = events.find((event) => event.eventLocation?.coordinates);
+      if (
+        fitEvent &&
+        fitEvent.eventLocation &&
+        fitEvent.eventLocation.coordinates
+      ) {
         const fitEventPos = new naver.maps.LatLng(
           fitEvent.eventLocation.coordinates[0],
           fitEvent.eventLocation.coordinates[1],
@@ -307,9 +315,9 @@ const useMapMarkers = (
     markers: markersRef.current,
     whiteSBMarkers: whiteSBMarkersRef.current,
     blackSBMarker: blackSBMarkerRef.current,
-    updateLatestPos,
     createMarkers,
     updateMarkers,
+    updateLatestPos,
     createBlackMarker,
     removeBlackSBMarker,
   };

@@ -45,7 +45,7 @@ import ManagePage from '@/pages/user/manage';
 import ResignPage from '@/pages/user/resign';
 import TossPage from '@/pages/auth/toss';
 import RequestPage from '@/pages/user/request';
-import { ErrorFallback } from '@/components';
+import { ErrorFallback, DeferredLoader } from '@/components';
 import { ROUTES, ADMIN_PATHS } from '@/constants/routes';
 
 const ProtectedPage = ({ children }: { children: React.ReactNode }) => {
@@ -72,6 +72,10 @@ const router = createBrowserRouter([
     element: <Layout />,
     errorElement: <ErrorFallback />,
     children: [
+      {
+        index: true,
+        element: <OnboardingPage />,
+      },
       {
         path: ROUTES.ONBOARDING,
         element: <OnboardingPage />,
@@ -136,7 +140,15 @@ const router = createBrowserRouter([
         path: ROUTES.EVENT_DETAIL,
         element: (
           <Suspense fallback={<EventDetailPageskeleton />}>
-            <EventDetailPage />
+            <EventDetailPage isAdmin={false} />
+          </Suspense>
+        ),
+      },
+      {
+        path: ROUTES.EVENT_DETAIL_ADMIN,
+        element: (
+          <Suspense fallback={<EventDetailPageskeleton />}>
+            <EventDetailPage isAdmin={true} />
           </Suspense>
         ),
       },
@@ -212,8 +224,12 @@ const router = createBrowserRouter([
         element: <EventCreatePage />,
       },
       {
-        path: ROUTES.EVENT_EDIT,
-        element: <EventEditPage />,
+        path: ROUTES.EVENT_EDIT_ID,
+        element: (
+          <Suspense fallback={<DeferredLoader />}>
+            <EventEditPage />
+          </Suspense>
+        ),
       },
       {
         path: ROUTES.ADMIN_SEARCH,

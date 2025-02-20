@@ -1,30 +1,49 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { useRecentSearchStore } from '@/stores';
 
 // 최근 검색을 위한 커스텀 훅
 const useRecentSearch = ({ queryKey, localKey }: useRecentSearchProps) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get(queryKey) ?? '';
   const isSearched = !!query;
-  const [recentSearch, setRecentSearch] = useState<string[]>(() =>
-    JSON.parse(localStorage.getItem(localKey) ?? '[]'),
-  );
+  const {
+    recentSearch,
+    setRecentSearch,
+    removeRecentSearch,
+    clearRecentSearch,
+  } = useRecentSearchStore();
+
+  useEffect(() => {
+    const storedData = JSON.parse(localStorage.getItem(localKey) ?? '[]');
+
+    if (Array.isArray(storedData)) {
+      // 중첩 배열을 평탄화하고, 문자열만 필터링한 후 중복 제거
+      const uniqueData = Array.from(
+        new Set(storedData.flat().filter((item) => typeof item === 'string')),
+      );
+
+      // 각 문자열을 `setRecentSearch`에 개별적으로 추가
+      uniqueData.forEach((search) => setRecentSearch(search));
+    }
+  }, [localKey, setRecentSearch]);
+
+  useEffect(() => {
+    localStorage.setItem(localKey, JSON.stringify(recentSearch));
+  }, [recentSearch, localKey]);
 
   useEffect(() => {
     const storedSearches = JSON.parse(localStorage.getItem(localKey) ?? '[]');
     setRecentSearch(storedSearches);
-  }, [query, localKey]);
+  }, [query, localKey, setRecentSearch]);
 
   const handleClear = () => {
-    localStorage.removeItem(localKey);
-    setRecentSearch([]);
+    clearRecentSearch();
   };
 
   const handleRemoveRecentSearch = (search: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    const newSearches = recentSearch.filter((item) => item !== search);
-    localStorage.setItem(localKey, JSON.stringify(newSearches));
-    setRecentSearch(newSearches);
+    removeRecentSearch(search);
   };
 
   const handleRecentSearchClick = (search: string) => {

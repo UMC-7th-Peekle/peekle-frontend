@@ -26,7 +26,8 @@ export { default as getMarker } from './getMarker';
 
 export {
   getDistrict,
-  getStartDateTime,
   formatSchedules,
   formatEventTitleForSB,
+  getCategoryId,
+  transformFormData,
 } from './eventFormatter';

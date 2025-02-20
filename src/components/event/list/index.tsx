@@ -4,22 +4,25 @@ import { EventCard, EventCardSkeleton, RoundedButton } from '@/components';
 import { useEventFilter, useGetEvents, useInfiniteScroll } from '@/hooks';
 import { EventData } from '@/types/event';
 import { ROUTES } from '@/constants/routes';
-import { useMapStore } from '@/stores';
+import { useMapStore, useMyLocationStore } from '@/stores';
 
 export const EventList = ({
   page = 'index',
 }: {
-  page?: 'search' | 'scrap' | 'index';
+  page?: 'search' | 'index';
 }) => {
   const navigate = useNavigate();
   const { formattedFilters } = useEventFilter();
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get('event-search') ?? '';
   const { setSelectedEvent } = useMapStore();
+  const { myLocation } = useMyLocationStore();
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useGetEvents(
     {
       ...formattedFilters,
+      lat: myLocation?.y,
+      lng: myLocation?.x,
     },
   );
 
@@ -31,9 +34,10 @@ export const EventList = ({
 
   const events = data.pages.flatMap((page) => page.success?.events ?? []) ?? [];
 
+  // console.log('events in list', events);
+
   const isSearchPage = page === 'search';
-  const isScrapPage = page === 'scrap';
-  const isAdmin = true;
+  const isAdmin = false;
 
   const handleCardClick = () => {
     if (isSearchPage) {
@@ -66,7 +70,7 @@ export const EventList = ({
               <EventCard
                 key={event.eventId}
                 id={event.eventId}
-                eventData={event}
+                eventCardData={event}
                 onClick={handleCardClick}
                 ref={index === events.length - 1 ? lastElementRef : null}
               />
@@ -93,13 +97,7 @@ export const EventList = ({
         </>
       ) : (
         <S.EmptyContainer>
-          {isSearchPage ? (
-            <S.NoSearchResult />
-          ) : isScrapPage ? (
-            <S.NoLikeResult />
-          ) : (
-            <S.NoFilteredResult />
-          )}
+          {isSearchPage ? <S.NoSearchResult /> : <S.NoFilteredResult />}
         </S.EmptyContainer>
       )}
     </section>

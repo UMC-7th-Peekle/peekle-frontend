@@ -1,5 +1,6 @@
 import * as S from './style';
 import { useNavigate } from 'react-router-dom';
+import { useBottomSheetStore } from '@/stores';
 
 const Backward = ({
   size = '24px',
@@ -11,8 +12,10 @@ const Backward = ({
   navigateUrl?: string;
 }) => {
   const navigate = useNavigate();
+  const { setActiveBottomSheet } = useBottomSheetStore();
 
   const handleBackClick = () => {
+    setActiveBottomSheet(null); // 바텀시트 닫기
     if (isErrorFallback) {
       window.history.back();
       return;

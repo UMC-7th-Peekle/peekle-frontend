@@ -2,7 +2,7 @@ import { InfiniteData, useSuspenseInfiniteQuery } from '@tanstack/react-query';
 import { clientAuth } from '@/apis/client';
 import {
   getEventsScrappedParams,
-  // GetEventsScrappedResponseSchema,
+  GetEventsScrappedResponseSchema,
   EventsScrappedResponse,
   EventsScrappedQKType,
 } from '@/types/event';
@@ -24,10 +24,22 @@ const getEventScrap = async ({
     },
   });
 
+  // 204 No Content 처리
+  if (!response.data || Object.keys(response.data).length === 0) {
+    return {
+      resultType: 'SUCCESS',
+      error: null,
+      success: {
+        events: [], // 빈 배열로 초기화
+        hasNextPage: false,
+        nextCursor: null,
+      },
+    };
+  }
+
   // 응답 데이터 검증
-  // const parsedData = EventsResponseSchema.parse(response.data);
-  // return parsedData;
-  return response.data;
+  const parsedData = GetEventsScrappedResponseSchema.parse(response.data);
+  return parsedData;
 };
 
 const useGetEventScrap = ({
@@ -35,14 +47,19 @@ const useGetEventScrap = ({
   cursor,
   categories,
 }: getEventsScrappedParams) => {
-  const { data, error, fetchNextPage, hasNextPage, isFetching } =
+  const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useSuspenseInfiniteQuery<
       EventsScrappedResponse,
       Error,
       InfiniteData<EventsScrappedResponse>,
       EventsScrappedQKType
     >({
-      queryKey: [GET_EVENTS_SCRAPPED_QK, limit, cursor, categories],
+      queryKey: [
+        GET_EVENTS_SCRAPPED_QK,
+        limit,
+        cursor,
+        JSON.stringify(categories), // 배열을 문자열로 변환하여 정확한 비교
+      ],
       queryFn: ({ pageParam }) =>
         getEventScrap({
           limit,
@@ -56,7 +73,7 @@ const useGetEventScrap = ({
       },
     });
 
-  return { data, error, fetchNextPage, hasNextPage, isFetching };
+  return { data, error, fetchNextPage, hasNextPage, isFetchingNextPage };
 };
 
 export default useGetEventScrap;

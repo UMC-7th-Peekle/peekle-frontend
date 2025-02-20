@@ -43,40 +43,53 @@ const ImageSlider = ({ images, title = 'event' }: ImageSliderProps) => {
   return (
     <S.ImageSliderContainer>
       <S.ImageSliderWrapper>
-        <S.ImageSlider
-          style={{
-            display: 'flex',
-            width: `${imagesLength * 100}%`,
-            x: dragX,
-          }}
-          drag="x"
-          dragConstraints={{ left: 0, right: 0 }}
-          animate={{
-            translateX: `-${currentIndex * 100}%`,
-          }}
-          transition={{ duration: 0.2 }}
-          onDragEnd={handleDragEnd}
-        >
-          {sortedImages.map((image, index) => (
-            <S.ImageItem key={index}>
-              {!imageErrors[index] ? (
-                <S.Image
-                  src={image.imageUrl}
-                  alt={`${title}-img-${index}`}
-                  onError={() => {
-                    setImageErrors((prev) => {
-                      const newErrors = [...prev];
-                      newErrors[index] = true;
-                      return newErrors;
-                    });
-                  }}
-                />
-              ) : (
-                <S.DefaultImageIcon />
-              )}
-            </S.ImageItem>
-          ))}
-        </S.ImageSlider>
+        {hasImages ? (
+          <S.ImageSlider
+            style={{
+              display: 'flex',
+              width: `${imagesLength * 100}%`,
+              x: dragX,
+            }}
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            animate={{
+              translateX: `-${currentIndex * 100}%`,
+            }}
+            transition={{ duration: 0.2 }}
+            onDragEnd={handleDragEnd}
+          >
+            {sortedImages.map((image, index) => (
+              <S.ImageItem key={index}>
+                {!imageErrors[index] ? (
+                  <S.Image
+                    src={image.imageUrl}
+                    alt={`${title}-img-${index}`}
+                    onError={() => {
+                      setImageErrors((prev) => {
+                        const newErrors = [...prev];
+                        newErrors[index] = true;
+                        return newErrors;
+                      });
+                    }}
+                    onLoad={() => {
+                      setImageErrors((prev) => {
+                        const newErrors = [...prev];
+                        newErrors[index] = false;
+                        return newErrors;
+                      });
+                    }}
+                  />
+                ) : (
+                  <S.DefaultImageIcon />
+                )}
+              </S.ImageItem>
+            ))}
+          </S.ImageSlider>
+        ) : (
+          <S.ImageItem>
+            <S.DefaultImageIcon />
+          </S.ImageItem>
+        )}
       </S.ImageSliderWrapper>
 
       {hasImages && (

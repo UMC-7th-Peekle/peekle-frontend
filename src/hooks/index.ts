@@ -10,6 +10,9 @@ export { default as useGetEventDetail } from './event/query/useGetEventDetail';
 export { default as useGetEventScrap } from './event/query/useGetEventScrap';
 export { default as useToggleScrapEvent } from './event/mutation/useToggleScrapEvent';
 export { default as useShareKakao } from './event/useShareKakao';
+export { default as useCreateEvent } from './event/mutation/useCreateEvent';
+export { default as useUpdateEvent } from './event/mutation/useUpdateEvent';
+export { default as useRemoveEvent } from './event/mutation/useRemoveEvent';
 // community
 export { default as useCommunityId } from './community/useCommunityId';
 

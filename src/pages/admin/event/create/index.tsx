@@ -1,5 +1,7 @@
+import { EventForm } from '@/components';
+
 const EventCreatePage = () => {
-  return <div>EventCreatePage</div>;
+  return <EventForm mode="create" />;
 };
 
 export default EventCreatePage;

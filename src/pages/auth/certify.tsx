@@ -8,6 +8,8 @@ import { useNavigate } from 'react-router-dom';
 import ResendSVG from '@/assets/images/auth/resend.svg?react';
 import { useEffect } from 'react';
 import { ROUTES } from '@/constants/routes';
+import usePostSend from './hook/query/usePostSend';
+import { theme } from '@/styles/theme';
 
 const CertifyPage = () => {
   const navigate = useNavigate();
@@ -16,10 +18,10 @@ const CertifyPage = () => {
     'phoneVerificationSessionId',
   );
   const alreadyRegisteredUser = localStorage.getItem('alreadyRegisteredUser');
-
   const [code, setCode] = useState(['', '', '', '']); // 4자리 인증 코드
   const { setActiveBottomSheet } = useBottomSheetStore();
   const api = import.meta.env.VITE_API_URL;
+  const { fetchPostSend, isPending: isSendPending } = usePostSend();
 
   const [timeLeft, setTimeLeft] = useState(300); // 300초 = 5분
 
@@ -54,29 +56,25 @@ const CertifyPage = () => {
     }
   };
 
-  const phoneVerificationCode = code.join('');
-
   const handleResend = async () => {
-    const phoneNumber = localStorage.getItem('phone-number');
-    const client = await fetch(`${api}/auth/phone/send`, {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify({ phone: phoneNumber }),
-    });
-    const data = await client.json();
-    console.log(data);
-  };
-
-  const handlePhone = () => {
-    navigate('/auth/phone-number');
+    if (!phone) {
+      alert('인증 정보를 찾을 수 없습니다.', 'warning', '확인');
+      return;
+    }
+    await fetchPostSend(phone);
+    alert('인증번호를 다시 보냈어요!', 'none', '확인');
+    setTimeLeft(300); // 타이머 다시 5분으로 설정
   };
 
   const handleVerify = async () => {
     if (!phone || !phoneVerificationSessionId) {
       alert('인증 정보를 찾을 수 없습니다.', 'warning', '확인');
       return;
+    }
+
+    // 가입되지 않은 사용자면 회원가입 alert 띄우고 다음 단계 진행
+    if (!alreadyRegisteredUser) {
+      alert('회원가입이 필요합니다.', 'none', '확인');
     }
 
     if (timeLeft <= 0) {
@@ -96,11 +94,14 @@ const CertifyPage = () => {
           body: JSON.stringify({
             phone,
             phoneVerificationSessionId,
-            phoneVerificationCode,
+            phoneVerificationCode: code.join(''),
           }),
         });
         const data = await response.json();
         localStorage.setItem('accessToken', data.success.accessToken);
+        localStorage.removeItem('phone');
+        localStorage.removeItem('phoneVerificationSessionId');
+        localStorage.removeItem('alreadyRegisteredUser');
         navigate(ROUTES.EVENT);
       } catch (error) {
         console.error('Local Login Request failed:', error);
@@ -113,7 +114,7 @@ const CertifyPage = () => {
           body: JSON.stringify({
             phone,
             phoneVerificationSessionId,
-            phoneVerificationCode,
+            phoneVerificationCode: code.join(''),
           }),
         });
 
@@ -138,8 +139,8 @@ const CertifyPage = () => {
   };
   return (
     <Container>
-      <BackwardWrapper onClick={handlePhone}>
-        <Backward />
+      <BackwardWrapper>
+        <Backward navigateUrl={ROUTES.AUTH_PHONE_NUMBER} />
       </BackwardWrapper>
 
       <Title>
@@ -161,7 +162,7 @@ const CertifyPage = () => {
             $filled={!!num}
           />
         ))}
-        <ResendWrapper onClick={handleResend}>
+        <ResendWrapper onClick={handleResend} $disabled={isSendPending}>
           <ResendSVG /> 재전송
         </ResendWrapper>
       </InputWrapper>
@@ -284,12 +285,12 @@ const Input = styled.input<{ $filled: boolean }>`
   background-color: #ffffff;
 `;
 
-const ResendWrapper = styled.div`
+const ResendWrapper = styled.div<{ $disabled: boolean }>`
   display: flex;
   align-items: center;
-  color: #4caf50;
+  color: ${({ $disabled }) => ($disabled ? theme.color.gray[500] : '#4caf50')};
   font-size: 20px;
-  cursor: pointer;
+  cursor: ${({ $disabled }) => ($disabled ? 'not-allowed' : 'pointer')};
   margin-top: 10px;
   font-family: 'Pretendard', sans-serif;
   font-weight: 700;

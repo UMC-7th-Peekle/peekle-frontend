@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { useRecentSearchStore } from '@/stores';
 import { alert } from '@/utils';
 
 interface UseTextFieldsProps {
@@ -10,12 +11,12 @@ interface UseTextFieldsProps {
 
 export const useTextFields = ({
   queryKey,
-  localKey,
   onQuerySubmit = () => {},
 }: UseTextFieldsProps) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get(queryKey) ?? '';
   const [inputValue, setInputValue] = useState(query ?? '');
+  const { setRecentSearch } = useRecentSearchStore();
 
   // ✅ 검색어가 변경되면 inputValue 업데이트 (검색 기록 클릭 시 반영)
   useEffect(() => {
@@ -33,12 +34,8 @@ export const useTextFields = ({
       alert('두 글자 이상 입력해주세요.', 'none', '확인');
       return;
     }
-    setSearchParams({ [queryKey]: inputValue });
-    const recentSearch = JSON.parse(localStorage.getItem(localKey) || '[]');
-    localStorage.setItem(
-      localKey,
-      JSON.stringify([...new Set([inputValue, ...recentSearch])]),
-    );
+    setSearchParams({ [queryKey]: inputValue }); // 현재 input 값으로 즉시 쿼리 업데이트
+    setRecentSearch(inputValue);
     onQuerySubmit?.(inputValue);
   };
 

@@ -84,6 +84,17 @@ export const XIcon = styled(XSVG)`
   color: ${theme.color.gray[200]};
 `;
 
+export const EmptyContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-self: center;
+  margin-top: 56px;
+
+  ${mediaQuery.sMobile`
+    margin-top: 0;
+  `};
+`;
+
 export const NoRecentSearch = styled(NoRecentSearchSVG)`
   margin-top: 56px;
   align-self: center;

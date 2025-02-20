@@ -5,27 +5,32 @@ import 'react-loading-skeleton/dist/skeleton.css';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
 import { EventCardProps } from '@/types/event';
+import { getDistrict, priceFormatter } from '@/utils';
 
 export const EventCard = forwardRef<HTMLDivElement, EventCardProps>(
-  ({ id, eventData, onClick }, ref) => {
+  ({ id, eventCardData, onClick }, ref) => {
     const [imageError, setImageError] = useState(false);
     const navigate = useNavigate();
     const { pathname } = useLocation();
     const isSearchPage = pathname === ROUTES.EVENT_SEARCH;
-    if (!eventData) return;
+    if (!eventCardData) return;
 
-    const {
-      eventImages,
-      title,
-      eventLocation: { sigungu },
-      price,
-    } = eventData;
+    const { eventImages, title, eventLocation, price } = eventCardData;
+
+    // 주소가 있을때만 행정구 표시
+    const district =
+      eventLocation?.address && getDistrict(eventLocation.address);
 
     const thumbnailImage =
       eventImages && eventImages.length > 0 && eventImages[0].imageUrl;
 
+    const isAdmin = true; // 임시 변수
     const handleCardClick = () => {
-      navigate(`/event/${id}`, { state: { isSearchPage } });
+      if (isAdmin) {
+        navigate(`/admin/event/${id}`);
+      } else {
+        navigate(`/event/${id}`, { state: { isSearchPage } });
+      }
       onClick?.();
     };
 
@@ -34,8 +39,8 @@ export const EventCard = forwardRef<HTMLDivElement, EventCardProps>(
         <S.Info>
           <S.Title>{title}</S.Title>
           <S.SubInfoWrapper>
-            <S.SubInfo>{sigungu}</S.SubInfo>
-            <S.SubInfo>{price}</S.SubInfo>
+            {district && <S.SubInfo>{district}</S.SubInfo>}
+            <S.SubInfo>{priceFormatter(price)}</S.SubInfo>
           </S.SubInfoWrapper>
         </S.Info>
         <S.ImageContainer>
@@ -44,6 +49,7 @@ export const EventCard = forwardRef<HTMLDivElement, EventCardProps>(
               src={thumbnailImage}
               alt={`${title}-img`}
               onError={() => setImageError(true)}
+              onLoad={() => setImageError(false)}
             />
           ) : (
             <S.DefaultImageIcon />

@@ -4,31 +4,48 @@ import {
   differenceInHours,
   differenceInDays,
   isSameYear,
+  parseISO,
 } from 'date-fns';
+import { ko } from 'date-fns/locale';
 
 // Date 객체를 YYYY-MM-DD 형식으로 변환
 export const formatDate = (date: Date | null) => {
   if (!date) return null;
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
+  return format(date, 'yyyy-MM-dd');
 };
 
-// YYYY-MM-DD 형식 문자열을 MM월 DD일 (요일)-선택 형식으로 변환
+// 요일 추출
+export const getDayOfWeek = (date: string) => {
+  const dateObj = parseISO(date);
+  return format(dateObj, 'E', { locale: ko });
+};
+
+// YYYY-MM-DD 형식 문자열을 (YYYY년)-선택 MM월 DD일 (요일)-선택 형식으로 변환
 export const formatDateToMonthDay = (
   dateString: string,
   withDayOfWeek?: boolean,
+  withYear?: boolean,
 ) => {
-  const formattedDate = dateString.slice(0, 10); // 날짜까지
-  const [, month, day] = formattedDate.split('-');
-  if (withDayOfWeek) {
-    const date = new Date(formattedDate); // 'YYYY-MM-DD' 형식을 Date 객체로 변환
-    const dayOfWeek = date.toLocaleString('ko-KR', { weekday: 'short' }); // 요일 추출
-    return `${parseInt(month, 10)}월 ${parseInt(day, 10)}일 (${dayOfWeek})`;
+  const dateObj = parseISO(dateString); // 'YYYY-MM-DD' 형식을 Date 객체로 변환
+  const year = dateObj.getFullYear();
+  const month = dateObj.getMonth() + 1;
+  const day = dateObj.getDate();
+
+  if (withDayOfWeek && withYear) {
+    const dayOfWeek = getDayOfWeek(dateString);
+    return `${year}년 ${month}월 ${day}일 (${dayOfWeek})`;
   }
 
-  return `${parseInt(month, 10)}월 ${parseInt(day, 10)}일`;
+  if (withDayOfWeek) {
+    const dayOfWeek = getDayOfWeek(dateString);
+    return `${month}월 ${day}일 (${dayOfWeek})`;
+  }
+
+  if (withYear) {
+    return `${year}년 ${month}월 ${day}일`;
+  }
+
+  return `${month}월 ${day}일`;
 };
 
 // Date 객체를 YYYY-MM-DD (요일) 형식으로 변환

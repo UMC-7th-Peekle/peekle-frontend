@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { FixedBackward } from '@/components';
 import { useNavigate } from 'react-router-dom';
 import useFormatPhoneNumber from './hook/useFormatPhoneNumber';
+import usePostSend from './hook/query/usePostSend';
 import { theme } from '@/styles/theme';
 
 const PhoneNumberPage = () => {
@@ -11,6 +12,7 @@ const PhoneNumberPage = () => {
 
   const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
+  const { fetchPostSend } = usePostSend();
   useFormatPhoneNumber(phone, setPhone);
 
   const handleSubmit = async () => {
@@ -23,8 +25,6 @@ const PhoneNumberPage = () => {
       );
       const statusData = await statusResponse.json();
 
-      let alreadyRegisteredUser = false;
-
       if (statusData.resultType === 'FAIL') {
         if (statusData.error?.reason === '탈퇴한 사용자입니다.') {
           navigate('/auth/certify');
@@ -32,30 +32,13 @@ const PhoneNumberPage = () => {
           navigate('/auth/sleeper');
         }
       } else if (statusData.resultType === 'SUCCESS') {
+        // 가입된 사용자면 인증번호 보내고 바로 certify로 이동
         if (statusData.success.message === '가입된 사용자의 전화번호입니다.') {
-          alreadyRegisteredUser = true;
+          localStorage.setItem('alreadyRegisteredUser', 'true');
         }
-        const client = await fetch(`${api}/auth/phone/send`, {
-          method: 'POST',
-          headers: {
-            'Content-type': 'application/json',
-          },
-          body: JSON.stringify({ phone: phoneNumber }),
-        });
-        const data = await client.json();
-        console.log(data);
-        if (client.ok) {
-          localStorage.setItem('phone-number', String(phoneNumber));
-          localStorage.setItem(
-            'phoneVerificationSessionId',
-            data.success.phoneVerificationSessionId,
-          );
-          localStorage.setItem(
-            'alreadyRegisteredUser',
-            String(alreadyRegisteredUser),
-          );
-          navigate('/auth/certify');
-        }
+        localStorage.setItem('phone-number', phoneNumber);
+        await fetchPostSend(phoneNumber);
+        navigate('/auth/certify');
       }
     } catch (error) {
       console.error('Request failed:', error);

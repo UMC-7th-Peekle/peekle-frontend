@@ -28,11 +28,29 @@ export const CATEGORY_OPTIONS_WITHOUT_ALL = [
   ['교육', '1'],
   ['문화', '2'],
   ['활동', '3'],
+  ['기타', '4'],
 ] as const;
 export const CATEGORY_IDS_WITHOUT_ALL = CATEGORY_OPTIONS_WITHOUT_ALL.map(
   (option) => option[1],
 );
+export const CATEGORY_OPIONS_LABEL_VALUE: {
+  label: string;
+  value: number;
+}[] = [
+  { label: '교육', value: 1 },
+  { label: '문화', value: 2 },
+  { label: '활동', value: 3 },
+  { label: '기타', value: 4 },
+] as const;
+
 export const PRICE_OPTIONS_WITHOUT_ALL = ['무료', '유료'] as const;
+export const PRICE_OPTIONS_LABEL_VALUE: {
+  label: string;
+  value: string;
+}[] = [
+  { label: '무료', value: '무료' },
+  { label: '유료', value: '유료' },
+] as const;
 export const LOCATION_OPTIONS_WITHOUT_ALL = [
   ['잠실 / 송파 / 강동', '1'],
   ['마포 / 서대문 / 은평', '2'],
@@ -46,6 +64,28 @@ export const LOCATION_OPTIONS_WITHOUT_ALL = [
 export const LOCATION_GROUP_IDS_WITHOUT_ALL = LOCATION_OPTIONS_WITHOUT_ALL.map(
   (option) => option[1],
 );
+
+// reapeatType
+export const REPEAT_TYPE_OPTIONS_LABEL_VALUE: {
+  label: string;
+  value: string;
+}[] = [
+  { label: '반복 없음', value: 'none' },
+  { label: '매일', value: 'daily' },
+  { label: '매주', value: 'weekly' },
+  { label: '매월', value: 'monthly' },
+  { label: '매년', value: 'yearly' },
+  { label: '직접 입력', value: 'custom' },
+] as const;
+
+//isAllDay
+export const IS_ALL_DAY_OPTIONS_LABEL_VALUE: {
+  label: string;
+  value: string;
+}[] = [
+  { label: '특정 시간에만 진행', value: 'false' },
+  { label: '하루 종일 진행', value: 'true' },
+] as const;
 
 // 기본 필터값
 export const DEFAULT_FILTERS = {
@@ -102,4 +142,3 @@ export const MAP_MARKERS = {
 export const GET_EVENTS_QK = 'events';
 export const GET_EVENT_DETAIL_QK = 'event-detail';
 export const GET_EVENTS_SCRAPPED_QK = 'event-scrapped';
-export const TOGGLE_SCRAP_EVENT_QK = 'event-toggle-scrap';

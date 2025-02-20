@@ -1,5 +1,5 @@
 import * as S from './style';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const Loader = ({ text = '' }: { text?: string }) => {
   return (
@@ -22,14 +22,17 @@ const DeferredLoader = ({ text = '' }: { text?: string }) => {
 
   // console.log('isDeferred', isDeferred);
 
-  const handleDeferred = () => {
-    setTimeout(() => {
+  useEffect(() => {
+    // 컴포넌트가 마운트된 후에 setIsDeferred 호출
+    const timer = setTimeout(() => {
       setIsDeferred(true);
     }, 300);
-  };
+
+    // 클린업 함수로 타이머 정리
+    return () => clearTimeout(timer);
+  }, []);
 
   if (!isDeferred) {
-    handleDeferred();
     return null;
   }
 

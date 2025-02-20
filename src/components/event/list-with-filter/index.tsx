@@ -9,9 +9,10 @@ import {
 import Header from '@/layouts/header';
 
 const EventListWithFilter = () => {
+  const isAdmin = false; // 임시 변수
   return (
     <>
-      <Header page="event" />
+      {!isAdmin && <Header page="event" />}
       <S.HeaderContainer>
         <CategoryChips />
         <Filter />

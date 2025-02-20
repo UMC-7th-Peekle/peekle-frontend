@@ -10,8 +10,10 @@ export const ROUTES = {
   EVENT_SEARCH: '/event/search',
   EVENT_SCRAP: '/event/scrap',
   EVENT_DETAIL: '/event/:id',
+  EVENT_DETAIL_ADMIN: '/admin/event/:id',
   EVENT_CREATE: '/admin/event/create',
   EVENT_EDIT: '/admin/event/edit',
+  EVENT_EDIT_ID: '/admin/event/edit/:id',
   COMMUNITY: '/community',
   COMMUNITY_SEARCH: '/community/search',
   COMMUNITY_LIKE: '/community/like',
@@ -24,12 +26,6 @@ export const ROUTES = {
   UNAUTHORIZE_ROLE: '/admin/authority/unauthorize-role',
   NOT_FOUND: '*',
 };
-
-export const PUBLIC_PATHS = [
-  ROUTES.EVENT,
-  ROUTES.EVENT_SEARCH,
-  ROUTES.EVENT_DETAIL,
-] as const;
 
 // 여기에 관리자 path를 추가해주세요
 export const ADMIN_PATHS = [

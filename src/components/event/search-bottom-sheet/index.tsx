@@ -37,6 +37,8 @@ const SearchBottomSheet = () => {
     localKey: 'recent-event-search',
   });
 
+  // console.log('recentSearch', recentSearch);
+
   const { events } = useEventsStore();
   const { isSearchBSOpen, setIsSearchBSOpen } = useSearchBottomSheetStore();
 
@@ -57,6 +59,8 @@ const SearchBottomSheet = () => {
     setIsSearchBSOpen(false);
   };
 
+  console.log('events', events);
+
   return (
     <>
       <AnimatePresence initial={false}>
@@ -76,9 +80,11 @@ const SearchBottomSheet = () => {
           dragControls={dragControls}
           dragListener={false}
         >
-          <S.BottomSheetHeader onPointerDown={(e) => dragControls.start(e)}>
-            <Filter isSearchPage={true} />
-          </S.BottomSheetHeader>
+          {events.length > 0 && (
+            <S.BottomSheetHeader onPointerDown={(e) => dragControls.start(e)}>
+              <Filter isSearchPage={true} />
+            </S.BottomSheetHeader>
+          )}
 
           <S.BottomSheetContent>
             {!isSearched ? (
@@ -108,7 +114,9 @@ const SearchBottomSheet = () => {
                   </S.RecentSearchTextContainer>
                 </S.RecentSearchContainer>
               ) : (
-                <S.NoRecentSearch />
+                <S.EmptyContainer>
+                  <S.NoRecentSearch />
+                </S.EmptyContainer>
               )
             ) : (
               <Suspense fallback={<EventListSkeleton />}>

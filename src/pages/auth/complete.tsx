@@ -46,6 +46,9 @@ const CompletePage = () => {
   const nickname = location.state?.nickname || '피클1135';
   const handleStart = () => {
     navigate(ROUTES.EVENT);
+    localStorage.removeItem('phone');
+    localStorage.removeItem('phoneVerificationSessionId');
+    localStorage.removeItem('alreadyRegisteredUser');
   };
   return (
     <Container>

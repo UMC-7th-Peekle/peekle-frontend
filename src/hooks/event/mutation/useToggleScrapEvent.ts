@@ -6,19 +6,20 @@ import {
   ToggleScrapEventResponseSchema,
   ToggleScrapEventResponse,
   ToggleScrapEventParams,
-  ToggleScrapEventContext,
+  EventDetailResponse,
 } from '@/types/event';
-import { TOGGLE_SCRAP_EVENT_QK } from '@/constants/event';
+import { GET_EVENT_DETAIL_QK } from '@/constants/event';
 
 // API 호출 함수
-const toggleScrapEvent = async (
-  eventId: bigint,
-  isScrapped: boolean,
-): Promise<ToggleScrapEventResponse> => {
+const toggleScrapEvent = async ({
+  eventId,
+  isScraped,
+}: ToggleScrapEventParams): Promise<ToggleScrapEventResponse> => {
+  console.log('api 호출에서 초기 isScraped', isScraped);
   const response = await clientAuth<ToggleScrapEventResponse>({
-    method: isScrapped ? 'DELETE' : 'POST',
+    method: isScraped ? 'DELETE' : 'POST',
     url: `/events/scrap`,
-    data: { eventId: eventId.toString() },
+    data: { eventId },
   });
 
   // 응답 데이터 검증
@@ -33,52 +34,43 @@ const useToggleScrapEvent = () => {
     ToggleScrapEventResponse,
     Error,
     ToggleScrapEventParams,
-    ToggleScrapEventContext
+    { prevData?: EventDetailResponse }
   >({
-    mutationFn: ({ eventId, isScrapped }) =>
-      toggleScrapEvent(eventId, isScrapped),
-    onMutate: async ({ eventId, isScrapped }) => {
+    mutationFn: ({ eventId, isScraped }) =>
+      toggleScrapEvent({ eventId, isScraped }),
+    onMutate: async ({ eventId, isScraped }) => {
       await queryClient.cancelQueries({
-        queryKey: [TOGGLE_SCRAP_EVENT_QK, eventId],
+        queryKey: [GET_EVENT_DETAIL_QK, eventId],
       });
 
-      const prevData = queryClient.getQueryData<ToggleScrapEventResponse>([
-        TOGGLE_SCRAP_EVENT_QK,
+      const prevData = queryClient.getQueryData<EventDetailResponse>([
+        GET_EVENT_DETAIL_QK,
         eventId,
       ]);
 
       queryClient.setQueryData(
-        [TOGGLE_SCRAP_EVENT_QK, eventId],
-        (old?: ToggleScrapEventResponse) =>
+        [GET_EVENT_DETAIL_QK, eventId],
+        (old?: EventDetailResponse) =>
           old
             ? {
                 ...old,
                 success: {
                   ...old.success,
-                  isScrapped: !old.success?.isScrapped,
-                  scrapCount: isScrapped
-                    ? Math.max(0, (old.success?.scrapCount ?? 0) - 1) // 하나 감소
-                    : (old.success?.scrapCount ?? 0) + 1, // 하나 증가
+                  event: {
+                    ...old.success?.event,
+                    isScraped: !isScraped,
+                  },
                 },
               }
-            : {
-                resultType: 'SUCCESS',
-                error: null,
-                success: { message: '', isScrapped: true, scrapCount: 1 },
-              },
+            : prevData,
       );
-      return {
-        prevData: prevData ?? {
-          resultType: 'SUCCESS',
-          error: null,
-          success: { message: '', isScrapped: false, scrapCount: 0 },
-        },
-      };
+
+      return { prevData };
     },
     onError: (error, { eventId }, context) => {
       if (context?.prevData) {
         queryClient.setQueryData(
-          [TOGGLE_SCRAP_EVENT_QK, eventId],
+          [GET_EVENT_DETAIL_QK, eventId],
           context.prevData,
         );
       }
@@ -86,7 +78,7 @@ const useToggleScrapEvent = () => {
     },
     onSettled: (_, __, { eventId }) => {
       queryClient.invalidateQueries({
-        queryKey: [TOGGLE_SCRAP_EVENT_QK, eventId],
+        queryKey: [GET_EVENT_DETAIL_QK, eventId],
       });
     },
   });
