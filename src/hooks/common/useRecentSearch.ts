@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 // 최근 검색을 위한 커스텀 훅
@@ -9,6 +9,11 @@ const useRecentSearch = ({ queryKey, localKey }: useRecentSearchProps) => {
   const [recentSearch, setRecentSearch] = useState<string[]>(() =>
     JSON.parse(localStorage.getItem(localKey) ?? '[]'),
   );
+
+  useEffect(() => {
+    const storedSearches = JSON.parse(localStorage.getItem(localKey) ?? '[]');
+    setRecentSearch(storedSearches);
+  }, [query, localKey]);
 
   const handleClear = () => {
     localStorage.removeItem(localKey);

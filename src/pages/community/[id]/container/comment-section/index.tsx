@@ -24,11 +24,29 @@ export default function CommentSection({ article }: CommentSectionProps) {
     articleId: article.articleId,
   });
 
-  if (isLoading || error) {
+  if (isLoading) {
     return <></>;
   }
 
-  const comments: ArticleComments = data?.success.comments || [];
+  if (error?.response?.status === 204 || !data?.success?.comments?.length) {
+    return (
+      <>
+        <S.NoCommentContainer>
+          <S.CommentIcon />
+          <S.NoCommentText>첫 댓글을 남겨주세요!</S.NoCommentText>
+        </S.NoCommentContainer>
+        <CommentInput
+          isAnonymous={isAnonymous}
+          onToggleAnonymous={onToggleAnonymous}
+          comment={comment}
+          setComment={setComment}
+          onSubmit={onSubmit}
+        />
+      </>
+    );
+  }
+
+  const comments: ArticleComments = data.success.comments;
 
   const commentMap = new Map<
     number,
@@ -59,21 +77,17 @@ export default function CommentSection({ article }: CommentSectionProps) {
             {comment.replies.length > 0 && (
               <S.ReplyContainer>
                 {comment.replies.map((reply) => (
-                  <CommentReplyCard key={reply.commentId} comment={reply} />
+                  <CommentReplyCard
+                    key={reply.commentId}
+                    parentCommentId={reply.parentCommentId || 0}
+                    comment={reply}
+                  />
                 ))}
               </S.ReplyContainer>
             )}
           </div>
         ))}
       </S.CommentContainer>
-
-      {comments.length === 0 && (
-        <S.NoCommentContainer>
-          <S.CommentIcon />
-          <S.NoCommentText>첫 댓글을 남겨주세요!</S.NoCommentText>
-        </S.NoCommentContainer>
-      )}
-
       <CommentInput
         isAnonymous={isAnonymous}
         onToggleAnonymous={onToggleAnonymous}

@@ -53,7 +53,7 @@ export const useDelArticleCommentLike = () => {
     mutationFn: deleteArticleCommentLike,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['get-community-comment'],
+        queryKey: ['get-article-comments'],
       });
     },
   });

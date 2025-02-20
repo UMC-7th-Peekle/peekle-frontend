@@ -2,7 +2,9 @@ import { theme } from '@/styles/theme';
 import styled from 'styled-components';
 import ListSvg from '@/assets/images/icons/three-dot.svg?react';
 
-const MainContainer = styled.div`
+const MainContainer = styled.div<{ $highlight: boolean }>`
+  background-color: ${({ $highlight }) =>
+    $highlight ? theme.color.primary[100] : 'transparent'};
   display: flex;
   flex-direction: row;
   width: 100%;
@@ -11,7 +13,9 @@ const MainContainer = styled.div`
   height: auto;
 `;
 
-const ReplyContainer = styled.div`
+const ReplyContainer = styled.div<{ $highlight: boolean }>`
+  background-color: ${({ $highlight }) =>
+    $highlight ? theme.color.primary[100] : 'transparent'};
   display: flex;
   flex-direction: row;
   width: 100%;
@@ -67,8 +71,10 @@ const TopTextContainer = styled.div`
   padding-top: 8px;
 `;
 
-const Content = styled.div`
+const Content = styled.div<{ $isDeleted: boolean }>`
   ${theme.typeFace.body['16R']};
+  color: ${({ $isDeleted, theme }) =>
+    $isDeleted ? theme.color.gray[200] : theme.color.gray[900]};
 `;
 
 const BottomContainer = styled.div`

@@ -53,7 +53,7 @@ export const usePostArticleCommentLike = () => {
     mutationFn: postArticleCommentLike,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['get-community-comment'],
+        queryKey: ['get-article-comments'],
       });
     },
   });

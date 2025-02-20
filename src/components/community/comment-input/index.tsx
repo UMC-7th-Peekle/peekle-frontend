@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import * as S from './style';
 import AnonymousCheck from '../anonymous-check';
 import Pen from '@/assets/images/community/pen.svg?react';
+import { useCommentReply } from '@/stores/community/useCommentReply';
 
 interface CommentInputProps {
   isAnonymous: boolean;
@@ -19,6 +20,7 @@ export default function CommentInput({
   onSubmit,
 }: CommentInputProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const { replyingTo } = useCommentReply();
 
   // ✅ textarea 높이 자동 조정
   const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -42,7 +44,11 @@ export default function CommentInput({
 
         <S.StyledTextarea
           ref={textareaRef}
-          placeholder="따뜻한 댓글을 입력해주세요 :)"
+          placeholder={
+            replyingTo
+              ? `${replyingTo.authorName}님에게 답글 남기기...`
+              : '따뜻한 댓글을 입력해주세요 :)'
+          }
           value={comment}
           onChange={handleInput}
           rows={1}
