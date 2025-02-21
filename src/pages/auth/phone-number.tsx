@@ -41,7 +41,7 @@ const PhoneNumberPage = () => {
           headers: {
             'Content-type': 'application/json',
           },
-          body: JSON.stringify({ phone: phone }),
+          body: JSON.stringify({ phone: phoneNumber }),
         });
         const data = await client.json();
         console.log(data);
@@ -49,8 +49,8 @@ const PhoneNumberPage = () => {
           'phoneVerificationSessionId',
           data.success.phoneVerificationSessionId,
         );
-        localStorage.setItem('phone-number', phone);
-        await fetchPostSend(phone);
+        localStorage.setItem('phone-number', phoneNumber);
+        await fetchPostSend(phoneNumber);
         navigate('/auth/certify');
       }
     } catch (error) {

@@ -233,8 +233,7 @@ const StyledButton = styled.button<{ $isCodeComplete: boolean }>`
   color: ${({ $isCodeComplete }) => ($isCodeComplete ? 'white' : '#BDBDBD')};
   cursor: ${({ $isCodeComplete }) =>
     $isCodeComplete ? 'pointer' : 'not-allowed'};
-  font-family: 'Pretendard', sans-serif;
-  font-weight: 700;
+  ${theme.typeFace.subTitle[20]};
 `;
 
 const Container = styled.div`
