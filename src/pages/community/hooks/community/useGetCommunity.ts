@@ -15,10 +15,10 @@ const AuthorInfoSchema = z.object({
 // Zod 스키마 정의
 const ArticleSchema = z.object({
   articleId: z.number().int(),
+  communityId: z.number().int(),
   title: z.string(),
   content: z.string(),
   isAnonymous: z.boolean().optional(),
-  communityId: z.number(),
   createdAt: z.string().transform(formatDateCardTime),
   updatedAt: z.string(),
   articleComments: z.number().int(),
@@ -37,7 +37,7 @@ const SuccessResponseSchema = z.object({
 
 const CommunityResponseSchema = z.object({
   resultType: z.literal('SUCCESS').nullable(),
-  error: z.null(),
+  error: z.string().nullable(),
   success: SuccessResponseSchema,
 });
 

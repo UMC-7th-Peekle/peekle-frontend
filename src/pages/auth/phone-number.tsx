@@ -36,8 +36,21 @@ const PhoneNumberPage = () => {
         if (statusData.success.message === '가입된 사용자의 전화번호입니다.') {
           localStorage.setItem('alreadyRegisteredUser', 'true');
         }
-        localStorage.setItem('phone-number', phoneNumber);
-        await fetchPostSend(phoneNumber);
+        const client = await fetch(`${api}/auth/phone/send`, {
+          method: 'POST',
+          headers: {
+            'Content-type': 'application/json',
+          },
+          body: JSON.stringify({ phone: phone }),
+        });
+        const data = await client.json();
+        console.log(data);
+        localStorage.setItem(
+          'phoneVerificationSessionId',
+          data.success.phoneVerificationSessionId,
+        );
+        localStorage.setItem('phone-number', phone);
+        await fetchPostSend(phone);
         navigate('/auth/certify');
       }
     } catch (error) {
