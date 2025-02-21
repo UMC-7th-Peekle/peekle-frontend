@@ -1,4 +1,4 @@
-import { FixedBackward } from '@/components';
+// import { FixedBackward } from '@/components';
 import { useNavigate } from 'react-router-dom';
 import KakaoSVG from '@/assets/images/onboarding/kakao.svg?react';
 import PhoneSVG from '@/assets/images/onboarding/phone.svg?react';
@@ -21,7 +21,7 @@ const OnboardingPage = () => {
 
   return (
     <S.Container>
-      <FixedBackward />
+      {/* <FixedBackward /> */}
       <S.Header>
         <HeaderSVG />
       </S.Header>

@@ -14,28 +14,26 @@ const useRecentSearch = ({ queryKey, localKey }: useRecentSearchProps) => {
     clearRecentSearch,
   } = useRecentSearchStore();
 
+  // 로컬 스토리지 값 가져오기
   useEffect(() => {
     const storedData = JSON.parse(localStorage.getItem(localKey) ?? '[]');
+    const datas = storedData
+      .flat(Infinity)
+      .filter(Boolean)
+      .filter((item: unknown): item is string => typeof item === 'string');
+    if (datas.length > 0) {
+      const uniqueData = Array.from(new Set(datas));
 
-    if (Array.isArray(storedData)) {
-      // 중첩 배열을 평탄화하고, 문자열만 필터링한 후 중복 제거
-      const uniqueData = Array.from(
-        new Set(storedData.flat().filter((item) => typeof item === 'string')),
-      );
-
-      // 각 문자열을 `setRecentSearch`에 개별적으로 추가
-      uniqueData.forEach((search) => setRecentSearch(search));
+      uniqueData.forEach((search) => {
+        setRecentSearch(search as string);
+      });
     }
   }, [localKey, setRecentSearch]);
 
+  // 로컬 스토리지에 업데이트
   useEffect(() => {
     localStorage.setItem(localKey, JSON.stringify(recentSearch));
-  }, [recentSearch, localKey]);
-
-  useEffect(() => {
-    const storedSearches = JSON.parse(localStorage.getItem(localKey) ?? '[]');
-    setRecentSearch(storedSearches);
-  }, [query, localKey, setRecentSearch]);
+  }, [localKey, recentSearch]);
 
   const handleClear = () => {
     clearRecentSearch();

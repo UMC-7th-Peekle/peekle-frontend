@@ -25,7 +25,6 @@ const getEvents = async ({
   northEast,
   sort,
 }: getEventsParams): Promise<EventsResponse> => {
-  console.log('getEvents 호출', query);
   const response = await client<EventsResponse>({
     method: 'GET',
     url: `/events`,

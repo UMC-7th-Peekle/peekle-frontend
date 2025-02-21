@@ -24,7 +24,7 @@ export const EventCard = forwardRef<HTMLDivElement, EventCardProps>(
     const thumbnailImage =
       eventImages && eventImages.length > 0 && eventImages[0].imageUrl;
 
-    const isAdmin = true; // 임시 변수
+    const isAdmin = false; // 임시 변수
     const handleCardClick = () => {
       if (isAdmin) {
         navigate(`/admin/event/${id}`);

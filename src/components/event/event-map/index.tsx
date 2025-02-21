@@ -24,13 +24,7 @@ window.navermap_authFailure = function () {
   throw new Error('네이버 지도 인증 실패');
 };
 
-const EventMap = ({
-  onMapLoad,
-  isSearchPage = false,
-}: {
-  onMapLoad: () => void;
-  isSearchPage?: boolean;
-}) => {
+const EventMap = ({ isSearchPage = false }: { isSearchPage?: boolean }) => {
   // localStorage.clear();
   // sessionStorage.clear();
   const [mapInstance, setMapInstance] = useState<naver.maps.Map>();
@@ -49,7 +43,7 @@ const EventMap = ({
 
   const { data: eventsData, isFetching: isEventsFetching } = useGetEvents({
     ...formattedFilters,
-    limit: 200, // 지도에 표시할 이벤트 수
+    limit: 300, // 지도에 표시할 이벤트 수
     southWest: bounds.southWest || undefined, // 빈 문자열이면 무시
     northEast: bounds.northEast || undefined,
   });
@@ -86,7 +80,7 @@ const EventMap = ({
 
   const navigate = useNavigate();
 
-  console.log('events in map', events);
+  // console.log('events in map', events);
 
   const initMap = useCallback(
     (centerLat: number, centerLng: number) => {
@@ -147,7 +141,7 @@ const EventMap = ({
       const timeDifference = now - lastApiCallTimeRef.current;
 
       if (timeDifference > 500) {
-        // 500ms 이상 지났으면 api 호출
+        // api 호출
         lastApiCallTimeRef.current = now;
 
         const bounds = mapInstance?.getBounds();
@@ -178,7 +172,10 @@ const EventMap = ({
         }
       }
     }
-    if (!isEventsFetching) onMapLoad();
+    if (!isEventsFetching) {
+      setIsLoading(false);
+      setLoadingMessage('');
+    }
 
     // 움직임 멈추고 latestPos 업데이트 해두기
     const center = mapInstance?.getCenter();
@@ -195,7 +192,8 @@ const EventMap = ({
     mapInstance,
     isSearchPage,
     isEventsFetching,
-    onMapLoad,
+    setIsLoading,
+    setLoadingMessage,
     setLatestPos,
   ]);
 
@@ -317,7 +315,6 @@ const EventMap = ({
     isLoading,
     setIsLoading,
     setLoadingMessage,
-    mapInstance,
   ]);
 
   // 내 위치로 이동
