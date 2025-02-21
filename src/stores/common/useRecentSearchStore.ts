@@ -12,7 +12,8 @@ const useRecentSearchStore = create<RecentSearchState>((set) => ({
   setRecentSearch: (search: string) =>
     set((state) => {
       // 검색어가 이미 존재하는지 체크하여 중복 추가 방지
-      if (!state.recentSearch.includes(search)) {
+      const flattenedSearches = state.recentSearch.flat(Infinity);
+      if (!flattenedSearches.includes(search)) {
         return { recentSearch: [...state.recentSearch, search] };
       }
       return state;

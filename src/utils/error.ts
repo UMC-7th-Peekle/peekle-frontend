@@ -1,5 +1,7 @@
 export const isNetworkError = (error: Error): boolean => {
-  return error.name === 'TypeError' && error.message.includes('Network');
+  if (error.name === 'TypeError' || error.message.includes('Network'))
+    return true;
+  return false;
 };
 
 export const isServerError = (error: Error): boolean => {

@@ -1,5 +1,5 @@
 import * as S from './style';
-import { Suspense, useCallback } from 'react';
+import { Suspense, memo } from 'react';
 import {
   BottomSheet,
   BottomSheetTabs,
@@ -9,18 +9,14 @@ import {
 import { BOTTOM_SHEET_ID_EVENT_FILTER } from '@/constants/event';
 import { useMapStore } from '@/stores';
 
+const MemoizedEventMap = memo(EventMap);
+
 const EventMapContainer = ({
   isSearchPage = false,
 }: {
   isSearchPage?: boolean;
 }) => {
-  const { isLoading, loadingMessage, setIsLoading, setLoadingMessage } =
-    useMapStore();
-
-  const handleMapLoad = useCallback(() => {
-    setIsLoading(false);
-    setLoadingMessage('');
-  }, [setLoadingMessage, setIsLoading]);
+  const { isLoading, loadingMessage } = useMapStore();
 
   return (
     <>
@@ -31,7 +27,7 @@ const EventMapContainer = ({
           </S.LoadingContainer>
         }
       >
-        <EventMap onMapLoad={handleMapLoad} isSearchPage={isSearchPage} />
+        <MemoizedEventMap isSearchPage={isSearchPage} />
       </Suspense>
       <BottomSheet id={BOTTOM_SHEET_ID_EVENT_FILTER}>
         <BottomSheetTabs />

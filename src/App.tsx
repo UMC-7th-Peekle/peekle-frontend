@@ -1,9 +1,9 @@
-import { Suspense, useState } from 'react';
+import { Suspense } from 'react';
 import {
   QueryClientProvider,
   QueryErrorResetBoundary,
 } from '@tanstack/react-query';
-import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools'; // 디버깅용
+// import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools'; // 디버깅용
 import { ErrorBoundary } from 'react-error-boundary';
 import queryClient from './lib/tanstack-query/queryClient';
 import { ThemeProvider } from 'styled-components';
@@ -21,7 +21,7 @@ import {
 import Router from '@/routes/Router';
 
 function App() {
-  const [isOpen, setIsOpen] = useState<boolean>(false); // ReactQueryDevtoolsPanel 열고닫기
+  // const [isOpen, setIsOpen] = useState<boolean>(false); // ReactQueryDevtoolsPanel 열고닫기
 
   return (
     <ThemeProvider theme={theme}>
@@ -40,7 +40,7 @@ function App() {
             </ErrorBoundary>
           )}
         </QueryErrorResetBoundary>
-        <button
+        {/* <button
           onClick={() => setIsOpen(!isOpen)}
         >{`${isOpen ? 'Close' : 'Open'} the devtools panel`}</button>
         {isOpen && (
@@ -48,7 +48,7 @@ function App() {
             style={{ height: '200px' }}
             onClose={() => setIsOpen(false)}
           />
-        )}
+        )} */}
       </QueryClientProvider>
     </ThemeProvider>
   );

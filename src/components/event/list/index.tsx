@@ -13,7 +13,7 @@ export const EventList = ({
 }) => {
   const navigate = useNavigate();
   const { formattedFilters } = useEventFilter();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get('event-search') ?? '';
   const { setSelectedEvent } = useMapStore();
   const { myLocation } = useMyLocationStore();
@@ -54,7 +54,14 @@ export const EventList = ({
 
   const handleGotoMapBtnClick = () => {
     setSelectedEvent(null); // 선택돼있는 이벤트 풀기
-    navigate(ROUTES.EVENT_MAP);
+    // 정렬 삭제 후 쿼리 재호출
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    newSearchParams.delete('sort');
+    setSearchParams(newSearchParams);
+    navigate({
+      pathname: ROUTES.EVENT_MAP,
+      search: newSearchParams.toString(), // 현재 쿼리 파람 유지
+    });
   };
 
   const handleAddEventBtnClick = () => {

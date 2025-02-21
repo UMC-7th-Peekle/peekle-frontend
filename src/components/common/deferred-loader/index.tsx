@@ -20,13 +20,11 @@ const Loader = ({ text = '' }: { text?: string }) => {
 const DeferredLoader = ({ text = '' }: { text?: string }) => {
   const [isDeferred, setIsDeferred] = useState(false);
 
-  // console.log('isDeferred', isDeferred);
-
   useEffect(() => {
     // 컴포넌트가 마운트된 후에 setIsDeferred 호출
     const timer = setTimeout(() => {
       setIsDeferred(true);
-    }, 300);
+    }, 500);
 
     // 클린업 함수로 타이머 정리
     return () => clearTimeout(timer);
